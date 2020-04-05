@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>welcome to st0n3&#39;s blog</title>
+    <link>/</link>
+    <description>Recent content on welcome to st0n3&#39;s blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 02 Apr 2020 16:55:00 +0800</lastBuildDate>
+    
+	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>一篇优雅的技术博客应该长这样</title>
+      <link>/post/%E7%9F%A5%E8%AF%86%E7%AE%A1%E7%90%86/%E4%B8%80%E7%AF%87%E4%BC%98%E9%9B%85%E7%9A%84%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2%E5%BA%94%E8%AF%A5%E9%95%BF%E8%BF%99%E6%A0%B7.html</link>
+      <pubDate>Thu, 02 Apr 2020 16:55:00 +0800</pubDate>
+      
+      <guid>/post/%E7%9F%A5%E8%AF%86%E7%AE%A1%E7%90%86/%E4%B8%80%E7%AF%87%E4%BC%98%E9%9B%85%E7%9A%84%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2%E5%BA%94%E8%AF%A5%E9%95%BF%E8%BF%99%E6%A0%B7.html</guid>
+      <description>我经常读到一些写给自己看的博客，特别是writeup，感觉十分困扰。希望自己能写出一些不只是给自己看的文章，所以尝试提出了一些写作的原则。
+ 文章开头应该指明本文在一个学科中的位置 文章不应该是写给当前的自己看的，可以假设读者是未接触相关内容的自己，或几个月后失忆的自己 结尾应该总结本文的主要内容 文中涉及到的前提知识应该提供学习的途径  TODO 敬请期待</description>
+    </item>
+    
+    <item>
+      <title>捕风捉影的使用原则</title>
+      <link>/post/%E7%9F%A5%E8%AF%86%E7%AE%A1%E7%90%86/%E6%8D%95%E9%A3%8E%E6%8D%89%E5%BD%B1%E7%9A%84%E4%BD%BF%E7%94%A8%E5%8E%9F%E5%88%99.html</link>
+      <pubDate>Thu, 02 Apr 2020 16:55:00 +0800</pubDate>
+      
+      <guid>/post/%E7%9F%A5%E8%AF%86%E7%AE%A1%E7%90%86/%E6%8D%95%E9%A3%8E%E6%8D%89%E5%BD%B1%E7%9A%84%E4%BD%BF%E7%94%A8%E5%8E%9F%E5%88%99.html</guid>
+      <description>捕风捉影 捕风捉影是我的知识管理工具的一个统称，有点中二哈哈哈。
+这个系统的机构如下
+捕风捉影 ├── 捕风(hackerbot): 收集最新动态 │ ├── rss │ ├── spider │ ├── mirror │ ├── proxy: darkweb, gfw, ... │ └── 小型团队协作功能 ├── 捉影 │ ├── skill_tree │ │ ├── version_static: 静态的版本，更新起来麻烦 │ │ └── version_dynamic: 动态版本，无法和博客较好得融合 │ ├── blog │ └── 知识图谱 整体的思路是，使用捕风平台贪婪得吸收实时动态，使用捉影平台沉淀信息并以技能树的形式呈现。
+使用原则 1. 所有自由时间点的分配，都应该来源于技能树的todo部分 主要目的是使技能点的分配相对系统点，否则容易迷失在细节中。但是也不应该过于功利性。
+2. 待补充 </description>
+    </item>
+    
+    <item>
+      <title>VolgaCTF2020Qualifier Crypto Guess writeup</title>
+      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/ctf/crypto/%E9%9D%9E%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86/%E7%A6%BB%E6%95%A3%E5%AF%B9%E6%95%B0/elgamal/volgactf2020qualifier_crypto_guess_writeup.html</link>
+      <pubDate>Wed, 01 Apr 2020 13:53:00 +0800</pubDate>
+      
+      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/ctf/crypto/%E9%9D%9E%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86/%E7%A6%BB%E6%95%A3%E5%AF%B9%E6%95%B0/elgamal/volgactf2020qualifier_crypto_guess_writeup.html</guid>
+      <description>上周末玩了下VolgaCTF 2020 Qualifier(https://ctftime.org/event/933), 只做了几道密码题，因为其他题都没有思路T_T 。整体感觉俄罗斯人的脑洞很大，数学功底很好。其中有一道ElGamal相关的密码题，虽然没感觉在现实中有什么实际用途，但是学到了一些重要的性质。
+我的解法比较简单，但是好像是非预期解。赛后，在这篇wp里发现了一个更完美的解法：标准解法的wp(https://www.josephsurin.me/posts/2020-03-30-volgactf-2020-qualifier-writeups#guess) 。我会在第三节记录下我的解法，在第四节简单翻译下标准解法。
+一、题目信息  Guess
+Try to guess all encrypted bits and get your reward!
+server.py(https://q.2020.volgactf.ru/files/541eeaf9fdf2d86fbe87def09be7e560/server.py)
+nc guess.q.2020.volgactf.ru 7777
+Your team has solved this task on Mar 28 at 21:20 UTC.
+179 other teams have managed to do the same.
+This task has been rated by 73 teams. The average rating is 3.99 (5.00 max).
+ server.py如下：
+#!/usr/bin/python # -*- coding: utf-8 -*- from __future__ import print_function from Crypto.</description>
+    </item>
+    
+    <item>
+      <title>chrome打印pdf的样式</title>
+      <link>/post/it%E6%9D%82%E8%B4%A7%E9%93%BA/chrome%E6%89%93%E5%8D%B0pdf%E7%9A%84%E6%A0%B7%E5%BC%8F.html</link>
+      <pubDate>Tue, 31 Mar 2020 09:01:00 +0800</pubDate>
+      
+      <guid>/post/it%E6%9D%82%E8%B4%A7%E9%93%BA/chrome%E6%89%93%E5%8D%B0pdf%E7%9A%84%E6%A0%B7%E5%BC%8F.html</guid>
+      <description>chrome打印PDF时，如何自定义样式？如何在打印PDF视角检查元素
+敬请期待，TODO</description>
+    </item>
+    
+    <item>
+      <title>hugo支持数学公式方案探索</title>
+      <link>/post/it%E6%9D%82%E8%B4%A7%E9%93%BA/hugo%E6%94%AF%E6%8C%81%E6%95%B0%E5%AD%A6%E5%85%AC%E5%BC%8F%E6%96%B9%E6%A1%88%E6%8E%A2%E7%B4%A2.html</link>
+      <pubDate>Tue, 31 Mar 2020 09:01:00 +0800</pubDate>
+      
+      <guid>/post/it%E6%9D%82%E8%B4%A7%E9%93%BA/hugo%E6%94%AF%E6%8C%81%E6%95%B0%E5%AD%A6%E5%85%AC%E5%BC%8F%E6%96%B9%E6%A1%88%E6%8E%A2%E7%B4%A2.html</guid>
+      <description>markdown百花齐放，对于数学公式的支持却各家标准都不同。在我的hugo博客中，我探索出了一条较为有效的方案。
+敬请期待，TODO</description>
+    </item>
+    
+    <item>
+      <title>代换密码和置换密码在块密码中的作用与区别</title>
+      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%90%86%E8%AE%BA/%E5%AF%86%E7%A0%81%E5%AD%A6/%E5%AF%86%E7%A0%81%E5%88%86%E6%9E%90/%E4%BB%A3%E6%8D%A2%E5%AF%86%E7%A0%81%E5%92%8C%E7%BD%AE%E6%8D%A2%E5%AF%86%E7%A0%81%E5%9C%A8%E5%9D%97%E5%AF%86%E7%A0%81%E4%B8%AD%E7%9A%84%E4%BD%9C%E7%94%A8%E4%B8%8E%E5%8C%BA%E5%88%AB.html</link>
+      <pubDate>Tue, 24 Mar 2020 09:02:00 +0800</pubDate>
+      
+      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%90%86%E8%AE%BA/%E5%AF%86%E7%A0%81%E5%AD%A6/%E5%AF%86%E7%A0%81%E5%88%86%E6%9E%90/%E4%BB%A3%E6%8D%A2%E5%AF%86%E7%A0%81%E5%92%8C%E7%BD%AE%E6%8D%A2%E5%AF%86%E7%A0%81%E5%9C%A8%E5%9D%97%E5%AF%86%E7%A0%81%E4%B8%AD%E7%9A%84%E4%BD%9C%E7%94%A8%E4%B8%8E%E5%8C%BA%E5%88%AB.html</guid>
+      <description>TODO
+https://en.wikipedia.org/wiki/Substitution%E2%80%93permutation_network
+Rather, a good S-box will have the property that changing one input bit will change about half of the output bits (or an avalanche effect). It will also have the property that each output bit will depend on every input bit.
+A P-box is a permutation of all the bits: it takes the outputs of all the S-boxes of one round, permutes the bits, and feeds them into the S-boxes of the next round.</description>
+    </item>
+    
+    <item>
+      <title>0ctf2018 zer0SPN (线性密码分析)</title>
+      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/ctf/crypto/%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86/%E5%9D%97%E5%8A%A0%E5%AF%86/spn/0ctf2018_zer0spn%E7%BA%BF%E6%80%A7%E5%AF%86%E7%A0%81%E5%88%86%E6%9E%90.html</link>
+      <pubDate>Tue, 24 Mar 2020 09:01:00 +0800</pubDate>
+      
+      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/ctf/crypto/%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86/%E5%9D%97%E5%8A%A0%E5%AF%86/spn/0ctf2018_zer0spn%E7%BA%BF%E6%80%A7%E5%AF%86%E7%A0%81%E5%88%86%E6%9E%90.html</guid>
+      <description>一、题目信息 zer0SPN.zip
+二、相关资料  2002年的一篇文章，很多材料都引用了这篇，这篇文章广泛传播主要是因为使用了一个非常容易理解的例子 A Tutorial on Linear and Differential Cryptanalysis 中文环境中写的相对详细的文章: 线性分析法 ctftime wp 线性分析法 分析 DES加密算法 密码学原理（华中科技大学） Algorithmic Algebraic Techniques and their Application to Block Cipher Cryptanalysis  在解这题时，我学习了很多资料。但是很多时候都感觉这些材料不算细致，我在学习中也遇到了非常多的困惑，所以希望能细致入微的重新记录一下。
+三、SPN 我在另一篇博客中详细描述了SPN的线性密码分析过程，详见[SPN线性密码分析]。
+四、线性密码分析 五、zer0SPN 线性分析 </description>
+    </item>
+    
+    <item>
+      <title>SPN线性密码分析</title>
+      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%90%86%E8%AE%BA/%E5%AF%86%E7%A0%81%E5%AD%A6/%E5%AF%86%E7%A0%81%E5%88%86%E6%9E%90/spn%E7%BA%BF%E6%80%A7%E5%AF%86%E7%A0%81%E5%88%86%E6%9E%90.html</link>
+      <pubDate>Tue, 24 Mar 2020 09:01:00 +0800</pubDate>
+      
+      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%90%86%E8%AE%BA/%E5%AF%86%E7%A0%81%E5%AD%A6/%E5%AF%86%E7%A0%81%E5%88%86%E6%9E%90/spn%E7%BA%BF%E6%80%A7%E5%AF%86%E7%A0%81%E5%88%86%E6%9E%90.html</guid>
+      <description>在学习SPN线性密码分析时，我找了很多资料。但是很多时候都感觉这些材料不算细致，我也遇到了非常多的困惑，所以希望能细致入微的记录一下。
+本文基本上是 A Tutorial on Linear and Differential Cryptanalysis 的翻译，用自己的语言复述了一遍，加了部分自己的理解。
+一、块加密 块加密(Block Cipher)，或称为分组加密，是一种对称加密算法。它将明文分成多个等长的块（block），使用确定的算法和对称密钥对每组分别加密解密。通常来说，每个块使用的加密算法是相同的，但是密码组件不一定相同，例如不同块的S盒不一定相同。
+二、SPN SPN——代换-置换网络(Substitution–permutation network), 是一系列被应用于分组密码中相关的数学运算，最典型的就是AES。这种加密网络使用明文块和密钥块作为输入，并通过交错的若干“轮”代换操作和置换操作产生密文块。代换（Substitution）和置换（Permutation）的组件分别被称作S盒（替换盒，S-boxes）和P盒（排列盒，P-boxes）。
+我在解SPN和Feistel相关算法的密码时，常常会觉得代换密码和置换密码的区别十分有限，非常困惑，后来我在写本文时想通了，如果你也有这个困惑，可以参考一下我的这篇博客：代换密码和置换密码在块加密中的作用与区别
+下图是 Heys 在 A Tutorial on Linear and Differential Cryptanalysis 中设计的一个非常基础的&amp;quot;Toy Cipher&amp;rdquo;。
+我们可以通过这个基础的&amp;quot;Toy Cipher&amp;rdquo;，来学习一下SPN。
+这个SPN密码中，输入16bit的明文和16bit的密钥，输出16bit的密文。分为4个块，每个块中, 分别有4bit明文、密文。共有4轮加密，每一轮加密由3个过程组成：
+ 轮密钥异或 代换 (Substitution) 置换 (Permutation)  在第四轮，没有置换过程，增加了一个轮密钥异或的过程。
+没有置换是因为置换密码主要起到的是扩散功能，使字母分布失去统计特征。置换密码是一个完全线性的过程，因此在最后一轮中，置换加密不会提升安全性。
+增加了一轮 轮密钥异或，主要是为了防止最后一轮的代换密码在密码分析中被非常容易的绕过。
+某种意义上，也可以认为是为了加密过程与解密过程的对称。
+1. 轮密钥异或 本例中，每一轮密钥都未知，每轮密钥之间的关系也未知。
+2. 代换 (Substitution)    input 0 1 2 3 4 5 6 7 8 9 A B C D E F     output E 4 D 1 2 F B 8 3 A 6 C 5 9 0 7    这是一个4x4的s盒，通常一个加密算法中会有多个s盒，s盒的数量与input的长度有关：</description>
+    </item>
+    
+    <item>
+      <title>docker代码审计范围</title>
+      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/%E6%B5%8B%E8%AF%95%E5%AF%B9%E8%B1%A1/%E5%BA%94%E7%94%A8%E5%AE%89%E5%85%A8/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/docker/docker%E6%BA%90%E7%A0%81%E5%AE%A1%E8%AE%A1/docker%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E8%8C%83%E5%9B%B4.html</link>
+      <pubDate>Mon, 30 Dec 2019 03:30:00 +0800</pubDate>
+      
+      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/%E6%B5%8B%E8%AF%95%E5%AF%B9%E8%B1%A1/%E5%BA%94%E7%94%A8%E5%AE%89%E5%85%A8/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/docker/docker%E6%BA%90%E7%A0%81%E5%AE%A1%E8%AE%A1/docker%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E8%8C%83%E5%9B%B4.html</guid>
+      <description>todo </description>
+    </item>
+    
+    <item>
+      <title>docker开发现状</title>
+      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/%E6%B5%8B%E8%AF%95%E5%AF%B9%E8%B1%A1/%E5%BA%94%E7%94%A8%E5%AE%89%E5%85%A8/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/docker/docker%E6%BA%90%E7%A0%81%E5%AE%A1%E8%AE%A1/docker%E5%BC%80%E5%8F%91%E7%8E%B0%E7%8A%B6.html</link>
+      <pubDate>Mon, 30 Dec 2019 03:30:00 +0800</pubDate>
+      
+      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/%E6%B5%8B%E8%AF%95%E5%AF%B9%E8%B1%A1/%E5%BA%94%E7%94%A8%E5%AE%89%E5%85%A8/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/docker/docker%E6%BA%90%E7%A0%81%E5%AE%A1%E8%AE%A1/docker%E5%BC%80%E5%8F%91%E7%8E%B0%E7%8A%B6.html</guid>
+      <description>todo </description>
+    </item>
+    
+    <item>
+      <title>正确使用Go DockerSDK(gomod)</title>
+      <link>/post/%E5%BC%80%E5%8F%91/go/docker-sdk/%E6%AD%A3%E7%A1%AE%E4%BD%BF%E7%94%A8go-dockersdkgomod.html</link>
+      <pubDate>Mon, 30 Dec 2019 01:30:00 +0800</pubDate>
+      
+      <guid>/post/%E5%BC%80%E5%8F%91/go/docker-sdk/%E6%AD%A3%E7%A1%AE%E4%BD%BF%E7%94%A8go-dockersdkgomod.html</guid>
+      <description>1. 背景 1.1 go语言特性: 标准导入路径(canonical import path)  Go 1.4 introduces an annotation for package clauses in Go source that identify a canonical import path for the package. If an import is attempted using a path that is not canonical, the go command will refuse to compile the importing package.
+https://golang.org/doc/go1.4#canonicalimports
+ go1.4 引入了一个特性，在package后可以使用注释声明导入这个包的标准路径, 叫做canonical import path。如果导入某个包的路径与这个canonical import path不同，则go命令会拒绝编译该包。
+例如：
+package pdf // import &amp;quot;rsc.io/pdf&amp;quot; 1.2 docker项目更名 docker详细开发现状参见: docker开发现状
+这里要了解的是，docker曾在2017年将项目迁移到github.com/moby/moby</description>
+    </item>
+    
+    <item>
+      <title>java反序列化</title>
+      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/%E6%B5%8B%E8%AF%95%E6%96%B9%E6%B3%95/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/java/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96.html</link>
+      <pubDate>Sun, 06 Oct 2019 03:05:00 +0800</pubDate>
+      
+      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/%E6%B5%8B%E8%AF%95%E6%96%B9%E6%B3%95/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/java/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96.html</guid>
+      <description>为了出题，复习一下java反序列化。
+找了很多现成的cms当做背景，最后还是觉得全都自己写比较好。
+以上是一些废话，后面应该会删掉。 以下是正文
+什么是序列化和反序列化 为什么需要反序列化  session持久化: 记住我功能;  记住我功能的实现 </description>
+    </item>
+    
+    <item>
+      <title>如何使用BootstrapVue</title>
+      <link>/post/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/vue/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8bootstrapvue.html</link>
+      <pubDate>Fri, 04 Oct 2019 13:58:00 +0800</pubDate>
+      
+      <guid>/post/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/vue/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8bootstrapvue.html</guid>
+      <description>一、使用WebStorm创建Vue项目 二、在main.js引用BootstrapVue import BootstrapVue from &amp;#39;bootstrap-vue&amp;#39; import &amp;#39;bootstrap/dist/css/bootstrap.css&amp;#39; import &amp;#39;bootstrap-vue/dist/bootstrap-vue.css&amp;#39; Vue.use(BootstrapVue) 三、现在可以使用BootstrapVue了 &amp;lt;b-btn variant=&amp;#34;info&amp;#34;&amp;gt;submit&amp;lt;/b-btn&amp;gt; </description>
+    </item>
+    
+    <item>
+      <title>pwnable.tw-100-start</title>
+      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/ctf/pwn/linux_pwn/stack_overflow/pwnable.tw-100-start.html</link>
+      <pubDate>Tue, 03 Sep 2019 02:13:00 +0800</pubDate>
+      
+      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/ctf/pwn/linux_pwn/stack_overflow/pwnable.tw-100-start.html</guid>
+      <description>1. 代码分析 1.1 文件信息 这是一个32位的Elf文件
+$ file start start: ELF 32-bit LSB executable, Intel 80386, version 1 (SYSV), statically linked, not stripped checksec显示未开启任何安全保护机制
+$ checksec start [*] &amp;#39;/home/st0n3/ctfs/pwnable.tw/100_Start/challenges/start&amp;#39; Arch: i386-32-little RELRO: No RELRO Stack: No canary found NX: NX disabled PIE: No PIE (0x8048000) 1.2 汇编代码 使用r2分析汇编，只有一个entry0入口函数。
+$ r2 start Warning: Cannot initialize dynamic strings [0x08048060]&amp;gt; aaa [x] Analyze all flags starting with sym. and entry0 (aa) [x] Analyze function calls (aac) [x] Analyze len bytes of instructions for references (aar) [x] Constructing a function name for fcn.</description>
+    </item>
+    
+    <item>
+      <title>寄存器</title>
+      <link>/post/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E6%9C%AC/%E6%B1%87%E7%BC%96%E8%AF%AD%E8%A8%80/%E5%AF%84%E5%AD%98%E5%99%A8.html</link>
+      <pubDate>Mon, 02 Sep 2019 03:01:00 +0800</pubDate>
+      
+      <guid>/post/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E6%9C%AC/%E6%B1%87%E7%BC%96%E8%AF%AD%E8%A8%80/%E5%AF%84%E5%AD%98%E5%99%A8.html</guid>
+      <description>还没写完
+ https://stackoverflow.com/questions/15191178/how-do-ax-ah-al-map-onto-eax  </description>
+    </item>
+    
+    <item>
+      <title>系统调用</title>
+      <link>/post/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E6%9C%AC/%E6%B1%87%E7%BC%96%E8%AF%AD%E8%A8%80/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8.html</link>
+      <pubDate>Mon, 02 Sep 2019 02:51:00 +0800</pubDate>
+      
+      <guid>/post/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E6%9C%AC/%E6%B1%87%E7%BC%96%E8%AF%AD%E8%A8%80/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8.html</guid>
+      <description>还没写完
+应用程序调用系统调用的过程是： 1. 把系统调用的编号存入 EAX； 2. 把函数参数存入其它通用寄存器； 3. 触发 0x80 号中断（int 0x80）。 来源: https://zh.wikipedia.org/wiki/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8  linux系统调用列表：http://syscalls.kernelgrok.com/
+例子:
+reference  https://zh.wikipedia.org/wiki/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8 Linux Syscall Reference  </description>
+    </item>
+    
+    <item>
+      <title>p32 or p64 or struct ?</title>
+      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/ctf/pwn/pwntools/p32-or-p64-or-struct.html</link>
+      <pubDate>Sun, 01 Sep 2019 23:47:00 +0800</pubDate>
+      
+      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/ctf/pwn/pwntools/p32-or-p64-or-struct.html</guid>
+      <description>&amp;gt;&amp;gt;&amp;gt; from pwn import * &amp;gt;&amp;gt;&amp;gt; import struct &amp;gt;&amp;gt;&amp;gt; p32(0xdeadbeef) &amp;#39;\xef\xbe\xad\xde&amp;#39; &amp;gt;&amp;gt;&amp;gt; struct.pack(&amp;#34;I&amp;#34;,0xdeadbeef) == p32(0xdeadbeef) True &amp;gt;&amp;gt;&amp;gt; p64(0xdeadbeef) &amp;#39;\xef\xbe\xad\xde\x00\x00\x00\x00&amp;#39; &amp;gt;&amp;gt;&amp;gt; struct.pack(&amp;#34;l&amp;#34;,0xdeadbeef) == p64(0xdeadbeef) True reference  pwntools doc struct doc  </description>
+    </item>
+    
+    <item>
+      <title>Go os exec坑</title>
+      <link>/post/%E5%BC%80%E5%8F%91/go/go%E5%9D%91/go-os-exec%E5%9D%91.html</link>
+      <pubDate>Tue, 27 Aug 2019 23:00:00 +0800</pubDate>
+      
+      <guid>/post/%E5%BC%80%E5%8F%91/go/go%E5%9D%91/go-os-exec%E5%9D%91.html</guid>
+      <description>cp: cannot stat ‘./test/*’: No such file or directory out, err := exec.Command(&amp;#34;cp&amp;#34;, &amp;#34;./test/*&amp;#34;, &amp;#34;/tmp&amp;#34;).CombinedOutput() logrus.Info(cmd) logrus.Info(string(out)) 这里的*不会被认为是通配符，而是认为是个文件。
+https://stackoverflow.com/questions/31467153/golang-failed-exec-command-that-works-in-terminal
+使用以下方法避免
+cmd := &amp;#34;cp ./test/* /tmp -r&amp;#34; out, err := exec.Command(&amp;#34;sh&amp;#34;, &amp;#34;-c&amp;#34;, cmd).CombinedOutput() logrus.Info(cmd) logrus.Info(string(out)) </description>
+    </item>
+    
+    <item>
+      <title>GoSDK中的panic</title>
+      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/%E6%B5%8B%E8%AF%95%E6%96%B9%E6%B3%95/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/go/panic/gosdk%E4%B8%AD%E7%9A%84panic.html</link>
+      <pubDate>Mon, 19 Aug 2019 01:05:00 +0800</pubDate>
+      
+      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/%E6%B5%8B%E8%AF%95%E6%96%B9%E6%B3%95/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/go/panic/gosdk%E4%B8%AD%E7%9A%84panic.html</guid>
+      <description>还没写完</description>
+    </item>
+    
+    <item>
+      <title>linux下如何优雅得网速监控</title>
+      <link>/post/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E6%9C%AC/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/linux/linux%E4%B8%8B%E5%A6%82%E4%BD%95%E4%BC%98%E9%9B%85%E5%BE%97%E7%BD%91%E9%80%9F%E7%9B%91%E6%8E%A7.html</link>
+      <pubDate>Mon, 19 Aug 2019 01:05:00 +0800</pubDate>
+      
+      <guid>/post/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E6%9C%AC/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/linux/linux%E4%B8%8B%E5%A6%82%E4%BD%95%E4%BC%98%E9%9B%85%E5%BE%97%E7%BD%91%E9%80%9F%E7%9B%91%E6%8E%A7.html</guid>
+      <description>安装nload sudo apt-get install nload 使用 nload -u K wlan0</description>
+    </item>
+    
+    <item>
+      <title>如何使用VisualStudio远程开发Go项目</title>
+      <link>/post/%E5%BC%80%E5%8F%91/ide/visualstudiocode/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8visualstudiocode%E8%BF%9C%E7%A8%8B%E5%BC%80%E5%8F%91go%E9%A1%B9%E7%9B%AE.html</link>
+      <pubDate>Sat, 17 Aug 2019 23:50:00 +0800</pubDate>
+      
+      <guid>/post/%E5%BC%80%E5%8F%91/ide/visualstudiocode/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8visualstudiocode%E8%BF%9C%E7%A8%8B%E5%BC%80%E5%8F%91go%E9%A1%B9%E7%9B%AE.html</guid>
+      <description>还没写完
+一、安装插件Remote Development Remote Development
+这个插件会同时安装
+ Remote - SSH Remote - Containers Remote - WSL  二、添加ssh远程配置 三、新建一个go文件 四、安装go相关扩展 </description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E9%A1%B9%E7%9B%AE%E5%BC%80%E5%8F%91/hackerbot/hackerbot%E5%9B%A2%E9%98%9F%E5%8D%8F%E4%BD%9C%E5%8A%9F%E8%83%BD%E8%AE%BE%E8%AE%A1.html</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E9%A1%B9%E7%9B%AE%E5%BC%80%E5%8F%91/hackerbot/hackerbot%E5%9B%A2%E9%98%9F%E5%8D%8F%E4%BD%9C%E5%8A%9F%E8%83%BD%E8%AE%BE%E8%AE%A1.html</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E9%A1%B9%E7%9B%AE%E5%BC%80%E5%8F%91/sectools/%E5%9F%BA%E4%BA%8Edocker%E7%9A%84%E5%B7%A5%E5%85%B7%E5%90%88%E9%9B%86.html</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E9%A1%B9%E7%9B%AE%E5%BC%80%E5%8F%91/sectools/%E5%9F%BA%E4%BA%8Edocker%E7%9A%84%E5%B7%A5%E5%85%B7%E5%90%88%E9%9B%86.html</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E9%A1%B9%E7%9B%AE%E5%BC%80%E5%8F%91/skilltree_blog/todo%E4%BA%A7%E7%94%9F%E4%BA%86%E4%B8%80%E4%BA%9B%E7%A9%BA%E7%99%BD%E7%9A%84%E5%8D%9A%E5%AE%A2.html</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E9%A1%B9%E7%9B%AE%E5%BC%80%E5%8F%91/skilltree_blog/todo%E4%BA%A7%E7%94%9F%E4%BA%86%E4%B8%80%E4%BA%9B%E7%A9%BA%E7%99%BD%E7%9A%84%E5%8D%9A%E5%AE%A2.html</guid>
+      <description>生成博客时忽略todo</description>
+    </item>
+    
+  </channel>
+</rss>
