@@ -55,6 +55,8 @@
 ###### p32-or-p64-or-struct?<a href="https://ssst0n3.github.io/post/网络安全/ctf/pwn/pwntools/p32-or-p64-or-struct.html" target="_blank"><!-- {"expanded":true,"direction":"right"} -->
 #### 出题<!-- {"expanded":true,"direction":"right"} -->
 ##### 2019-10-03到2019-10-07_java_10题<!-- {"expanded":false,"direction":"right"} -->
+##### de1ta2020<!-- {"expanded":false,"direction":"right"} -->
+###### [todo] 出出出<!-- {"expanded":false,"direction":"right"} -->
 #### crypto<!-- {"expanded":true,"direction":"right"} -->
 ##### 对称加密<!-- {"expanded":true,"direction":"right"} -->
 ###### 块加密<!-- {"expanded":true,"direction":"right"} -->
