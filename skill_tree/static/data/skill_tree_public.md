@@ -74,6 +74,9 @@
 ##### 密码分析<!-- {"expanded":false,"direction":"right"} -->
 ###### 代换密码和置换密码在块密码中的作用与区别<a href="https://ssst0n3.github.io/post/网络安全/安全理论/密码学/密码分析/代换密码和置换密码在块密码中的作用与区别.html" target="_blank"><!-- {"expanded":true,"direction":"right"} -->
 ###### SPN线性密码分析<a href="https://ssst0n3.github.io/post/网络安全/安全理论/密码学/密码分析/spn线性密码分析.html" target="_blank"><!-- {"expanded":true,"direction":"right"} -->
+### 安全工具<!-- {"expanded":true,"direction":"right"} -->
+#### kali<!-- {"expanded":true,"direction":"right"} -->
+##### kali_linux常用配置<a href="https://ssst0n3.github.io/post/网络安全/安全工具/kali/kali_linux常用配置.html" target="_blank"><!-- {"expanded":false,"direction":"right"} -->
 ## 开发<!-- {"expanded":true,"direction":"right"} -->
 ### IDE<!-- {"expanded":true,"direction":"right"} -->
 #### VisualStudioCode<!-- {"expanded":false,"direction":"right"} -->
@@ -82,6 +85,7 @@
 #### Go坑<!-- {"expanded":false,"direction":"right"} -->
 ##### [external] strings.TrimLeft or strings.TrimPrefix?<a href="http://10086ng.com/?p=900" target="_blank"><!-- {"expanded":true,"direction":"right"} -->
 ##### Go os exec坑<a href="https://ssst0n3.github.io/post/开发/go/go坑/go-os-exec坑.html" target="_blank"><!-- {"expanded":true,"direction":"right"} -->
+#### [external] 创建在Go中的可执行静态链接<a href="https://xebia.com/blog/create-the-smallest-possible-docker-container/" target="_blank"><!-- {"expanded":true,"direction":"right"} -->
 #### Docker-SDK<!-- {"expanded":false,"direction":"right"} -->
 ##### 正确使用Go DockerSDK(gomod)<a href="https://ssst0n3.github.io/post/开发/go/docker-sdk/正确使用go-dockersdkgomod.html" target="_blank"><!-- {"expanded":true,"direction":"right"} -->
 ### 前端<!-- {"expanded":true,"direction":"right"} -->
