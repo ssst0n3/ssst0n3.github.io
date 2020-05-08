@@ -6,10 +6,21 @@
     <description>Recent content in Post on welcome to st0n3&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 10 Apr 2020 20:30:00 +0800</lastBuildDate>
+    <lastBuildDate>Fri, 08 May 2020 23:42:00 +0800</lastBuildDate>
     
 	<atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>vscode terminal字符间距过宽</title>
+      <link>/post/it%E6%9D%82%E8%B4%A7%E9%93%BA/vscode_terminal%E5%AD%97%E7%AC%A6%E9%97%B4%E8%B7%9D%E8%BF%87%E5%AE%BD.html</link>
+      <pubDate>Fri, 08 May 2020 23:42:00 +0800</pubDate>
+      
+      <guid>/post/it%E6%9D%82%E8%B4%A7%E9%93%BA/vscode_terminal%E5%AD%97%E7%AC%A6%E9%97%B4%E8%B7%9D%E8%BF%87%E5%AE%BD.html</guid>
+      <description>kali linux 2020.1b, vscode terminal的字符间距过宽。
+修改&amp;quot;terminal.integrated.fontFamily&amp;quot;可以设置字体，但是我尝试了很多种字体都无效，仅发现修改为&amp;quot;Hack&amp;quot;字体有效。
+有空报给开源社区看看</description>
+    </item>
     
     <item>
       <title>kali linux常用配置</title>

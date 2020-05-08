@@ -105,6 +105,7 @@
 ## IT杂货铺<!-- {"expanded":false,"direction":"right"} -->
 ### hugo支持数学公式方案探索<a href="https://ssst0n3.github.io/post/it杂货铺/hugo支持数学公式方案探索.html" target="_blank"><!-- {"expanded":false,"direction":"right"} -->
 ### chrome打印pdf的样式<a href="https://ssst0n3.github.io/post/it杂货铺/chrome打印pdf的样式.html" target="_blank"><!-- {"expanded":false,"direction":"right"} -->
+### vscode_terminal字符间距过宽<a href="https://ssst0n3.github.io/post/it杂货铺/vscode_terminal字符间距过宽.html" target="_blank"><!-- {"expanded":false,"direction":"right"} -->
 ## 知识管理<!-- {"expanded":false,"direction":"right"} -->
 ### 捕风捉影的使用原则<a href="https://ssst0n3.github.io/post/知识管理/捕风捉影的使用原则.html" target="_blank"><!-- {"expanded":false,"direction":"right"} -->
 ### 一篇优雅的技术博客应该长这样<a href="https://ssst0n3.github.io/post/知识管理/一篇优雅的技术博客应该长这样.html" target="_blank"><!-- {"expanded":false,"direction":"right"} -->
