@@ -6,10 +6,48 @@
     <description>Recent content on welcome to st0n3&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 02 Apr 2020 16:55:00 +0800</lastBuildDate>
+    <lastBuildDate>Fri, 08 May 2020 23:42:00 +0800</lastBuildDate>
     
 	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>docker-compose使用host网络</title>
+      <link>/post/it%E6%9D%82%E8%B4%A7%E9%93%BA/docker-compose%E4%BD%BF%E7%94%A8host%E7%BD%91%E7%BB%9C.html</link>
+      <pubDate>Fri, 08 May 2020 23:42:00 +0800</pubDate>
+      
+      <guid>/post/it%E6%9D%82%E8%B4%A7%E9%93%BA/docker-compose%E4%BD%BF%E7%94%A8host%E7%BD%91%E7%BB%9C.html</guid>
+      <description>根据官方文档, 如果使用stack命令部署，可以使用networks参数配置，如果直接使用docker-compose, 使用network_mode参数配置。
+ Use the host’s networking stack, or no networking. Equivalent to docker run &amp;ndash;net=host or docker run &amp;ndash;net=none. Only used if you use docker stack commands. If you use the docker-compose command, use network_mode instead. &amp;mdash;-compose file reference: https://docs.docker.com/compose/compose-file/#devices
+ stack version: &amp;quot;3.8&amp;quot; services: web: networks: hostnet: {} networks: hostnet: external: true name: host docker-compose services: web: network_mode: &amp;quot;host&amp;quot; 问题 如果在docker-compose中使用networks参数配置系统默认网卡，会报以下错误：
+Creating zerotier-one ... error ERROR: for zerotier-one network-scoped alias is supported only for containers in user defined networks ERROR: for one network-scoped alias is supported only for containers in user defined networks ERROR: Encountered errors while bringing up the project.</description>
+    </item>
+    
+    <item>
+      <title>vscode terminal字符间距过宽</title>
+      <link>/post/it%E6%9D%82%E8%B4%A7%E9%93%BA/vscode_terminal%E5%AD%97%E7%AC%A6%E9%97%B4%E8%B7%9D%E8%BF%87%E5%AE%BD.html</link>
+      <pubDate>Fri, 08 May 2020 23:42:00 +0800</pubDate>
+      
+      <guid>/post/it%E6%9D%82%E8%B4%A7%E9%93%BA/vscode_terminal%E5%AD%97%E7%AC%A6%E9%97%B4%E8%B7%9D%E8%BF%87%E5%AE%BD.html</guid>
+      <description>kali linux 2020.1b, vscode terminal的字符间距过宽。
+修改&amp;quot;terminal.integrated.fontFamily&amp;quot;可以设置字体，但是我尝试了很多种字体都无效，仅发现修改为&amp;quot;Hack&amp;quot;字体有效。
+有空报给开源社区看看</description>
+    </item>
+    
+    <item>
+      <title>kali linux常用配置</title>
+      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E5%B7%A5%E5%85%B7/kali/kali_linux%E5%B8%B8%E7%94%A8%E9%85%8D%E7%BD%AE.html</link>
+      <pubDate>Fri, 10 Apr 2020 20:30:00 +0800</pubDate>
+      
+      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E5%B7%A5%E5%85%B7/kali/kali_linux%E5%B8%B8%E7%94%A8%E9%85%8D%E7%BD%AE.html</guid>
+      <description>持续更新
+适用kali linux 2020.1b amd64
+1. qterminal使用login shell kali linux 2020.1b amd64将默认的terminal切换成了qterminal，使用qterminal默认打开的bash的non-login bash，不会自动加载profile。
+可以配置一下快捷键：菜单-&amp;gt;设置-&amp;gt;键盘-&amp;gt;应用程序快捷键
+配置CTRL+ALT+T启动命令为qterminal -e &amp;quot;bash --login&amp;quot;, 即可默认加载profile。
+2. 替换qterminal为gnome-terminal qterminal并不是一个好方案，例如它的历史记录很短， 而gnome-terminal可以无限往上翻
+apt-get update gnome-terminal 3. debian系操作系统ssh开机启动 systemctl enable ssh</description>
+    </item>
     
     <item>
       <title>一篇优雅的技术博客应该长这样</title>
