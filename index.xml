@@ -6,7 +6,7 @@
     <description>Recent content on welcome to st0n3&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 08 May 2020 23:42:00 +0800</lastBuildDate>
+    <lastBuildDate>Mon, 11 May 2020 14:25:00 +0800</lastBuildDate>
     
 	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     
@@ -14,7 +14,7 @@
     <item>
       <title>docker-compose使用host网络</title>
       <link>/post/it%E6%9D%82%E8%B4%A7%E9%93%BA/docker-compose%E4%BD%BF%E7%94%A8host%E7%BD%91%E7%BB%9C.html</link>
-      <pubDate>Fri, 08 May 2020 23:42:00 +0800</pubDate>
+      <pubDate>Mon, 11 May 2020 14:25:00 +0800</pubDate>
       
       <guid>/post/it%E6%9D%82%E8%B4%A7%E9%93%BA/docker-compose%E4%BD%BF%E7%94%A8host%E7%BD%91%E7%BB%9C.html</guid>
       <description>根据官方文档, 如果使用stack命令部署，可以使用networks参数配置，如果直接使用docker-compose, 使用network_mode参数配置。
