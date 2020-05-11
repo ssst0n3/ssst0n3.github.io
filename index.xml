@@ -12,6 +12,7 @@
     
     
     <item>
+<<<<<<< HEAD
       <title>docker-compose使用host网络</title>
       <link>/post/it%E6%9D%82%E8%B4%A7%E9%93%BA/docker-compose%E4%BD%BF%E7%94%A8host%E7%BD%91%E7%BB%9C.html</link>
       <pubDate>Fri, 08 May 2020 23:42:00 +0800</pubDate>
@@ -24,6 +25,8 @@ Creating zerotier-one ... error ERROR: for zerotier-one network-scoped alias is 
     </item>
     
     <item>
+=======
+>>>>>>> a46676192cf94142c19c73615d065b3588947941
       <title>vscode terminal字符间距过宽</title>
       <link>/post/it%E6%9D%82%E8%B4%A7%E9%93%BA/vscode_terminal%E5%AD%97%E7%AC%A6%E9%97%B4%E8%B7%9D%E8%BF%87%E5%AE%BD.html</link>
       <pubDate>Fri, 08 May 2020 23:42:00 +0800</pubDate>
@@ -46,7 +49,11 @@ Creating zerotier-one ... error ERROR: for zerotier-one network-scoped alias is 
 可以配置一下快捷键：菜单-&amp;gt;设置-&amp;gt;键盘-&amp;gt;应用程序快捷键
 配置CTRL+ALT+T启动命令为qterminal -e &amp;quot;bash --login&amp;quot;, 即可默认加载profile。
 2. 替换qterminal为gnome-terminal qterminal并不是一个好方案，例如它的历史记录很短， 而gnome-terminal可以无限往上翻
+<<<<<<< HEAD
 apt-get update gnome-terminal 3. debian系操作系统ssh开机启动 systemctl enable ssh</description>
+=======
+apt-get update gnome-terminal </description>
+>>>>>>> a46676192cf94142c19c73615d065b3588947941
     </item>
     
     <item>
