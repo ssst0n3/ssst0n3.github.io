@@ -6,10 +6,22 @@
     <description>Recent content in Post on welcome to st0n3&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 11 May 2020 15:36:00 +0800</lastBuildDate>
+    <lastBuildDate>Sat, 30 May 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>发布go modules</title>
+      <link>/post/%E5%BC%80%E5%8F%91/go/%E5%8F%91%E5%B8%83go_modules.html</link>
+      <pubDate>Sat, 30 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/post/%E5%BC%80%E5%8F%91/go/%E5%8F%91%E5%B8%83go_modules.html</guid>
+      <description>https://blog.golang.org/publishing-go-modules
+https://golang.org/doc/go1.13
+ The version prefix must be of the form vX.0.0, or derived from a tag on an ancestor of the named revision, or derived from a tag that includes build metadata on the named revision itself.
+ https://stackoverflow.com/questions/52242077/go-modules-finding-out-right-pseudo-version-vx-y-z-timestamp-commit-of-re</description>
+    </item>
     
     <item>
       <title>letsencrypt通过dns获取证书</title>
@@ -38,9 +50,9 @@ Creating zerotier-one ... error ERROR: for zerotier-one network-scoped alias is 
       <pubDate>Fri, 08 May 2020 23:42:00 +0800</pubDate>
       
       <guid>/post/it%E6%9D%82%E8%B4%A7%E9%93%BA/vscode_terminal%E5%AD%97%E7%AC%A6%E9%97%B4%E8%B7%9D%E8%BF%87%E5%AE%BD.html</guid>
-      <description>kali linux 2020.1b, vscode terminal的字符间距过宽。
+      <description>kali linux 2020.1b, vscode terminal 1.44.2 的字符间距过宽。
 修改&amp;quot;terminal.integrated.fontFamily&amp;quot;可以设置字体，但是我尝试了很多种字体都无效，仅发现修改为&amp;quot;Hack&amp;quot;字体有效。
-有空报给开源社区看看</description>
+坐等社区解决</description>
     </item>
     
     <item>
@@ -55,7 +67,9 @@ Creating zerotier-one ... error ERROR: for zerotier-one network-scoped alias is 
 可以配置一下快捷键：菜单-&amp;gt;设置-&amp;gt;键盘-&amp;gt;应用程序快捷键
 配置CTRL+ALT+T启动命令为qterminal -e &amp;quot;bash --login&amp;quot;, 即可默认加载profile。
 2. 替换qterminal为gnome-terminal qterminal并不是一个好方案，例如它的历史记录很短， 而gnome-terminal可以无限往上翻
-apt-get update gnome-terminal 3. debian系操作系统ssh开机启动 systemctl enable ssh</description>
+apt-get update gnome-terminal 同时修改一下首选应用程序中的terminal为gnome-terminal， 这个修改会使x-terminal-emulator命令默认打开gnome-terminal
+菜单-&amp;gt;设置-&amp;gt;首选应用程序-&amp;gt;实用程序-&amp;gt;终端模拟器-&amp;gt;GNOME终端-&amp;gt;注销重新登录生效
+3. debian系操作系统ssh开机启动 systemctl enable ssh</description>
     </item>
     
     <item>
