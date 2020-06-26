@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author"
+    content="">
+<meta name="description"
+    content="title: &amp;ldquo;方舟生存进化: docker一键部署&amp;rdquo; date: 2020-06-26T22:00:00&#43;08:00 draft: false 前段时间epic白给了方舟，俺也在方舟度过了153个小时的时间了，简单分享下部署方舟服务器的过程。
+1. quick-start 创建docker-compose.yml文件, 执行docker-compose up -d拉起容器
+version: &#39;3&#39; services: ark: container_name: ark image: thmhoag/arkserver volumes: - steam:/home/steam/Steam - ark:/ark ports: - &amp;quot;27015:27015&amp;quot; - &amp;quot;27015:27015/udp&amp;quot; - &amp;quot;7777:7777&amp;quot; - &amp;quot;7777:7777/udp&amp;quot; - &amp;quot;7778:7778&amp;quot; - &amp;quot;7778:7778/udp&amp;quot; - &amp;quot;7779:7779&amp;quot; - &amp;quot;7779:7779/udp&amp;quot; - &amp;quot;32330:32330&amp;quot; environment: - am_ark_SessionName=my_ark - am_ark_GameModIds=889745138,751991809,1404697612 - am_ark_ServerPVE=True restart: always volumes: steam: name: steam ark: name: ark 在steam里添加游戏服务器，就可以愉快得开始啦。
+steam-&amp;gt;查看-&amp;gt;服务器-&amp;gt;收藏夹-&amp;gt;添加服务器-&amp;gt;输入服务器ip:27015-&amp;gt;将此地址添加至收藏夹
+2. 详细解释 这个部署方案源于两个开源项目:
+ https://github.com/FezVrasta/ark-server-tools https://github.com/thmhoag/arkserver  前者实现了arkmanager工具，后者实现了容器化部署。" />
+<meta name="keywords" content="" />
+<meta name="robots" content="noodp" />
+<link rel="canonical" href="/post/%E6%B8%B8%E6%88%8F/%E6%96%B9%E8%88%9F%E7%94%9F%E5%AD%98%E8%BF%9B%E5%8C%96_docker%E4%B8%80%E9%94%AE%E9%83%A8%E7%BD%B2.html" />
+
+
+<title>
+    
+     :: welcome to st0n3&#39;s blog 
+    
+</title>
+
+
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.2.1/css/flag-icon.min.css" rel="stylesheet"
+    type="text/css">
+
+
+
+<link rel="stylesheet" href="/main.min.de959d61dd13c2cd41136acd491ffb0749779e1afe37b1fed6d5cba0b7e1938d.css">
+
+
+
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#252627">
+<link rel="shortcut icon" href="/favicon.ico">
+<meta name="theme-color" content="#252627"><meta itemprop="name" content="">
+<meta itemprop="description" content="title: &ldquo;方舟生存进化: docker一键部署&rdquo; date: 2020-06-26T22:00:00&#43;08:00 draft: false 前段时间epic白给了方舟，俺也在方舟度过了153个小时的时间了，简单分享下部署方舟服务器的过程。
+1. quick-start 创建docker-compose.yml文件, 执行docker-compose up -d拉起容器
+version: &#39;3&#39; services: ark: container_name: ark image: thmhoag/arkserver volumes: - steam:/home/steam/Steam - ark:/ark ports: - &quot;27015:27015&quot; - &quot;27015:27015/udp&quot; - &quot;7777:7777&quot; - &quot;7777:7777/udp&quot; - &quot;7778:7778&quot; - &quot;7778:7778/udp&quot; - &quot;7779:7779&quot; - &quot;7779:7779/udp&quot; - &quot;32330:32330&quot; environment: - am_ark_SessionName=my_ark - am_ark_GameModIds=889745138,751991809,1404697612 - am_ark_ServerPVE=True restart: always volumes: steam: name: steam ark: name: ark 在steam里添加游戏服务器，就可以愉快得开始啦。
+steam-&gt;查看-&gt;服务器-&gt;收藏夹-&gt;添加服务器-&gt;输入服务器ip:27015-&gt;将此地址添加至收藏夹
+2. 详细解释 这个部署方案源于两个开源项目:
+ https://github.com/FezVrasta/ark-server-tools https://github.com/thmhoag/arkserver  前者实现了arkmanager工具，后者实现了容器化部署。">
+
+<meta itemprop="wordCount" content="103">
+
+
+
+<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content=""/>
+<meta name="twitter:description" content="title: &ldquo;方舟生存进化: docker一键部署&rdquo; date: 2020-06-26T22:00:00&#43;08:00 draft: false 前段时间epic白给了方舟，俺也在方舟度过了153个小时的时间了，简单分享下部署方舟服务器的过程。
+1. quick-start 创建docker-compose.yml文件, 执行docker-compose up -d拉起容器
+version: &#39;3&#39; services: ark: container_name: ark image: thmhoag/arkserver volumes: - steam:/home/steam/Steam - ark:/ark ports: - &quot;27015:27015&quot; - &quot;27015:27015/udp&quot; - &quot;7777:7777&quot; - &quot;7777:7777/udp&quot; - &quot;7778:7778&quot; - &quot;7778:7778/udp&quot; - &quot;7779:7779&quot; - &quot;7779:7779/udp&quot; - &quot;32330:32330&quot; environment: - am_ark_SessionName=my_ark - am_ark_GameModIds=889745138,751991809,1404697612 - am_ark_ServerPVE=True restart: always volumes: steam: name: steam ark: name: ark 在steam里添加游戏服务器，就可以愉快得开始啦。
+steam-&gt;查看-&gt;服务器-&gt;收藏夹-&gt;添加服务器-&gt;输入服务器ip:27015-&gt;将此地址添加至收藏夹
+2. 详细解释 这个部署方案源于两个开源项目:
+ https://github.com/FezVrasta/ark-server-tools https://github.com/thmhoag/arkserver  前者实现了arkmanager工具，后者实现了容器化部署。"/>
+
+
+
+
+
+
+
+
+
+
+
+    </head>
+
+    <body class="dark-theme">
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text">$ cd /home/st0n3</span>
+            <span class="logo__cursor"></span>
+        
+    </div>
+</a>
+
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="/aboutme.html">About</a></li><li><a href="/post.html">Blog</a></li><li><a href="/hackerbot">Hackerbot</a></li><li><a href="/skill_tree">SkillTree</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+
+            <span class="theme-toggle"><svg class="theme-toggler" width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M22 41C32.4934 41 41 32.4934 41 22C41 11.5066 32.4934 3 22
+  3C11.5066 3 3 11.5066 3 22C3 32.4934 11.5066 41 22 41ZM7 22C7
+  13.7157 13.7157 7 22 7V37C13.7157 37 7 30.2843 7 22Z"/>
+</svg>
+</span>
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
+                
+    <main class="post">
+
+        <div class="post-info">
+            
+            </p>
+        </div>
+
+        <article>
+            <h2 class="post-title"><a href="/post/%E6%B8%B8%E6%88%8F/%E6%96%B9%E8%88%9F%E7%94%9F%E5%AD%98%E8%BF%9B%E5%8C%96_docker%E4%B8%80%E9%94%AE%E9%83%A8%E7%BD%B2.html"></a></h2>
+
+            
+
+            <div class="post-content">
+                <h2 id="draft-false">title: &ldquo;方舟生存进化: docker一键部署&rdquo;
+date: 2020-06-26T22:00:00+08:00
+draft: false</h2>
+<p>前段时间epic白给了方舟，俺也在方舟度过了153个小时的时间了，简单分享下部署方舟服务器的过程。</p>
+<h2 id="1-quick-start">1. quick-start</h2>
+<p>创建<a href="https://github.com/ssst0n3/ark/blob/master/docker-compose.yml">docker-compose.yml</a>文件, 执行<code>docker-compose up -d</code>拉起容器</p>
+<pre><code>version: '3'
+services:
+  ark:
+    container_name: ark
+    image: thmhoag/arkserver
+    volumes: 
+      - steam:/home/steam/Steam
+      - ark:/ark
+    ports: 
+      - &quot;27015:27015&quot;
+      - &quot;27015:27015/udp&quot;
+      - &quot;7777:7777&quot;
+      - &quot;7777:7777/udp&quot;
+      - &quot;7778:7778&quot;
+      - &quot;7778:7778/udp&quot;
+      - &quot;7779:7779&quot;
+      - &quot;7779:7779/udp&quot;
+      - &quot;32330:32330&quot;
+    environment: 
+      - am_ark_SessionName=my_ark
+      - am_ark_GameModIds=889745138,751991809,1404697612
+      - am_ark_ServerPVE=True
+    restart: always
+
+volumes: 
+  steam:
+    name: steam
+  ark:
+    name: ark
+</code></pre><p>在steam里添加游戏服务器，就可以愉快得开始啦。</p>
+<p>steam-&gt;查看-&gt;服务器-&gt;收藏夹-&gt;添加服务器-&gt;输入服务器ip:27015-&gt;将此地址添加至收藏夹</p>
+<h2 id="2-详细解释">2. 详细解释</h2>
+<p>这个部署方案源于两个开源项目:</p>
+<ul>
+<li><a href="https://github.com/FezVrasta/ark-server-tools">https://github.com/FezVrasta/ark-server-tools</a></li>
+<li><a href="https://github.com/thmhoag/arkserver">https://github.com/thmhoag/arkserver</a></li>
+</ul>
+<p>前者实现了arkmanager工具，后者实现了容器化部署。</p>
+<p>docker-compose.yml文件中，配置了多个端口，其中27015是steam与服务器交互的端口，7777-7779(可自定义)是自定义的服务器端口，32330(可选)是服务器命令行管理工具RCON的连接端口。</p>
+<p>可以通过指定环境变量来将服务器配置传递给arkmanager，可以配置的参数参考 <a href="https://github.com/FezVrasta/ark-server-tools#configuration-files/">https://github.com/FezVrasta/ark-server-tools#configuration-files/</a></p>
+<p>注意配置环境变量时，在名称前加上am_前缀。</p>
+<p>例如，如果要配置服务器管理员密码，可以传递这样的环境变量:
+environment:
+- am_ark_ServerAdminPassword=your_password</p>
+<h2 id="3-重启服务器">3. 重启服务器</h2>
+<p>docker-compose restart</p>
+<p>默认配置会在每天固定时间重启并检查更新。</p>
+<p>如果有更改过设置，需要使用以下命令重启，使配置生效</p>
+<pre><code>docker-compose down
+docker-compose up -d
+</code></pre><h2 id="4-数据恢复">4. 数据恢复</h2>
+<p>方舟的数据都存储在名为ark的volume中，可以通过挂在该卷，并将方舟的备份数据复制出来用于恢复数据。方舟备份位于<code>/ark/backup</code></p>
+<h2 id="5--我的服务器">5.  我的服务器</h2>
+<p>我创建了一个服务器ark.st0n3.xyz:27015 。</p>
+<p>这个世界是一个孤岛地图/PVE服务器，世界运行了1152天，为了尽量维持原汁原味的游戏性，我只设置了1倍速度，增加了3个mod。</p>
+<p>麝足兽是最傻的一只龙，开心的时候一晃一晃的。</p>
+<p>雷龙看起来很难搞，其实最笨。</p>
+<p>我现在最厉害的恐龙是棘背龙，但是攻击力好像也只排到第44。</p>
+<p>接下来想抓霸王龙，哈别人。</p>
+<p>——————</p>
+<p>感谢方舟在疫情期间给了我另一个寄托情感的世界，如果你也有想见但是现实中无法相见的人，在这个世界相遇是一个不错的方案～</p>
+
+            </div>
+        </article>
+
+        <hr />
+
+        <div class="post-info">
+  			</div>
+
+        
+    </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>&copy; 2020</span>
+            
+            <span></span>
+            <span> <a href="/posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a></span>
+        </div>
+    </div>
+    <div class="footer__inner">
+        <div class="footer__content">
+
+        </div>
+    </div>
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>Powered by <a href="http://gohugo.io">Hugo</a></span>
+            <span>Made with &#10084; by <a href="https://github.com/st0n3">st0n3</a></span>
+            <span>Based on <a href="https://github.com/rhazdon">rhazdon</a></span>
+        </div>
+    </div>
+
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+
+<script type="text/javascript" src="/bundle.min.4c3fb12a087ceed4a52cb5d57068a9795c7069617a01ca70f788052ad66e1791779e6c72686e1dc0ca13dc03b0203204b6566bb0dd1ee80de2b7ff4d8fe53db2.js" integrity="sha512-TD&#43;xKgh87tSlLLXVcGipeVxwaWF6Acpw94gFKtZuF5F3nmxyaG4dwMoT3AOwIDIEtlZrsN0e6A3it/9Nj&#43;U9sg=="></script>
+
+
+
+    </body>
+</html>

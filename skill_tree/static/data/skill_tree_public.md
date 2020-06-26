@@ -115,3 +115,5 @@
 ### 一篇优雅的技术博客应该长这样<a href="https://ssst0n3.github.io/post/知识管理/一篇优雅的技术博客应该长这样.html" target="_blank"><!-- {"expanded":false,"direction":"right"} -->
 ## 离散数学<!-- {"expanded":true,"direction":"right"} -->
 ### [external] 另一种世界观——有限域<a href="https://www.bilibili.com/read/cv2922069/" target="_blank"><!-- {"expanded":false,"direction":"right"} -->
+## 游戏<!-- {"expanded":true,"direction":"right"} -->
+### 方舟生存进化_docker一键部署<a href="https://ssst0n3.github.io/post/游戏/方舟生存进化_docker一键部署.html" target="_blank"><!-- {"expanded":false,"direction":"right"} -->
