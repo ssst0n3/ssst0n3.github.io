@@ -11,7 +11,7 @@
 1. quick-start 创建docker-compose.yml文件, 执行docker-compose up -d拉起容器
 version: &#39;3&#39; services: ark: container_name: ark image: thmhoag/arkserver volumes: - steam:/home/steam/Steam - ark:/ark ports: - &amp;quot;27015:27015&amp;quot; - &amp;quot;27015:27015/udp&amp;quot; - &amp;quot;7777:7777&amp;quot; - &amp;quot;7777:7777/udp&amp;quot; - &amp;quot;7778:7778&amp;quot; - &amp;quot;7778:7778/udp&amp;quot; - &amp;quot;7779:7779&amp;quot; - &amp;quot;7779:7779/udp&amp;quot; - &amp;quot;32330:32330&amp;quot; environment: - am_ark_SessionName=my_ark - am_ark_GameModIds=889745138,751991809,1404697612 - am_ark_ServerPVE=True restart: always volumes: steam: name: steam ark: name: ark 在steam里添加游戏服务器，就可以愉快得开始啦。
 steam-&amp;gt;查看-&amp;gt;服务器-&amp;gt;收藏夹-&amp;gt;添加服务器-&amp;gt;输入服务器ip:27015-&amp;gt;将此地址添加至收藏夹
-2. 详细解释 这个部署方案源于两个开源项目:
+2. 解释 这个部署方案源于两个开源项目:
  https://github.com/FezVrasta/ark-server-tools https://github.com/thmhoag/arkserver  前者实现了arkmanager工具，后者实现了容器化部署。" />
 <meta name="keywords" content="" />
 <meta name="robots" content="noodp" />
@@ -46,7 +46,7 @@ steam-&amp;gt;查看-&amp;gt;服务器-&amp;gt;收藏夹-&amp;gt;添加服务器
 1. quick-start 创建docker-compose.yml文件, 执行docker-compose up -d拉起容器
 version: &#39;3&#39; services: ark: container_name: ark image: thmhoag/arkserver volumes: - steam:/home/steam/Steam - ark:/ark ports: - &quot;27015:27015&quot; - &quot;27015:27015/udp&quot; - &quot;7777:7777&quot; - &quot;7777:7777/udp&quot; - &quot;7778:7778&quot; - &quot;7778:7778/udp&quot; - &quot;7779:7779&quot; - &quot;7779:7779/udp&quot; - &quot;32330:32330&quot; environment: - am_ark_SessionName=my_ark - am_ark_GameModIds=889745138,751991809,1404697612 - am_ark_ServerPVE=True restart: always volumes: steam: name: steam ark: name: ark 在steam里添加游戏服务器，就可以愉快得开始啦。
 steam-&gt;查看-&gt;服务器-&gt;收藏夹-&gt;添加服务器-&gt;输入服务器ip:27015-&gt;将此地址添加至收藏夹
-2. 详细解释 这个部署方案源于两个开源项目:
+2. 解释 这个部署方案源于两个开源项目:
  https://github.com/FezVrasta/ark-server-tools https://github.com/thmhoag/arkserver  前者实现了arkmanager工具，后者实现了容器化部署。">
 
 <meta itemprop="wordCount" content="103">
@@ -59,7 +59,7 @@ steam-&gt;查看-&gt;服务器-&gt;收藏夹-&gt;添加服务器-&gt;输入服�
 1. quick-start 创建docker-compose.yml文件, 执行docker-compose up -d拉起容器
 version: &#39;3&#39; services: ark: container_name: ark image: thmhoag/arkserver volumes: - steam:/home/steam/Steam - ark:/ark ports: - &quot;27015:27015&quot; - &quot;27015:27015/udp&quot; - &quot;7777:7777&quot; - &quot;7777:7777/udp&quot; - &quot;7778:7778&quot; - &quot;7778:7778/udp&quot; - &quot;7779:7779&quot; - &quot;7779:7779/udp&quot; - &quot;32330:32330&quot; environment: - am_ark_SessionName=my_ark - am_ark_GameModIds=889745138,751991809,1404697612 - am_ark_ServerPVE=True restart: always volumes: steam: name: steam ark: name: ark 在steam里添加游戏服务器，就可以愉快得开始啦。
 steam-&gt;查看-&gt;服务器-&gt;收藏夹-&gt;添加服务器-&gt;输入服务器ip:27015-&gt;将此地址添加至收藏夹
-2. 详细解释 这个部署方案源于两个开源项目:
+2. 解释 这个部署方案源于两个开源项目:
  https://github.com/FezVrasta/ark-server-tools https://github.com/thmhoag/arkserver  前者实现了arkmanager工具，后者实现了容器化部署。"/>
 
 
@@ -167,7 +167,7 @@ volumes:
     name: ark
 </code></pre><p>在steam里添加游戏服务器，就可以愉快得开始啦。</p>
 <p>steam-&gt;查看-&gt;服务器-&gt;收藏夹-&gt;添加服务器-&gt;输入服务器ip:27015-&gt;将此地址添加至收藏夹</p>
-<h2 id="2-详细解释">2. 详细解释</h2>
+<h2 id="2-解释">2. 解释</h2>
 <p>这个部署方案源于两个开源项目:</p>
 <ul>
 <li><a href="https://github.com/FezVrasta/ark-server-tools">https://github.com/FezVrasta/ark-server-tools</a></li>
