@@ -151,6 +151,7 @@
 ### vscode_terminal字符间距过宽<a href="https://ssst0n3.github.io/post/it杂货铺/vscode_terminal字符间距过宽.html" target="_blank"><!-- {"expanded":false,"direction":"right"} -->
 ### docker-compose使用host网络<a href="https://ssst0n3.github.io/post/it杂货铺/docker-compose使用host网络.html" target="_blank"><!-- {"expanded":false,"direction":"right"} -->
 ### letsencrypt通过dns获取证书<a href="https://ssst0n3.github.io/post/it杂货铺/letsencrypt通过dns获取证书.html" target="_blank"><!-- {"expanded":false,"direction":"right"} -->
+### 用bug解决bug_荣耀智慧屏闹钟设置方案<a href="https://ssst0n3.github.io/post/it杂货铺/用bug解决bug_荣耀智慧屏闹钟设置方案.html" target="_blank"><!-- {"expanded":false,"direction":"right"} -->
 ## 知识管理<!-- {"expanded":false,"direction":"right"} -->
 ### 捕风捉影的使用原则<a href="https://ssst0n3.github.io/post/知识管理/捕风捉影的使用原则.html" target="_blank"><!-- {"expanded":false,"direction":"right"} -->
 ### 一篇优雅的技术博客应该长这样<a href="https://ssst0n3.github.io/post/知识管理/一篇优雅的技术博客应该长这样.html" target="_blank"><!-- {"expanded":false,"direction":"right"} -->

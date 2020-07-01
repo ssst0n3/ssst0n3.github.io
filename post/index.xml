@@ -6,10 +6,20 @@
     <description>Recent content in Post on welcome to st0n3&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 28 Jun 2020 08:39:00 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 30 Jun 2020 07:36:00 +0800</lastBuildDate>
     
 	<atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>用bug解决bug:荣耀智慧屏闹钟设置方案</title>
+      <link>/post/it%E6%9D%82%E8%B4%A7%E9%93%BA/%E7%94%A8bug%E8%A7%A3%E5%86%B3bug_%E8%8D%A3%E8%80%80%E6%99%BA%E6%85%A7%E5%B1%8F%E9%97%B9%E9%92%9F%E8%AE%BE%E7%BD%AE%E6%96%B9%E6%A1%88.html</link>
+      <pubDate>Tue, 30 Jun 2020 07:36:00 +0800</pubDate>
+      
+      <guid>/post/it%E6%9D%82%E8%B4%A7%E9%93%BA/%E7%94%A8bug%E8%A7%A3%E5%86%B3bug_%E8%8D%A3%E8%80%80%E6%99%BA%E6%85%A7%E5%B1%8F%E9%97%B9%E9%92%9F%E8%AE%BE%E7%BD%AE%E6%96%B9%E6%A1%88.html</guid>
+      <description>前段时间趁着6.18买了一台电视机&amp;hellip;荣耀智慧屏x1。1699￥,真的很便宜了。到今天，使用了快一个月了，发现了两个倔强的bug。
+1. 闹钟不是你以为的闹钟 </description>
+    </item>
     
     <item>
       <title>docker CVE-2019-5736 runc逃逸漏洞</title>
