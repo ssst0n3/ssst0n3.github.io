@@ -56,7 +56,7 @@
 ########## seccomp<!-- {"expanded":true,"direction":"right"} -->
 ########## apparmor<!-- {"expanded":true,"direction":"right"} -->
 ########### docker的默认apparmor策略具体配置了什么<a href="https://ssst0n3.github.io/post/网络安全/安全测试/测试对象/应用安全/容器安全/docker/docker安全的关键技术/linux内核安全机制/apparmor/docker的默认apparmor策略具体配置了什么.html" target="_blank"><!-- {"expanded":false,"direction":"right"} -->
-######### Understanding_Docker_container_escapes<a href="https://ssst0n3.github.io/post/网络安全/安全测试/测试对象/应用安全/容器安全/docker/docker安全的关键技术/understanding_docker_container_escapes.html" target="_blank"><!-- {"expanded":true,"direction":"right"} -->
+######### [external] Understanding_Docker_container_escapes<a href="https://blog.trailofbits.com/2019/07/19/understanding-docker-container-escapes/" target="_blank"><!-- {"expanded":true,"direction":"right"} -->
 ######## docker安全配置<!-- {"expanded":true,"direction":"right"} -->
 ######## 安全风险<!-- {"expanded":true,"direction":"right"} -->
 ######## docker相关工具的安全性<!-- {"expanded":true,"direction":"right"} -->
@@ -131,7 +131,7 @@
 #### Go坑<!-- {"expanded":false,"direction":"right"} -->
 ##### [external] strings.TrimLeft or strings.TrimPrefix?<a href="http://10086ng.com/?p=900" target="_blank"><!-- {"expanded":true,"direction":"right"} -->
 ##### Go os exec坑<a href="https://ssst0n3.github.io/post/开发/go/go坑/go-os-exec坑.html" target="_blank"><!-- {"expanded":true,"direction":"right"} -->
-##### Go test坑<a href="https://ssst0n3.github.io/post/开发/go/go坑/go-test坑.html" target="_blank"><!-- {"expanded":true,"direction":"right"} -->
+##### [external] Go test坑<a href="https://segmentfault.com/a/1190000018027117" target="_blank"><!-- {"expanded":true,"direction":"right"} -->
 #### [external] 创建在Go中的可执行静态链接<a href="https://xebia.com/blog/create-the-smallest-possible-docker-container/" target="_blank"><!-- {"expanded":true,"direction":"right"} -->
 #### 发布go_modules<a href="https://ssst0n3.github.io/post/开发/go/发布go_modules.html" target="_blank"><!-- {"expanded":false,"direction":"right"} -->
 #### Docker-SDK<!-- {"expanded":false,"direction":"right"} -->
