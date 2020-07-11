@@ -394,6 +394,24 @@ cmd := &amp;#34;cp ./test/* /tmp -r&amp;#34; out, err := exec.Command(&amp;#34;s
     
     <item>
       <title></title>
+      <link>/post/%E5%BC%80%E5%8F%91/myproject/git_todo.html</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/post/%E5%BC%80%E5%8F%91/myproject/git_todo.html</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>/post/%E5%BC%80%E5%8F%91/myproject/git_update.html</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/post/%E5%BC%80%E5%8F%91/myproject/git_update.html</guid>
+      <description>遍历目录下所有git项目，commit并push到remote</description>
+    </item>
+    
+    <item>
+      <title></title>
       <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/ctf/%E5%87%BA%E9%A2%98/de1ta2020/%E5%87%BA%E5%87%BA%E5%87%BA.html</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       

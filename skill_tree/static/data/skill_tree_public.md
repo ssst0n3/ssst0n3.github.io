@@ -161,6 +161,10 @@ https://github.com/kubernetes/kubernetes/issues/90259<!-- {"expanded":false,"dir
 ### 前端<!-- {"expanded":true,"direction":"right"} -->
 #### Vue<!-- {"expanded":false,"direction":"right"} -->
 ##### 如何使用BootstrapVue<a href="https://ssst0n3.github.io/post/开发/前端/vue/如何使用bootstrapvue.html" target="_blank"><!-- {"expanded":true,"direction":"right"} -->
+### myproject<!-- {"expanded":true,"direction":"right"} -->
+#### [todo] git_todo<!-- {"expanded":false,"direction":"right"} -->
+#### [todo] git_update<!-- {"expanded":false,"direction":"right"} -->
+##### [todo] 遍历目录下所有git项目，commit并push到remote<!-- {"expanded":false,"direction":"right"} -->
 ## 计算机基本<!-- {"expanded":true,"direction":"right"} -->
 ### 操作系统<!-- {"expanded":true,"direction":"right"} -->
 #### linux<!-- {"expanded":false,"direction":"right"} -->
