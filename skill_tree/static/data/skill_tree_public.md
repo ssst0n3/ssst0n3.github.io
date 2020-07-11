@@ -74,9 +74,7 @@
 ####### k8s<!-- {"expanded":false,"direction":"right"} -->
 ######## 历史漏洞分析与复现<!-- {"expanded":true,"direction":"right"} -->
 ######### [todo] CVE-2020-8558<!-- {"expanded":false,"direction":"right"} -->
-########## [todo] https://github.com/kubernetes/kubernetes/issues/92315
-
-https://github.com/kubernetes/kubernetes/issues/90259<!-- {"expanded":false,"direction":"right"} -->
+########## [todo] https://github.com/kubernetes/kubernetes/issues/92315https://github.com/kubernetes/kubernetes/issues/90259<!-- {"expanded":false,"direction":"right"} -->
 ###### 云安全<!-- {"expanded":true,"direction":"right"} -->
 ###### IOT安全<!-- {"expanded":true,"direction":"right"} -->
 ###### 移动安全<!-- {"expanded":true,"direction":"right"} -->
@@ -134,17 +132,15 @@ https://github.com/kubernetes/kubernetes/issues/90259<!-- {"expanded":false,"dir
 ##### 密码分析<!-- {"expanded":false,"direction":"right"} -->
 ###### 代换密码和置换密码在块密码中的作用与区别<a href="https://ssst0n3.github.io/post/网络安全/安全理论/密码学/密码分析/代换密码和置换密码在块密码中的作用与区别.html" target="_blank"><!-- {"expanded":true,"direction":"right"} -->
 ###### SPN线性密码分析<a href="https://ssst0n3.github.io/post/网络安全/安全理论/密码学/密码分析/spn线性密码分析.html" target="_blank"><!-- {"expanded":true,"direction":"right"} -->
-#### [todo] 开源软件安全研究方法<!-- {"expanded":false,"direction":"right"} -->
-##### [todo] * 软件基础
-    * 使用
-    * 开源情况
-        * 已知漏洞数量与分布情况<!-- {"expanded":false,"direction":"right"} -->
 ### 安全培训<!-- {"expanded":true,"direction":"right"} -->
 ### 安全人才竞争力评价<!-- {"expanded":true,"direction":"right"} -->
 ### 网络安全专业英语<!-- {"expanded":true,"direction":"right"} -->
 ### 安全工具<!-- {"expanded":true,"direction":"right"} -->
 #### kali<!-- {"expanded":true,"direction":"right"} -->
 ##### kali_linux常用配置<a href="https://ssst0n3.github.io/post/网络安全/安全工具/kali/kali_linux常用配置.html" target="_blank"><!-- {"expanded":false,"direction":"right"} -->
+### 安全研究<!-- {"expanded":true,"direction":"right"} -->
+#### [todo] 开源软件安全研究方法<!-- {"expanded":false,"direction":"right"} -->
+##### [todo] ---title: "开源软件安全研究方法"date: 2020-07-11T19:46:00+08:00draft: true---* 软件基础    * 使用    * 开源情况        * 已知漏洞数量与分布情况<!-- {"expanded":false,"direction":"right"} -->
 ## 开发<!-- {"expanded":true,"direction":"right"} -->
 ### IDE<!-- {"expanded":true,"direction":"right"} -->
 #### VisualStudioCode<!-- {"expanded":false,"direction":"right"} -->
