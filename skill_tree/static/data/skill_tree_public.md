@@ -99,6 +99,7 @@ https://github.com/kubernetes/kubernetes/issues/90259
 ##### [todo] include_mode<!-- {"expanded":false,"direction":"right"} -->
 [todo description]
 可能存在多个学科引用同一个技能的情况。
+##### [todo] show_todo_description<!-- {"expanded":false,"direction":"right"} -->
 #### skilltree_blog<!-- {"expanded":false,"direction":"right"} -->
 ##### [todo] todo产生了一些空白的博客<!-- {"expanded":false,"direction":"right"} -->
 [todo description]
