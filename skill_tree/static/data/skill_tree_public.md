@@ -65,6 +65,12 @@
 ######## docker相关工具的安全性<!-- {"expanded":true,"direction":"right"} -->
 ####### 其他容器<!-- {"expanded":true,"direction":"right"} -->
 ####### 容器实现规范<!-- {"expanded":true,"direction":"right"} -->
+####### k8s<!-- {"expanded":false,"direction":"right"} -->
+######## 历史漏洞分析与复现<!-- {"expanded":true,"direction":"right"} -->
+######### [todo] CVE-2020-8558<!-- {"expanded":false,"direction":"right"} -->
+########## [todo] https://github.com/kubernetes/kubernetes/issues/92315
+
+https://github.com/kubernetes/kubernetes/issues/90259<!-- {"expanded":false,"direction":"right"} -->
 ###### 云安全<!-- {"expanded":true,"direction":"right"} -->
 ###### IOT安全<!-- {"expanded":true,"direction":"right"} -->
 ###### 移动安全<!-- {"expanded":true,"direction":"right"} -->
