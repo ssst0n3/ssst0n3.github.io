@@ -6,10 +6,66 @@
     <description>Recent content in Post on welcome to st0n3&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 26 Jun 2020 22:00:00 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 01 Jul 2020 17:49:00 +0800</lastBuildDate>
     
 	<atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>docker中apparmor的加载过程</title>
+      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/%E6%B5%8B%E8%AF%95%E5%AF%B9%E8%B1%A1/%E5%BA%94%E7%94%A8%E5%AE%89%E5%85%A8/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/docker/docker%E5%AE%89%E5%85%A8%E7%9A%84%E5%85%B3%E9%94%AE%E6%8A%80%E6%9C%AF/linux%E5%86%85%E6%A0%B8%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/apparmor/docker%E4%B8%ADapparmor%E7%9A%84%E5%8A%A0%E8%BD%BD%E8%BF%87%E7%A8%8B.html</link>
+      <pubDate>Wed, 01 Jul 2020 17:49:00 +0800</pubDate>
+      
+      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/%E6%B5%8B%E8%AF%95%E5%AF%B9%E8%B1%A1/%E5%BA%94%E7%94%A8%E5%AE%89%E5%85%A8/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/docker/docker%E5%AE%89%E5%85%A8%E7%9A%84%E5%85%B3%E9%94%AE%E6%8A%80%E6%9C%AF/linux%E5%86%85%E6%A0%B8%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/apparmor/docker%E4%B8%ADapparmor%E7%9A%84%E5%8A%A0%E8%BD%BD%E8%BF%87%E7%A8%8B.html</guid>
+      <description>判断操作系统是否启用apparmor，如果支持就安装名为docker-default的规则。 https://github.com/moby/moby/blob/master/daemon/apparmor_default.go
+const ( unconfinedAppArmorProfile = &amp;quot;unconfined&amp;quot; defaultAppArmorProfile = &amp;quot;docker-default&amp;quot; ) func ensureDefaultAppArmorProfile() error { if apparmor.IsEnabled() { loaded, err := aaprofile.IsLoaded(defaultAppArmorProfile) if err != nil { return fmt.Errorf(&amp;quot;Could not check if %s AppArmor profile was loaded: %s&amp;quot;, defaultAppArmorProfile, err) } // Nothing to do. if loaded { return nil } // Load the profile. if err := aaprofile.InstallDefault(defaultAppArmorProfile); err != nil { return fmt.Errorf(&amp;quot;AppArmor enabled on system but the %s profile could not be loaded: %s&amp;quot;, defaultAppArmorProfile, err) } } return nil } 其中判断是否启用apparmor代码如下，主要是判断apparmor相关文件是否存在。</description>
+    </item>
+    
+    <item>
+      <title>docker中apparmor机制综述</title>
+      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/%E6%B5%8B%E8%AF%95%E5%AF%B9%E8%B1%A1/%E5%BA%94%E7%94%A8%E5%AE%89%E5%85%A8/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/docker/docker%E5%AE%89%E5%85%A8%E7%9A%84%E5%85%B3%E9%94%AE%E6%8A%80%E6%9C%AF/linux%E5%86%85%E6%A0%B8%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/apparmor/docker%E4%B8%ADapparmor%E6%9C%BA%E5%88%B6%E7%BB%BC%E8%BF%B0.html</link>
+      <pubDate>Wed, 01 Jul 2020 17:48:00 +0800</pubDate>
+      
+      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/%E6%B5%8B%E8%AF%95%E5%AF%B9%E8%B1%A1/%E5%BA%94%E7%94%A8%E5%AE%89%E5%85%A8/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/docker/docker%E5%AE%89%E5%85%A8%E7%9A%84%E5%85%B3%E9%94%AE%E6%8A%80%E6%9C%AF/linux%E5%86%85%E6%A0%B8%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/apparmor/docker%E4%B8%ADapparmor%E6%9C%BA%E5%88%B6%E7%BB%BC%E8%BF%B0.html</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>docker的默认apparmor策略具体配置了什么</title>
+      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/%E6%B5%8B%E8%AF%95%E5%AF%B9%E8%B1%A1/%E5%BA%94%E7%94%A8%E5%AE%89%E5%85%A8/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/docker/docker%E5%AE%89%E5%85%A8%E7%9A%84%E5%85%B3%E9%94%AE%E6%8A%80%E6%9C%AF/linux%E5%86%85%E6%A0%B8%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/apparmor/docker%E7%9A%84%E9%BB%98%E8%AE%A4apparmor%E7%AD%96%E7%95%A5%E5%85%B7%E4%BD%93%E9%85%8D%E7%BD%AE%E4%BA%86%E4%BB%80%E4%B9%88.html</link>
+      <pubDate>Wed, 01 Jul 2020 16:20:00 +0800</pubDate>
+      
+      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/%E6%B5%8B%E8%AF%95%E5%AF%B9%E8%B1%A1/%E5%BA%94%E7%94%A8%E5%AE%89%E5%85%A8/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/docker/docker%E5%AE%89%E5%85%A8%E7%9A%84%E5%85%B3%E9%94%AE%E6%8A%80%E6%9C%AF/linux%E5%86%85%E6%A0%B8%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/apparmor/docker%E7%9A%84%E9%BB%98%E8%AE%A4apparmor%E7%AD%96%E7%95%A5%E5%85%B7%E4%BD%93%E9%85%8D%E7%BD%AE%E4%BA%86%E4%BB%80%E4%B9%88.html</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>用bug解决bug:荣耀智慧屏闹钟设置方案</title>
+      <link>/post/it%E6%9D%82%E8%B4%A7%E9%93%BA/%E7%94%A8bug%E8%A7%A3%E5%86%B3bug_%E8%8D%A3%E8%80%80%E6%99%BA%E6%85%A7%E5%B1%8F%E9%97%B9%E9%92%9F%E8%AE%BE%E7%BD%AE%E6%96%B9%E6%A1%88.html</link>
+      <pubDate>Tue, 30 Jun 2020 07:36:00 +0800</pubDate>
+      
+      <guid>/post/it%E6%9D%82%E8%B4%A7%E9%93%BA/%E7%94%A8bug%E8%A7%A3%E5%86%B3bug_%E8%8D%A3%E8%80%80%E6%99%BA%E6%85%A7%E5%B1%8F%E9%97%B9%E9%92%9F%E8%AE%BE%E7%BD%AE%E6%96%B9%E6%A1%88.html</guid>
+      <description>前段时间趁着6.18买了一台电视机&amp;hellip;荣耀智慧屏x1。1699￥,真的很便宜了。到今天，使用了快一个月了，发现了两个倔强的bug。
+1. 闹钟不是你以为的闹钟 </description>
+    </item>
+    
+    <item>
+      <title>docker CVE-2019-5736 runc逃逸漏洞</title>
+      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/%E6%B5%8B%E8%AF%95%E5%AF%B9%E8%B1%A1/%E5%BA%94%E7%94%A8%E5%AE%89%E5%85%A8/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/docker/docker%E6%BA%90%E7%A0%81%E5%AE%A1%E8%AE%A1/docker%E5%8E%86%E5%8F%B2%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90%E4%B8%8E%E5%A4%8D%E7%8E%B0/docker_cve-2019-5736_runc%E9%80%83%E9%80%B8%E6%BC%8F%E6%B4%9E.html</link>
+      <pubDate>Sun, 28 Jun 2020 08:39:00 +0800</pubDate>
+      
+      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/%E6%B5%8B%E8%AF%95%E5%AF%B9%E8%B1%A1/%E5%BA%94%E7%94%A8%E5%AE%89%E5%85%A8/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/docker/docker%E6%BA%90%E7%A0%81%E5%AE%A1%E8%AE%A1/docker%E5%8E%86%E5%8F%B2%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90%E4%B8%8E%E5%A4%8D%E7%8E%B0/docker_cve-2019-5736_runc%E9%80%83%E9%80%B8%E6%BC%8F%E6%B4%9E.html</guid>
+      <description>还没写完
+几个重要的fix commit
+  https://github.com/opencontainers/runc/commit/6635b4f0c6af3810594d2770f662f34ddc15b40d
+  https://github.com/opencontainers/runc/commit/2b18fe1d885ee5083ef9f0838fee39b62d653e30
+  https://github.com/opencontainers/runc/commit/28a697cce3e4f905dca700eda81d681a30eef9cd
+  https://github.com/moby/moby/commit/25cdae293fedb18f3538788d629d6e4475acaa4b
+  https://github.com/moby/moby/commit/f03698b69a7777b8d30b9c5897504f8704b87676
+  https://github.com/moby/moby/commit/a327428bdb596a891359ba050c3bf6a074ec2278
+  参考
+ https://unit42.paloaltonetworks.com/breaking-docker-via-runc-explaining-cve-2019-5736/ https://github.com/opencontainers/runc/blob/cc8146cf936f86646a065ba73d911c5614e9c049/libcontainer/nsenter/README.md  </description>
+    </item>
     
     <item>
       <title>方舟生存进化: docker一键部署</title>
@@ -26,7 +82,7 @@ steam-&amp;gt;查看-&amp;gt;服务器-&amp;gt;收藏夹-&amp;gt;添加服务器
 docker-compose.yml文件中，配置了多个端口，其中27015是steam与服务器交互的端口，7777-7779(可自定义)是自定义的服务器端口，32330(可选)是服务器命令行管理工具RCON的连接端口。
 可以通过指定环境变量来将服务器配置传递给arkmanager，可以配置的参数参考 https://github.com/FezVrasta/ark-server-tools#configuration-files/
 注意配置环境变量时，在名称前加上am_前缀。
-例如，如果要配置服务器管理员密码，可以传递这样的环境变量: environment: - am_ark_ServerAdminPassword=your_password</description>
+例如，如果要配置服务器管理员密码，可以传递这样的环境变量:</description>
     </item>
     
     <item>
@@ -342,6 +398,15 @@ cmd := &amp;#34;cp ./test/* /tmp -r&amp;#34; out, err := exec.Command(&amp;#34;s
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/ctf/%E5%87%BA%E9%A2%98/de1ta2020/%E5%87%BA%E5%87%BA%E5%87%BA.html</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/%E6%B5%8B%E8%AF%95%E5%AF%B9%E8%B1%A1/%E5%BA%94%E7%94%A8%E5%AE%89%E5%85%A8/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/docker/docker%E5%AE%89%E5%85%A8%E7%9A%84%E5%85%B3%E9%94%AE%E6%8A%80%E6%9C%AF/linux%E5%86%85%E6%A0%B8%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/seccomp/docker%E7%9A%84%E9%BB%98%E8%AE%A4seccomp%E8%A7%84%E5%88%99%E5%85%B7%E4%BD%93%E9%85%8D%E7%BD%AE%E4%BA%86%E4%BB%80%E4%B9%88.html</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/%E6%B5%8B%E8%AF%95%E5%AF%B9%E8%B1%A1/%E5%BA%94%E7%94%A8%E5%AE%89%E5%85%A8/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/docker/docker%E5%AE%89%E5%85%A8%E7%9A%84%E5%85%B3%E9%94%AE%E6%8A%80%E6%9C%AF/linux%E5%86%85%E6%A0%B8%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/seccomp/docker%E7%9A%84%E9%BB%98%E8%AE%A4seccomp%E8%A7%84%E5%88%99%E5%85%B7%E4%BD%93%E9%85%8D%E7%BD%AE%E4%BA%86%E4%BB%80%E4%B9%88.html</guid>
       <description></description>
     </item>
     
