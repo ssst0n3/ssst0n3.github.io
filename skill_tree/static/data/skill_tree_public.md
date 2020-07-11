@@ -82,6 +82,8 @@
 #### sectools<!-- {"expanded":false,"direction":"right"} -->
 ##### [todo] 基于docker的工具合集<!-- {"expanded":false,"direction":"right"} -->
 #### skill_tree<!-- {"expanded":false,"direction":"right"} -->
+##### [todo] include_mode<!-- {"expanded":false,"direction":"right"} -->
+###### [todo] 可能存在多个学科引用同一个技能的情况。<!-- {"expanded":false,"direction":"right"} -->
 #### skilltree_blog<!-- {"expanded":false,"direction":"right"} -->
 ##### [todo] todo产生了一些空白的博客<!-- {"expanded":false,"direction":"right"} -->
 ###### [todo] 生成博客时忽略todo<!-- {"expanded":false,"direction":"right"} -->
