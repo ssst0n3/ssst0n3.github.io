@@ -33,7 +33,8 @@
 ######### spring_cloud<!-- {"expanded":false,"direction":"right"} -->
 ########## spring_cloud_config<!-- {"expanded":false,"direction":"right"} -->
 ########### [todo] CVE-2019-3799分析与复现<!-- {"expanded":false,"direction":"right"} -->
-############ [todo] https://xz.aliyun.com/t/4844<!-- {"expanded":false,"direction":"right"} -->
+[todo description]
+https://xz.aliyun.com/t/4844
 ###### 逆向工程<!-- {"expanded":true,"direction":"right"} -->
 ###### 云安全<!-- {"expanded":true,"direction":"right"} -->
 ###### IOT安全<!-- {"expanded":true,"direction":"right"} -->
@@ -53,11 +54,13 @@
 ##### [todo] 基于docker的工具合集<!-- {"expanded":false,"direction":"right"} -->
 #### skill_tree<!-- {"expanded":false,"direction":"right"} -->
 ##### [todo] include_mode<!-- {"expanded":false,"direction":"right"} -->
-###### [todo] 可能存在多个学科引用同一个技能的情况。<!-- {"expanded":false,"direction":"right"} -->
+[todo description]
+可能存在多个学科引用同一个技能的情况。
 ##### [todo] show_todo_description<!-- {"expanded":false,"direction":"right"} -->
 #### skilltree_blog<!-- {"expanded":false,"direction":"right"} -->
 ##### [todo] todo产生了一些空白的博客<!-- {"expanded":false,"direction":"right"} -->
-###### [todo] 生成博客时忽略todo<!-- {"expanded":false,"direction":"right"} -->
+[todo description]
+生成博客时忽略todo
 ### CTF<!-- {"expanded":true,"direction":"right"} -->
 #### 参考资料<!-- {"expanded":true,"direction":"right"} -->
 #### pwn<!-- {"expanded":true,"direction":"right"} -->
@@ -101,7 +104,8 @@
 ##### kali_linux常用配置<a href="https://ssst0n3.github.io/post/网络安全/安全工具/kali/kali_linux常用配置.html" target="_blank"><!-- {"expanded":false,"direction":"right"} -->
 ### 安全研究<!-- {"expanded":true,"direction":"right"} -->
 #### [todo] 开源软件安全研究方法<!-- {"expanded":false,"direction":"right"} -->
-##### [todo] ---
+[todo description]
+---
 title: "开源软件安全研究方法"
 date: 2020-07-11T19:46:00+08:00
 draft: true
@@ -110,7 +114,7 @@ draft: true
 * 软件基础
     * 使用
     * 开源情况
-        * 已知漏洞数量与分布情况<!-- {"expanded":false,"direction":"right"} -->
+        * 已知漏洞数量与分布情况
 #### 容器安全<!-- {"expanded":true,"direction":"right"} -->
 ##### docker<!-- {"expanded":false,"direction":"right"} -->
 ###### docker基础<!-- {"expanded":true,"direction":"right"} -->
@@ -166,7 +170,8 @@ draft: true
 ### myproject<!-- {"expanded":true,"direction":"right"} -->
 #### [todo] git_todo<!-- {"expanded":false,"direction":"right"} -->
 #### [todo] git_update<!-- {"expanded":false,"direction":"right"} -->
-##### [todo] 遍历目录下所有git项目，commit并push到remote<!-- {"expanded":false,"direction":"right"} -->
+[todo description]
+遍历目录下所有git项目，commit并push到remote
 ## 计算机基本<!-- {"expanded":true,"direction":"right"} -->
 ### 操作系统<!-- {"expanded":true,"direction":"right"} -->
 #### linux<!-- {"expanded":false,"direction":"right"} -->
