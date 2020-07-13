@@ -7,7 +7,7 @@
 <meta name="author"
     content="">
 <meta name="description"
-    content="├── 基于进程隔离技术的容器技术 │ ├── docker安全 │ ├── gvisor ├── 容器集群安全 │ ├── k8s │ ├── swarm ├── 安全容器 │ ├── kata │ ├── firecracker
+    content="├── 基于进程隔离技术的容器技术 │ ├── docker安全 │ ├── gvisor ├── 容器集群安全 │ ├── k8s │ ├── swarm ├── 安全容器 │ ├── kata │ ├── firecracker ├── 容器实现规范
 在研究安全容器时，需要这样看待容器生态 ├── kubelet │ ├── CRI: │ │ ├── OCI │ │ │ ├── VMM │ │ │ │ ├── Hyper-V │ │ │ │ │ ├── Linux Kernel │ │ │ │ │ │ ├── container" />
 <meta name="keywords" content="" />
 <meta name="robots" content="noodp" />
@@ -38,16 +38,16 @@
 <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#252627">
 <link rel="shortcut icon" href="/favicon.ico">
 <meta name="theme-color" content="#252627"><meta itemprop="name" content="">
-<meta itemprop="description" content="├── 基于进程隔离技术的容器技术 │ ├── docker安全 │ ├── gvisor ├── 容器集群安全 │ ├── k8s │ ├── swarm ├── 安全容器 │ ├── kata │ ├── firecracker
+<meta itemprop="description" content="├── 基于进程隔离技术的容器技术 │ ├── docker安全 │ ├── gvisor ├── 容器集群安全 │ ├── k8s │ ├── swarm ├── 安全容器 │ ├── kata │ ├── firecracker ├── 容器实现规范
 在研究安全容器时，需要这样看待容器生态 ├── kubelet │ ├── CRI: │ │ ├── OCI │ │ │ ├── VMM │ │ │ │ ├── Hyper-V │ │ │ │ │ ├── Linux Kernel │ │ │ │ │ │ ├── container">
 
-<meta itemprop="wordCount" content="61">
+<meta itemprop="wordCount" content="63">
 
 
 
 <meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content=""/>
-<meta name="twitter:description" content="├── 基于进程隔离技术的容器技术 │ ├── docker安全 │ ├── gvisor ├── 容器集群安全 │ ├── k8s │ ├── swarm ├── 安全容器 │ ├── kata │ ├── firecracker
+<meta name="twitter:description" content="├── 基于进程隔离技术的容器技术 │ ├── docker安全 │ ├── gvisor ├── 容器集群安全 │ ├── k8s │ ├── swarm ├── 安全容器 │ ├── kata │ ├── firecracker ├── 容器实现规范
 在研究安全容器时，需要这样看待容器生态 ├── kubelet │ ├── CRI: │ │ ├── OCI │ │ │ ├── VMM │ │ │ │ ├── Hyper-V │ │ │ │ │ ├── Linux Kernel │ │ │ │ │ │ ├── container"/>
 
 
@@ -126,7 +126,8 @@
 │   ├── swarm
 ├── 安全容器
 │   ├── kata
-│   ├── firecracker</p>
+│   ├── firecracker
+├── 容器实现规范</p>
 <p>在研究安全容器时，需要这样看待容器生态
 ├── kubelet
 │   ├── CRI:
