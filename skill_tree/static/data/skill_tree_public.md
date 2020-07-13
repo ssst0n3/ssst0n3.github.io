@@ -50,6 +50,7 @@ https://xz.aliyun.com/t/4844
 ### 安全项目开发<!-- {"expanded":true,"direction":"right"} -->
 #### hackerbot<!-- {"expanded":false,"direction":"right"} -->
 ##### [todo] hackerbot团队协作功能设计<!-- {"expanded":false,"direction":"right"} -->
+##### [todo] 融入aminer情报<!-- {"expanded":false,"direction":"right"} -->
 #### sectools<!-- {"expanded":false,"direction":"right"} -->
 ##### [todo] 基于docker的工具合集<!-- {"expanded":false,"direction":"right"} -->
 #### skill_tree<!-- {"expanded":false,"direction":"right"} -->
@@ -180,6 +181,11 @@ draft: true
 ####### 历史漏洞分析与复现<!-- {"expanded":false,"direction":"right"} -->
 ##### 安全容器<!-- {"expanded":false,"direction":"right"} -->
 ##### 容器实现规范<!-- {"expanded":true,"direction":"right"} -->
+#### 学术情报学习<!-- {"expanded":true,"direction":"right"} -->
+##### [external] aminer必读论文<a href="https://www.aminer.cn/
+https://www.aminer.cn/channel/
+https://www.aminer.cn/topic/5e80bc21e52b9645c1f7b19f
+https://www.aminer.cn/research_report/5de27b53af66005a44822b12" target="_blank"><!-- {"expanded":false,"direction":"right"} -->
 ## 开发<!-- {"expanded":true,"direction":"right"} -->
 ### IDE<!-- {"expanded":true,"direction":"right"} -->
 #### VisualStudioCode<!-- {"expanded":false,"direction":"right"} -->
