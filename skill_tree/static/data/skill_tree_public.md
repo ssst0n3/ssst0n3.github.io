@@ -151,6 +151,30 @@ draft: true
 ###### docker相关工具的安全性<!-- {"expanded":true,"direction":"right"} -->
 ##### 其他容器<!-- {"expanded":true,"direction":"right"} -->
 ##### 容器实现规范<!-- {"expanded":true,"direction":"right"} -->
+##### [todo] 容器安全研究全景<!-- {"expanded":false,"direction":"right"} -->
+[todo description]
+├── 基于进程隔离技术的容器技术
+│   ├── docker安全
+│   ├── gvisor
+├── 容器集群安全
+│   ├── k8s
+│   ├── swarm
+├── 安全容器
+│   ├── kata
+│   ├── firecracker
+
+
+在研究安全容器时，需要这样看待容器生态
+├── kubelet
+│   ├── CRI: 
+│   │   ├── OCI
+│   │   │   ├── VMM
+│   │   │   │   ├── Hyper-V
+│   │   │   │   │   ├── Linux Kernel
+│   │   │   │   │   │   ├── container
+
+
+
 ## 开发<!-- {"expanded":true,"direction":"right"} -->
 ### IDE<!-- {"expanded":true,"direction":"right"} -->
 #### VisualStudioCode<!-- {"expanded":false,"direction":"right"} -->
