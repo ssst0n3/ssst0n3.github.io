@@ -104,18 +104,7 @@ https://xz.aliyun.com/t/4844
 #### kali<!-- {"expanded":true,"direction":"right"} -->
 ##### kali_linux常用配置<a href="https://ssst0n3.github.io/post/网络安全/安全工具/kali/kali_linux常用配置.html" target="_blank"><!-- {"expanded":false,"direction":"right"} -->
 ### 安全研究<!-- {"expanded":true,"direction":"right"} -->
-#### [todo] 开源软件安全研究方法<!-- {"expanded":false,"direction":"right"} -->
-[todo description]
----
-title: "开源软件安全研究方法"
-date: 2020-07-11T19:46:00+08:00
-draft: true
----
-
-* 软件基础
-    * 使用
-    * 开源情况
-        * 已知漏洞数量与分布情况
+#### 开源软件安全研究方法<a href="https://ssst0n3.github.io/post/网络安全/安全研究/开源软件安全研究方法.html" target="_blank"><!-- {"expanded":false,"direction":"right"} -->
 #### 容器安全<!-- {"expanded":true,"direction":"right"} -->
 ##### [todo] 容器安全研究全景<!-- {"expanded":false,"direction":"right"} -->
 [todo description]
