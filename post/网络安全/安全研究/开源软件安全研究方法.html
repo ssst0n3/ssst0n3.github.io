@@ -9,7 +9,9 @@
 <meta name="description"
     content="0. 背景 最近一年左右，我的主要精力都花在容器安全上。容器是一个很大的概念，涉及领域众多，如果缺少一套高屋建瓴的、可行的方法论，将会被困在局部的知识点上，而无法系统性得分析出关键的容器安全风险。下面是基于前期容器安全研究总结了一套通用方法论，其中每个叶子节点都可以写成一篇文章，用于承载相关知识点的具体内容，如果一个节点的所有子节点都形成了翔实的文档，则可以认为完成了这个节点的研究工作。
 1. 软件基础 磨刀不误砍柴工，首先能熟练使用该软件的主要功能，才有可能在其中发现有建设性的安全风险。
-1.1 软件简介 1.2 安装 1.3 快速使用 1.4 其他关于该软件的重要介绍 2. 开源情况 2.1 开源基本情况  开发语言 LICENSE branch, tag 项目主要贡献者 项目上下游情况  2.2 issue,commit管理概况 2.3 已知漏洞数量与分布情况 2.4 如何报告该项目的漏洞 3. 历史漏洞分析与复现 有规范的、成体系的分析、复现并存留实验环境，可以利用vagrant或docker记录、分享漏洞环境。
+1.1 软件简介 1.2 安装 1.3 快速使用 1.4 其他关于该软件的重要介绍 2. 开源情况 2.1 开源基本情况  开发语言 LICENSE branch, tag 项目主要贡献者 项目上下游情况  2.2 issue,commit管理概况 2.3 已知漏洞数量与分布情况 2.4 如何报告该项目的漏洞 3. 如何第一时间知悉该软件安全情报 google announce, 例如：
+ https://groups.google.com/forum/feed/kubernetes-announce/msgs/rss_v2_0.xml?num=50 https://groups.google.com/forum/feed/golang-announce/msgs/rss_v2_0.xml?num=50  4. 历史漏洞分析与复现 有规范的、成体系的分析、复现并存留实验环境，可以利用vagrant或docker记录、分享漏洞环境。
+5. 安全配置 6. 安全关键技术 7. 安全风险分析 8. 源码审计 8.1 代码审计范围 8.2 issues与commits分析 8.3 代码结构分析 8.4 安全强相关文件 8.5 详细走读 8.6 自动化测试 Fuzz, 静态代码扫描, IAST
 // TODO" />
 <meta name="keywords" content="" />
 <meta name="robots" content="noodp" />
@@ -42,11 +44,13 @@
 <meta name="theme-color" content="#252627"><meta itemprop="name" content="开源软件安全研究方法">
 <meta itemprop="description" content="0. 背景 最近一年左右，我的主要精力都花在容器安全上。容器是一个很大的概念，涉及领域众多，如果缺少一套高屋建瓴的、可行的方法论，将会被困在局部的知识点上，而无法系统性得分析出关键的容器安全风险。下面是基于前期容器安全研究总结了一套通用方法论，其中每个叶子节点都可以写成一篇文章，用于承载相关知识点的具体内容，如果一个节点的所有子节点都形成了翔实的文档，则可以认为完成了这个节点的研究工作。
 1. 软件基础 磨刀不误砍柴工，首先能熟练使用该软件的主要功能，才有可能在其中发现有建设性的安全风险。
-1.1 软件简介 1.2 安装 1.3 快速使用 1.4 其他关于该软件的重要介绍 2. 开源情况 2.1 开源基本情况  开发语言 LICENSE branch, tag 项目主要贡献者 项目上下游情况  2.2 issue,commit管理概况 2.3 已知漏洞数量与分布情况 2.4 如何报告该项目的漏洞 3. 历史漏洞分析与复现 有规范的、成体系的分析、复现并存留实验环境，可以利用vagrant或docker记录、分享漏洞环境。
+1.1 软件简介 1.2 安装 1.3 快速使用 1.4 其他关于该软件的重要介绍 2. 开源情况 2.1 开源基本情况  开发语言 LICENSE branch, tag 项目主要贡献者 项目上下游情况  2.2 issue,commit管理概况 2.3 已知漏洞数量与分布情况 2.4 如何报告该项目的漏洞 3. 如何第一时间知悉该软件安全情报 google announce, 例如：
+ https://groups.google.com/forum/feed/kubernetes-announce/msgs/rss_v2_0.xml?num=50 https://groups.google.com/forum/feed/golang-announce/msgs/rss_v2_0.xml?num=50  4. 历史漏洞分析与复现 有规范的、成体系的分析、复现并存留实验环境，可以利用vagrant或docker记录、分享漏洞环境。
+5. 安全配置 6. 安全关键技术 7. 安全风险分析 8. 源码审计 8.1 代码审计范围 8.2 issues与commits分析 8.3 代码结构分析 8.4 安全强相关文件 8.5 详细走读 8.6 自动化测试 Fuzz, 静态代码扫描, IAST
 // TODO">
 <meta itemprop="datePublished" content="2020-07-11T19:46:00&#43;08:00" />
 <meta itemprop="dateModified" content="2020-07-11T19:46:00&#43;08:00" />
-<meta itemprop="wordCount" content="35">
+<meta itemprop="wordCount" content="65">
 
 
 
@@ -54,7 +58,9 @@
 <meta name="twitter:title" content="开源软件安全研究方法"/>
 <meta name="twitter:description" content="0. 背景 最近一年左右，我的主要精力都花在容器安全上。容器是一个很大的概念，涉及领域众多，如果缺少一套高屋建瓴的、可行的方法论，将会被困在局部的知识点上，而无法系统性得分析出关键的容器安全风险。下面是基于前期容器安全研究总结了一套通用方法论，其中每个叶子节点都可以写成一篇文章，用于承载相关知识点的具体内容，如果一个节点的所有子节点都形成了翔实的文档，则可以认为完成了这个节点的研究工作。
 1. 软件基础 磨刀不误砍柴工，首先能熟练使用该软件的主要功能，才有可能在其中发现有建设性的安全风险。
-1.1 软件简介 1.2 安装 1.3 快速使用 1.4 其他关于该软件的重要介绍 2. 开源情况 2.1 开源基本情况  开发语言 LICENSE branch, tag 项目主要贡献者 项目上下游情况  2.2 issue,commit管理概况 2.3 已知漏洞数量与分布情况 2.4 如何报告该项目的漏洞 3. 历史漏洞分析与复现 有规范的、成体系的分析、复现并存留实验环境，可以利用vagrant或docker记录、分享漏洞环境。
+1.1 软件简介 1.2 安装 1.3 快速使用 1.4 其他关于该软件的重要介绍 2. 开源情况 2.1 开源基本情况  开发语言 LICENSE branch, tag 项目主要贡献者 项目上下游情况  2.2 issue,commit管理概况 2.3 已知漏洞数量与分布情况 2.4 如何报告该项目的漏洞 3. 如何第一时间知悉该软件安全情报 google announce, 例如：
+ https://groups.google.com/forum/feed/kubernetes-announce/msgs/rss_v2_0.xml?num=50 https://groups.google.com/forum/feed/golang-announce/msgs/rss_v2_0.xml?num=50  4. 历史漏洞分析与复现 有规范的、成体系的分析、复现并存留实验环境，可以利用vagrant或docker记录、分享漏洞环境。
+5. 安全配置 6. 安全关键技术 7. 安全风险分析 8. 源码审计 8.1 代码审计范围 8.2 issues与commits分析 8.3 代码结构分析 8.4 安全强相关文件 8.5 详细走读 8.6 自动化测试 Fuzz, 静态代码扫描, IAST
 // TODO"/>
 
 
@@ -146,8 +152,25 @@
 <h3 id="22-issuecommit管理概况">2.2 issue,commit管理概况</h3>
 <h3 id="23-已知漏洞数量与分布情况">2.3 已知漏洞数量与分布情况</h3>
 <h3 id="24-如何报告该项目的漏洞">2.4 如何报告该项目的漏洞</h3>
-<h2 id="3-历史漏洞分析与复现">3. 历史漏洞分析与复现</h2>
+<h2 id="3-如何第一时间知悉该软件安全情报">3. 如何第一时间知悉该软件安全情报</h2>
+<p>google announce, 例如：</p>
+<ul>
+<li><a href="https://groups.google.com/forum/feed/kubernetes-announce/msgs/rss_v2_0.xml?num=50">https://groups.google.com/forum/feed/kubernetes-announce/msgs/rss_v2_0.xml?num=50</a></li>
+<li><a href="https://groups.google.com/forum/feed/golang-announce/msgs/rss_v2_0.xml?num=50">https://groups.google.com/forum/feed/golang-announce/msgs/rss_v2_0.xml?num=50</a></li>
+</ul>
+<h2 id="4-历史漏洞分析与复现">4. 历史漏洞分析与复现</h2>
 <p>有规范的、成体系的分析、复现并存留实验环境，可以利用vagrant或docker记录、分享漏洞环境。</p>
+<h2 id="5-安全配置">5. 安全配置</h2>
+<h2 id="6-安全关键技术">6. 安全关键技术</h2>
+<h2 id="7-安全风险分析">7. 安全风险分析</h2>
+<h2 id="8-源码审计">8. 源码审计</h2>
+<h3 id="81-代码审计范围">8.1 代码审计范围</h3>
+<h3 id="82-issues与commits分析">8.2 issues与commits分析</h3>
+<h3 id="83-代码结构分析">8.3 代码结构分析</h3>
+<h3 id="84-安全强相关文件">8.4 安全强相关文件</h3>
+<h3 id="85-详细走读">8.5 详细走读</h3>
+<h3 id="86-自动化测试">8.6 自动化测试</h3>
+<p>Fuzz, 静态代码扫描, IAST</p>
 <p>// TODO</p>
 
             </div>

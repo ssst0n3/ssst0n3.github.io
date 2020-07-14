@@ -6,6 +6,9 @@
 ###### Go<!-- {"expanded":false,"direction":"right"} -->
 ####### Panic<!-- {"expanded":false,"direction":"right"} -->
 ######## GoSDK中的Panic<a href="https://ssst0n3.github.io/post/网络安全/安全测试/测试方法/代码审计/go/panic/gosdk中的panic.html" target="_blank"><!-- {"expanded":true,"direction":"right"} -->
+####### [todo] 及时获取go语言安全情报<!-- {"expanded":false,"direction":"right"} -->
+[todo description]
+https://groups.google.com/forum/feed/golang-announce/msgs/rss_v2_0.xml?num=50
 ###### Python<!-- {"expanded":true,"direction":"right"} -->
 ###### Java<!-- {"expanded":false,"direction":"right"} -->
 ####### 反序列化<!-- {"expanded":true,"direction":"right"} -->
@@ -51,6 +54,13 @@ https://xz.aliyun.com/t/4844
 #### hackerbot<!-- {"expanded":false,"direction":"right"} -->
 ##### [todo] hackerbot团队协作功能设计<!-- {"expanded":false,"direction":"right"} -->
 ##### [todo] 融入aminer情报<!-- {"expanded":false,"direction":"right"} -->
+##### [todo] proxy<!-- {"expanded":false,"direction":"right"} -->
+[todo description]
+https://groups.google.com/forum/feed/golang-announce/msgs/rss_v2_0.xml?num=50
+* https://groups.google.com/forum/feed/kubernetes-announce/msgs/rss_v2_0.xml?num=50
+##### [todo] wereader便捷刷新token<!-- {"expanded":false,"direction":"right"} -->
+[todo description]
+https://developers.weixin.qq.com/doc/oplatform/Mobile_App/WeChat_Login/Development_Guide.html
 #### sectools<!-- {"expanded":false,"direction":"right"} -->
 ##### [todo] 基于docker的工具合集<!-- {"expanded":false,"direction":"right"} -->
 #### skill_tree<!-- {"expanded":false,"direction":"right"} -->
@@ -168,6 +178,10 @@ https://xz.aliyun.com/t/4844
 ##### 容器集群安全<!-- {"expanded":false,"direction":"right"} -->
 ###### k8s<!-- {"expanded":false,"direction":"right"} -->
 ####### 历史漏洞分析与复现<!-- {"expanded":false,"direction":"right"} -->
+######## kube-proxy_CVE-2020-8558_默认设置route_localnet允许邻近主机绕过localhost边界<a href="https://ssst0n3.github.io/post/网络安全/安全研究/容器安全/容器集群安全/k8s/历史漏洞分析与复现/kube-proxy_cve-2020-8558_默认设置route_localnet允许邻近主机绕过localhost边界.html" target="_blank"><!-- {"expanded":false,"direction":"right"} -->
+####### [todo] 及时获取k8s安全情报<!-- {"expanded":false,"direction":"right"} -->
+[todo description]
+* https://groups.google.com/forum/feed/kubernetes-announce/msgs/rss_v2_0.xml?num=50
 ##### 安全容器<!-- {"expanded":false,"direction":"right"} -->
 ##### 容器实现规范<!-- {"expanded":true,"direction":"right"} -->
 #### 学术情报学习<!-- {"expanded":true,"direction":"right"} -->
