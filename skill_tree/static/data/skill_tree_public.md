@@ -7,8 +7,6 @@
 ####### Panic<!-- {"expanded":false,"direction":"right"} -->
 ######## GoSDK中的Panic<a href="https://ssst0n3.github.io/post/网络安全/安全测试/测试方法/代码审计/go/panic/gosdk中的panic.html" target="_blank"><!-- {"expanded":true,"direction":"right"} -->
 ####### [todo] 及时获取go语言安全情报<!-- {"expanded":false,"direction":"right"} -->
-[todo description]
-https://groups.google.com/forum/feed/golang-announce/msgs/rss_v2_0.xml?num=50
 ###### Python<!-- {"expanded":true,"direction":"right"} -->
 ###### Java<!-- {"expanded":false,"direction":"right"} -->
 ####### 反序列化<!-- {"expanded":true,"direction":"right"} -->
@@ -36,8 +34,6 @@ https://groups.google.com/forum/feed/golang-announce/msgs/rss_v2_0.xml?num=50
 ######### spring_cloud<!-- {"expanded":false,"direction":"right"} -->
 ########## spring_cloud_config<!-- {"expanded":false,"direction":"right"} -->
 ########### [todo] CVE-2019-3799分析与复现<!-- {"expanded":false,"direction":"right"} -->
-[todo description]
-https://xz.aliyun.com/t/4844
 ###### 逆向工程<!-- {"expanded":true,"direction":"right"} -->
 ###### 云安全<!-- {"expanded":true,"direction":"right"} -->
 ###### IOT安全<!-- {"expanded":true,"direction":"right"} -->
@@ -55,23 +51,14 @@ https://xz.aliyun.com/t/4844
 ##### [todo] hackerbot团队协作功能设计<!-- {"expanded":false,"direction":"right"} -->
 ##### [todo] 融入aminer情报<!-- {"expanded":false,"direction":"right"} -->
 ##### [todo] proxy<!-- {"expanded":false,"direction":"right"} -->
-[todo description]
-https://groups.google.com/forum/feed/golang-announce/msgs/rss_v2_0.xml?num=50
-* https://groups.google.com/forum/feed/kubernetes-announce/msgs/rss_v2_0.xml?num=50
 ##### [todo] wereader便捷刷新token<!-- {"expanded":false,"direction":"right"} -->
-[todo description]
-https://developers.weixin.qq.com/doc/oplatform/Mobile_App/WeChat_Login/Development_Guide.html
 #### sectools<!-- {"expanded":false,"direction":"right"} -->
 ##### [todo] 基于docker的工具合集<!-- {"expanded":false,"direction":"right"} -->
 #### skill_tree<!-- {"expanded":false,"direction":"right"} -->
 ##### [todo] include_mode<!-- {"expanded":false,"direction":"right"} -->
-[todo description]
-可能存在多个学科引用同一个技能的情况。
 ##### [todo] show_todo_description<!-- {"expanded":false,"direction":"right"} -->
 #### skilltree_blog<!-- {"expanded":false,"direction":"right"} -->
 ##### [todo] todo产生了一些空白的博客<!-- {"expanded":false,"direction":"right"} -->
-[todo description]
-生成博客时忽略todo
 ### CTF<!-- {"expanded":true,"direction":"right"} -->
 #### 参考资料<!-- {"expanded":true,"direction":"right"} -->
 #### pwn<!-- {"expanded":true,"direction":"right"} -->
@@ -117,30 +104,6 @@ https://developers.weixin.qq.com/doc/oplatform/Mobile_App/WeChat_Login/Developme
 #### 开源软件安全研究方法<a href="https://ssst0n3.github.io/post/网络安全/安全研究/开源软件安全研究方法.html" target="_blank"><!-- {"expanded":false,"direction":"right"} -->
 #### 容器安全<!-- {"expanded":true,"direction":"right"} -->
 ##### [todo] 容器安全研究全景<!-- {"expanded":false,"direction":"right"} -->
-[todo description]
-├── 基于进程隔离技术的容器技术
-│   ├── docker安全
-│   ├── gvisor
-├── 容器集群安全
-│   ├── k8s
-│   ├── swarm
-├── 安全容器
-│   ├── kata
-│   ├── firecracker
-├── 容器实现规范
-
-
-在研究安全容器时，需要这样看待容器生态
-├── kubelet
-│   ├── CRI: 
-│   │   ├── OCI
-│   │   │   ├── VMM
-│   │   │   │   ├── Hyper-V
-│   │   │   │   │   ├── Linux Kernel
-│   │   │   │   │   │   ├── container
-
-
-
 ##### 基于进程隔离的容器技术<!-- {"expanded":false,"direction":"right"} -->
 ###### docker<!-- {"expanded":false,"direction":"right"} -->
 ####### docker基础<!-- {"expanded":true,"direction":"right"} -->
@@ -180,17 +143,10 @@ https://developers.weixin.qq.com/doc/oplatform/Mobile_App/WeChat_Login/Developme
 ####### 历史漏洞分析与复现<!-- {"expanded":false,"direction":"right"} -->
 ######## kube-proxy_CVE-2020-8558_默认设置route_localnet允许邻近主机绕过localhost边界<a href="https://ssst0n3.github.io/post/网络安全/安全研究/容器安全/容器集群安全/k8s/历史漏洞分析与复现/kube-proxy_cve-2020-8558_默认设置route_localnet允许邻近主机绕过localhost边界.html" target="_blank"><!-- {"expanded":false,"direction":"right"} -->
 ####### [todo] 及时获取k8s安全情报<!-- {"expanded":false,"direction":"right"} -->
-[todo description]
-* https://groups.google.com/forum/feed/kubernetes-announce/msgs/rss_v2_0.xml?num=50
 ##### 安全容器<!-- {"expanded":false,"direction":"right"} -->
 ##### 容器实现规范<!-- {"expanded":true,"direction":"right"} -->
 #### 学术情报学习<!-- {"expanded":true,"direction":"right"} -->
 ##### [todo] aminer必读论文<!-- {"expanded":false,"direction":"right"} -->
-[todo description]
-https://www.aminer.cn/
-https://www.aminer.cn/channel/
-https://www.aminer.cn/topic/5e80bc21e52b9645c1f7b19f
-https://www.aminer.cn/research_report/5de27b53af66005a44822b12
 ## 开发<!-- {"expanded":true,"direction":"right"} -->
 ### IDE<!-- {"expanded":true,"direction":"right"} -->
 #### VisualStudioCode<!-- {"expanded":false,"direction":"right"} -->
@@ -210,8 +166,6 @@ https://www.aminer.cn/research_report/5de27b53af66005a44822b12
 ### myproject<!-- {"expanded":true,"direction":"right"} -->
 #### [todo] git_todo<!-- {"expanded":false,"direction":"right"} -->
 #### [todo] git_update<!-- {"expanded":false,"direction":"right"} -->
-[todo description]
-遍历目录下所有git项目，commit并push到remote
 ## 计算机基本<!-- {"expanded":true,"direction":"right"} -->
 ### 操作系统<!-- {"expanded":true,"direction":"right"} -->
 #### linux<!-- {"expanded":false,"direction":"right"} -->
@@ -230,6 +184,7 @@ https://www.aminer.cn/research_report/5de27b53af66005a44822b12
 ### docker-compose使用host网络<a href="https://ssst0n3.github.io/post/it杂货铺/docker-compose使用host网络.html" target="_blank"><!-- {"expanded":false,"direction":"right"} -->
 ### letsencrypt通过dns获取证书<a href="https://ssst0n3.github.io/post/it杂货铺/letsencrypt通过dns获取证书.html" target="_blank"><!-- {"expanded":false,"direction":"right"} -->
 ### 用bug解决bug_荣耀智慧屏闹钟设置方案<a href="https://ssst0n3.github.io/post/it杂货铺/用bug解决bug_荣耀智慧屏闹钟设置方案.html" target="_blank"><!-- {"expanded":false,"direction":"right"} -->
+### [todo] 理清markdown语法乱麻<!-- {"expanded":false,"direction":"right"} -->
 ## 知识管理<!-- {"expanded":false,"direction":"right"} -->
 ### 捕风捉影的使用原则<a href="https://ssst0n3.github.io/post/知识管理/捕风捉影的使用原则.html" target="_blank"><!-- {"expanded":false,"direction":"right"} -->
 ### 一篇优雅的技术博客应该长这样<a href="https://ssst0n3.github.io/post/知识管理/一篇优雅的技术博客应该长这样.html" target="_blank"><!-- {"expanded":false,"direction":"right"} -->
