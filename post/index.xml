@@ -17,13 +17,8 @@
       <pubDate>Tue, 14 Jul 2020 14:53:00 +0800</pubDate>
       
       <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E5%AE%B9%E5%99%A8%E9%9B%86%E7%BE%A4%E5%AE%89%E5%85%A8/k8s/%E5%8E%86%E5%8F%B2%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90%E4%B8%8E%E5%A4%8D%E7%8E%B0/kube-proxy_cve-2020-8558_%E9%BB%98%E8%AE%A4%E8%AE%BE%E7%BD%AEroute_localnet%E5%85%81%E8%AE%B8%E9%82%BB%E8%BF%91%E4%B8%BB%E6%9C%BA%E7%BB%95%E8%BF%87localhost%E8%BE%B9%E7%95%8C.html</guid>
-      <description>一、kube-proxy kube-proxy 是集群中每个节点上运行的网络代理,实现 Kubernetes Service 概念的一部分。kube-proxy 维护节点上的网络规则。这些网络规则允许从集群内部或外部的网络会话与 Pod 进行网络通信。如果操作系统提供了数据包过滤层并可用的话，kube-proxy会通过它来实现网络规则。否则，kube-proxy 仅转发流量本身。1
-二、漏洞简介   影响范围
-  修复版本
- patch commit    影响
- 评分     [Service]: 将运行在一组 Pods 上的应用程序公开为网络服务的抽象方法。
-    https://kubernetes.io/zh/docs/concepts/overview/components/#kube-proxy &amp;#x21a9;&amp;#xfe0e;
-   </description>
+      <description>一、kube-proxy kube-proxy 是集群中每个节点上运行的网络代理,实现 Kubernetes Service 概念的一部分。kube-proxy 维护节点上的网络规则。这些网络规则允许从集群内部或外部的网络会话与 Pod 进行网络通信。如果操作系统提供了数据包过滤层并可用的话，kube-proxy会通过它来实现网络规则。否则，kube-proxy 仅转发流量本身。[^https://kubernetes.io/zh/docs/concepts/overview/components/#kube-proxy]
+二、漏洞简介  影响范围 修复版本  patch commit   影响  评分    *[Kubernetes]: 将运行在一组 Pods 上的应用程序公开为网络服务的抽象方法。</description>
     </item>
     
     <item>
