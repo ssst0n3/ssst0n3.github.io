@@ -50,7 +50,7 @@ package pdf // import &quot;rsc.io/pdf&quot; 1.2 docker项目更名 docker详细
 这里要了解的是，docker曾在2017年将项目迁移到github.com/moby/moby">
 <meta itemprop="datePublished" content="2019-12-30T01:30:00&#43;08:00" />
 <meta itemprop="dateModified" content="2019-12-30T01:30:00&#43;08:00" />
-<meta itemprop="wordCount" content="226">
+<meta itemprop="wordCount" content="244">
 
 
 
@@ -145,7 +145,7 @@ package pdf // import &quot;rsc.io/pdf&quot; 1.2 docker项目更名 docker详细
 <p>docker详细开发现状参见: <a href="/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/%E6%B5%8B%E8%AF%95%E5%AF%B9%E8%B1%A1/%E5%BA%94%E7%94%A8%E5%AE%89%E5%85%A8/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/docker/docker%E6%BA%90%E7%A0%81%E5%AE%A1%E8%AE%A1/docker%E5%BC%80%E5%8F%91%E7%8E%B0%E7%8A%B6.html">docker开发现状</a></p>
 <p>这里要了解的是，docker曾在2017年将项目迁移到github.com/moby/moby</p>
 <h3 id="13-docker项目的依赖管理方式">1.3 docker项目的依赖管理方式</h3>
-<p>go语言在1.11版本时发布了gomod特性来管理依赖，非常好用，但也有一些用起来不方便的地方，例如无法使用latest和master， 只能使用release或commit。</p>
+<p>go语言在1.11版本时发布了gomod特性来管理依赖，非常好用，但也有一些用起来不方便的地方，例如必须依赖于tag来管理版本。</p>
 <p>docker未使用gomod管理依赖，使用的方法是在vendor中明细每个依赖的commit记录:</p>
 <ul>
 <li><a href="https://github.com/docker/engine/blob/master/vendor.conf">docker/engine/vendor.conf</a></li>
@@ -199,7 +199,14 @@ replace github.com/docker/cli =&gt; github.com/docker/cli v0.0.0-20191220145525-
 replace github.com/docker/docker =&gt; github.com/docker/docker v0.7.3-0.20191025225506-a09e6e323e55
 replace github.com/docker/swarmkit =&gt; github.com/docker/swarmkit v1.12.1-0.20190717134425-7dded76ec532
 </code></pre><p>当然直接在require语句中写清楚commit记录也是可以的。</p>
-
+<p>也可以使用在docker/engine中查询到tag记录，执行go mod tidy来获取对应的commit记录
+require (
+github.com/docker/docker v19.03.12
+)</p>
+<p>例如使用以上语句声明docker版本，执行go mod tidy命令时，会自动替换成commit时间-hash的形式。</p>
+<pre><code>$ go mod tidy
+go: downloading github.com/docker/docker v0.0.0-20200618181300-9dc6525e6118
+</code></pre>
             </div>
         </article>
 
