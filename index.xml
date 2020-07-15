@@ -28,8 +28,10 @@
       
       <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E5%AE%B9%E5%99%A8%E9%9B%86%E7%BE%A4%E5%AE%89%E5%85%A8/k8s/%E5%8E%86%E5%8F%B2%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90%E4%B8%8E%E5%A4%8D%E7%8E%B0/kube-proxy_cve-2020-8558_%E9%BB%98%E8%AE%A4%E8%AE%BE%E7%BD%AEroute_localnet%E5%85%81%E8%AE%B8%E9%82%BB%E8%BF%91%E4%B8%BB%E6%9C%BA%E7%BB%95%E8%BF%87localhost%E8%BE%B9%E7%95%8C.html</guid>
       <description>一、kube-proxy kube-proxy 是集群中每个节点上运行的网络代理,实现 Kubernetes Service 概念的一部分。kube-proxy 维护节点上的网络规则。这些网络规则允许从集群内部或外部的网络会话与 Pod 进行网络通信。如果操作系统提供了数据包过滤层并可用的话，kube-proxy会通过它来实现网络规则。否则，kube-proxy 仅转发流量本身。1
-二、漏洞简介  影响范围 修复版本  patch commit   影响  评分      https://kubernetes.io/zh/docs/concepts/overview/components/#kube-proxy &amp;#x21a9;&amp;#xfe0e;
-   </description>
+二、漏洞简介 1. 简介 2020年6月20日，kubernetes在issue2中公布了一个漏洞——CVE-2020-8558。kube-proxy默认设置net.ipv4.conf.all.route_localnet=1，这允许局域网内的主机或容器绕过localhost边界，访问其他主机或容器绑定在127网段(本地回还接口)的TCP/UDP服务。如果绑定在本地的服务无认证和流量加密机制，则会受本漏洞影响。特别的，如果开启了kubernetes的不安全(http,未启用证书)端口8080，则可能直接调用kubernetes的api。
+2. 影响 2.1 CVSS评分 本漏洞官方给出了两个评分：
+对于开启了kubernetes 8080端口的情况，CVSS3.1打分为8.8分，CVSS:3.1/AV:A/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H。2
+   维度 级别 理由     Attack Vector Adjacent 此漏洞由局域网发起，攻击其他主机   Attack Complexity Low 攻击复杂度低   Privileges Required None 此漏洞的必要条件是攻击者已在局域网内，因此不需要额外权限   User Interaction None 无需用户交互   Scope Unchanged 未更改权限体系   Confidentiality High 可以通过k8s api获取宿主机root权限，影响机密性高   Integrity High 可以通过k8s api获取宿主机root权限，影响机密性高   Availability High 可以通过k8s api获取宿主机root权限，影响可用性高    对于典型场景(未开启8080端口，不考虑宿主机其他绑定在本地的服务)，CVSS3.</description>
     </item>
     
     <item>
@@ -473,6 +475,18 @@ https://www.markdownguide.org/extended-syntax/</description>
       
       <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/%E6%B5%8B%E8%AF%95%E6%96%B9%E6%B3%95/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/go/%E5%8F%8A%E6%97%B6%E8%8E%B7%E5%8F%96go%E8%AF%AD%E8%A8%80%E5%AE%89%E5%85%A8%E6%83%85%E6%8A%A5.html</guid>
       <description>https://groups.google.com/forum/feed/golang-announce/msgs/rss_v2_0.xml?num=50</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%A6%82%E4%BD%95%E4%BC%98%E9%9B%85%E5%9C%B0%E8%BF%9B%E8%A1%8C%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0.html</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%A6%82%E4%BD%95%E4%BC%98%E9%9B%85%E5%9C%B0%E8%BF%9B%E8%A1%8C%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0.html</guid>
+      <description>docker &amp;amp; vagrant
+vagrant 1. vagrant简介 Vagrant 是在单个工作流中构建和管理虚拟机环境的工具。通过易于使用的工作流程和对自动化的关注，Vagrant 降低了开发环境的设置时间，增加了生产等价性，并使“在我的机器上工作”成为历史。1
+2. 安装 sudo apt-get install vagrant 参考链接   https://www.vagrantup.com/intro &amp;#x21a9;&amp;#xfe0e;
+   </description>
     </item>
     
     <item>
