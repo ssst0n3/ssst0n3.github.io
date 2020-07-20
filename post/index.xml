@@ -6,10 +6,19 @@
     <description>Recent content in Post on welcome to st0n3&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 15 Jul 2020 07:00:00 +0800</lastBuildDate>
+    <lastBuildDate>Mon, 20 Jul 2020 10:00:00 +0800</lastBuildDate>
     
 	<atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>漏洞分析与复现模板</title>
+      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90%E4%B8%8E%E5%A4%8D%E7%8E%B0%E6%A8%A1%E6%9D%BF.html</link>
+      <pubDate>Mon, 20 Jul 2020 10:00:00 +0800</pubDate>
+      
+      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90%E4%B8%8E%E5%A4%8D%E7%8E%B0%E6%A8%A1%E6%9D%BF.html</guid>
+      <description>一、基本信息    条目 详情 备注     项目地址 https://github.com/spring-cloud/spring-cloud-config    发布日期 2019-04-16    CVE-ID CVE-2019-3799 https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2019-3799   EDB-ID EDB-46772 https://www.exploit-db.com/exploits/46772   cvedetails https://www.cvedetails.com/cve/CVE-2019-3799/ \   影响范围 spring-cloud-config 2.1.0-2.1.1, 2.0.0-2.0.3, 1.4.0-1.4.5 及更旧版本 \   修复版本 2.1.2, 2.0.4, 1.4.6 \   CVSS 7.5 CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N     二、组件简介 三、漏洞介绍 1. 简介 2. 影响 四、漏洞复现 五、漏洞分析 六、总结 参考链接 </description>
+    </item>
     
     <item>
       <title>spring-cloud-config CVE-2019-3799任意文件读取漏洞分析与复现</title>
@@ -525,15 +534,6 @@ vagrant 1. vagrant简介 Vagrant 是在单个工作流中构建和管理虚拟�
       
       <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E5%AE%B9%E5%99%A8%E9%9B%86%E7%BE%A4%E5%AE%89%E5%85%A8/k8s/%E5%8F%8A%E6%97%B6%E8%8E%B7%E5%8F%96k8s%E5%AE%89%E5%85%A8%E6%83%85%E6%8A%A5.html</guid>
       <description> https://groups.google.com/forum/feed/kubernetes-announce/msgs/rss_v2_0.xml?num=50  </description>
-    </item>
-    
-    <item>
-      <title></title>
-      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90%E4%B8%8E%E5%A4%8D%E7%8E%B0%E6%A8%A1%E6%9D%BF.html</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90%E4%B8%8E%E5%A4%8D%E7%8E%B0%E6%A8%A1%E6%9D%BF.html</guid>
-      <description>一、基本信息    条目 详情 备注     项目地址 https://github.com/spring-cloud/spring-cloud-config    CVE-ID CVE-2019-3799 https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2019-3799   EDB-ID EDB-46772 https://www.exploit-db.com/exploits/46772   cvedetails https://www.cvedetails.com/cve/CVE-2019-3799/ \   影响范围 spring-cloud-config 2.1.0-2.1.1, 2.0.0-2.0.3, 1.4.0-1.4.5 及更旧版本 \   修复版本 2.1.2, 2.0.4, 1.4.6 \    二、组件简介 三、漏洞介绍 1. 简介 2. 影响 四、漏洞复现 五、漏洞分析 六、总结 参考链接 </description>
     </item>
     
     <item>

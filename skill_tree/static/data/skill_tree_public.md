@@ -148,7 +148,7 @@
 #### 学术情报学习<!-- {"expanded":true,"direction":"right"} -->
 ##### [todo] aminer必读论文<!-- {"expanded":false,"direction":"right"} -->
 #### [todo] 如何优雅地进行漏洞复现<!-- {"expanded":false,"direction":"right"} -->
-#### [todo] 漏洞分析与复现模板<!-- {"expanded":false,"direction":"right"} -->
+#### 漏洞分析与复现模板<a href="https://ssst0n3.github.io/post/网络安全/安全研究/漏洞分析与复现模板.html" target="_blank"><!-- {"expanded":false,"direction":"right"} -->
 ## 开发<!-- {"expanded":true,"direction":"right"} -->
 ### IDE<!-- {"expanded":true,"direction":"right"} -->
 #### VisualStudioCode<!-- {"expanded":false,"direction":"right"} -->
