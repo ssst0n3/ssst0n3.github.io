@@ -140,9 +140,12 @@
 ####### docker相关工具的安全性<!-- {"expanded":true,"direction":"right"} -->
 ##### 容器集群安全<!-- {"expanded":false,"direction":"right"} -->
 ###### k8s<!-- {"expanded":false,"direction":"right"} -->
+####### k8s基础<!-- {"expanded":false,"direction":"right"} -->
+######## [todo] k8s安装<!-- {"expanded":false,"direction":"right"} -->
+####### k8s开源情况<!-- {"expanded":false,"direction":"right"} -->
+####### [todo] 及时获取k8s安全情报<!-- {"expanded":false,"direction":"right"} -->
 ####### 历史漏洞分析与复现<!-- {"expanded":false,"direction":"right"} -->
 ######## [todo] kube-proxy_CVE-2020-8558_默认设置route_localnet允许邻近主机绕过localhost边界<!-- {"expanded":false,"direction":"right"} -->
-####### [todo] 及时获取k8s安全情报<!-- {"expanded":false,"direction":"right"} -->
 ##### 安全容器<!-- {"expanded":false,"direction":"right"} -->
 ##### 容器实现规范<!-- {"expanded":true,"direction":"right"} -->
 #### 学术情报学习<!-- {"expanded":true,"direction":"right"} -->

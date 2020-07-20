@@ -529,6 +529,17 @@ vagrant 1. vagrant简介 Vagrant 是在单个工作流中构建和管理虚拟�
     
     <item>
       <title></title>
+      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E5%AE%B9%E5%99%A8%E9%9B%86%E7%BE%A4%E5%AE%89%E5%85%A8/k8s/k8s%E5%9F%BA%E7%A1%80/k8s%E5%AE%89%E8%A3%85.html</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E5%AE%B9%E5%99%A8%E9%9B%86%E7%BE%A4%E5%AE%89%E5%85%A8/k8s/k8s%E5%9F%BA%E7%A1%80/k8s%E5%AE%89%E8%A3%85.html</guid>
+      <description>生产环境 学习环境 使用minikube安装k8s 安装minikube 在minikube github找到二进制安装包，并安装
+例如
+wget https://github.com/kubernetes/minikube/releases/download/v1.12.1/minikube_latest_amd64.deb sudo dpkg -i minikube_latest_amd64.deb 安装kubectl $ cat &amp;lt;&amp;lt;EOF &amp;gt; /etc/apt/sources.list.d/kubernetes.list deb https://mirrors.huaweicloud.com/kubernetes/apt/ kubernetes-xenial main EOF $ curl -s https://mirrors.huaweicloud.com/kubernetes/apt/doc/apt-key.gpg | sudo apt-key add - $ sudo apt update $ sudo apt install -y kubectl 创建k8s环境 https_proxy=&amp;quot;http://127.0.0.1:8118&amp;quot; http_proxy=&amp;quot;http://127.0.0.1:8118&amp;quot; NO_PROXY=localhost,127.0.0.1,10.96.0.0/12,192.168.99.0/24,192.168.39.0/24 minikube start --driver=virtualbox --kubernetes-version=v1.18.3 参考链接  安装 Minikube 使用 Minikube 安装 Kubernetes 安装并配置 kubectl minikube start  </description>
+    </item>
+    
+    <item>
+      <title></title>
       <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E5%AE%B9%E5%99%A8%E9%9B%86%E7%BE%A4%E5%AE%89%E5%85%A8/k8s/%E5%8F%8A%E6%97%B6%E8%8E%B7%E5%8F%96k8s%E5%AE%89%E5%85%A8%E6%83%85%E6%8A%A5.html</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
