@@ -155,6 +155,7 @@
 ### 渗透测试<!-- {"expanded":true,"direction":"right"} -->
 #### 权限提升<!-- {"expanded":true,"direction":"right"} -->
 ##### [external] MySQL远程代码执行_权限提升漏洞的分析与实践(CVE-2016-6662)<a href="https://paper.seebug.org/46/" target="_blank"><!-- {"expanded":false,"direction":"right"} -->
+##### [external] MySQL远程代码执行_权限提升漏洞的分析与实践(CVE-2016-6662)<a href="https://www.exploit-db.com/exploits/1518" target="_blank"><!-- {"expanded":false,"direction":"right"} -->
 ## 开发<!-- {"expanded":true,"direction":"right"} -->
 ### IDE<!-- {"expanded":true,"direction":"right"} -->
 #### VisualStudioCode<!-- {"expanded":false,"direction":"right"} -->
