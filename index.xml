@@ -620,5 +620,14 @@ wget https://github.com/kubernetes/minikube/releases/download/v1.12.1/minikube_l
       <description>生成博客时忽略todo</description>
     </item>
     
+    <item>
+      <title></title>
+      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/%E6%9D%83%E9%99%90%E6%8F%90%E5%8D%87/linux%E6%8F%90%E6%9D%83%E6%A3%80%E6%B5%8B%E8%84%9A%E6%9C%AC.html</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/%E6%9D%83%E9%99%90%E6%8F%90%E5%8D%87/linux%E6%8F%90%E6%9D%83%E6%A3%80%E6%B5%8B%E8%84%9A%E6%9C%AC.html</guid>
+      <description> 这里有一些编译好的提权exp: https://github.com/pythonmaster41/Go-For-OSCP/blob/master/Exploits/ exp集合：https://github.com/SecWiki/linux-kernel-exploits PEASS: https://github.com/carlospolop/privilege-escalation-awesome-scripts-suite 检查脚本：https://github.com/InteliSecureLabs/Linux_Exploit_Suggester 检查脚本：https://github.com/sleventyeleven/linuxprivchecker 检查脚本：https://github.com/mzet-/linux-exploit-suggester 检查脚本：https://github.com/jondonas/linux-exploit-suggester-2/ 检查脚本：https://github.com/rebootuser/LinEnum  </description>
+    </item>
+    
   </channel>
 </rss>
