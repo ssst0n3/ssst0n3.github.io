@@ -441,6 +441,17 @@ cmd := &amp;#34;cp ./test/* /tmp -r&amp;#34; out, err := exec.Command(&amp;#34;s
     
     <item>
       <title></title>
+      <link>/post/it%E6%9D%82%E8%B4%A7%E9%93%BA/openvpn_chaining.html</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/post/it%E6%9D%82%E8%B4%A7%E9%93%BA/openvpn_chaining.html</guid>
+      <description>https://i.stack.imgur.com/DdIHk.png
+https://serverfault.com/questions/900551/chaining-two-vpns-using-a-vps
+# cat iptables.sh #!/bin/bash iptables -t nat -D POSTROUTING -s 10.8.0.0/24 ! -d 10.8.0.0/24 -j SNAT --to-source 192.168.1.222 iptables -A FORWARD -i tun0 -o tun1 -j ACCEPT iptables -A FORWARD -i tun1 -o tun0 -j ACCEPT iptables -A FORWARD -d 10.8.0.0/24 -m state --state ESTABLISHED,RELATED -j ACCEPT iptables -t nat -A POSTROUTING -s 10.8.0.0/24 -j SNAT --to-source 192.168.119.176 ip route add default via 192.168.119.176 table 120 ip rule add from 10.</description>
+    </item>
+    
+    <item>
+      <title></title>
       <link>/post/it%E6%9D%82%E8%B4%A7%E9%93%BA/windows%E5%88%86%E5%B1%8F%E8%BD%AF%E4%BB%B6%E6%8E%A8%E8%8D%90.html</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
