@@ -81,6 +81,8 @@
 ###### 离散对数<!-- {"expanded":true,"direction":"right"} -->
 ####### ElGamal<!-- {"expanded":false,"direction":"right"} -->
 ######## VolgaCTF2020Qualifier_Crypto_Guess_writeup<a href="https://ssst0n3.github.io/post/网络安全/ctf/crypto/非对称加密/离散对数/elgamal/volgactf2020qualifier_crypto_guess_writeup.html" target="_blank"><!-- {"expanded":true,"direction":"right"} -->
+##### 数论<!-- {"expanded":true,"direction":"right"} -->
+###### [todo] 强网杯-Qualifier-2020_强网先锋_baby_crt_writeup<!-- {"expanded":false,"direction":"right"} -->
 ### 安全运维<!-- {"expanded":true,"direction":"right"} -->
 ### 应急响应<!-- {"expanded":true,"direction":"right"} -->
 ### 安全数据分析<!-- {"expanded":true,"direction":"right"} -->
@@ -154,20 +156,10 @@
 #### 漏洞分析与复现模板<a href="https://ssst0n3.github.io/post/网络安全/安全研究/漏洞分析与复现模板.html" target="_blank"><!-- {"expanded":false,"direction":"right"} -->
 ### 渗透测试<!-- {"expanded":true,"direction":"right"} -->
 #### 权限提升<!-- {"expanded":true,"direction":"right"} -->
-##### linux提权<!-- {"expanded":false,"direction":"right"} -->
-###### [todo] linux提权检测脚本<!-- {"expanded":false,"direction":"right"} -->
-##### windows提权<!-- {"expanded":false,"direction":"right"} -->
-###### [external] Windows_elevation_of_privileges_ToC<a href="https://guif.re/windowseop" target="_blank"><!-- {"expanded":false,"direction":"right"} -->
-###### [external] Checklist-Local_Windows_Privilege_Escalation<a href="https://book.hacktricks.xyz/windows/checklist-windows-privilege-escalation" target="_blank"><!-- {"expanded":false,"direction":"right"} -->
-###### [external] accesschk_accepteula_Flag<a href="https://xor.cat/2017/09/05/sysinternals-accesschk-accepteula/" target="_blank"><!-- {"expanded":false,"direction":"right"} -->
-###### [external] OSCP-Windows_Priviledge_Escalation<a href="https://hackingandsecurity.blogspot.com/2017/09/oscp-windows-priviledge-escalation.html" target="_blank"><!-- {"expanded":false,"direction":"right"} -->
-###### [external] OSCP_NOTES–PRIVILEGE_ESCALATION(WINDOWS)<a href="https://securism.wordpress.com/oscp-notes-privilege-escalation-windows/" target="_blank"><!-- {"expanded":false,"direction":"right"} -->
-###### [external] privilege_escalation_windows<a href="https://sushant747.gitbooks.io/total-oscp-guide/content/privilege_escalation_windows.html" target="_blank"><!-- {"expanded":false,"direction":"right"} -->
-###### [external] Windows-Privilege_Escalation<a href="https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Windows%20-%20Privilege%20Escalation.md" target="_blank"><!-- {"expanded":false,"direction":"right"} -->
-###### [external] Windows_Privilege_Escalation_Fundamentals<a href="https://www.fuzzysecurity.com/tutorials/16.html" target="_blank"><!-- {"expanded":false,"direction":"right"} -->
-##### mysql权限提升<!-- {"expanded":false,"direction":"right"} -->
-###### [external] MySQL远程代码执行_权限提升漏洞的分析与实践(CVE-2016-6662)<a href="https://paper.seebug.org/46/" target="_blank"><!-- {"expanded":false,"direction":"right"} -->
-###### [external] MySQL4.x或5.0(Linux)-User-Defined_Function(UDF)_Dynamic_Library(2)<a href="https://www.exploit-db.com/exploits/1518" target="_blank"><!-- {"expanded":false,"direction":"right"} -->
+##### [external] MySQL远程代码执行_权限提升漏洞的分析与实践(CVE-2016-6662)<a href="https://paper.seebug.org/46/" target="_blank"><!-- {"expanded":false,"direction":"right"} -->
+##### [external] MySQL远程代码执行_权限提升漏洞的分析与实践(CVE-2016-6662)<a href="https://www.exploit-db.com/exploits/1518" target="_blank"><!-- {"expanded":false,"direction":"right"} -->
+##### [todo] linux提权检测脚本<!-- {"expanded":false,"direction":"right"} -->
+##### [external] GTFOBins<a href="https://gtfobins.github.io" target="_blank"><!-- {"expanded":false,"direction":"right"} -->
 ## 开发<!-- {"expanded":true,"direction":"right"} -->
 ### IDE<!-- {"expanded":true,"direction":"right"} -->
 #### VisualStudioCode<!-- {"expanded":false,"direction":"right"} -->
@@ -206,10 +198,6 @@
 ### letsencrypt通过dns获取证书<a href="https://ssst0n3.github.io/post/it杂货铺/letsencrypt通过dns获取证书.html" target="_blank"><!-- {"expanded":false,"direction":"right"} -->
 ### [todo] 用bug解决bug_荣耀智慧屏闹钟设置方案<!-- {"expanded":false,"direction":"right"} -->
 ### [todo] 理清markdown语法乱麻<!-- {"expanded":false,"direction":"right"} -->
-### [todo] windows分屏软件推荐<!-- {"expanded":false,"direction":"right"} -->
-### [todo] 递爪app推荐<!-- {"expanded":false,"direction":"right"} -->
-### [external] git放弃本地commit<a href="https://www.cnblogs.com/tyoutetu/p/9952304.html" target="_blank"><!-- {"expanded":false,"direction":"right"} -->
-### [todo] openvpn_chaining<!-- {"expanded":false,"direction":"right"} -->
 ## 知识管理<!-- {"expanded":false,"direction":"right"} -->
 ### [todo] 捕风捉影的使用原则<!-- {"expanded":false,"direction":"right"} -->
 ### [todo] 一篇优雅的技术博客应该长这样<!-- {"expanded":false,"direction":"right"} -->

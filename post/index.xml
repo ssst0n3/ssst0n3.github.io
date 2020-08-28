@@ -441,26 +441,6 @@ cmd := &amp;#34;cp ./test/* /tmp -r&amp;#34; out, err := exec.Command(&amp;#34;s
     
     <item>
       <title></title>
-      <link>/post/it%E6%9D%82%E8%B4%A7%E9%93%BA/openvpn_chaining.html</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>/post/it%E6%9D%82%E8%B4%A7%E9%93%BA/openvpn_chaining.html</guid>
-      <description>https://i.stack.imgur.com/DdIHk.png
-https://serverfault.com/questions/900551/chaining-two-vpns-using-a-vps
-# cat iptables.sh #!/bin/bash iptables -t nat -D POSTROUTING -s 10.8.0.0/24 ! -d 10.8.0.0/24 -j SNAT --to-source 192.168.1.222 iptables -A FORWARD -i tun0 -o tun1 -j ACCEPT iptables -A FORWARD -i tun1 -o tun0 -j ACCEPT iptables -A FORWARD -d 10.8.0.0/24 -m state --state ESTABLISHED,RELATED -j ACCEPT iptables -t nat -A POSTROUTING -s 10.8.0.0/24 -j SNAT --to-source 192.168.119.176 ip route add default via 192.168.119.176 table 120 ip rule add from 10.</description>
-    </item>
-    
-    <item>
-      <title></title>
-      <link>/post/it%E6%9D%82%E8%B4%A7%E9%93%BA/windows%E5%88%86%E5%B1%8F%E8%BD%AF%E4%BB%B6%E6%8E%A8%E8%8D%90.html</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>/post/it%E6%9D%82%E8%B4%A7%E9%93%BA/windows%E5%88%86%E5%B1%8F%E8%BD%AF%E4%BB%B6%E6%8E%A8%E8%8D%90.html</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title></title>
       <link>/post/it%E6%9D%82%E8%B4%A7%E9%93%BA/%E7%90%86%E6%B8%85markdown%E8%AF%AD%E6%B3%95%E4%B9%B1%E9%BA%BB.html</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
@@ -469,15 +449,6 @@ https://serverfault.com/questions/900551/chaining-two-vpns-using-a-vps
 https://www.markdownguide.org/tools/hugo/
 https://www.markdownguide.org/basic-syntax/
 https://www.markdownguide.org/extended-syntax/</description>
-    </item>
-    
-    <item>
-      <title></title>
-      <link>/post/it%E6%9D%82%E8%B4%A7%E9%93%BA/%E9%80%92%E7%88%AAapp%E6%8E%A8%E8%8D%90.html</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>/post/it%E6%9D%82%E8%B4%A7%E9%93%BA/%E9%80%92%E7%88%AAapp%E6%8E%A8%E8%8D%90.html</guid>
-      <description>https://github.com/microsoft/PowerToys</description>
     </item>
     
     <item>
@@ -496,6 +467,23 @@ https://www.markdownguide.org/extended-syntax/</description>
       
       <guid>/post/%E5%BC%80%E5%8F%91/myproject/git_update.html</guid>
       <description>遍历目录下所有git项目，commit并push到remote</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/ctf/crypto/%E6%95%B0%E8%AE%BA/%E5%BC%BA%E7%BD%91%E6%9D%AF-qualifier-2020_%E5%BC%BA%E7%BD%91%E5%85%88%E9%94%8B_baby_crt_writeup.html</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/ctf/crypto/%E6%95%B0%E8%AE%BA/%E5%BC%BA%E7%BD%91%E6%9D%AF-qualifier-2020_%E5%BC%BA%E7%BD%91%E5%85%88%E9%94%8B_baby_crt_writeup.html</guid>
+      <description>强网杯-Qualifier-2020/强网先锋/baby_crt 描述信息  分值：105 已解答：77 第一名：WM 第二名：激流勇进队 第三名：L3H_Sec  附件下载
+题目分析 题目提供了两个文件
+ task.py: 提供了具体的加密算法，但生成flag的大素数p未知 output0: 三个数，分别对应task.py中的n,m,sig  task.py文件内容不长，可以快速翻译为数学语言如下：
+典型RSA相关的参数： $$ \begin{cases} \begin{align} &amp;amp; e = 65537 \
+&amp;amp; p,q未知, n = p\cdot q \
+&amp;amp; e\cdot d \equiv 1\mod n \end{align} \end{cases} $$
+基于d派生的相关参数: $$ \begin{cases} \begin{align} &amp;amp; t_1, t_2是16 bit的素数 \
+&amp;amp; gcd(d,t_{1,2}-1)==1 \ &amp;amp; t_{1,2} \equiv 3 \mod 4 \
+&amp;amp; e_{t_1} \cdot d \equiv 1 \equiv \mod t_1 \</description>
     </item>
     
     <item>
@@ -651,10 +639,10 @@ wget https://github.com/kubernetes/minikube/releases/download/v1.12.1/minikube_l
     
     <item>
       <title></title>
-      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/%E6%9D%83%E9%99%90%E6%8F%90%E5%8D%87/linux%E6%8F%90%E6%9D%83/linux%E6%8F%90%E6%9D%83%E6%A3%80%E6%B5%8B%E8%84%9A%E6%9C%AC.html</link>
+      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/%E6%9D%83%E9%99%90%E6%8F%90%E5%8D%87/linux%E6%8F%90%E6%9D%83%E6%A3%80%E6%B5%8B%E8%84%9A%E6%9C%AC.html</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/%E6%9D%83%E9%99%90%E6%8F%90%E5%8D%87/linux%E6%8F%90%E6%9D%83/linux%E6%8F%90%E6%9D%83%E6%A3%80%E6%B5%8B%E8%84%9A%E6%9C%AC.html</guid>
+      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/%E6%9D%83%E9%99%90%E6%8F%90%E5%8D%87/linux%E6%8F%90%E6%9D%83%E6%A3%80%E6%B5%8B%E8%84%9A%E6%9C%AC.html</guid>
       <description> 这里有一些编译好的提权exp: https://github.com/pythonmaster41/Go-For-OSCP/blob/master/Exploits/ exp集合：https://github.com/SecWiki/linux-kernel-exploits PEASS: https://github.com/carlospolop/privilege-escalation-awesome-scripts-suite 检查脚本：https://github.com/InteliSecureLabs/Linux_Exploit_Suggester 检查脚本：https://github.com/sleventyeleven/linuxprivchecker 检查脚本：https://github.com/mzet-/linux-exploit-suggester 检查脚本：https://github.com/jondonas/linux-exploit-suggester-2/ 检查脚本：https://github.com/rebootuser/LinEnum  </description>
     </item>
     
