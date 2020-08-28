@@ -7,7 +7,7 @@
 <meta name="author"
     content="">
 <meta name="description"
-    content="强网杯-Qualifier-2020/强网先锋/baby_crt 描述信息  分值：105 已解答：77 第一名：WM 第二名：激流勇进队 第三名：L3H_Sec  附件下载
+    content="描述信息  分值：105 已解答：77 第一名：WM 第二名：激流勇进队 第三名：L3H_Sec  附件下载
 题目分析 题目提供了两个文件
  task.py: 提供了具体的加密算法，但生成flag的大素数p未知 output0: 三个数，分别对应task.py中的n,m,sig  task.py文件内容不长，可以快速翻译为数学语言如下：
 典型RSA相关的参数： $$ \begin{cases} \begin{align} &amp;amp; e = 65537 \
@@ -23,7 +23,7 @@
 
 <title>
     
-     :: welcome to st0n3&#39;s blog 
+    强网杯-Qualifier-2020/强网先锋/baby_crt writeup :: welcome to st0n3&#39;s blog 
     
 </title>
 
@@ -44,8 +44,8 @@
 <link rel="manifest" href="/site.webmanifest">
 <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#252627">
 <link rel="shortcut icon" href="/favicon.ico">
-<meta name="theme-color" content="#252627"><meta itemprop="name" content="">
-<meta itemprop="description" content="强网杯-Qualifier-2020/强网先锋/baby_crt 描述信息  分值：105 已解答：77 第一名：WM 第二名：激流勇进队 第三名：L3H_Sec  附件下载
+<meta name="theme-color" content="#252627"><meta itemprop="name" content="强网杯-Qualifier-2020/强网先锋/baby_crt writeup">
+<meta itemprop="description" content="描述信息  分值：105 已解答：77 第一名：WM 第二名：激流勇进队 第三名：L3H_Sec  附件下载
 题目分析 题目提供了两个文件
  task.py: 提供了具体的加密算法，但生成flag的大素数p未知 output0: 三个数，分别对应task.py中的n,m,sig  task.py文件内容不长，可以快速翻译为数学语言如下：
 典型RSA相关的参数： $$ \begin{cases} \begin{align} &amp; e = 65537 \
@@ -54,14 +54,15 @@
 基于d派生的相关参数: $$ \begin{cases} \begin{align} &amp; t_1, t_2是16 bit的素数 \
 &amp; gcd(d,t_{1,2}-1)==1 \ &amp; t_{1,2} \equiv 3 \mod 4 \
 &amp; e_{t_1} \cdot d \equiv 1 \equiv \mod t_1 \">
-
-<meta itemprop="wordCount" content="756">
+<meta itemprop="datePublished" content="2020-08-28T13:53:00&#43;08:00" />
+<meta itemprop="dateModified" content="2020-08-28T13:53:00&#43;08:00" />
+<meta itemprop="wordCount" content="755">
 
 
 
 <meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content=""/>
-<meta name="twitter:description" content="强网杯-Qualifier-2020/强网先锋/baby_crt 描述信息  分值：105 已解答：77 第一名：WM 第二名：激流勇进队 第三名：L3H_Sec  附件下载
+<meta name="twitter:title" content="强网杯-Qualifier-2020/强网先锋/baby_crt writeup"/>
+<meta name="twitter:description" content="描述信息  分值：105 已解答：77 第一名：WM 第二名：激流勇进队 第三名：L3H_Sec  附件下载
 题目分析 题目提供了两个文件
  task.py: 提供了具体的加密算法，但生成flag的大素数p未知 output0: 三个数，分别对应task.py中的n,m,sig  task.py文件内容不长，可以快速翻译为数学语言如下：
 典型RSA相关的参数： $$ \begin{cases} \begin{align} &amp; e = 65537 \
@@ -74,6 +75,7 @@
 
 
 
+<meta property="article:published_time" content="2020-08-28 13:53:00 &#43;0800 CST" />
 
 
 
@@ -134,13 +136,12 @@
         </div>
 
         <article>
-            <h2 class="post-title"><a href="/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/ctf/crypto/%E6%95%B0%E8%AE%BA/%E5%BC%BA%E7%BD%91%E6%9D%AF-qualifier-2020_%E5%BC%BA%E7%BD%91%E5%85%88%E9%94%8B_baby_crt_writeup.html"></a></h2>
+            <h2 class="post-title"><a href="/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/ctf/crypto/%E6%95%B0%E8%AE%BA/%E5%BC%BA%E7%BD%91%E6%9D%AF-qualifier-2020_%E5%BC%BA%E7%BD%91%E5%85%88%E9%94%8B_baby_crt_writeup.html">强网杯-Qualifier-2020/强网先锋/baby_crt writeup</a></h2>
 
             
 
             <div class="post-content">
-                <h1 id="强网杯-qualifier-2020强网先锋baby_crt">强网杯-Qualifier-2020/强网先锋/baby_crt</h1>
-<h2 id="描述信息">描述信息</h2>
+                <h2 id="描述信息">描述信息</h2>
 <ul>
 <li>分值：105</li>
 <li>已解答：77</li>
@@ -354,6 +355,24 @@ for i in range(min, max):
             <span>Based on <a href="https://github.com/rhazdon">rhazdon</a></span>
         </div>
     </div>
+
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      extensions: ["tex2jax.js"],
+      
+      jax: ["input/TeX", "output/CommonHTML"],
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+        displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+        processEscapes: true
+      },
+      "HTML-CSS": { fonts: ["TeX"] },
+      displayAlign: "left"
+    });
+  </script>
+
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_CHTML"></script>
+
 
 </footer>
 

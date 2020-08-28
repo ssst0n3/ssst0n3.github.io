@@ -6,10 +6,27 @@
     <description>Recent content in Post on welcome to st0n3&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 20 Jul 2020 10:00:00 +0800</lastBuildDate>
+    <lastBuildDate>Fri, 28 Aug 2020 13:53:00 +0800</lastBuildDate>
     
 	<atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>强网杯-Qualifier-2020/强网先锋/baby_crt writeup</title>
+      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/ctf/crypto/%E6%95%B0%E8%AE%BA/%E5%BC%BA%E7%BD%91%E6%9D%AF-qualifier-2020_%E5%BC%BA%E7%BD%91%E5%85%88%E9%94%8B_baby_crt_writeup.html</link>
+      <pubDate>Fri, 28 Aug 2020 13:53:00 +0800</pubDate>
+      
+      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/ctf/crypto/%E6%95%B0%E8%AE%BA/%E5%BC%BA%E7%BD%91%E6%9D%AF-qualifier-2020_%E5%BC%BA%E7%BD%91%E5%85%88%E9%94%8B_baby_crt_writeup.html</guid>
+      <description>描述信息  分值：105 已解答：77 第一名：WM 第二名：激流勇进队 第三名：L3H_Sec  附件下载
+题目分析 题目提供了两个文件
+ task.py: 提供了具体的加密算法，但生成flag的大素数p未知 output0: 三个数，分别对应task.py中的n,m,sig  task.py文件内容不长，可以快速翻译为数学语言如下：
+典型RSA相关的参数： $$ \begin{cases} \begin{align} &amp;amp; e = 65537 \
+&amp;amp; p,q未知, n = p\cdot q \
+&amp;amp; e\cdot d \equiv 1\mod n \end{align} \end{cases} $$
+基于d派生的相关参数: $$ \begin{cases} \begin{align} &amp;amp; t_1, t_2是16 bit的素数 \
+&amp;amp; gcd(d,t_{1,2}-1)==1 \ &amp;amp; t_{1,2} \equiv 3 \mod 4 \
+&amp;amp; e_{t_1} \cdot d \equiv 1 \equiv \mod t_1 \</description>
+    </item>
     
     <item>
       <title>漏洞分析与复现模板</title>
@@ -496,23 +513,6 @@ https://www.markdownguide.org/extended-syntax/</description>
       
       <guid>/post/%E5%BC%80%E5%8F%91/myproject/git_update.html</guid>
       <description>遍历目录下所有git项目，commit并push到remote</description>
-    </item>
-    
-    <item>
-      <title></title>
-      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/ctf/crypto/%E6%95%B0%E8%AE%BA/%E5%BC%BA%E7%BD%91%E6%9D%AF-qualifier-2020_%E5%BC%BA%E7%BD%91%E5%85%88%E9%94%8B_baby_crt_writeup.html</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/ctf/crypto/%E6%95%B0%E8%AE%BA/%E5%BC%BA%E7%BD%91%E6%9D%AF-qualifier-2020_%E5%BC%BA%E7%BD%91%E5%85%88%E9%94%8B_baby_crt_writeup.html</guid>
-      <description>强网杯-Qualifier-2020/强网先锋/baby_crt 描述信息  分值：105 已解答：77 第一名：WM 第二名：激流勇进队 第三名：L3H_Sec  附件下载
-题目分析 题目提供了两个文件
- task.py: 提供了具体的加密算法，但生成flag的大素数p未知 output0: 三个数，分别对应task.py中的n,m,sig  task.py文件内容不长，可以快速翻译为数学语言如下：
-典型RSA相关的参数： $$ \begin{cases} \begin{align} &amp;amp; e = 65537 \
-&amp;amp; p,q未知, n = p\cdot q \
-&amp;amp; e\cdot d \equiv 1\mod n \end{align} \end{cases} $$
-基于d派生的相关参数: $$ \begin{cases} \begin{align} &amp;amp; t_1, t_2是16 bit的素数 \
-&amp;amp; gcd(d,t_{1,2}-1)==1 \ &amp;amp; t_{1,2} \equiv 3 \mod 4 \
-&amp;amp; e_{t_1} \cdot d \equiv 1 \equiv \mod t_1 \</description>
     </item>
     
     <item>
