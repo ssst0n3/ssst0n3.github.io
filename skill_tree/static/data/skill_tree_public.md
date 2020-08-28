@@ -171,6 +171,9 @@
 ###### [external] MySQL远程代码执行_权限提升漏洞的分析与实践(CVE-2016-6662)<a href="https://paper.seebug.org/46/" target="_blank"><!-- {"expanded":false,"direction":"right"} -->
 ###### [external] MySQL4.x或5.0(Linux)-User-Defined_Function(UDF)_Dynamic_Library(2)<a href="https://www.exploit-db.com/exploits/1518" target="_blank"><!-- {"expanded":false,"direction":"right"} -->
 ##### [external] GTFOBins<a href="https://gtfobins.github.io" target="_blank"><!-- {"expanded":false,"direction":"right"} -->
+#### Exfiltration<!-- {"expanded":true,"direction":"right"} -->
+##### [external] smb_upload_file<a href="https://unix.stackexchange.com/questions/206415/sending-files-over-samba-with-command-line" target="_blank"><!-- {"expanded":false,"direction":"right"} -->
+##### [external] smbget<a href="https://www.samba.org/samba/docs/current/man-html/smbget.1.html" target="_blank"><!-- {"expanded":false,"direction":"right"} -->
 ## 开发<!-- {"expanded":true,"direction":"right"} -->
 ### IDE<!-- {"expanded":true,"direction":"right"} -->
 #### VisualStudioCode<!-- {"expanded":false,"direction":"right"} -->
