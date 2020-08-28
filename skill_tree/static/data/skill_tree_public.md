@@ -82,7 +82,7 @@
 ####### ElGamal<!-- {"expanded":false,"direction":"right"} -->
 ######## VolgaCTF2020Qualifier_Crypto_Guess_writeup<a href="https://ssst0n3.github.io/post/网络安全/ctf/crypto/非对称加密/离散对数/elgamal/volgactf2020qualifier_crypto_guess_writeup.html" target="_blank"><!-- {"expanded":true,"direction":"right"} -->
 ##### 数论<!-- {"expanded":true,"direction":"right"} -->
-###### [todo] 强网杯-Qualifier-2020_强网先锋_baby_crt_writeup<!-- {"expanded":false,"direction":"right"} -->
+###### 强网杯-Qualifier-2020_强网先锋_baby_crt_writeup<a href="https://ssst0n3.github.io/post/网络安全/ctf/crypto/数论/强网杯-qualifier-2020_强网先锋_baby_crt_writeup.html" target="_blank"><!-- {"expanded":false,"direction":"right"} -->
 ### 安全运维<!-- {"expanded":true,"direction":"right"} -->
 ### 应急响应<!-- {"expanded":true,"direction":"right"} -->
 ### 安全数据分析<!-- {"expanded":true,"direction":"right"} -->
