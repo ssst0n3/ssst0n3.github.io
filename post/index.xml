@@ -39,44 +39,6 @@
     </item>
     
     <item>
-      <title>spring-cloud-config CVE-2019-3799任意文件读取漏洞分析与复现</title>
-      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/%E6%B5%8B%E8%AF%95%E5%AF%B9%E8%B1%A1/%E5%BA%94%E7%94%A8%E5%AE%89%E5%85%A8/web%E5%AE%89%E5%85%A8/web%E7%BB%84%E4%BB%B6/spring/spring_cloud/spring_cloud_config/spring-cloud-config_cve-2019-3799%E5%88%86%E6%9E%90%E4%B8%8E%E5%A4%8D%E7%8E%B0.html</link>
-      <pubDate>Wed, 15 Jul 2020 07:00:00 +0800</pubDate>
-      
-      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/%E6%B5%8B%E8%AF%95%E5%AF%B9%E8%B1%A1/%E5%BA%94%E7%94%A8%E5%AE%89%E5%85%A8/web%E5%AE%89%E5%85%A8/web%E7%BB%84%E4%BB%B6/spring/spring_cloud/spring_cloud_config/spring-cloud-config_cve-2019-3799%E5%88%86%E6%9E%90%E4%B8%8E%E5%A4%8D%E7%8E%B0.html</guid>
-      <description>一、基本信息    条目 详情 备注     项目地址 https://github.com/spring-cloud/spring-cloud-config    发布日期 2019-04-16    CVE-ID CVE-2019-3799 https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2019-3799   EDB-ID EDB-46772 https://www.exploit-db.com/exploits/46772   cvedetails https://www.cvedetails.com/cve/CVE-2019-3799/ \   影响范围 spring-cloud-config 2.1.0-2.1.1, 2.0.0-2.0.3, 1.4.0-1.4.5 及更旧版本 \   修复版本 2.1.2, 2.0.4, 1.4.6 \   CVSS 7.5 CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N     二、spring-cloud-config简介 Spring Cloud为微服务开发提供了一系列的工具集，Spring Cloud Config就是其中的配置服务，它可以让我们集中管理各个配置。Spring Cloud Config由两个部分组成——Server和Client。Server提供相关配置的api，Client可以通过Server提供的api获取配置。在spring-cloud-config-server默认使用git管理配置库，用户可以将配置项放置在git仓库中，使用时从git仓库中获取具体配置。
-快速使用可以参见github。根据官方quick-start中的介绍，我们可以使用多种方式获取配置。
-/{application}/{profile}[/{label}] /{application}-{profile}.yml /{label}/{application}-{profile}.yml /{application}-{profile}.</description>
-    </item>
-    
-    <item>
-      <title>kube-proxy CVE-2020-8558 默认设置route_localnet允许邻近主机绕过localhost边界</title>
-      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E5%AE%B9%E5%99%A8%E9%9B%86%E7%BE%A4%E5%AE%89%E5%85%A8/k8s/%E5%8E%86%E5%8F%B2%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90%E4%B8%8E%E5%A4%8D%E7%8E%B0/kube-proxy_cve-2020-8558_%E9%BB%98%E8%AE%A4%E8%AE%BE%E7%BD%AEroute_localnet%E5%85%81%E8%AE%B8%E9%82%BB%E8%BF%91%E4%B8%BB%E6%9C%BA%E7%BB%95%E8%BF%87localhost%E8%BE%B9%E7%95%8C.html</link>
-      <pubDate>Tue, 14 Jul 2020 14:53:00 +0800</pubDate>
-      
-      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E5%AE%B9%E5%99%A8%E9%9B%86%E7%BE%A4%E5%AE%89%E5%85%A8/k8s/%E5%8E%86%E5%8F%B2%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90%E4%B8%8E%E5%A4%8D%E7%8E%B0/kube-proxy_cve-2020-8558_%E9%BB%98%E8%AE%A4%E8%AE%BE%E7%BD%AEroute_localnet%E5%85%81%E8%AE%B8%E9%82%BB%E8%BF%91%E4%B8%BB%E6%9C%BA%E7%BB%95%E8%BF%87localhost%E8%BE%B9%E7%95%8C.html</guid>
-      <description>一、kube-proxy kube-proxy 是集群中每个节点上运行的网络代理,实现 Kubernetes Service 概念的一部分。kube-proxy 维护节点上的网络规则。这些网络规则允许从集群内部或外部的网络会话与 Pod 进行网络通信。如果操作系统提供了数据包过滤层并可用的话，kube-proxy会通过它来实现网络规则。否则，kube-proxy 仅转发流量本身。1
-二、漏洞简介 1. 简介 2020年6月20日，kubernetes在issue2中公布了一个漏洞——CVE-2020-8558。kube-proxy默认设置net.ipv4.conf.all.route_localnet=1，这允许局域网内的主机或容器绕过localhost边界，访问其他主机或容器绑定在127网段(本地回还接口)的TCP/UDP服务。如果绑定在本地的服务无认证和流量加密机制，则会受本漏洞影响。特别的，如果开启了kubernetes的不安全(http,未启用证书)端口8080，则可能直接调用kubernetes的api。
-2. 影响 2.1 CVSS评分 本漏洞官方给出了两个评分：
-对于开启了kubernetes 8080端口的情况，CVSS3.1打分为8.8分，CVSS:3.1/AV:A/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H。2
-   维度 级别 理由     Attack Vector Adjacent 此漏洞由局域网发起，攻击其他主机   Attack Complexity Low 攻击复杂度低   Privileges Required None 此漏洞的必要条件是攻击者已在局域网内，因此不需要额外权限   User Interaction None 无需用户交互   Scope Unchanged 未更改权限体系   Confidentiality High 可以通过k8s api获取宿主机root权限，影响机密性高   Integrity High 可以通过k8s api获取宿主机root权限，影响机密性高   Availability High 可以通过k8s api获取宿主机root权限，影响可用性高    对于典型场景(未开启8080端口，不考虑宿主机其他绑定在本地的服务)，CVSS3.</description>
-    </item>
-    
-    <item>
-      <title>开源软件安全研究方法</title>
-      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%BC%80%E6%BA%90%E8%BD%AF%E4%BB%B6%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6%E6%96%B9%E6%B3%95.html</link>
-      <pubDate>Sat, 11 Jul 2020 19:46:00 +0800</pubDate>
-      
-      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%BC%80%E6%BA%90%E8%BD%AF%E4%BB%B6%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6%E6%96%B9%E6%B3%95.html</guid>
-      <description>0. 背景 最近一年左右，我的主要精力都花在容器安全上。容器是一个很大的概念，涉及领域众多，如果缺少一套高屋建瓴的、可行的方法论，将会被困在局部的知识点上，而无法系统性得分析出关键的容器安全风险。下面是基于前期容器安全研究总结了一套通用方法论，其中每个叶子节点都可以写成一篇文章，用于承载相关知识点的具体内容，如果一个节点的所有子节点都形成了翔实的文档，则可以认为完成了这个节点的研究工作。
-1. 软件基础 磨刀不误砍柴工，首先能熟练使用该软件的主要功能，才有可能在其中发现有建设性的安全风险。
-1.1 软件简介 1.2 安装 1.3 快速使用 1.4 其他关于该软件的重要介绍 2. 开源情况 2.1 开源基本情况  开发语言 LICENSE branch, tag 项目主要贡献者 项目上下游情况  2.2 issue,commit管理概况 2.3 已知漏洞数量与分布情况 2.4 如何报告该项目的漏洞 3. 如何第一时间知悉该软件安全情报 google announce, 例如：
- https://groups.google.com/forum/feed/kubernetes-announce/msgs/rss_v2_0.xml?num=50 https://groups.google.com/forum/feed/golang-announce/msgs/rss_v2_0.xml?num=50  4. 历史漏洞分析与复现 有规范的、成体系的分析、复现并存留实验环境，可以利用vagrant或docker记录、分享漏洞环境。
-5. 安全配置 6. 安全关键技术 7. 安全风险分析 8. 源码审计 8.1 代码审计范围 8.2 issues与commits分析 8.3 代码结构分析 8.4 安全强相关文件 8.5 详细走读 8.6 自动化测试 Fuzz, 静态代码扫描, IAST
-// TODO</description>
-    </item>
-    
-    <item>
       <title>docker中apparmor的加载过程</title>
       <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E5%9F%BA%E4%BA%8E%E8%BF%9B%E7%A8%8B%E9%9A%94%E7%A6%BB%E7%9A%84%E5%AE%B9%E5%99%A8%E6%8A%80%E6%9C%AF/docker/docker%E5%AE%89%E5%85%A8%E7%9A%84%E5%85%B3%E9%94%AE%E6%8A%80%E6%9C%AF/linux%E5%86%85%E6%A0%B8%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/apparmor/docker%E4%B8%ADapparmor%E7%9A%84%E5%8A%A0%E8%BD%BD%E8%BF%87%E7%A8%8B.html</link>
       <pubDate>Wed, 01 Jul 2020 17:49:00 +0800</pubDate>
@@ -84,52 +46,6 @@
       <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E5%9F%BA%E4%BA%8E%E8%BF%9B%E7%A8%8B%E9%9A%94%E7%A6%BB%E7%9A%84%E5%AE%B9%E5%99%A8%E6%8A%80%E6%9C%AF/docker/docker%E5%AE%89%E5%85%A8%E7%9A%84%E5%85%B3%E9%94%AE%E6%8A%80%E6%9C%AF/linux%E5%86%85%E6%A0%B8%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/apparmor/docker%E4%B8%ADapparmor%E7%9A%84%E5%8A%A0%E8%BD%BD%E8%BF%87%E7%A8%8B.html</guid>
       <description>判断操作系统是否启用apparmor，如果支持就安装名为docker-default的规则。 https://github.com/moby/moby/blob/master/daemon/apparmor_default.go
 const ( unconfinedAppArmorProfile = &amp;quot;unconfined&amp;quot; defaultAppArmorProfile = &amp;quot;docker-default&amp;quot; ) func ensureDefaultAppArmorProfile() error { if apparmor.IsEnabled() { loaded, err := aaprofile.IsLoaded(defaultAppArmorProfile) if err != nil { return fmt.Errorf(&amp;quot;Could not check if %s AppArmor profile was loaded: %s&amp;quot;, defaultAppArmorProfile, err) } // Nothing to do. if loaded { return nil } // Load the profile. if err := aaprofile.InstallDefault(defaultAppArmorProfile); err != nil { return fmt.Errorf(&amp;quot;AppArmor enabled on system but the %s profile could not be loaded: %s&amp;quot;, defaultAppArmorProfile, err) } } return nil } 其中判断是否启用apparmor代码如下，主要是判断apparmor相关文件是否存在。</description>
-    </item>
-    
-    <item>
-      <title>docker中apparmor机制综述</title>
-      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E5%9F%BA%E4%BA%8E%E8%BF%9B%E7%A8%8B%E9%9A%94%E7%A6%BB%E7%9A%84%E5%AE%B9%E5%99%A8%E6%8A%80%E6%9C%AF/docker/docker%E5%AE%89%E5%85%A8%E7%9A%84%E5%85%B3%E9%94%AE%E6%8A%80%E6%9C%AF/linux%E5%86%85%E6%A0%B8%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/apparmor/docker%E4%B8%ADapparmor%E6%9C%BA%E5%88%B6%E7%BB%BC%E8%BF%B0.html</link>
-      <pubDate>Wed, 01 Jul 2020 17:48:00 +0800</pubDate>
-      
-      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E5%9F%BA%E4%BA%8E%E8%BF%9B%E7%A8%8B%E9%9A%94%E7%A6%BB%E7%9A%84%E5%AE%B9%E5%99%A8%E6%8A%80%E6%9C%AF/docker/docker%E5%AE%89%E5%85%A8%E7%9A%84%E5%85%B3%E9%94%AE%E6%8A%80%E6%9C%AF/linux%E5%86%85%E6%A0%B8%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/apparmor/docker%E4%B8%ADapparmor%E6%9C%BA%E5%88%B6%E7%BB%BC%E8%BF%B0.html</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>docker的默认apparmor策略具体配置了什么</title>
-      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E5%9F%BA%E4%BA%8E%E8%BF%9B%E7%A8%8B%E9%9A%94%E7%A6%BB%E7%9A%84%E5%AE%B9%E5%99%A8%E6%8A%80%E6%9C%AF/docker/docker%E5%AE%89%E5%85%A8%E7%9A%84%E5%85%B3%E9%94%AE%E6%8A%80%E6%9C%AF/linux%E5%86%85%E6%A0%B8%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/apparmor/docker%E7%9A%84%E9%BB%98%E8%AE%A4apparmor%E7%AD%96%E7%95%A5%E5%85%B7%E4%BD%93%E9%85%8D%E7%BD%AE%E4%BA%86%E4%BB%80%E4%B9%88.html</link>
-      <pubDate>Wed, 01 Jul 2020 16:20:00 +0800</pubDate>
-      
-      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E5%9F%BA%E4%BA%8E%E8%BF%9B%E7%A8%8B%E9%9A%94%E7%A6%BB%E7%9A%84%E5%AE%B9%E5%99%A8%E6%8A%80%E6%9C%AF/docker/docker%E5%AE%89%E5%85%A8%E7%9A%84%E5%85%B3%E9%94%AE%E6%8A%80%E6%9C%AF/linux%E5%86%85%E6%A0%B8%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/apparmor/docker%E7%9A%84%E9%BB%98%E8%AE%A4apparmor%E7%AD%96%E7%95%A5%E5%85%B7%E4%BD%93%E9%85%8D%E7%BD%AE%E4%BA%86%E4%BB%80%E4%B9%88.html</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>用bug解决bug:荣耀智慧屏闹钟设置方案</title>
-      <link>/post/it%E6%9D%82%E8%B4%A7%E9%93%BA/%E7%94%A8bug%E8%A7%A3%E5%86%B3bug_%E8%8D%A3%E8%80%80%E6%99%BA%E6%85%A7%E5%B1%8F%E9%97%B9%E9%92%9F%E8%AE%BE%E7%BD%AE%E6%96%B9%E6%A1%88.html</link>
-      <pubDate>Tue, 30 Jun 2020 07:36:00 +0800</pubDate>
-      
-      <guid>/post/it%E6%9D%82%E8%B4%A7%E9%93%BA/%E7%94%A8bug%E8%A7%A3%E5%86%B3bug_%E8%8D%A3%E8%80%80%E6%99%BA%E6%85%A7%E5%B1%8F%E9%97%B9%E9%92%9F%E8%AE%BE%E7%BD%AE%E6%96%B9%E6%A1%88.html</guid>
-      <description>前段时间趁着6.18买了一台电视机&amp;hellip;荣耀智慧屏x1。1699￥,真的很便宜了。到今天，使用了快一个月了，发现了两个倔强的bug。
-1. 闹钟不是你以为的闹钟 </description>
-    </item>
-    
-    <item>
-      <title>docker CVE-2019-5736 runc逃逸漏洞</title>
-      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E5%9F%BA%E4%BA%8E%E8%BF%9B%E7%A8%8B%E9%9A%94%E7%A6%BB%E7%9A%84%E5%AE%B9%E5%99%A8%E6%8A%80%E6%9C%AF/docker/docker%E6%BA%90%E7%A0%81%E5%AE%A1%E8%AE%A1/docker%E5%8E%86%E5%8F%B2%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90%E4%B8%8E%E5%A4%8D%E7%8E%B0/docker_cve-2019-5736_runc%E9%80%83%E9%80%B8%E6%BC%8F%E6%B4%9E.html</link>
-      <pubDate>Sun, 28 Jun 2020 08:39:00 +0800</pubDate>
-      
-      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E5%9F%BA%E4%BA%8E%E8%BF%9B%E7%A8%8B%E9%9A%94%E7%A6%BB%E7%9A%84%E5%AE%B9%E5%99%A8%E6%8A%80%E6%9C%AF/docker/docker%E6%BA%90%E7%A0%81%E5%AE%A1%E8%AE%A1/docker%E5%8E%86%E5%8F%B2%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90%E4%B8%8E%E5%A4%8D%E7%8E%B0/docker_cve-2019-5736_runc%E9%80%83%E9%80%B8%E6%BC%8F%E6%B4%9E.html</guid>
-      <description>还没写完
-几个重要的fix commit
-  https://github.com/opencontainers/runc/commit/6635b4f0c6af3810594d2770f662f34ddc15b40d
-  https://github.com/opencontainers/runc/commit/2b18fe1d885ee5083ef9f0838fee39b62d653e30
-  https://github.com/opencontainers/runc/commit/28a697cce3e4f905dca700eda81d681a30eef9cd
-  https://github.com/moby/moby/commit/25cdae293fedb18f3538788d629d6e4475acaa4b
-  https://github.com/moby/moby/commit/f03698b69a7777b8d30b9c5897504f8704b87676
-  https://github.com/moby/moby/commit/a327428bdb596a891359ba050c3bf6a074ec2278
-  参考
- https://unit42.paloaltonetworks.com/breaking-docker-via-runc-explaining-cve-2019-5736/ https://github.com/opencontainers/runc/blob/cc8146cf936f86646a065ba73d911c5614e9c049/libcontainer/nsenter/README.md  </description>
     </item>
     
     <item>
@@ -148,18 +64,6 @@ docker-compose.yml文件中，配置了多个端口，其中27015是steam与服�
 可以通过指定环境变量来将服务器配置传递给arkmanager，可以配置的参数参考 https://github.com/FezVrasta/ark-server-tools#configuration-files/
 注意配置环境变量时，在名称前加上am_前缀。
 例如，如果要配置服务器管理员密码，可以传递这样的环境变量:</description>
-    </item>
-    
-    <item>
-      <title>发布go modules</title>
-      <link>/post/%E5%BC%80%E5%8F%91/go/%E5%8F%91%E5%B8%83go_modules.html</link>
-      <pubDate>Sat, 30 May 2020 00:00:00 +0000</pubDate>
-      
-      <guid>/post/%E5%BC%80%E5%8F%91/go/%E5%8F%91%E5%B8%83go_modules.html</guid>
-      <description>https://blog.golang.org/publishing-go-modules
-https://golang.org/doc/go1.13
- The version prefix must be of the form vX.0.0, or derived from a tag on an ancestor of the named revision, or derived from a tag that includes build metadata on the named revision itself.
- https://stackoverflow.com/questions/52242077/go-modules-finding-out-right-pseudo-version-vx-y-z-timestamp-commit-of-re</description>
     </item>
     
     <item>
@@ -212,29 +116,6 @@ apt-get update gnome-terminal 同时修改一下首选应用程序中的terminal
     </item>
     
     <item>
-      <title>一篇优雅的技术博客应该长这样</title>
-      <link>/post/%E7%9F%A5%E8%AF%86%E7%AE%A1%E7%90%86/%E4%B8%80%E7%AF%87%E4%BC%98%E9%9B%85%E7%9A%84%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2%E5%BA%94%E8%AF%A5%E9%95%BF%E8%BF%99%E6%A0%B7.html</link>
-      <pubDate>Thu, 02 Apr 2020 16:55:00 +0800</pubDate>
-      
-      <guid>/post/%E7%9F%A5%E8%AF%86%E7%AE%A1%E7%90%86/%E4%B8%80%E7%AF%87%E4%BC%98%E9%9B%85%E7%9A%84%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2%E5%BA%94%E8%AF%A5%E9%95%BF%E8%BF%99%E6%A0%B7.html</guid>
-      <description>我经常读到一些写给自己看的博客，特别是writeup，感觉十分困扰。希望自己能写出一些不只是给自己看的文章，所以尝试提出了一些写作的原则。
- 文章开头应该指明本文在一个学科中的位置 文章不应该是写给当前的自己看的，可以假设读者是未接触相关内容的自己，或几个月后失忆的自己 结尾应该总结本文的主要内容 文中涉及到的前提知识应该提供学习的途径  TODO 敬请期待</description>
-    </item>
-    
-    <item>
-      <title>捕风捉影的使用原则</title>
-      <link>/post/%E7%9F%A5%E8%AF%86%E7%AE%A1%E7%90%86/%E6%8D%95%E9%A3%8E%E6%8D%89%E5%BD%B1%E7%9A%84%E4%BD%BF%E7%94%A8%E5%8E%9F%E5%88%99.html</link>
-      <pubDate>Thu, 02 Apr 2020 16:55:00 +0800</pubDate>
-      
-      <guid>/post/%E7%9F%A5%E8%AF%86%E7%AE%A1%E7%90%86/%E6%8D%95%E9%A3%8E%E6%8D%89%E5%BD%B1%E7%9A%84%E4%BD%BF%E7%94%A8%E5%8E%9F%E5%88%99.html</guid>
-      <description>捕风捉影 捕风捉影是我的知识管理工具的一个统称，有点中二哈哈哈。
-这个系统的机构如下
-捕风捉影 ├── 捕风(hackerbot): 收集最新动态 │ ├── rss │ ├── spider │ ├── mirror │ ├── proxy: darkweb, gfw, ... │ └── 小型团队协作功能 ├── 捉影 │ ├── skill_tree │ │ ├── version_static: 静态的版本，更新起来麻烦 │ │ └── version_dynamic: 动态版本，无法和博客较好得融合 │ ├── blog │ └── 知识图谱 整体的思路是，使用捕风平台贪婪得吸收实时动态，使用捉影平台沉淀信息并以技能树的形式呈现。
-使用原则 1. 所有自由时间点的分配，都应该来源于技能树的todo部分 主要目的是使技能点的分配相对系统点，否则容易迷失在细节中。但是也不应该过于功利性。
-2. 待补充 </description>
-    </item>
-    
-    <item>
       <title>VolgaCTF2020Qualifier Crypto Guess writeup</title>
       <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/ctf/crypto/%E9%9D%9E%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86/%E7%A6%BB%E6%95%A3%E5%AF%B9%E6%95%B0/elgamal/volgactf2020qualifier_crypto_guess_writeup.html</link>
       <pubDate>Wed, 01 Apr 2020 13:53:00 +0800</pubDate>
@@ -251,50 +132,6 @@ Your team has solved this task on Mar 28 at 21:20 UTC.
 This task has been rated by 73 teams. The average rating is 3.99 (5.00 max).
  server.py如下：
 #!/usr/bin/python # -*- coding: utf-8 -*- from __future__ import print_function from Crypto.</description>
-    </item>
-    
-    <item>
-      <title>chrome打印pdf的样式</title>
-      <link>/post/it%E6%9D%82%E8%B4%A7%E9%93%BA/chrome%E6%89%93%E5%8D%B0pdf%E7%9A%84%E6%A0%B7%E5%BC%8F.html</link>
-      <pubDate>Tue, 31 Mar 2020 09:01:00 +0800</pubDate>
-      
-      <guid>/post/it%E6%9D%82%E8%B4%A7%E9%93%BA/chrome%E6%89%93%E5%8D%B0pdf%E7%9A%84%E6%A0%B7%E5%BC%8F.html</guid>
-      <description>chrome打印PDF时，如何自定义样式？如何在打印PDF视角检查元素
-敬请期待，TODO</description>
-    </item>
-    
-    <item>
-      <title>hugo支持数学公式方案探索</title>
-      <link>/post/it%E6%9D%82%E8%B4%A7%E9%93%BA/hugo%E6%94%AF%E6%8C%81%E6%95%B0%E5%AD%A6%E5%85%AC%E5%BC%8F%E6%96%B9%E6%A1%88%E6%8E%A2%E7%B4%A2.html</link>
-      <pubDate>Tue, 31 Mar 2020 09:01:00 +0800</pubDate>
-      
-      <guid>/post/it%E6%9D%82%E8%B4%A7%E9%93%BA/hugo%E6%94%AF%E6%8C%81%E6%95%B0%E5%AD%A6%E5%85%AC%E5%BC%8F%E6%96%B9%E6%A1%88%E6%8E%A2%E7%B4%A2.html</guid>
-      <description>markdown百花齐放，对于数学公式的支持却各家标准都不同。在我的hugo博客中，我探索出了一条较为有效的方案。
-敬请期待，TODO</description>
-    </item>
-    
-    <item>
-      <title>代换密码和置换密码在块密码中的作用与区别</title>
-      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%90%86%E8%AE%BA/%E5%AF%86%E7%A0%81%E5%AD%A6/%E5%AF%86%E7%A0%81%E5%88%86%E6%9E%90/%E4%BB%A3%E6%8D%A2%E5%AF%86%E7%A0%81%E5%92%8C%E7%BD%AE%E6%8D%A2%E5%AF%86%E7%A0%81%E5%9C%A8%E5%9D%97%E5%AF%86%E7%A0%81%E4%B8%AD%E7%9A%84%E4%BD%9C%E7%94%A8%E4%B8%8E%E5%8C%BA%E5%88%AB.html</link>
-      <pubDate>Tue, 24 Mar 2020 09:02:00 +0800</pubDate>
-      
-      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%90%86%E8%AE%BA/%E5%AF%86%E7%A0%81%E5%AD%A6/%E5%AF%86%E7%A0%81%E5%88%86%E6%9E%90/%E4%BB%A3%E6%8D%A2%E5%AF%86%E7%A0%81%E5%92%8C%E7%BD%AE%E6%8D%A2%E5%AF%86%E7%A0%81%E5%9C%A8%E5%9D%97%E5%AF%86%E7%A0%81%E4%B8%AD%E7%9A%84%E4%BD%9C%E7%94%A8%E4%B8%8E%E5%8C%BA%E5%88%AB.html</guid>
-      <description>TODO
-https://en.wikipedia.org/wiki/Substitution%E2%80%93permutation_network
-Rather, a good S-box will have the property that changing one input bit will change about half of the output bits (or an avalanche effect). It will also have the property that each output bit will depend on every input bit.
-A P-box is a permutation of all the bits: it takes the outputs of all the S-boxes of one round, permutes the bits, and feeds them into the S-boxes of the next round.</description>
-    </item>
-    
-    <item>
-      <title>0ctf2018 zer0SPN (线性密码分析)</title>
-      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/ctf/crypto/%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86/%E5%9D%97%E5%8A%A0%E5%AF%86/spn/0ctf2018_zer0spn%E7%BA%BF%E6%80%A7%E5%AF%86%E7%A0%81%E5%88%86%E6%9E%90.html</link>
-      <pubDate>Tue, 24 Mar 2020 09:01:00 +0800</pubDate>
-      
-      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/ctf/crypto/%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86/%E5%9D%97%E5%8A%A0%E5%AF%86/spn/0ctf2018_zer0spn%E7%BA%BF%E6%80%A7%E5%AF%86%E7%A0%81%E5%88%86%E6%9E%90.html</guid>
-      <description>一、题目信息 zer0SPN.zip
-二、相关资料  2002年的一篇文章，很多材料都引用了这篇，这篇文章广泛传播主要是因为使用了一个非常容易理解的例子 A Tutorial on Linear and Differential Cryptanalysis 中文环境中写的相对详细的文章: 线性分析法 ctftime wp 线性分析法 分析 DES加密算法 密码学原理（华中科技大学） Algorithmic Algebraic Techniques and their Application to Block Cipher Cryptanalysis  在解这题时，我学习了很多资料。但是很多时候都感觉这些材料不算细致，我在学习中也遇到了非常多的困惑，所以希望能细致入微的重新记录一下。
-三、SPN 我在另一篇博客中详细描述了SPN的线性密码分析过程，详见[SPN线性密码分析]。
-四、线性密码分析 五、zer0SPN 线性分析 </description>
     </item>
     
     <item>
@@ -320,50 +157,6 @@ A P-box is a permutation of all the bits: it takes the outputs of all the S-boxe
     </item>
     
     <item>
-      <title>docker代码审计范围</title>
-      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E5%9F%BA%E4%BA%8E%E8%BF%9B%E7%A8%8B%E9%9A%94%E7%A6%BB%E7%9A%84%E5%AE%B9%E5%99%A8%E6%8A%80%E6%9C%AF/docker/docker%E6%BA%90%E7%A0%81%E5%AE%A1%E8%AE%A1/docker%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E8%8C%83%E5%9B%B4.html</link>
-      <pubDate>Mon, 30 Dec 2019 03:30:00 +0800</pubDate>
-      
-      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E5%9F%BA%E4%BA%8E%E8%BF%9B%E7%A8%8B%E9%9A%94%E7%A6%BB%E7%9A%84%E5%AE%B9%E5%99%A8%E6%8A%80%E6%9C%AF/docker/docker%E6%BA%90%E7%A0%81%E5%AE%A1%E8%AE%A1/docker%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E8%8C%83%E5%9B%B4.html</guid>
-      <description>todo </description>
-    </item>
-    
-    <item>
-      <title>docker开发现状</title>
-      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E5%9F%BA%E4%BA%8E%E8%BF%9B%E7%A8%8B%E9%9A%94%E7%A6%BB%E7%9A%84%E5%AE%B9%E5%99%A8%E6%8A%80%E6%9C%AF/docker/docker%E6%BA%90%E7%A0%81%E5%AE%A1%E8%AE%A1/docker%E5%BC%80%E5%8F%91%E7%8E%B0%E7%8A%B6.html</link>
-      <pubDate>Mon, 30 Dec 2019 03:30:00 +0800</pubDate>
-      
-      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E5%9F%BA%E4%BA%8E%E8%BF%9B%E7%A8%8B%E9%9A%94%E7%A6%BB%E7%9A%84%E5%AE%B9%E5%99%A8%E6%8A%80%E6%9C%AF/docker/docker%E6%BA%90%E7%A0%81%E5%AE%A1%E8%AE%A1/docker%E5%BC%80%E5%8F%91%E7%8E%B0%E7%8A%B6.html</guid>
-      <description>todo </description>
-    </item>
-    
-    <item>
-      <title>正确使用Go DockerSDK(gomod)</title>
-      <link>/post/%E5%BC%80%E5%8F%91/go/docker-sdk/%E6%AD%A3%E7%A1%AE%E4%BD%BF%E7%94%A8go-dockersdkgomod.html</link>
-      <pubDate>Mon, 30 Dec 2019 01:30:00 +0800</pubDate>
-      
-      <guid>/post/%E5%BC%80%E5%8F%91/go/docker-sdk/%E6%AD%A3%E7%A1%AE%E4%BD%BF%E7%94%A8go-dockersdkgomod.html</guid>
-      <description>1. 背景 1.1 go语言特性: 标准导入路径(canonical import path)  Go 1.4 introduces an annotation for package clauses in Go source that identify a canonical import path for the package. If an import is attempted using a path that is not canonical, the go command will refuse to compile the importing package.
-https://golang.org/doc/go1.4#canonicalimports
- go1.4 引入了一个特性，在package后可以使用注释声明导入这个包的标准路径, 叫做canonical import path。如果导入某个包的路径与这个canonical import path不同，则go命令会拒绝编译该包。
-例如：
-package pdf // import &amp;quot;rsc.io/pdf&amp;quot; 1.2 docker项目更名 docker详细开发现状参见: docker开发现状
-这里要了解的是，docker曾在2017年将项目迁移到github.com/moby/moby</description>
-    </item>
-    
-    <item>
-      <title>java反序列化</title>
-      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/%E6%B5%8B%E8%AF%95%E6%96%B9%E6%B3%95/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/java/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96.html</link>
-      <pubDate>Sun, 06 Oct 2019 03:05:00 +0800</pubDate>
-      
-      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/%E6%B5%8B%E8%AF%95%E6%96%B9%E6%B3%95/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/java/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96.html</guid>
-      <description>为了出题，复习一下java反序列化。
-找了很多现成的cms当做背景，最后还是觉得全都自己写比较好。
-以上是一些废话，后面应该会删掉。 以下是正文
-什么是序列化和反序列化 为什么需要反序列化  session持久化: 记住我功能;  记住我功能的实现 </description>
-    </item>
-    
-    <item>
       <title>如何使用BootstrapVue</title>
       <link>/post/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/vue/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8bootstrapvue.html</link>
       <pubDate>Fri, 04 Oct 2019 13:58:00 +0800</pubDate>
@@ -382,28 +175,6 @@ package pdf // import &amp;quot;rsc.io/pdf&amp;quot; 1.2 docker项目更名 dock
 $ file start start: ELF 32-bit LSB executable, Intel 80386, version 1 (SYSV), statically linked, not stripped checksec显示未开启任何安全保护机制
 $ checksec start [*] &amp;#39;/home/st0n3/ctfs/pwnable.tw/100_Start/challenges/start&amp;#39; Arch: i386-32-little RELRO: No RELRO Stack: No canary found NX: NX disabled PIE: No PIE (0x8048000) 1.2 汇编代码 使用r2分析汇编，只有一个entry0入口函数。
 $ r2 start Warning: Cannot initialize dynamic strings [0x08048060]&amp;gt; aaa [x] Analyze all flags starting with sym. and entry0 (aa) [x] Analyze function calls (aac) [x] Analyze len bytes of instructions for references (aar) [x] Constructing a function name for fcn.</description>
-    </item>
-    
-    <item>
-      <title>寄存器</title>
-      <link>/post/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E6%9C%AC/%E6%B1%87%E7%BC%96%E8%AF%AD%E8%A8%80/%E5%AF%84%E5%AD%98%E5%99%A8.html</link>
-      <pubDate>Mon, 02 Sep 2019 03:01:00 +0800</pubDate>
-      
-      <guid>/post/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E6%9C%AC/%E6%B1%87%E7%BC%96%E8%AF%AD%E8%A8%80/%E5%AF%84%E5%AD%98%E5%99%A8.html</guid>
-      <description>还没写完
- https://stackoverflow.com/questions/15191178/how-do-ax-ah-al-map-onto-eax  </description>
-    </item>
-    
-    <item>
-      <title>系统调用</title>
-      <link>/post/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E6%9C%AC/%E6%B1%87%E7%BC%96%E8%AF%AD%E8%A8%80/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8.html</link>
-      <pubDate>Mon, 02 Sep 2019 02:51:00 +0800</pubDate>
-      
-      <guid>/post/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E6%9C%AC/%E6%B1%87%E7%BC%96%E8%AF%AD%E8%A8%80/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8.html</guid>
-      <description>还没写完
-应用程序调用系统调用的过程是： 1. 把系统调用的编号存入 EAX； 2. 把函数参数存入其它通用寄存器； 3. 触发 0x80 号中断（int 0x80）。 来源: https://zh.wikipedia.org/wiki/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8  linux系统调用列表：http://syscalls.kernelgrok.com/
-例子:
-reference  https://zh.wikipedia.org/wiki/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8 Linux Syscall Reference  </description>
     </item>
     
     <item>
@@ -428,252 +199,12 @@ cmd := &amp;#34;cp ./test/* /tmp -r&amp;#34; out, err := exec.Command(&amp;#34;s
     </item>
     
     <item>
-      <title>GoSDK中的panic</title>
-      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/%E6%B5%8B%E8%AF%95%E6%96%B9%E6%B3%95/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/go/panic/gosdk%E4%B8%AD%E7%9A%84panic.html</link>
-      <pubDate>Mon, 19 Aug 2019 01:05:00 +0800</pubDate>
-      
-      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/%E6%B5%8B%E8%AF%95%E6%96%B9%E6%B3%95/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/go/panic/gosdk%E4%B8%AD%E7%9A%84panic.html</guid>
-      <description>还没写完</description>
-    </item>
-    
-    <item>
       <title>linux下如何优雅得网速监控</title>
       <link>/post/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E6%9C%AC/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/linux/linux%E4%B8%8B%E5%A6%82%E4%BD%95%E4%BC%98%E9%9B%85%E5%BE%97%E7%BD%91%E9%80%9F%E7%9B%91%E6%8E%A7.html</link>
       <pubDate>Mon, 19 Aug 2019 01:05:00 +0800</pubDate>
       
       <guid>/post/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E6%9C%AC/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/linux/linux%E4%B8%8B%E5%A6%82%E4%BD%95%E4%BC%98%E9%9B%85%E5%BE%97%E7%BD%91%E9%80%9F%E7%9B%91%E6%8E%A7.html</guid>
       <description>安装nload sudo apt-get install nload 使用 nload -u K wlan0</description>
-    </item>
-    
-    <item>
-      <title>如何使用VisualStudio远程开发Go项目</title>
-      <link>/post/%E5%BC%80%E5%8F%91/ide/visualstudiocode/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8visualstudiocode%E8%BF%9C%E7%A8%8B%E5%BC%80%E5%8F%91go%E9%A1%B9%E7%9B%AE.html</link>
-      <pubDate>Sat, 17 Aug 2019 23:50:00 +0800</pubDate>
-      
-      <guid>/post/%E5%BC%80%E5%8F%91/ide/visualstudiocode/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8visualstudiocode%E8%BF%9C%E7%A8%8B%E5%BC%80%E5%8F%91go%E9%A1%B9%E7%9B%AE.html</guid>
-      <description>还没写完
-一、安装插件Remote Development Remote Development
-这个插件会同时安装
- Remote - SSH Remote - Containers Remote - WSL  二、添加ssh远程配置 三、新建一个go文件 四、安装go相关扩展 </description>
-    </item>
-    
-    <item>
-      <title></title>
-      <link>/post/it%E6%9D%82%E8%B4%A7%E9%93%BA/openvpn_chaining.html</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>/post/it%E6%9D%82%E8%B4%A7%E9%93%BA/openvpn_chaining.html</guid>
-      <description>https://i.stack.imgur.com/DdIHk.png
-https://serverfault.com/questions/900551/chaining-two-vpns-using-a-vps
-# cat iptables.sh #!/bin/bash iptables -t nat -D POSTROUTING -s 10.8.0.0/24 ! -d 10.8.0.0/24 -j SNAT --to-source 192.168.1.222 iptables -A FORWARD -i tun0 -o tun1 -j ACCEPT iptables -A FORWARD -i tun1 -o tun0 -j ACCEPT iptables -A FORWARD -d 10.8.0.0/24 -m state --state ESTABLISHED,RELATED -j ACCEPT iptables -t nat -A POSTROUTING -s 10.8.0.0/24 -j SNAT --to-source 192.168.119.176 ip route add default via 192.168.119.176 table 120 ip rule add from 10.</description>
-    </item>
-    
-    <item>
-      <title></title>
-      <link>/post/it%E6%9D%82%E8%B4%A7%E9%93%BA/windows%E5%88%86%E5%B1%8F%E8%BD%AF%E4%BB%B6%E6%8E%A8%E8%8D%90.html</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>/post/it%E6%9D%82%E8%B4%A7%E9%93%BA/windows%E5%88%86%E5%B1%8F%E8%BD%AF%E4%BB%B6%E6%8E%A8%E8%8D%90.html</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title></title>
-      <link>/post/it%E6%9D%82%E8%B4%A7%E9%93%BA/%E7%90%86%E6%B8%85markdown%E8%AF%AD%E6%B3%95%E4%B9%B1%E9%BA%BB.html</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>/post/it%E6%9D%82%E8%B4%A7%E9%93%BA/%E7%90%86%E6%B8%85markdown%E8%AF%AD%E6%B3%95%E4%B9%B1%E9%BA%BB.html</guid>
-      <description>https://spec.commonmark.org/0.29/
-https://www.markdownguide.org/tools/hugo/
-https://www.markdownguide.org/basic-syntax/
-https://www.markdownguide.org/extended-syntax/</description>
-    </item>
-    
-    <item>
-      <title></title>
-      <link>/post/it%E6%9D%82%E8%B4%A7%E9%93%BA/%E9%80%92%E7%88%AAapp%E6%8E%A8%E8%8D%90.html</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>/post/it%E6%9D%82%E8%B4%A7%E9%93%BA/%E9%80%92%E7%88%AAapp%E6%8E%A8%E8%8D%90.html</guid>
-      <description>https://github.com/microsoft/PowerToys</description>
-    </item>
-    
-    <item>
-      <title></title>
-      <link>/post/%E5%BC%80%E5%8F%91/myproject/git_todo.html</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>/post/%E5%BC%80%E5%8F%91/myproject/git_todo.html</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title></title>
-      <link>/post/%E5%BC%80%E5%8F%91/myproject/git_update.html</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>/post/%E5%BC%80%E5%8F%91/myproject/git_update.html</guid>
-      <description>遍历目录下所有git项目，commit并push到remote</description>
-    </item>
-    
-    <item>
-      <title></title>
-      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/ctf/%E5%87%BA%E9%A2%98/de1ta2020/%E5%87%BA%E5%87%BA%E5%87%BA.html</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/ctf/%E5%87%BA%E9%A2%98/de1ta2020/%E5%87%BA%E5%87%BA%E5%87%BA.html</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title></title>
-      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/%E6%B5%8B%E8%AF%95%E6%96%B9%E6%B3%95/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/go/%E5%8F%8A%E6%97%B6%E8%8E%B7%E5%8F%96go%E8%AF%AD%E8%A8%80%E5%AE%89%E5%85%A8%E6%83%85%E6%8A%A5.html</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/%E6%B5%8B%E8%AF%95%E6%96%B9%E6%B3%95/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/go/%E5%8F%8A%E6%97%B6%E8%8E%B7%E5%8F%96go%E8%AF%AD%E8%A8%80%E5%AE%89%E5%85%A8%E6%83%85%E6%8A%A5.html</guid>
-      <description>https://groups.google.com/forum/feed/golang-announce/msgs/rss_v2_0.xml?num=50</description>
-    </item>
-    
-    <item>
-      <title></title>
-      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%A6%82%E4%BD%95%E4%BC%98%E9%9B%85%E5%9C%B0%E8%BF%9B%E8%A1%8C%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0.html</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%A6%82%E4%BD%95%E4%BC%98%E9%9B%85%E5%9C%B0%E8%BF%9B%E8%A1%8C%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0.html</guid>
-      <description>docker &amp;amp; vagrant
-vagrant 1. vagrant简介 Vagrant 是在单个工作流中构建和管理虚拟机环境的工具。通过易于使用的工作流程和对自动化的关注，Vagrant 降低了开发环境的设置时间，增加了生产等价性，并使“在我的机器上工作”成为历史。1
-2. 安装 sudo apt-get install vagrant 参考链接   https://www.vagrantup.com/intro &amp;#x21a9;&amp;#xfe0e;
-   </description>
-    </item>
-    
-    <item>
-      <title></title>
-      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AD%A6%E6%9C%AF%E6%83%85%E6%8A%A5%E5%AD%A6%E4%B9%A0/aminer%E5%BF%85%E8%AF%BB%E8%AE%BA%E6%96%87.html</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AD%A6%E6%9C%AF%E6%83%85%E6%8A%A5%E5%AD%A6%E4%B9%A0/aminer%E5%BF%85%E8%AF%BB%E8%AE%BA%E6%96%87.html</guid>
-      <description>https://www.aminer.cn/ https://www.aminer.cn/channel/ https://www.aminer.cn/topic/5e80bc21e52b9645c1f7b19f https://www.aminer.cn/research_report/5de27b53af66005a44822b12</description>
-    </item>
-    
-    <item>
-      <title></title>
-      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E5%9F%BA%E4%BA%8E%E8%BF%9B%E7%A8%8B%E9%9A%94%E7%A6%BB%E7%9A%84%E5%AE%B9%E5%99%A8%E6%8A%80%E6%9C%AF/docker/docker%E5%AE%89%E5%85%A8%E7%9A%84%E5%85%B3%E9%94%AE%E6%8A%80%E6%9C%AF/linux%E5%86%85%E6%A0%B8%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/seccomp/docker%E7%9A%84%E9%BB%98%E8%AE%A4seccomp%E8%A7%84%E5%88%99%E5%85%B7%E4%BD%93%E9%85%8D%E7%BD%AE%E4%BA%86%E4%BB%80%E4%B9%88.html</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E5%9F%BA%E4%BA%8E%E8%BF%9B%E7%A8%8B%E9%9A%94%E7%A6%BB%E7%9A%84%E5%AE%B9%E5%99%A8%E6%8A%80%E6%9C%AF/docker/docker%E5%AE%89%E5%85%A8%E7%9A%84%E5%85%B3%E9%94%AE%E6%8A%80%E6%9C%AF/linux%E5%86%85%E6%A0%B8%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/seccomp/docker%E7%9A%84%E9%BB%98%E8%AE%A4seccomp%E8%A7%84%E5%88%99%E5%85%B7%E4%BD%93%E9%85%8D%E7%BD%AE%E4%BA%86%E4%BB%80%E4%B9%88.html</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title></title>
-      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6%E5%85%A8%E6%99%AF.html</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6%E5%85%A8%E6%99%AF.html</guid>
-      <description>├── 基于进程隔离技术的容器技术 │ ├── docker安全 │ ├── gvisor ├── 容器集群安全 │ ├── k8s │ ├── swarm ├── 安全容器 │ ├── kata │ ├── firecracker ├── 容器实现规范
-在研究安全容器时，需要这样看待容器生态 ├── kubelet │ ├── CRI: │ │ ├── OCI │ │ │ ├── VMM │ │ │ │ ├── Hyper-V │ │ │ │ │ ├── Linux Kernel │ │ │ │ │ │ ├── container</description>
-    </item>
-    
-    <item>
-      <title></title>
-      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E5%AE%B9%E5%99%A8%E9%9B%86%E7%BE%A4%E5%AE%89%E5%85%A8/k8s/k8s%E5%9F%BA%E7%A1%80/k8s%E5%AE%89%E8%A3%85.html</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E5%AE%B9%E5%99%A8%E9%9B%86%E7%BE%A4%E5%AE%89%E5%85%A8/k8s/k8s%E5%9F%BA%E7%A1%80/k8s%E5%AE%89%E8%A3%85.html</guid>
-      <description>生产环境 学习环境 使用minikube安装k8s 安装minikube 在minikube github找到二进制安装包，并安装
-例如
-wget https://github.com/kubernetes/minikube/releases/download/v1.12.1/minikube_latest_amd64.deb sudo dpkg -i minikube_latest_amd64.deb 安装kubectl $ cat &amp;lt;&amp;lt;EOF &amp;gt; /etc/apt/sources.list.d/kubernetes.list deb https://mirrors.huaweicloud.com/kubernetes/apt/ kubernetes-xenial main EOF $ curl -s https://mirrors.huaweicloud.com/kubernetes/apt/doc/apt-key.gpg | sudo apt-key add - $ sudo apt update $ sudo apt install -y kubectl 创建k8s环境 https_proxy=&amp;quot;http://127.0.0.1:8118&amp;quot; http_proxy=&amp;quot;http://127.0.0.1:8118&amp;quot; NO_PROXY=localhost,127.0.0.1,10.96.0.0/12,192.168.99.0/24,192.168.39.0/24 minikube start --driver=virtualbox --kubernetes-version=v1.18.3 参考链接  安装 Minikube 使用 Minikube 安装 Kubernetes 安装并配置 kubectl minikube start  </description>
-    </item>
-    
-    <item>
-      <title></title>
-      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E5%AE%B9%E5%99%A8%E9%9B%86%E7%BE%A4%E5%AE%89%E5%85%A8/k8s/%E5%8F%8A%E6%97%B6%E8%8E%B7%E5%8F%96k8s%E5%AE%89%E5%85%A8%E6%83%85%E6%8A%A5.html</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E5%AE%B9%E5%99%A8%E9%9B%86%E7%BE%A4%E5%AE%89%E5%85%A8/k8s/%E5%8F%8A%E6%97%B6%E8%8E%B7%E5%8F%96k8s%E5%AE%89%E5%85%A8%E6%83%85%E6%8A%A5.html</guid>
-      <description> https://groups.google.com/forum/feed/kubernetes-announce/msgs/rss_v2_0.xml?num=50  </description>
-    </item>
-    
-    <item>
-      <title></title>
-      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E9%A1%B9%E7%9B%AE%E5%BC%80%E5%8F%91/hackerbot/hackerbot%E5%9B%A2%E9%98%9F%E5%8D%8F%E4%BD%9C%E5%8A%9F%E8%83%BD%E8%AE%BE%E8%AE%A1.html</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E9%A1%B9%E7%9B%AE%E5%BC%80%E5%8F%91/hackerbot/hackerbot%E5%9B%A2%E9%98%9F%E5%8D%8F%E4%BD%9C%E5%8A%9F%E8%83%BD%E8%AE%BE%E8%AE%A1.html</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title></title>
-      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E9%A1%B9%E7%9B%AE%E5%BC%80%E5%8F%91/hackerbot/proxy.html</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E9%A1%B9%E7%9B%AE%E5%BC%80%E5%8F%91/hackerbot/proxy.html</guid>
-      <description>https://groups.google.com/forum/feed/golang-announce/msgs/rss_v2_0.xml?num=50
- https://groups.google.com/forum/feed/kubernetes-announce/msgs/rss_v2_0.xml?num=50  </description>
-    </item>
-    
-    <item>
-      <title></title>
-      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E9%A1%B9%E7%9B%AE%E5%BC%80%E5%8F%91/hackerbot/wereader%E4%BE%BF%E6%8D%B7%E5%88%B7%E6%96%B0token.html</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E9%A1%B9%E7%9B%AE%E5%BC%80%E5%8F%91/hackerbot/wereader%E4%BE%BF%E6%8D%B7%E5%88%B7%E6%96%B0token.html</guid>
-      <description>https://developers.weixin.qq.com/doc/oplatform/Mobile_App/WeChat_Login/Development_Guide.html</description>
-    </item>
-    
-    <item>
-      <title></title>
-      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E9%A1%B9%E7%9B%AE%E5%BC%80%E5%8F%91/hackerbot/%E8%9E%8D%E5%85%A5aminer%E6%83%85%E6%8A%A5.html</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E9%A1%B9%E7%9B%AE%E5%BC%80%E5%8F%91/hackerbot/%E8%9E%8D%E5%85%A5aminer%E6%83%85%E6%8A%A5.html</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title></title>
-      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E9%A1%B9%E7%9B%AE%E5%BC%80%E5%8F%91/sectools/%E5%9F%BA%E4%BA%8Edocker%E7%9A%84%E5%B7%A5%E5%85%B7%E5%90%88%E9%9B%86.html</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E9%A1%B9%E7%9B%AE%E5%BC%80%E5%8F%91/sectools/%E5%9F%BA%E4%BA%8Edocker%E7%9A%84%E5%B7%A5%E5%85%B7%E5%90%88%E9%9B%86.html</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title></title>
-      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E9%A1%B9%E7%9B%AE%E5%BC%80%E5%8F%91/skill_tree/include_mode.html</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E9%A1%B9%E7%9B%AE%E5%BC%80%E5%8F%91/skill_tree/include_mode.html</guid>
-      <description>可能存在多个学科引用同一个技能的情况。</description>
-    </item>
-    
-    <item>
-      <title></title>
-      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E9%A1%B9%E7%9B%AE%E5%BC%80%E5%8F%91/skill_tree/show_todo_description.html</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E9%A1%B9%E7%9B%AE%E5%BC%80%E5%8F%91/skill_tree/show_todo_description.html</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title></title>
-      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E9%A1%B9%E7%9B%AE%E5%BC%80%E5%8F%91/skilltree_blog/todo%E4%BA%A7%E7%94%9F%E4%BA%86%E4%B8%80%E4%BA%9B%E7%A9%BA%E7%99%BD%E7%9A%84%E5%8D%9A%E5%AE%A2.html</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E9%A1%B9%E7%9B%AE%E5%BC%80%E5%8F%91/skilltree_blog/todo%E4%BA%A7%E7%94%9F%E4%BA%86%E4%B8%80%E4%BA%9B%E7%A9%BA%E7%99%BD%E7%9A%84%E5%8D%9A%E5%AE%A2.html</guid>
-      <description>生成博客时忽略todo</description>
-    </item>
-    
-    <item>
-      <title></title>
-      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/%E6%9D%83%E9%99%90%E6%8F%90%E5%8D%87/linux%E6%8F%90%E6%9D%83/linux%E6%8F%90%E6%9D%83%E6%A3%80%E6%B5%8B%E8%84%9A%E6%9C%AC.html</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/%E6%9D%83%E9%99%90%E6%8F%90%E5%8D%87/linux%E6%8F%90%E6%9D%83/linux%E6%8F%90%E6%9D%83%E6%A3%80%E6%B5%8B%E8%84%9A%E6%9C%AC.html</guid>
-      <description> 这里有一些编译好的提权exp: https://github.com/pythonmaster41/Go-For-OSCP/blob/master/Exploits/ exp集合：https://github.com/SecWiki/linux-kernel-exploits PEASS: https://github.com/carlospolop/privilege-escalation-awesome-scripts-suite 检查脚本：https://github.com/InteliSecureLabs/Linux_Exploit_Suggester 检查脚本：https://github.com/sleventyeleven/linuxprivchecker 检查脚本：https://github.com/mzet-/linux-exploit-suggester 检查脚本：https://github.com/jondonas/linux-exploit-suggester-2/ 检查脚本：https://github.com/rebootuser/LinEnum  </description>
     </item>
     
   </channel>
