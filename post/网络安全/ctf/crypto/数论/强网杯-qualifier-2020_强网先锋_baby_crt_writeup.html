@@ -10,12 +10,13 @@
     content="描述信息  分值：105 已解答：77 第一名：WM 第二名：激流勇进队 第三名：L3H_Sec  附件下载
 题目分析 题目提供了两个文件
  task.py: 提供了具体的加密算法，但生成flag的大素数p未知 output0: 三个数，分别对应task.py中的n,m,sig  task.py文件内容不长，可以快速翻译为数学语言如下：
-典型RSA相关的参数： $$ \begin{cases} \begin{align} &amp;amp; e = 65537 \
-&amp;amp; p,q未知, n = p\cdot q \
-&amp;amp; e\cdot d \equiv 1\mod n \end{align} \end{cases} $$
-基于d派生的相关参数: $$ \begin{cases} \begin{align} &amp;amp; t_1, t_2是16 bit的素数 \
-&amp;amp; gcd(d,t_{1,2}-1)==1 \ &amp;amp; t_{1,2} \equiv 3 \mod 4 \
-&amp;amp; e_{t_1} \cdot d \equiv 1 \equiv \mod t_1 \" />
+典型RSA相关的参数： $$ \begin{align} \begin{cases} &amp;amp; e = 65537 \\
+&amp;amp; p,q未知, n = p\cdot q \\
+&amp;amp; e\cdot d \equiv 1\mod n \end{cases} \end{align} $$
+基于d派生的相关参数: $$ \begin{cases} \begin{align} &amp;amp; t_1, t_2是16 bit的素数 \\
+&amp;amp; gcd(d,t_{1,2}-1)==1 \\
+&amp;amp; t_{1,2} \equiv 3 \mod 4 \\
+&amp;amp; e_{t_1} \cdot d \equiv 1 \equiv \mod t_1 \\" />
 <meta name="keywords" content="" />
 <meta name="robots" content="noodp" />
 <link rel="canonical" href="/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/ctf/crypto/%E6%95%B0%E8%AE%BA/%E5%BC%BA%E7%BD%91%E6%9D%AF-qualifier-2020_%E5%BC%BA%E7%BD%91%E5%85%88%E9%94%8B_baby_crt_writeup.html" />
@@ -48,12 +49,13 @@
 <meta itemprop="description" content="描述信息  分值：105 已解答：77 第一名：WM 第二名：激流勇进队 第三名：L3H_Sec  附件下载
 题目分析 题目提供了两个文件
  task.py: 提供了具体的加密算法，但生成flag的大素数p未知 output0: 三个数，分别对应task.py中的n,m,sig  task.py文件内容不长，可以快速翻译为数学语言如下：
-典型RSA相关的参数： $$ \begin{cases} \begin{align} &amp; e = 65537 \
-&amp; p,q未知, n = p\cdot q \
-&amp; e\cdot d \equiv 1\mod n \end{align} \end{cases} $$
-基于d派生的相关参数: $$ \begin{cases} \begin{align} &amp; t_1, t_2是16 bit的素数 \
-&amp; gcd(d,t_{1,2}-1)==1 \ &amp; t_{1,2} \equiv 3 \mod 4 \
-&amp; e_{t_1} \cdot d \equiv 1 \equiv \mod t_1 \">
+典型RSA相关的参数： $$ \begin{align} \begin{cases} &amp; e = 65537 \\
+&amp; p,q未知, n = p\cdot q \\
+&amp; e\cdot d \equiv 1\mod n \end{cases} \end{align} $$
+基于d派生的相关参数: $$ \begin{cases} \begin{align} &amp; t_1, t_2是16 bit的素数 \\
+&amp; gcd(d,t_{1,2}-1)==1 \\
+&amp; t_{1,2} \equiv 3 \mod 4 \\
+&amp; e_{t_1} \cdot d \equiv 1 \equiv \mod t_1 \\">
 <meta itemprop="datePublished" content="2020-08-28T13:53:00&#43;08:00" />
 <meta itemprop="dateModified" content="2020-08-28T13:53:00&#43;08:00" />
 <meta itemprop="wordCount" content="755">
@@ -65,12 +67,13 @@
 <meta name="twitter:description" content="描述信息  分值：105 已解答：77 第一名：WM 第二名：激流勇进队 第三名：L3H_Sec  附件下载
 题目分析 题目提供了两个文件
  task.py: 提供了具体的加密算法，但生成flag的大素数p未知 output0: 三个数，分别对应task.py中的n,m,sig  task.py文件内容不长，可以快速翻译为数学语言如下：
-典型RSA相关的参数： $$ \begin{cases} \begin{align} &amp; e = 65537 \
-&amp; p,q未知, n = p\cdot q \
-&amp; e\cdot d \equiv 1\mod n \end{align} \end{cases} $$
-基于d派生的相关参数: $$ \begin{cases} \begin{align} &amp; t_1, t_2是16 bit的素数 \
-&amp; gcd(d,t_{1,2}-1)==1 \ &amp; t_{1,2} \equiv 3 \mod 4 \
-&amp; e_{t_1} \cdot d \equiv 1 \equiv \mod t_1 \"/>
+典型RSA相关的参数： $$ \begin{align} \begin{cases} &amp; e = 65537 \\
+&amp; p,q未知, n = p\cdot q \\
+&amp; e\cdot d \equiv 1\mod n \end{cases} \end{align} $$
+基于d派生的相关参数: $$ \begin{cases} \begin{align} &amp; t_1, t_2是16 bit的素数 \\
+&amp; gcd(d,t_{1,2}-1)==1 \\
+&amp; t_{1,2} \equiv 3 \mod 4 \\
+&amp; e_{t_1} \cdot d \equiv 1 \equiv \mod t_1 \\"/>
 
 
 
@@ -159,22 +162,22 @@
 <p>task.py文件内容不长，可以快速翻译为数学语言如下：</p>
 <p>典型RSA相关的参数：
 $$
-\begin{cases}
 \begin{align}
-&amp; e = 65537 \<br>
-&amp; p,q未知, n = p\cdot q \<br>
+\begin{cases}
+&amp; e = 65537 \\<br>
+&amp; p,q未知, n = p\cdot q \\<br>
 &amp; e\cdot d \equiv 1\mod n
-\end{align}
 \end{cases}
+\end{align}
 $$</p>
 <p>基于d派生的相关参数:
 $$
 \begin{cases}
 \begin{align}
-&amp; t_1, t_2是16 bit的素数 \<br>
-&amp; gcd(d,t_{1,2}-1)==1 \
-&amp; t_{1,2} \equiv 3 \mod 4 \<br>
-&amp; e_{t_1} \cdot d \equiv 1 \equiv \mod t_1 \<br>
+&amp; t_1, t_2是16 bit的素数 \\<br>
+&amp; gcd(d,t_{1,2}-1)==1 \\<br>
+&amp; t_{1,2} \equiv 3 \mod 4 \\<br>
+&amp; e_{t_1} \cdot d \equiv 1 \equiv \mod t_1 \\<br>
 &amp; e_{t_2} \cdot d \equiv 1 \equiv \mod t_2
 \end{align}
 \end{cases}
@@ -183,17 +186,17 @@ $$</p>
 $$
 \begin{cases}
 \begin{align}
-&amp; m已知 \<br>
-&amp; k是16bit的随机素数 \<br>
-&amp; d_p \equiv d \mod phi(p\cdot t_1) \<br>
-&amp; d_q \equiv d \mod phi(q\cdot t_2) \<br>
-&amp; S_p \equiv {(m+k)}^{d_p} \mod (p\cdot t_1) \tag{0-1} \<br>
-&amp; S_q \equiv {m}^{d_q} \mod (q\cdot t_2) \tag{0-2} \
-&amp; C_p \equiv q \cdot t_2 \cdot ((q \cdot t_2)^{-1} \mod (p \cdot t_1)) \tag{0-3} \
-&amp; C_q \equiv p \cdot t_1 \cdot ((p \cdot t_1)^{-1} \mod (q \cdot t_2)) \tag{0-4} \<br>
-&amp; S \equiv C_p \cdot S_p + C_q\cdot S_q \mod (p \cdot q \cdot t_1 \cdot t_2) \tag{0-5} \<br>
-&amp; c_1 \equiv m - S^{e_1} + 1 \mod t_1 \<br>
-&amp; c_2 \equiv m - S^{e_2} + 1 \mod t_2 \<br>
+&amp; m已知 \\<br>
+&amp; k是16bit的随机素数 \\<br>
+&amp; d_p \equiv d \mod phi(p\cdot t_1) \\<br>
+&amp; d_q \equiv d \mod phi(q\cdot t_2) \\<br>
+&amp; S_p \equiv {(m+k)}^{d_p} \mod (p\cdot t_1) \tag{0-1} \\<br>
+&amp; S_q \equiv {m}^{d_q} \mod (q\cdot t_2) \tag{0-2} \\<br>
+&amp; C_p \equiv q \cdot t_2 \cdot ((q \cdot t_2)^{-1} \mod (p \cdot t_1)) \tag{0-3} \\<br>
+&amp; C_q \equiv p \cdot t_1 \cdot ((p \cdot t_1)^{-1} \mod (q \cdot t_2)) \tag{0-4} \\<br>
+&amp; S \equiv C_p \cdot S_p + C_q\cdot S_q \mod (p \cdot q \cdot t_1 \cdot t_2) \tag{0-5} \\<br>
+&amp; c_1 \equiv m - S^{e_1} + 1 \mod t_1 \\<br>
+&amp; c_2 \equiv m - S^{e_2} + 1 \mod t_2 \\<br>
 &amp; sig \equiv S^{c_1 \cdot c_2} \mod n
 \end{align}
 \end{cases}
@@ -202,9 +205,9 @@ $$</p>
 <p>观察0-1,0-2,0-3,0-4,0-5式，可发现这是中国剩余定理的公式。因此想到$S_p, S_q和S应该分别在模p\cdot t_1,  q\cdot t_2 上相等$，证明如下：
 $$
 \begin{align}
-S &amp; \equiv S_p \cdot C_p + S_q \cdot C_q \mod ( (p\cdot t_1)\cdot (q \cdot t_2)) \<br>
-&amp; \equiv S_p \cdot q \cdot t_2 \cdot ((q \cdot t_2)^{-1} \mod (p \cdot t_1)) + S_q \cdot p \cdot t_1 \cdot ((p \cdot t_1)^{-1} \mod (q \cdot t_2)) \mod (p\cdot t_1) \<br>
-&amp; \equiv S_p \cdot q \cdot t_2 \cdot (q \cdot t_2)^{-1} + S_q \cdot 0 \mod (p\cdot t_1) \<br>
+S &amp; \equiv S_p \cdot C_p + S_q \cdot C_q \mod ( (p\cdot t_1)\cdot (q \cdot t_2)) \\<br>
+&amp; \equiv S_p \cdot q \cdot t_2 \cdot ((q \cdot t_2)^{-1} \mod (p \cdot t_1)) + S_q \cdot p \cdot t_1 \cdot ((p \cdot t_1)^{-1} \mod (q \cdot t_2)) \mod (p\cdot t_1) \\<br>
+&amp; \equiv S_p \cdot q \cdot t_2 \cdot (q \cdot t_2)^{-1} + S_q \cdot 0 \mod (p\cdot t_1) \\<br>
 &amp; \equiv S_p \mod (p\cdot t_1)
 \end{align}
 $$</p>
@@ -213,39 +216,39 @@ $$</p>
 <p>根据以上所有等式，结合模运算性质可得
 \begin{cases}
 \begin{align}
-&amp; S \equiv (m+k)^{d_p} \mod (p) \tag{1} \<br>
-&amp; S \equiv (m+k)^{d_p} \mod (t_1) \tag{2} \<br>
-&amp; S \equiv m^{d_q} \mod (q)\tag{3} \<br>
-&amp; S \equiv m^{d_q} \mod (t_2) \tag{4} \<br>
-&amp; d_p \equiv d \mod (p-1) \tag{5} \<br>
-&amp; d_p \equiv d \mod (t_1 - 1) \tag{6} \<br>
-&amp; d_q = d \mod (q-1) \tag{7} \<br>
-&amp; d_q = d \mod (t_2 - 1) \tag{8} \<br>
-&amp; e_1 = d^{-1} \mod (t_1 - 1) \tag{9} \<br>
+&amp; S \equiv (m+k)^{d_p} \mod (p) \tag{1} \\<br>
+&amp; S \equiv (m+k)^{d_p} \mod (t_1) \tag{2} \\<br>
+&amp; S \equiv m^{d_q} \mod (q)\tag{3} \\<br>
+&amp; S \equiv m^{d_q} \mod (t_2) \tag{4} \\<br>
+&amp; d_p \equiv d \mod (p-1) \tag{5} \\<br>
+&amp; d_p \equiv d \mod (t_1 - 1) \tag{6} \\<br>
+&amp; d_q = d \mod (q-1) \tag{7} \\<br>
+&amp; d_q = d \mod (t_2 - 1) \tag{8} \\<br>
+&amp; e_1 = d^{-1} \mod (t_1 - 1) \tag{9} \\<br>
 &amp; e_2 = d^{-1} \mod (t_2 - 1) \tag{10}
 \end{align}
 \end{cases}</p>
 <p>由(2)(6)(9)可得</p>
 <p>\begin{align}
-&amp; S^{e_1} \mod t_1 \equiv (m+k)^{d_p \cdot e_1} \mod (t_1)\<br>
-&amp; \equiv (m+k)^{d \cdot d^{-1} \mod (t_1 -1)} \mod (t_1)\<br>
-&amp; \equiv (m+k)^{1+a1 \cdot (t_1 -1)} \mod (t_1)\<br>
-&amp; \equiv (m+k) \mod (t_1)\<br>
+&amp; S^{e_1} \mod t_1 \equiv (m+k)^{d_p \cdot e_1} \mod (t_1)\\<br>
+&amp; \equiv (m+k)^{d \cdot d^{-1} \mod (t_1 -1)} \mod (t_1)\\<br>
+&amp; \equiv (m+k)^{1+a1 \cdot (t_1 -1)} \mod (t_1)\\<br>
+&amp; \equiv (m+k) \mod (t_1)\\<br>
 \end{align}</p>
 <p>类似的，由(4)(8)(10)可得
 \begin{align}
-&amp; S^{e_2} \mod t_2 \equiv (m) \mod (t_2)\<br>
+&amp; S^{e_2} \mod t_2 \equiv (m) \mod (t_2)\\<br>
 \end{align}</p>
 <p>因此
 \begin{align}
-&amp; c_1 = (m-S^{e_1}\mod t_1 +1) \mod t_1 \<br>
-&amp; = [m-(m+k+a2 \cdot t_1)+1] \mod t_1 \<br>
+&amp; c_1 = (m-S^{e_1}\mod t_1 +1) \mod t_1 \\<br>
+&amp; = [m-(m+k+a2 \cdot t_1)+1] \mod t_1 \\<br>
 &amp; = 1-k+a3 \cdot t_1 \quad \quad(其中a3为1或2)
 \end{align}</p>
 <p>同理
 \begin{align}
-&amp; c_2 = (m-S^{e_2}\mod t_2 +1) \mod t_2 \<br>
-&amp; = (m-m+a4 \cdot t_2 +1) \mod t_2 \<br>
+&amp; c_2 = (m-S^{e_2}\mod t_2 +1) \mod t_2 \\<br>
+&amp; = (m-m+a4 \cdot t_2 +1) \mod t_2 \\<br>
 &amp; = 1
 \end{align}</p>
 <p>所以
@@ -255,8 +258,8 @@ $$</p>
 <p>此时，可以进一步将S化简为Sp 或 Sq，因Sq未知数更少，我们选择将S化简为Sq:</p>
 <p>又因
 \begin{align}
-&amp; n = p \cdot q \<br>
-&amp; \Longrightarrow \<br>
+&amp; n = p \cdot q \\<br>
+&amp; \Longrightarrow \\<br>
 &amp; sig \equiv S_q^{1-k+a3 \cdot t_1} \mod q \quad \quad (a3=1,2) \quad \quad (11)
 \end{align}</p>
 <p>由
@@ -266,27 +269,27 @@ $$</p>
 得
 \begin{cases}
 \begin{align}
-&amp; e \equiv d^{-1} \mod (p-1)  \<br>
+&amp; e \equiv d^{-1} \mod (p-1)  \\<br>
 &amp; e \equiv d^{-1} \mod (q-1) \tag{12}
 \end{align}
 \end{cases}</p>
 <p>由(3)(7)(12)得
 \begin{align}
-&amp; S_q^e \equiv m^{d_q \cdot e} \mod q \<br>
-&amp; \equiv m^{d \cdot d^{-1} \mod (q-1)} \mod q\<br>
-&amp; \equiv m^{1+a5 \cdot(q-1)} \mod q \<br>
+&amp; S_q^e \equiv m^{d_q \cdot e} \mod q \\<br>
+&amp; \equiv m^{d \cdot d^{-1} \mod (q-1)} \mod q\\<br>
+&amp; \equiv m^{1+a5 \cdot(q-1)} \mod q \\<br>
 &amp; \equiv m \mod q \quad \quad (13)
 \end{align}</p>
 <p>由(11)(13)得
 \begin{align}
-&amp; (S^e)^{1-k+a3\cdot t_1} \equiv (S^{1-k+a3\cdot t_1})^e \mod q \<br>
-&amp; \equiv sig^e \mod q \<br>
+&amp; (S^e)^{1-k+a3\cdot t_1} \equiv (S^{1-k+a3\cdot t_1})^e \mod q \\<br>
+&amp; \equiv sig^e \mod q \\<br>
 &amp; \equiv m^{1+k+a3 \cdot t_1} \mod q \quad \quad (a3=1,2)
 \end{align}</p>
 <p>所以
 \begin{align}
-&amp; (m^{1-k+a3 \cdot t_1} - sig^e)|q \<br>
-&amp; \Longrightarrow \<br>
+&amp; (m^{1-k+a3 \cdot t_1} - sig^e)|q \\<br>
+&amp; \Longrightarrow \\<br>
 &amp; gcd((m^{1-k+a3 \cdot t_1} - sig^e), n)=q \ne 1 \quad \quad (a3=1,2)
 \end{align}</p>
 <h2 id="exp">exp</h2>
@@ -317,7 +320,6 @@ for i in range(min, max):
 <h2 id="相关资料">相关资料</h2>
 <ul>
 <li><a href="http://e.jd.com/30041829.html">《信息安全数学基础》</a></li>
-<li><a href=""></a></li>
 </ul>
 
             </div>

@@ -20,12 +20,13 @@
       <description>描述信息  分值：105 已解答：77 第一名：WM 第二名：激流勇进队 第三名：L3H_Sec  附件下载
 题目分析 题目提供了两个文件
  task.py: 提供了具体的加密算法，但生成flag的大素数p未知 output0: 三个数，分别对应task.py中的n,m,sig  task.py文件内容不长，可以快速翻译为数学语言如下：
-典型RSA相关的参数： $$ \begin{cases} \begin{align} &amp;amp; e = 65537 \
-&amp;amp; p,q未知, n = p\cdot q \
-&amp;amp; e\cdot d \equiv 1\mod n \end{align} \end{cases} $$
-基于d派生的相关参数: $$ \begin{cases} \begin{align} &amp;amp; t_1, t_2是16 bit的素数 \
-&amp;amp; gcd(d,t_{1,2}-1)==1 \ &amp;amp; t_{1,2} \equiv 3 \mod 4 \
-&amp;amp; e_{t_1} \cdot d \equiv 1 \equiv \mod t_1 \</description>
+典型RSA相关的参数： $$ \begin{align} \begin{cases} &amp;amp; e = 65537 \\
+&amp;amp; p,q未知, n = p\cdot q \\
+&amp;amp; e\cdot d \equiv 1\mod n \end{cases} \end{align} $$
+基于d派生的相关参数: $$ \begin{cases} \begin{align} &amp;amp; t_1, t_2是16 bit的素数 \\
+&amp;amp; gcd(d,t_{1,2}-1)==1 \\
+&amp;amp; t_{1,2} \equiv 3 \mod 4 \\
+&amp;amp; e_{t_1} \cdot d \equiv 1 \equiv \mod t_1 \\</description>
     </item>
     
     <item>
