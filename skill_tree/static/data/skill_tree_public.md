@@ -174,6 +174,9 @@
 #### Exfiltration<!-- {"expanded":true,"direction":"right"} -->
 ##### [external] smb_upload_file<a href="https://unix.stackexchange.com/questions/206415/sending-files-over-samba-with-command-line" target="_blank"><!-- {"expanded":false,"direction":"right"} -->
 ##### [external] smbget<a href="https://www.samba.org/samba/docs/current/man-html/smbget.1.html" target="_blank"><!-- {"expanded":false,"direction":"right"} -->
+### 安全职业认证<!-- {"expanded":true,"direction":"right"} -->
+#### oscp<!-- {"expanded":true,"direction":"right"} -->
+##### [external] OSCP-Survival-Guide<a href="https://github.com/Elinpf/OSCP-survival-guide" target="_blank"><!-- {"expanded":false,"direction":"right"} -->
 ## 开发<!-- {"expanded":true,"direction":"right"} -->
 ### IDE<!-- {"expanded":true,"direction":"right"} -->
 #### VisualStudioCode<!-- {"expanded":false,"direction":"right"} -->
