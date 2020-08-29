@@ -177,6 +177,7 @@
 ### 安全职业认证<!-- {"expanded":true,"direction":"right"} -->
 #### oscp<!-- {"expanded":true,"direction":"right"} -->
 ##### [external] OSCP-Survival-Guide<a href="https://github.com/Elinpf/OSCP-survival-guide" target="_blank"><!-- {"expanded":false,"direction":"right"} -->
+##### [external] OSCP-PWK-Notes-Public<a href="https://github.com/tbowman01/OSCP-PWK-Notes-Public" target="_blank"><!-- {"expanded":false,"direction":"right"} -->
 ## 开发<!-- {"expanded":true,"direction":"right"} -->
 ### IDE<!-- {"expanded":true,"direction":"right"} -->
 #### VisualStudioCode<!-- {"expanded":false,"direction":"right"} -->
