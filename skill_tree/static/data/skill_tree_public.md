@@ -160,6 +160,7 @@
 ###### katacontainers<!-- {"expanded":false,"direction":"right"} -->
 ####### [external] blackhat2020-us-20-Avrahami-Escaping-Virtualized-Containers<a href="https://i.blackhat.com/USA-20/Thursday/us-20-Avrahami-Escaping-Virtualized-Containers.pdf" target="_blank"><!-- {"expanded":false,"direction":"right"} -->
 ####### [external] blackhat2020-us-20-Avrahami-Escaping-Virtualized-Containers(brief)<a href="https://www.blackhat.com/us-20/briefings/schedule/#escaping-virtualized-containers-20514?hwa_trace_source=welink.mail_readmail" target="_blank"><!-- {"expanded":false,"direction":"right"} -->
+####### blackhat2020-us-虚拟化容器逃逸-分析<a href="https://ssst0n3.github.io/post/网络安全/安全研究/容器安全/虚拟化容器/katacontainers/blackhat2020-us-虚拟化容器逃逸-分析.html" target="_blank"><!-- {"expanded":false,"direction":"right"} -->
 ##### 容器实现规范<!-- {"expanded":true,"direction":"right"} -->
 ##### 容器安全情报收集<!-- {"expanded":false,"direction":"right"} -->
 ###### [external] Posts-created-by-Yuval-Avrahami<a href="https://unit42.paloaltonetworks.com/author/yuval-avrahami/" target="_blank"><!-- {"expanded":false,"direction":"right"} -->
@@ -171,6 +172,7 @@
 #### 漏洞分析与复现模板<a href="https://ssst0n3.github.io/post/网络安全/安全研究/漏洞分析与复现模板.html" target="_blank"><!-- {"expanded":false,"direction":"right"} -->
 #### 工业界情报学习<!-- {"expanded":true,"direction":"right"} -->
 ##### [external] blackhat2020<a href="https://www.blackhat.com/us-20/briefings/schedule/" target="_blank"><!-- {"expanded":false,"direction":"right"} -->
+##### [todo] 工业界威胁情报平台<!-- {"expanded":false,"direction":"right"} -->
 ### 渗透测试<!-- {"expanded":true,"direction":"right"} -->
 #### 权限提升<!-- {"expanded":true,"direction":"right"} -->
 ##### linux提权<!-- {"expanded":false,"direction":"right"} -->
