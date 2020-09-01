@@ -157,6 +157,20 @@ This task has been rated by 73 teams. The average rating is 3.99 (5.00 max).
     </item>
     
     <item>
+      <title>正确使用Go DockerSDK(gomod)</title>
+      <link>/post/%E5%BC%80%E5%8F%91/go/docker-sdk/%E6%AD%A3%E7%A1%AE%E4%BD%BF%E7%94%A8go-dockersdkgomod.html</link>
+      <pubDate>Mon, 30 Dec 2019 01:30:00 +0800</pubDate>
+      
+      <guid>/post/%E5%BC%80%E5%8F%91/go/docker-sdk/%E6%AD%A3%E7%A1%AE%E4%BD%BF%E7%94%A8go-dockersdkgomod.html</guid>
+      <description>1. 背景 1.1 go语言特性: 标准导入路径(canonical import path)  Go 1.4 introduces an annotation for package clauses in Go source that identify a canonical import path for the package. If an import is attempted using a path that is not canonical, the go command will refuse to compile the importing package.
+https://golang.org/doc/go1.4#canonicalimports
+ go1.4 引入了一个特性，在package后可以使用注释声明导入这个包的标准路径, 叫做canonical import path。如果导入某个包的路径与这个canonical import path不同，则go命令会拒绝编译该包。
+例如：
+package pdf // import &amp;quot;rsc.io/pdf&amp;quot; 1.2 docker项目更名 docker详细开发现状参见: docker开发现状
+这里要了解的是，docker曾在2017年将项目迁移到github.com/moby/moby</description>
+    </item>
+    
+    <item>
       <title>如何使用BootstrapVue</title>
       <link>/post/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/vue/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8bootstrapvue.html</link>
       <pubDate>Fri, 04 Oct 2019 13:58:00 +0800</pubDate>
