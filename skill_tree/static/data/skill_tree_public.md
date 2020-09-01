@@ -33,7 +33,7 @@
 ######## spring<!-- {"expanded":false,"direction":"right"} -->
 ######### spring_cloud<!-- {"expanded":false,"direction":"right"} -->
 ########## spring_cloud_config<!-- {"expanded":false,"direction":"right"} -->
-########### [todo] spring-cloud-config_CVE-2019-3799分析与复现<!-- {"expanded":false,"direction":"right"} -->
+########### spring-cloud-config_CVE-2019-3799分析与复现<a href="https://ssst0n3.github.io/post/网络安全/安全测试/测试对象/应用安全/web安全/web组件/spring/spring_cloud/spring_cloud_config/spring-cloud-config_cve-2019-3799分析与复现.html" target="_blank"><!-- {"expanded":false,"direction":"right"} -->
 ###### 逆向工程<!-- {"expanded":true,"direction":"right"} -->
 ###### 云安全<!-- {"expanded":true,"direction":"right"} -->
 ###### IOT安全<!-- {"expanded":true,"direction":"right"} -->
@@ -99,7 +99,11 @@
 ###### [todo] 代换密码和置换密码在块密码中的作用与区别<!-- {"expanded":true,"direction":"right"} -->
 ###### SPN线性密码分析<a href="https://ssst0n3.github.io/post/网络安全/安全理论/密码学/密码分析/spn线性密码分析.html" target="_blank"><!-- {"expanded":true,"direction":"right"} -->
 ### 安全培训<!-- {"expanded":true,"direction":"right"} -->
-### 安全人才竞争力评价<!-- {"expanded":true,"direction":"right"} -->
+### 安全人才竞争力<!-- {"expanded":true,"direction":"right"} -->
+#### 安全职业认证<!-- {"expanded":true,"direction":"right"} -->
+##### oscp<!-- {"expanded":true,"direction":"right"} -->
+###### [external] OSCP-Survival-Guide<a href="https://github.com/Elinpf/OSCP-survival-guide" target="_blank"><!-- {"expanded":false,"direction":"right"} -->
+###### [external] OSCP-PWK-Notes-Public<a href="https://github.com/tbowman01/OSCP-PWK-Notes-Public" target="_blank"><!-- {"expanded":false,"direction":"right"} -->
 ### 网络安全专业英语<!-- {"expanded":true,"direction":"right"} -->
 ### 安全工具<!-- {"expanded":true,"direction":"right"} -->
 #### kali<!-- {"expanded":true,"direction":"right"} -->
@@ -192,10 +196,6 @@
 #### Exfiltration<!-- {"expanded":true,"direction":"right"} -->
 ##### [external] smb_upload_file<a href="https://unix.stackexchange.com/questions/206415/sending-files-over-samba-with-command-line" target="_blank"><!-- {"expanded":false,"direction":"right"} -->
 ##### [external] smbget<a href="https://www.samba.org/samba/docs/current/man-html/smbget.1.html" target="_blank"><!-- {"expanded":false,"direction":"right"} -->
-### 安全职业认证<!-- {"expanded":true,"direction":"right"} -->
-#### oscp<!-- {"expanded":true,"direction":"right"} -->
-##### [external] OSCP-Survival-Guide<a href="https://github.com/Elinpf/OSCP-survival-guide" target="_blank"><!-- {"expanded":false,"direction":"right"} -->
-##### [external] OSCP-PWK-Notes-Public<a href="https://github.com/tbowman01/OSCP-PWK-Notes-Public" target="_blank"><!-- {"expanded":false,"direction":"right"} -->
 ## 开发<!-- {"expanded":true,"direction":"right"} -->
 ### IDE<!-- {"expanded":true,"direction":"right"} -->
 #### VisualStudioCode<!-- {"expanded":false,"direction":"right"} -->
