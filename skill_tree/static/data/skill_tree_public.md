@@ -112,7 +112,7 @@
 #### [todo] 开源软件安全研究方法<!-- {"expanded":false,"direction":"right"} -->
 #### 容器安全<!-- {"expanded":true,"direction":"right"} -->
 ##### [todo] 容器安全研究全景<!-- {"expanded":false,"direction":"right"} -->
-##### 基于进程隔离的容器技术<!-- {"expanded":false,"direction":"right"} -->
+##### 进程容器<!-- {"expanded":false,"direction":"right"} -->
 ###### docker<!-- {"expanded":false,"direction":"right"} -->
 ####### docker基础<!-- {"expanded":true,"direction":"right"} -->
 ######## [todo] 容器概述<!-- {"expanded":true,"direction":"right"} -->
@@ -137,15 +137,17 @@
 ####### 自动化测试<!-- {"expanded":true,"direction":"right"} -->
 ####### docker安全的关键技术<!-- {"expanded":true,"direction":"right"} -->
 ######## linux内核安全机制<!-- {"expanded":true,"direction":"right"} -->
+######### [todo] docker使用的linux内核安全机制介绍<!-- {"expanded":false,"direction":"right"} -->
 ######### seccomp<!-- {"expanded":true,"direction":"right"} -->
 ########## [todo] docker的默认seccomp规则具体配置了什么<!-- {"expanded":false,"direction":"right"} -->
 ######### apparmor<!-- {"expanded":true,"direction":"right"} -->
 ########## [todo] docker中apparmor机制综述<!-- {"expanded":false,"direction":"right"} -->
-########## docker中apparmor的加载过程<a href="https://ssst0n3.github.io/post/网络安全/安全研究/容器安全/基于进程隔离的容器技术/docker/docker安全的关键技术/linux内核安全机制/apparmor/docker中apparmor的加载过程.html" target="_blank"><!-- {"expanded":false,"direction":"right"} -->
+########## docker中apparmor的加载过程<a href="https://ssst0n3.github.io/post/网络安全/安全研究/容器安全/进程容器/docker/docker安全的关键技术/linux内核安全机制/apparmor/docker中apparmor的加载过程.html" target="_blank"><!-- {"expanded":false,"direction":"right"} -->
 ########## [todo] docker的默认apparmor策略具体配置了什么<!-- {"expanded":false,"direction":"right"} -->
 ######## [external] Understanding_Docker_container_escapes<a href="https://blog.trailofbits.com/2019/07/19/understanding-docker-container-escapes/" target="_blank"><!-- {"expanded":true,"direction":"right"} -->
 ####### docker安全配置<!-- {"expanded":true,"direction":"right"} -->
 ####### 安全风险<!-- {"expanded":true,"direction":"right"} -->
+######## [todo] 容器安全风险分析<!-- {"expanded":false,"direction":"right"} -->
 ####### docker相关工具的安全性<!-- {"expanded":true,"direction":"right"} -->
 ###### rkt<!-- {"expanded":false,"direction":"right"} -->
 ####### [external] breaking-out-of-coresos-rkt-3-new-cves<a href="https://unit42.paloaltonetworks.com/breaking-out-of-coresos-rkt-3-new-cves/" target="_blank"><!-- {"expanded":false,"direction":"right"} -->
@@ -161,6 +163,8 @@
 ######## [todo] kube-proxy_CVE-2020-8558_默认设置route_localnet允许邻近主机绕过localhost边界<!-- {"expanded":false,"direction":"right"} -->
 ##### 虚拟化容器<!-- {"expanded":false,"direction":"right"} -->
 ###### katacontainers<!-- {"expanded":false,"direction":"right"} -->
+####### kata软件基础<!-- {"expanded":true,"direction":"right"} -->
+######## [todo] 快速使用<!-- {"expanded":false,"direction":"right"} -->
 ####### [external] blackhat2020-us-20-Avrahami-Escaping-Virtualized-Containers<a href="https://i.blackhat.com/USA-20/Thursday/us-20-Avrahami-Escaping-Virtualized-Containers.pdf" target="_blank"><!-- {"expanded":false,"direction":"right"} -->
 ####### [external] blackhat2020-us-20-Avrahami-Escaping-Virtualized-Containers(brief)<a href="https://www.blackhat.com/us-20/briefings/schedule/#escaping-virtualized-containers-20514?hwa_trace_source=welink.mail_readmail" target="_blank"><!-- {"expanded":false,"direction":"right"} -->
 ####### [todo] blackhat2020-us-虚拟化容器逃逸-分析<!-- {"expanded":false,"direction":"right"} -->
