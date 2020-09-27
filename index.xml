@@ -40,10 +40,10 @@
     
     <item>
       <title>docker中apparmor的加载过程</title>
-      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E5%9F%BA%E4%BA%8E%E8%BF%9B%E7%A8%8B%E9%9A%94%E7%A6%BB%E7%9A%84%E5%AE%B9%E5%99%A8%E6%8A%80%E6%9C%AF/docker/docker%E5%AE%89%E5%85%A8%E7%9A%84%E5%85%B3%E9%94%AE%E6%8A%80%E6%9C%AF/linux%E5%86%85%E6%A0%B8%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/apparmor/docker%E4%B8%ADapparmor%E7%9A%84%E5%8A%A0%E8%BD%BD%E8%BF%87%E7%A8%8B.html</link>
+      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E8%BF%9B%E7%A8%8B%E5%AE%B9%E5%99%A8/docker/docker%E5%AE%89%E5%85%A8%E7%9A%84%E5%85%B3%E9%94%AE%E6%8A%80%E6%9C%AF/linux%E5%86%85%E6%A0%B8%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/apparmor/docker%E4%B8%ADapparmor%E7%9A%84%E5%8A%A0%E8%BD%BD%E8%BF%87%E7%A8%8B.html</link>
       <pubDate>Wed, 01 Jul 2020 17:49:00 +0800</pubDate>
       
-      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E5%9F%BA%E4%BA%8E%E8%BF%9B%E7%A8%8B%E9%9A%94%E7%A6%BB%E7%9A%84%E5%AE%B9%E5%99%A8%E6%8A%80%E6%9C%AF/docker/docker%E5%AE%89%E5%85%A8%E7%9A%84%E5%85%B3%E9%94%AE%E6%8A%80%E6%9C%AF/linux%E5%86%85%E6%A0%B8%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/apparmor/docker%E4%B8%ADapparmor%E7%9A%84%E5%8A%A0%E8%BD%BD%E8%BF%87%E7%A8%8B.html</guid>
+      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E8%BF%9B%E7%A8%8B%E5%AE%B9%E5%99%A8/docker/docker%E5%AE%89%E5%85%A8%E7%9A%84%E5%85%B3%E9%94%AE%E6%8A%80%E6%9C%AF/linux%E5%86%85%E6%A0%B8%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/apparmor/docker%E4%B8%ADapparmor%E7%9A%84%E5%8A%A0%E8%BD%BD%E8%BF%87%E7%A8%8B.html</guid>
       <description>判断操作系统是否启用apparmor，如果支持就安装名为docker-default的规则。 https://github.com/moby/moby/blob/master/daemon/apparmor_default.go
 const ( unconfinedAppArmorProfile = &amp;quot;unconfined&amp;quot; defaultAppArmorProfile = &amp;quot;docker-default&amp;quot; ) func ensureDefaultAppArmorProfile() error { if apparmor.IsEnabled() { loaded, err := aaprofile.IsLoaded(defaultAppArmorProfile) if err != nil { return fmt.Errorf(&amp;quot;Could not check if %s AppArmor profile was loaded: %s&amp;quot;, defaultAppArmorProfile, err) } // Nothing to do. if loaded { return nil } // Load the profile. if err := aaprofile.InstallDefault(defaultAppArmorProfile); err != nil { return fmt.Errorf(&amp;quot;AppArmor enabled on system but the %s profile could not be loaded: %s&amp;quot;, defaultAppArmorProfile, err) } } return nil } 其中判断是否启用apparmor代码如下，主要是判断apparmor相关文件是否存在。</description>
     </item>
@@ -155,6 +155,20 @@ This task has been rated by 73 teams. The average rating is 3.99 (5.00 max).
 某种意义上，也可以认为是为了加密过程与解密过程的对称。
 1. 轮密钥异或 本例中，每一轮密钥都未知，每轮密钥之间的关系也未知。
 2. 代换 (Substitution)    input 0 1 2 3 4 5 6 7 8 9 A B C D E F     output E 4 D 1 2 F B 8 3 A 6 C 5 9 0 7    这是一个4x4的s盒，通常一个加密算法中会有多个s盒，s盒的数量与input的长度有关：</description>
+    </item>
+    
+    <item>
+      <title>正确使用Go DockerSDK(gomod)</title>
+      <link>/post/%E5%BC%80%E5%8F%91/go/docker-sdk/%E6%AD%A3%E7%A1%AE%E4%BD%BF%E7%94%A8go-dockersdkgomod.html</link>
+      <pubDate>Mon, 30 Dec 2019 01:30:00 +0800</pubDate>
+      
+      <guid>/post/%E5%BC%80%E5%8F%91/go/docker-sdk/%E6%AD%A3%E7%A1%AE%E4%BD%BF%E7%94%A8go-dockersdkgomod.html</guid>
+      <description>1. 背景 1.1 go语言特性: 标准导入路径(canonical import path)  Go 1.4 introduces an annotation for package clauses in Go source that identify a canonical import path for the package. If an import is attempted using a path that is not canonical, the go command will refuse to compile the importing package.
+https://golang.org/doc/go1.4#canonicalimports
+ go1.4 引入了一个特性，在package后可以使用注释声明导入这个包的标准路径, 叫做canonical import path。如果导入某个包的路径与这个canonical import path不同，则go命令会拒绝编译该包。
+例如：
+package pdf // import &amp;quot;rsc.io/pdf&amp;quot; 1.2 docker项目更名 docker详细开发现状参见: docker开发现状
+这里要了解的是，docker曾在2017年将项目迁移到github.com/moby/moby</description>
     </item>
     
     <item>
