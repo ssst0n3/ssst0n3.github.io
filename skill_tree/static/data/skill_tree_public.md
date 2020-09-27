@@ -33,7 +33,7 @@
 ######## spring<!-- {"expanded":false,"direction":"right"} -->
 ######### spring_cloud<!-- {"expanded":false,"direction":"right"} -->
 ########## spring_cloud_config<!-- {"expanded":false,"direction":"right"} -->
-########### spring-cloud-config_CVE-2019-3799分析与复现<a href="https://ssst0n3.github.io/post/网络安全/安全测试/测试对象/应用安全/web安全/web组件/spring/spring_cloud/spring_cloud_config/spring-cloud-config_cve-2019-3799分析与复现.html" target="_blank"><!-- {"expanded":false,"direction":"right"} -->
+########### [todo] spring-cloud-config_CVE-2019-3799分析与复现<!-- {"expanded":false,"direction":"right"} -->
 ###### 逆向工程<!-- {"expanded":true,"direction":"right"} -->
 ###### 云安全<!-- {"expanded":true,"direction":"right"} -->
 ###### IOT安全<!-- {"expanded":true,"direction":"right"} -->
@@ -58,6 +58,7 @@
 ##### [todo] include_mode<!-- {"expanded":false,"direction":"right"} -->
 ##### [todo] show_todo_description<!-- {"expanded":false,"direction":"right"} -->
 #### skilltree_blog<!-- {"expanded":false,"direction":"right"} -->
+##### [todo] todo产生了一些空白的博客_done<!-- {"expanded":false,"direction":"right"} -->
 ### CTF<!-- {"expanded":true,"direction":"right"} -->
 #### 参考资料<!-- {"expanded":true,"direction":"right"} -->
 #### pwn<!-- {"expanded":true,"direction":"right"} -->
@@ -91,19 +92,12 @@
 ##### linux内核安全机制<!-- {"expanded":true,"direction":"right"} -->
 ###### seccomp<!-- {"expanded":false,"direction":"right"} -->
 ####### [external] seccomp学习笔记<a href="https://veritas501.space/2018/05/05/seccomp%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" target="_blank"><!-- {"expanded":true,"direction":"right"} -->
-###### LinuxSecurityModule<!-- {"expanded":false,"direction":"right"} -->
-####### [external] LinuxSecurityModuleUsage<a href="https://www.kernel.org/doc/html/v4.15/admin-guide/LSM/index.html" target="_blank"><!-- {"expanded":false,"direction":"right"} -->
-###### [external] wikipedia-chroot<a href="https://zh.wikipedia.org/wiki/Chroot" target="_blank"><!-- {"expanded":false,"direction":"right"} -->
 #### 密码学<!-- {"expanded":true,"direction":"right"} -->
 ##### 密码分析<!-- {"expanded":false,"direction":"right"} -->
 ###### [todo] 代换密码和置换密码在块密码中的作用与区别<!-- {"expanded":true,"direction":"right"} -->
 ###### SPN线性密码分析<a href="https://ssst0n3.github.io/post/网络安全/安全理论/密码学/密码分析/spn线性密码分析.html" target="_blank"><!-- {"expanded":true,"direction":"right"} -->
 ### 安全培训<!-- {"expanded":true,"direction":"right"} -->
-### 安全人才竞争力<!-- {"expanded":true,"direction":"right"} -->
-#### 安全职业认证<!-- {"expanded":true,"direction":"right"} -->
-##### oscp<!-- {"expanded":true,"direction":"right"} -->
-###### [external] OSCP-Survival-Guide<a href="https://github.com/Elinpf/OSCP-survival-guide" target="_blank"><!-- {"expanded":false,"direction":"right"} -->
-###### [external] OSCP-PWK-Notes-Public<a href="https://github.com/tbowman01/OSCP-PWK-Notes-Public" target="_blank"><!-- {"expanded":false,"direction":"right"} -->
+### 安全人才竞争力评价<!-- {"expanded":true,"direction":"right"} -->
 ### 网络安全专业英语<!-- {"expanded":true,"direction":"right"} -->
 ### 安全工具<!-- {"expanded":true,"direction":"right"} -->
 #### kali<!-- {"expanded":true,"direction":"right"} -->
@@ -112,7 +106,7 @@
 #### [todo] 开源软件安全研究方法<!-- {"expanded":false,"direction":"right"} -->
 #### 容器安全<!-- {"expanded":true,"direction":"right"} -->
 ##### [todo] 容器安全研究全景<!-- {"expanded":false,"direction":"right"} -->
-##### 进程容器<!-- {"expanded":false,"direction":"right"} -->
+##### 基于进程隔离的容器技术<!-- {"expanded":false,"direction":"right"} -->
 ###### docker<!-- {"expanded":false,"direction":"right"} -->
 ####### docker基础<!-- {"expanded":true,"direction":"right"} -->
 ######## [todo] 容器概述<!-- {"expanded":true,"direction":"right"} -->
@@ -127,7 +121,6 @@
 ######### [external] cvedetails<a href="https://www.cvedetails.com/vulnerability-list/vendor_id-13534/product_id-28125/Docker-Docker.html" target="_blank"><!-- {"expanded":false,"direction":"right"} -->
 ######### [todo] 如何获取旧版本docker<!-- {"expanded":true,"direction":"right"} -->
 ######### [todo] docker_CVE-2019-5736_runc逃逸漏洞<!-- {"expanded":false,"direction":"right"} -->
-######### [external] CVE-2019-14271<a href="https://unit42.paloaltonetworks.com/docker-patched-the-most-severe-copy-vulnerability-to-date-with-cve-2019-14271/" target="_blank"><!-- {"expanded":false,"direction":"right"} -->
 ######## issues与commit分析<!-- {"expanded":true,"direction":"right"} -->
 ######### [todo] 历史issues和commits分析<!-- {"expanded":true,"direction":"right"} -->
 ######### [todo] 跟踪最新commits和issues<!-- {"expanded":true,"direction":"right"} -->
@@ -137,22 +130,16 @@
 ####### 自动化测试<!-- {"expanded":true,"direction":"right"} -->
 ####### docker安全的关键技术<!-- {"expanded":true,"direction":"right"} -->
 ######## linux内核安全机制<!-- {"expanded":true,"direction":"right"} -->
-######### [todo] docker使用的linux内核安全机制介绍<!-- {"expanded":false,"direction":"right"} -->
 ######### seccomp<!-- {"expanded":true,"direction":"right"} -->
 ########## [todo] docker的默认seccomp规则具体配置了什么<!-- {"expanded":false,"direction":"right"} -->
 ######### apparmor<!-- {"expanded":true,"direction":"right"} -->
 ########## [todo] docker中apparmor机制综述<!-- {"expanded":false,"direction":"right"} -->
-########## docker中apparmor的加载过程<a href="https://ssst0n3.github.io/post/网络安全/安全研究/容器安全/进程容器/docker/docker安全的关键技术/linux内核安全机制/apparmor/docker中apparmor的加载过程.html" target="_blank"><!-- {"expanded":false,"direction":"right"} -->
+########## docker中apparmor的加载过程<a href="https://ssst0n3.github.io/post/网络安全/安全研究/容器安全/基于进程隔离的容器技术/docker/docker安全的关键技术/linux内核安全机制/apparmor/docker中apparmor的加载过程.html" target="_blank"><!-- {"expanded":false,"direction":"right"} -->
 ########## [todo] docker的默认apparmor策略具体配置了什么<!-- {"expanded":false,"direction":"right"} -->
 ######## [external] Understanding_Docker_container_escapes<a href="https://blog.trailofbits.com/2019/07/19/understanding-docker-container-escapes/" target="_blank"><!-- {"expanded":true,"direction":"right"} -->
 ####### docker安全配置<!-- {"expanded":true,"direction":"right"} -->
 ####### 安全风险<!-- {"expanded":true,"direction":"right"} -->
-######## [todo] 容器安全风险分析<!-- {"expanded":false,"direction":"right"} -->
 ####### docker相关工具的安全性<!-- {"expanded":true,"direction":"right"} -->
-###### rkt<!-- {"expanded":false,"direction":"right"} -->
-####### [external] breaking-out-of-coresos-rkt-3-new-cves<a href="https://unit42.paloaltonetworks.com/breaking-out-of-coresos-rkt-3-new-cves/" target="_blank"><!-- {"expanded":false,"direction":"right"} -->
-####### [external] github-rkt<a href="https://github.com/rkt" target="_blank"><!-- {"expanded":false,"direction":"right"} -->
-####### [external] Ending-and-archiving-the-rkt-project<a href="https://github.com/rkt/rkt/issues/4024" target="_blank"><!-- {"expanded":false,"direction":"right"} -->
 ##### 容器集群安全<!-- {"expanded":false,"direction":"right"} -->
 ###### k8s<!-- {"expanded":false,"direction":"right"} -->
 ####### k8s基础<!-- {"expanded":false,"direction":"right"} -->
@@ -161,25 +148,12 @@
 ####### [todo] 及时获取k8s安全情报<!-- {"expanded":false,"direction":"right"} -->
 ####### 历史漏洞分析与复现<!-- {"expanded":false,"direction":"right"} -->
 ######## [todo] kube-proxy_CVE-2020-8558_默认设置route_localnet允许邻近主机绕过localhost边界<!-- {"expanded":false,"direction":"right"} -->
-##### 虚拟化容器<!-- {"expanded":false,"direction":"right"} -->
-###### katacontainers<!-- {"expanded":false,"direction":"right"} -->
-####### kata软件基础<!-- {"expanded":true,"direction":"right"} -->
-######## [todo] 快速使用<!-- {"expanded":false,"direction":"right"} -->
-####### [external] blackhat2020-us-20-Avrahami-Escaping-Virtualized-Containers<a href="https://i.blackhat.com/USA-20/Thursday/us-20-Avrahami-Escaping-Virtualized-Containers.pdf" target="_blank"><!-- {"expanded":false,"direction":"right"} -->
-####### [external] blackhat2020-us-20-Avrahami-Escaping-Virtualized-Containers(brief)<a href="https://www.blackhat.com/us-20/briefings/schedule/#escaping-virtualized-containers-20514?hwa_trace_source=welink.mail_readmail" target="_blank"><!-- {"expanded":false,"direction":"right"} -->
-####### [todo] blackhat2020-us-虚拟化容器逃逸-分析<!-- {"expanded":false,"direction":"right"} -->
+##### 安全容器<!-- {"expanded":false,"direction":"right"} -->
 ##### 容器实现规范<!-- {"expanded":true,"direction":"right"} -->
-##### 容器安全情报收集<!-- {"expanded":false,"direction":"right"} -->
-###### [external] Posts-created-by-Yuval-Avrahami<a href="https://unit42.paloaltonetworks.com/author/yuval-avrahami/" target="_blank"><!-- {"expanded":false,"direction":"right"} -->
-###### [external] github-YuvalAvra<a href="https://github.com/YuvalAvra" target="_blank"><!-- {"expanded":false,"direction":"right"} -->
-###### [external] dockercon17-Escape-From-Your-VMs-with-Image2Docker<a href="https://www.youtube.com/watch?v=YVfiK72Il5A" target="_blank"><!-- {"expanded":false,"direction":"right"} -->
 #### 学术情报学习<!-- {"expanded":true,"direction":"right"} -->
 ##### [todo] aminer必读论文<!-- {"expanded":false,"direction":"right"} -->
 #### [todo] 如何优雅地进行漏洞复现<!-- {"expanded":false,"direction":"right"} -->
 #### 漏洞分析与复现模板<a href="https://ssst0n3.github.io/post/网络安全/安全研究/漏洞分析与复现模板.html" target="_blank"><!-- {"expanded":false,"direction":"right"} -->
-#### 工业界情报学习<!-- {"expanded":true,"direction":"right"} -->
-##### [external] blackhat2020<a href="https://www.blackhat.com/us-20/briefings/schedule/" target="_blank"><!-- {"expanded":false,"direction":"right"} -->
-##### [todo] 工业界威胁情报平台<!-- {"expanded":false,"direction":"right"} -->
 ### 渗透测试<!-- {"expanded":true,"direction":"right"} -->
 #### 权限提升<!-- {"expanded":true,"direction":"right"} -->
 ##### linux提权<!-- {"expanded":false,"direction":"right"} -->
@@ -200,6 +174,10 @@
 #### Exfiltration<!-- {"expanded":true,"direction":"right"} -->
 ##### [external] smb_upload_file<a href="https://unix.stackexchange.com/questions/206415/sending-files-over-samba-with-command-line" target="_blank"><!-- {"expanded":false,"direction":"right"} -->
 ##### [external] smbget<a href="https://www.samba.org/samba/docs/current/man-html/smbget.1.html" target="_blank"><!-- {"expanded":false,"direction":"right"} -->
+### 安全职业认证<!-- {"expanded":true,"direction":"right"} -->
+#### oscp<!-- {"expanded":true,"direction":"right"} -->
+##### [external] OSCP-Survival-Guide<a href="https://github.com/Elinpf/OSCP-survival-guide" target="_blank"><!-- {"expanded":false,"direction":"right"} -->
+##### [external] OSCP-PWK-Notes-Public<a href="https://github.com/tbowman01/OSCP-PWK-Notes-Public" target="_blank"><!-- {"expanded":false,"direction":"right"} -->
 ## 开发<!-- {"expanded":true,"direction":"right"} -->
 ### IDE<!-- {"expanded":true,"direction":"right"} -->
 #### VisualStudioCode<!-- {"expanded":false,"direction":"right"} -->
@@ -212,7 +190,7 @@
 #### [external] 创建在Go中的可执行静态链接<a href="https://xebia.com/blog/create-the-smallest-possible-docker-container/" target="_blank"><!-- {"expanded":true,"direction":"right"} -->
 #### [todo] 发布go_modules<!-- {"expanded":false,"direction":"right"} -->
 #### Docker-SDK<!-- {"expanded":false,"direction":"right"} -->
-##### 正确使用Go DockerSDK(gomod)<a href="https://ssst0n3.github.io/post/开发/go/docker-sdk/正确使用go-dockersdkgomod.html" target="_blank"><!-- {"expanded":true,"direction":"right"} -->
+##### [todo] 正确使用Go DockerSDK(gomod)<!-- {"expanded":true,"direction":"right"} -->
 ### 前端<!-- {"expanded":true,"direction":"right"} -->
 #### Vue<!-- {"expanded":false,"direction":"right"} -->
 ##### 如何使用BootstrapVue<a href="https://ssst0n3.github.io/post/开发/前端/vue/如何使用bootstrapvue.html" target="_blank"><!-- {"expanded":true,"direction":"right"} -->
