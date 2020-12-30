@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author"
+    content="">
+<meta name="description"
+    content="强网杯-Qualifier-2020/强网先锋/baby_crt writeup 描述信息  分值：105 已解答：77 第一名：WM 第二名：激流勇进队 第三名：L3H_Sec  附件下载
+题目分析 题目提供了两个文件
+ task.py: 提供了具体的加密算法，但生成flag的大素数p未知 output0: 三个数，分别对应task.py中的n,m,sig  task.py文件内容不长，可以快速翻译为数学语言如下：
+典型RSA相关的参数： $$ \begin{align} \begin{cases} &amp;amp; e = 65537 \newline &amp;amp; p,q未知, n = p\cdot q \newline &amp;amp; e\cdot d \equiv 1\mod n \end{cases} \end{align} $$
+基于d派生的相关参数: $$ \begin{cases} \begin{align} &amp;amp; t_1, t_2是16 bit的素数 \newline &amp;amp; gcd(d,t_{1,2}-1)==1 \newline &amp;amp; t_{1,2} \equiv 3 \mod 4 \newline &amp;amp; e_{t_1} \cdot d \equiv 1 \equiv \mod t_1 \newline &amp;amp; e_{t_2} \cdot d \equiv 1 \equiv \mod t_2 \end{align} \end{cases} $$" />
+<meta name="keywords" content="" />
+<meta name="robots" content="noodp" />
+<link rel="canonical" href="/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/CTF/crypto/%E6%95%B0%E8%AE%BA/%E5%BC%BA%E7%BD%91%E6%9D%AF-Qualifier-2020%E5%BC%BA%E7%BD%91%E5%85%88%E9%94%8Bbaby_crt-writeup.html" />
+
+
+<title>
+    
+    强网杯-Qualifier-2020/强网先锋/baby_crt writeup :: welcome to st0n3&#39;s blog 
+    
+</title>
+
+
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.2.1/css/flag-icon.min.css" rel="stylesheet"
+    type="text/css">
+
+
+
+<link rel="stylesheet" href="/main.min.de959d61dd13c2cd41136acd491ffb0749779e1afe37b1fed6d5cba0b7e1938d.css">
+
+
+
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#252627">
+<link rel="shortcut icon" href="/favicon.ico">
+<meta name="theme-color" content="#252627"><meta itemprop="name" content="强网杯-Qualifier-2020/强网先锋/baby_crt writeup">
+<meta itemprop="description" content="强网杯-Qualifier-2020/强网先锋/baby_crt writeup 描述信息  分值：105 已解答：77 第一名：WM 第二名：激流勇进队 第三名：L3H_Sec  附件下载
+题目分析 题目提供了两个文件
+ task.py: 提供了具体的加密算法，但生成flag的大素数p未知 output0: 三个数，分别对应task.py中的n,m,sig  task.py文件内容不长，可以快速翻译为数学语言如下：
+典型RSA相关的参数： $$ \begin{align} \begin{cases} &amp; e = 65537 \newline &amp; p,q未知, n = p\cdot q \newline &amp; e\cdot d \equiv 1\mod n \end{cases} \end{align} $$
+基于d派生的相关参数: $$ \begin{cases} \begin{align} &amp; t_1, t_2是16 bit的素数 \newline &amp; gcd(d,t_{1,2}-1)==1 \newline &amp; t_{1,2} \equiv 3 \mod 4 \newline &amp; e_{t_1} \cdot d \equiv 1 \equiv \mod t_1 \newline &amp; e_{t_2} \cdot d \equiv 1 \equiv \mod t_2 \end{align} \end{cases} $$">
+<meta itemprop="datePublished" content="2020-12-30T07:32:29+00:00" />
+<meta itemprop="dateModified" content="2020-12-30T07:32:29+00:00" />
+<meta itemprop="wordCount" content="758">
+
+
+
+<meta itemprop="keywords" content="" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="强网杯-Qualifier-2020/强网先锋/baby_crt writeup"/>
+<meta name="twitter:description" content="强网杯-Qualifier-2020/强网先锋/baby_crt writeup 描述信息  分值：105 已解答：77 第一名：WM 第二名：激流勇进队 第三名：L3H_Sec  附件下载
+题目分析 题目提供了两个文件
+ task.py: 提供了具体的加密算法，但生成flag的大素数p未知 output0: 三个数，分别对应task.py中的n,m,sig  task.py文件内容不长，可以快速翻译为数学语言如下：
+典型RSA相关的参数： $$ \begin{align} \begin{cases} &amp; e = 65537 \newline &amp; p,q未知, n = p\cdot q \newline &amp; e\cdot d \equiv 1\mod n \end{cases} \end{align} $$
+基于d派生的相关参数: $$ \begin{cases} \begin{align} &amp; t_1, t_2是16 bit的素数 \newline &amp; gcd(d,t_{1,2}-1)==1 \newline &amp; t_{1,2} \equiv 3 \mod 4 \newline &amp; e_{t_1} \cdot d \equiv 1 \equiv \mod t_1 \newline &amp; e_{t_2} \cdot d \equiv 1 \equiv \mod t_2 \end{align} \end{cases} $$"/>
+
+
+
+
+<meta property="article:published_time" content="2020-12-30 07:32:29 &#43;0000 UTC" />
+
+
+
+
+
+
+
+    </head>
+
+    <body class="dark-theme">
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text">$ cd /home/st0n3</span>
+            <span class="logo__cursor"></span>
+        
+    </div>
+</a>
+
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="/aboutme.html">About</a></li><li><a href="/post.html">Blog</a></li><li><a href="/hackerbot">Hackerbot</a></li><li><a href="/skill_tree/">SkillTree</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+
+            <span class="theme-toggle"><svg class="theme-toggler" width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M22 41C32.4934 41 41 32.4934 41 22C41 11.5066 32.4934 3 22
+  3C11.5066 3 3 11.5066 3 22C3 32.4934 11.5066 41 22 41ZM7 22C7
+  13.7157 13.7157 7 22 7V37C13.7157 37 7 30.2843 7 22Z"/>
+</svg>
+</span>
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
+                
+    <main class="post">
+
+        <div class="post-info">
+            
+            </p>
+        </div>
+
+        <article>
+            <h2 class="post-title"><a href="/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/CTF/crypto/%E6%95%B0%E8%AE%BA/%E5%BC%BA%E7%BD%91%E6%9D%AF-Qualifier-2020%E5%BC%BA%E7%BD%91%E5%85%88%E9%94%8Bbaby_crt-writeup.html">强网杯-Qualifier-2020/强网先锋/baby_crt writeup</a></h2>
+
+            
+
+            <div class="post-content">
+                <h1 id="强网杯-qualifier-2020强网先锋baby_crt-writeup">强网杯-Qualifier-2020/强网先锋/baby_crt writeup</h1>
+<h2 id="描述信息">描述信息</h2>
+<ul>
+<li>分值：105</li>
+<li>已解答：77</li>
+<li>第一名：WM</li>
+<li>第二名：激流勇进队</li>
+<li>第三名：L3H_Sec</li>
+</ul>
+<p><a href="https://ctf-challenges.obs.cn-south-1.myhuaweicloud.com/2020/%E5%BC%BA%E7%BD%91%E6%9D%AF-Qualifier-2020/%E5%BC%BA%E7%BD%91%E5%85%88%E9%94%8B/baby_crt/baby_crt-478096f13e5c113c1438d0649ff87efa.zip">附件下载</a></p>
+<h2 id="题目分析">题目分析</h2>
+<p>题目提供了两个文件</p>
+<ul>
+<li>task.py: 提供了具体的加密算法，但生成flag的大素数p未知</li>
+<li>output0: 三个数，分别对应task.py中的n,m,sig</li>
+</ul>
+<p>task.py文件内容不长，可以快速翻译为数学语言如下：</p>
+<p>典型RSA相关的参数：
+$$
+\begin{align}
+\begin{cases}
+&amp; e = 65537 \newline
+&amp; p,q未知, n = p\cdot q \newline
+&amp; e\cdot d \equiv 1\mod n
+\end{cases}
+\end{align}
+$$</p>
+<p>基于d派生的相关参数:
+$$
+\begin{cases}
+\begin{align}
+&amp; t_1, t_2是16 bit的素数 \newline
+&amp; gcd(d,t_{1,2}-1)==1 \newline
+&amp; t_{1,2} \equiv 3 \mod 4 \newline
+&amp; e_{t_1} \cdot d \equiv 1 \equiv \mod t_1 \newline
+&amp; e_{t_2} \cdot d \equiv 1 \equiv \mod t_2
+\end{align}
+\end{cases}
+$$</p>
+<p>sign函数中涉及的等式：
+$$
+\begin{cases}
+\begin{align}
+&amp; m已知 \newline
+&amp; k是16bit的随机素数 \newline
+&amp; d_p \equiv d \mod phi(p\cdot t_1) \newline
+&amp; d_q \equiv d \mod phi(q\cdot t_2) \newline
+&amp; S_p \equiv {(m+k)}^{d_p} \mod (p\cdot t_1) \tag{0-1} \newline
+&amp; S_q \equiv {m}^{d_q} \mod (q\cdot t_2) \tag{0-2} \newline
+&amp; C_p \equiv q \cdot t_2 \cdot ((q \cdot t_2)^{-1} \mod (p \cdot t_1)) \tag{0-3} \newline
+&amp; C_q \equiv p \cdot t_1 \cdot ((p \cdot t_1)^{-1} \mod (q \cdot t_2)) \tag{0-4} \newline
+&amp; S \equiv C_p \cdot S_p + C_q\cdot S_q \mod (p \cdot q \cdot t_1 \cdot t_2) \tag{0-5} \newline
+&amp; c_1 \equiv m - S^{e_1} + 1 \mod t_1 \newline
+&amp; c_2 \equiv m - S^{e_2} + 1 \mod t_2 \newline
+&amp; sig \equiv S^{c_1 \cdot c_2} \mod n
+\end{align}
+\end{cases}
+$$</p>
+<h2 id="题解">题解</h2>
+<p>观察0-1,0-2,0-3,0-4,0-5式，可发现这是中国剩余定理的公式。因此想到$S_p, S_q和S应该分别在模p\cdot t_1,  q\cdot t_2 上相等$，证明如下：
+$$
+\begin{align}
+S &amp; \equiv S_p \cdot C_p + S_q \cdot C_q \mod ( (p\cdot t_1)\cdot (q \cdot t_2)) \newline
+&amp; \equiv S_p \cdot q \cdot t_2 \cdot ((q \cdot t_2)^{-1} \mod (p \cdot t_1)) + S_q \cdot p \cdot t_1 \cdot ((p \cdot t_1)^{-1} \mod (q \cdot t_2)) \mod (p\cdot t_1) \newline
+&amp; \equiv S_p \cdot q \cdot t_2 \cdot (q \cdot t_2)^{-1} + S_q \cdot 0 \mod (p\cdot t_1) \newline
+&amp; \equiv S_p \mod (p\cdot t_1)
+\end{align}
+$$</p>
+<p>同理, 也有$S \equiv S_q \mod (q\cdot t_2)$</p>
+<p>下面我们希望对最终的等式做一些化简，特别是$c_1\cdot c_2$，尽可能得减少未知数。</p>
+<p>根据以上所有等式，结合模运算性质可得
+\begin{cases}
+\begin{align}
+&amp; S \equiv (m+k)^{d_p} \mod (p) \tag{1} \newline
+&amp; S \equiv (m+k)^{d_p} \mod (t_1) \tag{2} \newline
+&amp; S \equiv m^{d_q} \mod (q)\tag{3} \newline
+&amp; S \equiv m^{d_q} \mod (t_2) \tag{4} \newline
+&amp; d_p \equiv d \mod (p-1) \tag{5} \newline
+&amp; d_p \equiv d \mod (t_1 - 1) \tag{6} \newline
+&amp; d_q = d \mod (q-1) \tag{7} \newline
+&amp; d_q = d \mod (t_2 - 1) \tag{8} \newline
+&amp; e_1 = d^{-1} \mod (t_1 - 1) \tag{9} \newline
+&amp; e_2 = d^{-1} \mod (t_2 - 1) \tag{10}
+\end{align}
+\end{cases}</p>
+<p>由(2)(6)(9)可得</p>
+<p>\begin{align}
+&amp; S^{e_1} \mod t_1 \equiv (m+k)^{d_p \cdot e_1} \mod (t_1)\newline
+&amp; \equiv (m+k)^{d \cdot d^{-1} \mod (t_1 -1)} \mod (t_1)\newline
+&amp; \equiv (m+k)^{1+a1 \cdot (t_1 -1)} \mod (t_1)\newline
+&amp; \equiv (m+k) \mod (t_1)\newline
+\end{align}</p>
+<p>类似的，由(4)(8)(10)可得
+\begin{align}
+&amp; S^{e_2} \mod t_2 \equiv (m) \mod (t_2)\newline
+\end{align}</p>
+<p>因此
+\begin{align}
+&amp; c_1 = (m-S^{e_1}\mod t_1 +1) \mod t_1 \newline
+&amp; = [m-(m+k+a2 \cdot t_1)+1] \mod t_1 \newline
+&amp; = 1-k+a3 \cdot t_1 \quad \quad(其中a3为1或2)
+\end{align}</p>
+<p>同理
+\begin{align}
+&amp; c_2 = (m-S^{e_2}\mod t_2 +1) \mod t_2 \newline
+&amp; = (m-m+a4 \cdot t_2 +1) \mod t_2 \newline
+&amp; = 1
+\end{align}</p>
+<p>所以
+\begin{align}
+&amp; sig \equiv S^{c_1 \cdot c_2} \mod n \equiv S^{1-k+a3 \cdot t_1} \mod n \quad \quad (a3=1,2)
+\end{align}</p>
+<p>此时，可以进一步将S化简为Sp 或 Sq，因Sq未知数更少，我们选择将S化简为Sq:</p>
+<p>又因
+\begin{align}
+&amp; n = p \cdot q \newline
+&amp; \Longrightarrow \newline
+&amp; sig \equiv S_q^{1-k+a3 \cdot t_1} \mod q \quad \quad (a3=1,2) \quad \quad (11)
+\end{align}</p>
+<p>由
+\begin{align}
+&amp; e \equiv d^{-1} \mod (p-1) \cdot (q-1)
+\end{align}
+得
+\begin{cases}
+\begin{align}
+&amp; e \equiv d^{-1} \mod (p-1)  \newline
+&amp; e \equiv d^{-1} \mod (q-1) \tag{12}
+\end{align}
+\end{cases}</p>
+<p>由(3)(7)(12)得
+\begin{align}
+&amp; S_q^e \equiv m^{d_q \cdot e} \mod q \newline
+&amp; \equiv m^{d \cdot d^{-1} \mod (q-1)} \mod q\newline
+&amp; \equiv m^{1+a5 \cdot(q-1)} \mod q \newline
+&amp; \equiv m \mod q \quad \quad (13)
+\end{align}</p>
+<p>由(11)(13)得
+\begin{align}
+&amp; (S^e)^{1-k+a3\cdot t_1} \equiv (S^{1-k+a3\cdot t_1})^e \mod q \newline
+&amp; \equiv sig^e \mod q \newline
+&amp; \equiv m^{1+k+a3 \cdot t_1} \mod q \quad \quad (a3=1,2)
+\end{align}</p>
+<p>所以
+\begin{align}
+&amp; (m^{1-k+a3 \cdot t_1} - sig^e)|q \newline
+&amp; \Longrightarrow \newline
+&amp; gcd((m^{1-k+a3 \cdot t_1} - sig^e), n)=q \ne 1 \quad \quad (a3=1,2)
+\end{align}</p>
+<h2 id="exp">exp</h2>
+<pre><code class="language-python=" data-lang="python=">from hashlib import sha1
+
+import libnum
+from Crypto.Util.number import long_to_bytes
+
+min = 1 - pow(2, 17) + pow(2, 15)
+max = 1 - pow(2, 15) + pow(2, 17)
+n = 26318358382258215770827770763384603359524444566146134039272065206657135513496897321983920652242182112479484135343436206815722605756557098241887233837248519031879444740922789351356138322947108346833956405647578838873425658405513192437479359531790697924285889505666769580176431360506227506064132034621123828090480606055877425480739950809109048177976884825589023444901953529913585288143291544181183810227553891973915960951526154469344587083295640034876874318610991153058462811369615555470571469517472865469502025030548451296909857667669963720366290084062470583318590585472209798523021029182199921435625983186101089395997
+m = 26275493320706026144196966398886196833815170413807705805287763413013100962831703774640332765503838087434904835657988276064660304427802961609185997964665440867416900711128517859267504657627160598700248689738045243142111489179673375819308779535247214660694211698799461044354352200950309392321861021920968200334344131893259850468214901266208090469265809729514249143938043521579678234754670097056281556861805568096657415974805578299196440362791907408888958917063668867208257370099324084840742435785960681801625180611324948953657666742195051492610613830629731633827861546693629268844700581558851830936504144170791124745540
+sig = 20152941369122888414130075002845764046912727471716839854671280255845798928738103824595339885345405419943354215456598381228519131902698373225795339649300359363119754605698321052334731477127433796964107633109608706030111197156701607379086766944096066649323367976786383015106681896479446835419143225832320978530554399851074180762308322092339721839566642144908864530466017614731679525392259796511789624080228587080621454084957169193343724515867468178242402356741884890739873250658960438450287159439457730127074563991513030091456771906853781028159857466498315359846665211412644316716082898396009119848634426989676119219246
+e = 65537
+
+sig_power = pow(sig, e, n)
+for i in range(min, max):
+    x = pow(m, i, n)
+    if libnum.gcd((x - sig_power), n) != 1:
+        q = libnum.gcd((x - sig_power)%n, n)
+        p = n // q
+        assert p * q == n
+        print(p)
+        flag = &quot;flag{&quot; + sha1(long_to_bytes(p)).hexdigest() + &quot;}&quot;
+        print(flag)
+        break
+</code></pre><h2 id="总结">总结</h2>
+<p>本题涉及到的知识点主要是数论、欧拉定理、欧拉函数、孙子定理，基本都涵盖在《信息安全数学基础》课程中。</p>
+<h2 id="相关资料">相关资料</h2>
+<ul>
+<li><a href="http://e.jd.com/30041829.html">《信息安全数学基础》</a></li>
+</ul>
+
+            </div>
+        </article>
+
+        <hr />
+
+        <div class="post-info">
+  			</div>
+
+        
+    </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>&copy; 2020</span>
+            
+            <span></span>
+            <span> <a href="/posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a></span>
+        </div>
+    </div>
+    <div class="footer__inner">
+        <div class="footer__content">
+
+        </div>
+    </div>
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>Powered by <a href="http://gohugo.io">Hugo</a></span>
+            <span>Made with &#10084; by <a href="https://github.com/st0n3">st0n3</a></span>
+            <span>Based on <a href="https://github.com/rhazdon">rhazdon</a></span>
+        </div>
+    </div>
+
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      extensions: ["tex2jax.js"],
+      
+      jax: ["input/TeX", "output/CommonHTML"],
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+        displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+        processEscapes: true
+      },
+      "HTML-CSS": { fonts: ["TeX"] },
+      displayAlign: "left"
+    });
+  </script>
+
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_CHTML"></script>
+
+
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+
+<script type="text/javascript" src="/bundle.min.4c3fb12a087ceed4a52cb5d57068a9795c7069617a01ca70f788052ad66e1791779e6c72686e1dc0ca13dc03b0203204b6566bb0dd1ee80de2b7ff4d8fe53db2.js" integrity="sha512-TD&#43;xKgh87tSlLLXVcGipeVxwaWF6Acpw94gFKtZuF5F3nmxyaG4dwMoT3AOwIDIEtlZrsN0e6A3it/9Nj&#43;U9sg=="></script>
+
+
+
+    </body>
+</html>

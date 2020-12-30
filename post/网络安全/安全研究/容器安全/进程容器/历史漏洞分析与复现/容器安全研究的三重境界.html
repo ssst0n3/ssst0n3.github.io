@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author"
+    content="">
+<meta name="description"
+    content="容器安全研究的三重境界 与其他形态的技术相比，容器安全的漏洞更聚集在设计层面，而非实现层面，准确得说，非编码层面。
+编码层面的漏洞更容易发现，且更容易自动化发现，但这种“优势”不会一直存在。因此，必然将形成漏洞越来越难挖的局面。而对容器技术而言，这个时间点来得相当早。这使得深入容器安全显得不那么容易，使研究者沮丧，但这也会极大地锻炼安全研究者的思维能力。
+一、四级安全性 如果我们作以下定义：
+ 将理想状态的安全定义为“理想模型” 将实际设计的结果定义为“设计模型” 将真实实现的代码定义为“实现模型”  我们将会得到4个不同级别的安全性： $$ \begin{equation} \left\lbrace \begin{array}{lr} 理想模型 \newline 设计模型 \newline 实现模型 \newline 编码漏洞 \end{array} \right. \end{equation} $$
+以及3个可供挖掘漏洞的空间：
+1. 编码漏洞 该类问题通常与语言本身强相关，较为显著的包括C语言带来的内存安全类问题、PHP弱类型引发的问题等。各语言都有一些不同的、隐蔽的特性，如果开发者不能熟知这些特性，则可能会埋藏漏洞。
+这类问题的发现手段多，包括Fuzz,代码审计等。呈现出的漏洞数量也相当可观。
+2. 三种模型间的差距  分别分析出设计模型和实现模型，将二者对比，即可得出实现层面的漏洞 将设计模型与理想模型对比，则可得出设计层面的漏洞  二、三重境界 1. 设计漏洞 寻找设计层面的漏洞，我们需要回答两个问题
+ 什么是容器的理想模型？ 某容器相关的项目，当前的设计模型是什么样的  对于容器来说，问题2是容易回答的，oci有翔实的specification。
+难点在于解答问题一，或者我们是否有已知的安全设计模式可以套上去？
+我暂时没有发现有可以直接使用的方法论，也许我们可以自行总结一套。这方面，后续我可以尝试用很长一个篇幅解答。
+2. 实现漏洞 我们将追求放低至发现实现层面的漏洞，需要做的事情就简单多了
+ 熟读oci specification 走读容器相关项目的代码  看，简单多了——至少是可执行的！
+3. 编码漏洞 开篇即谈到了，容器安全的漏洞更聚集于非编码层面。但这个论述的对象主要是针对容器相关产品自身而言的，但如果将范围扩大至容器生态链呢？
+例如
+ docker所调用的各组件，甚至各LSM模块 由各云厂商以开源形式贡献至k8s的CNI &amp;hellip;  这样看，我们还是有希望在此层面挖掘相关漏洞的，但可能需要将挖掘范围扩大、将漏洞挖掘的方法进行微调，以适应于发现容器类漏洞。
+三、结语 对容器来说，少有编码层面的漏洞可以挖，没有办法；对其他类型的技术栈来说，现在编码层面还有很大的研究空间，但已经有这种趋势，也应该尽早布局。
+如果安全也有修仙一样的等级的话，挖掘编码层漏洞的集大成者就像是斗宗强者。当然很厉害了，但是上层似乎还有更广阔的空间。" />
+<meta name="keywords" content="" />
+<meta name="robots" content="noodp" />
+<link rel="canonical" href="/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E8%BF%9B%E7%A8%8B%E5%AE%B9%E5%99%A8/%E5%8E%86%E5%8F%B2%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90%E4%B8%8E%E5%A4%8D%E7%8E%B0/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6%E7%9A%84%E4%B8%89%E9%87%8D%E5%A2%83%E7%95%8C.html" />
+
+
+<title>
+    
+    容器安全研究的三重境界 :: welcome to st0n3&#39;s blog 
+    
+</title>
+
+
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.2.1/css/flag-icon.min.css" rel="stylesheet"
+    type="text/css">
+
+
+
+<link rel="stylesheet" href="/main.min.de959d61dd13c2cd41136acd491ffb0749779e1afe37b1fed6d5cba0b7e1938d.css">
+
+
+
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#252627">
+<link rel="shortcut icon" href="/favicon.ico">
+<meta name="theme-color" content="#252627"><meta itemprop="name" content="容器安全研究的三重境界">
+<meta itemprop="description" content="容器安全研究的三重境界 与其他形态的技术相比，容器安全的漏洞更聚集在设计层面，而非实现层面，准确得说，非编码层面。
+编码层面的漏洞更容易发现，且更容易自动化发现，但这种“优势”不会一直存在。因此，必然将形成漏洞越来越难挖的局面。而对容器技术而言，这个时间点来得相当早。这使得深入容器安全显得不那么容易，使研究者沮丧，但这也会极大地锻炼安全研究者的思维能力。
+一、四级安全性 如果我们作以下定义：
+ 将理想状态的安全定义为“理想模型” 将实际设计的结果定义为“设计模型” 将真实实现的代码定义为“实现模型”  我们将会得到4个不同级别的安全性： $$ \begin{equation} \left\lbrace \begin{array}{lr} 理想模型 \newline 设计模型 \newline 实现模型 \newline 编码漏洞 \end{array} \right. \end{equation} $$
+以及3个可供挖掘漏洞的空间：
+1. 编码漏洞 该类问题通常与语言本身强相关，较为显著的包括C语言带来的内存安全类问题、PHP弱类型引发的问题等。各语言都有一些不同的、隐蔽的特性，如果开发者不能熟知这些特性，则可能会埋藏漏洞。
+这类问题的发现手段多，包括Fuzz,代码审计等。呈现出的漏洞数量也相当可观。
+2. 三种模型间的差距  分别分析出设计模型和实现模型，将二者对比，即可得出实现层面的漏洞 将设计模型与理想模型对比，则可得出设计层面的漏洞  二、三重境界 1. 设计漏洞 寻找设计层面的漏洞，我们需要回答两个问题
+ 什么是容器的理想模型？ 某容器相关的项目，当前的设计模型是什么样的  对于容器来说，问题2是容易回答的，oci有翔实的specification。
+难点在于解答问题一，或者我们是否有已知的安全设计模式可以套上去？
+我暂时没有发现有可以直接使用的方法论，也许我们可以自行总结一套。这方面，后续我可以尝试用很长一个篇幅解答。
+2. 实现漏洞 我们将追求放低至发现实现层面的漏洞，需要做的事情就简单多了
+ 熟读oci specification 走读容器相关项目的代码  看，简单多了——至少是可执行的！
+3. 编码漏洞 开篇即谈到了，容器安全的漏洞更聚集于非编码层面。但这个论述的对象主要是针对容器相关产品自身而言的，但如果将范围扩大至容器生态链呢？
+例如
+ docker所调用的各组件，甚至各LSM模块 由各云厂商以开源形式贡献至k8s的CNI &hellip;  这样看，我们还是有希望在此层面挖掘相关漏洞的，但可能需要将挖掘范围扩大、将漏洞挖掘的方法进行微调，以适应于发现容器类漏洞。
+三、结语 对容器来说，少有编码层面的漏洞可以挖，没有办法；对其他类型的技术栈来说，现在编码层面还有很大的研究空间，但已经有这种趋势，也应该尽早布局。
+如果安全也有修仙一样的等级的话，挖掘编码层漏洞的集大成者就像是斗宗强者。当然很厉害了，但是上层似乎还有更广阔的空间。">
+<meta itemprop="datePublished" content="2020-12-29T11:07:11+00:00" />
+<meta itemprop="dateModified" content="2020-12-29T11:07:11+00:00" />
+<meta itemprop="wordCount" content="62">
+
+
+
+<meta itemprop="keywords" content="" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="容器安全研究的三重境界"/>
+<meta name="twitter:description" content="容器安全研究的三重境界 与其他形态的技术相比，容器安全的漏洞更聚集在设计层面，而非实现层面，准确得说，非编码层面。
+编码层面的漏洞更容易发现，且更容易自动化发现，但这种“优势”不会一直存在。因此，必然将形成漏洞越来越难挖的局面。而对容器技术而言，这个时间点来得相当早。这使得深入容器安全显得不那么容易，使研究者沮丧，但这也会极大地锻炼安全研究者的思维能力。
+一、四级安全性 如果我们作以下定义：
+ 将理想状态的安全定义为“理想模型” 将实际设计的结果定义为“设计模型” 将真实实现的代码定义为“实现模型”  我们将会得到4个不同级别的安全性： $$ \begin{equation} \left\lbrace \begin{array}{lr} 理想模型 \newline 设计模型 \newline 实现模型 \newline 编码漏洞 \end{array} \right. \end{equation} $$
+以及3个可供挖掘漏洞的空间：
+1. 编码漏洞 该类问题通常与语言本身强相关，较为显著的包括C语言带来的内存安全类问题、PHP弱类型引发的问题等。各语言都有一些不同的、隐蔽的特性，如果开发者不能熟知这些特性，则可能会埋藏漏洞。
+这类问题的发现手段多，包括Fuzz,代码审计等。呈现出的漏洞数量也相当可观。
+2. 三种模型间的差距  分别分析出设计模型和实现模型，将二者对比，即可得出实现层面的漏洞 将设计模型与理想模型对比，则可得出设计层面的漏洞  二、三重境界 1. 设计漏洞 寻找设计层面的漏洞，我们需要回答两个问题
+ 什么是容器的理想模型？ 某容器相关的项目，当前的设计模型是什么样的  对于容器来说，问题2是容易回答的，oci有翔实的specification。
+难点在于解答问题一，或者我们是否有已知的安全设计模式可以套上去？
+我暂时没有发现有可以直接使用的方法论，也许我们可以自行总结一套。这方面，后续我可以尝试用很长一个篇幅解答。
+2. 实现漏洞 我们将追求放低至发现实现层面的漏洞，需要做的事情就简单多了
+ 熟读oci specification 走读容器相关项目的代码  看，简单多了——至少是可执行的！
+3. 编码漏洞 开篇即谈到了，容器安全的漏洞更聚集于非编码层面。但这个论述的对象主要是针对容器相关产品自身而言的，但如果将范围扩大至容器生态链呢？
+例如
+ docker所调用的各组件，甚至各LSM模块 由各云厂商以开源形式贡献至k8s的CNI &hellip;  这样看，我们还是有希望在此层面挖掘相关漏洞的，但可能需要将挖掘范围扩大、将漏洞挖掘的方法进行微调，以适应于发现容器类漏洞。
+三、结语 对容器来说，少有编码层面的漏洞可以挖，没有办法；对其他类型的技术栈来说，现在编码层面还有很大的研究空间，但已经有这种趋势，也应该尽早布局。
+如果安全也有修仙一样的等级的话，挖掘编码层漏洞的集大成者就像是斗宗强者。当然很厉害了，但是上层似乎还有更广阔的空间。"/>
+
+
+
+
+<meta property="article:published_time" content="2020-12-29 11:07:11 &#43;0000 UTC" />
+
+
+
+
+
+
+
+    </head>
+
+    <body class="dark-theme">
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text">$ cd /home/st0n3</span>
+            <span class="logo__cursor"></span>
+        
+    </div>
+</a>
+
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="/aboutme.html">About</a></li><li><a href="/post.html">Blog</a></li><li><a href="/hackerbot">Hackerbot</a></li><li><a href="/skill_tree">SkillTree</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+
+            <span class="theme-toggle"><svg class="theme-toggler" width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M22 41C32.4934 41 41 32.4934 41 22C41 11.5066 32.4934 3 22
+  3C11.5066 3 3 11.5066 3 22C3 32.4934 11.5066 41 22 41ZM7 22C7
+  13.7157 13.7157 7 22 7V37C13.7157 37 7 30.2843 7 22Z"/>
+</svg>
+</span>
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
+                
+    <main class="post">
+
+        <div class="post-info">
+            
+            </p>
+        </div>
+
+        <article>
+            <h2 class="post-title"><a href="/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E8%BF%9B%E7%A8%8B%E5%AE%B9%E5%99%A8/%E5%8E%86%E5%8F%B2%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90%E4%B8%8E%E5%A4%8D%E7%8E%B0/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6%E7%9A%84%E4%B8%89%E9%87%8D%E5%A2%83%E7%95%8C.html">容器安全研究的三重境界</a></h2>
+
+            
+
+            <div class="post-content">
+                <h1 id="容器安全研究的三重境界">容器安全研究的三重境界</h1>
+<p>与其他形态的技术相比，容器安全的漏洞更聚集在设计层面，而非实现层面，准确得说，非编码层面。</p>
+<p>编码层面的漏洞更容易发现，且更容易自动化发现，但这种“优势”不会一直存在。因此，必然将形成漏洞越来越难挖的局面。而对容器技术而言，这个时间点来得相当早。这使得深入容器安全显得不那么容易，使研究者沮丧，但这也会极大地锻炼安全研究者的思维能力。</p>
+<h2 id="一四级安全性">一、四级安全性</h2>
+<p>如果我们作以下定义：</p>
+<ol>
+<li>将理想状态的安全定义为“理想模型”</li>
+<li>将实际设计的结果定义为“设计模型”</li>
+<li>将真实实现的代码定义为“实现模型”</li>
+</ol>
+<p>我们将会得到4个不同级别的安全性：
+$$
+\begin{equation}
+\left\lbrace
+\begin{array}{lr}
+理想模型 \newline
+设计模型 \newline
+实现模型 \newline
+编码漏洞
+\end{array}
+\right.
+\end{equation}
+$$</p>
+<p>以及3个可供挖掘漏洞的空间：</p>
+<img src="http://img.st0n3.obs.cn-south-1.myhuaweicloud.com/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6%E4%B8%89%E9%87%8D%E5%A2%83%E7%95%8C.png" width="300px" style="background:white;">
+<h3 id="1-编码漏洞">1. 编码漏洞</h3>
+<p>该类问题通常与语言本身强相关，较为显著的包括C语言带来的内存安全类问题、PHP弱类型引发的问题等。各语言都有一些不同的、隐蔽的特性，如果开发者不能熟知这些特性，则可能会埋藏漏洞。</p>
+<p>这类问题的发现手段多，包括Fuzz,代码审计等。呈现出的漏洞数量也相当可观。</p>
+<h3 id="2-三种模型间的差距">2. 三种模型间的差距</h3>
+<ul>
+<li>分别分析出设计模型和实现模型，将二者对比，即可得出实现层面的漏洞</li>
+<li>将设计模型与理想模型对比，则可得出设计层面的漏洞</li>
+</ul>
+<h2 id="二三重境界">二、三重境界</h2>
+<h3 id="1-设计漏洞">1. 设计漏洞</h3>
+<p>寻找设计层面的漏洞，我们需要回答两个问题</p>
+<ol>
+<li>什么是容器的理想模型？</li>
+<li>某容器相关的项目，当前的设计模型是什么样的</li>
+</ol>
+<p>对于容器来说，问题2是容易回答的，<a href="https://github.com/opencontainers">oci</a>有翔实的specification。</p>
+<p>难点在于解答问题一，或者我们是否有已知的安全设计模式可以套上去？</p>
+<p>我暂时没有发现有可以直接使用的方法论，也许我们可以自行总结一套。这方面，后续我可以尝试用很长一个篇幅解答。</p>
+<h3 id="2-实现漏洞">2. 实现漏洞</h3>
+<p>我们将追求放低至发现实现层面的漏洞，需要做的事情就简单多了</p>
+<ol>
+<li>熟读oci specification</li>
+<li>走读容器相关项目的代码</li>
+</ol>
+<p>看，简单多了——至少是可执行的！</p>
+<h3 id="3-编码漏洞">3. 编码漏洞</h3>
+<p>开篇即谈到了，容器安全的漏洞更聚集于非编码层面。但这个论述的对象主要是针对容器相关产品自身而言的，但如果将范围扩大至容器生态链呢？</p>
+<p>例如</p>
+<ul>
+<li>docker所调用的各组件，甚至各LSM模块</li>
+<li>由各云厂商以开源形式贡献至k8s的CNI</li>
+<li>&hellip;</li>
+</ul>
+<p>这样看，我们还是有希望在此层面挖掘相关漏洞的，但可能需要将挖掘范围扩大、将漏洞挖掘的方法进行微调，以适应于发现容器类漏洞。</p>
+<h2 id="三结语">三、结语</h2>
+<p>对容器来说，少有编码层面的漏洞可以挖，没有办法；对其他类型的技术栈来说，现在编码层面还有很大的研究空间，但已经有这种趋势，也应该尽早布局。</p>
+<p>如果安全也有修仙一样的等级的话，挖掘编码层漏洞的集大成者就像是斗宗强者。当然很厉害了，但是上层似乎还有更广阔的空间。</p>
+<p>(一个斗之气一段的臆想 T_T)</p>
+
+            </div>
+        </article>
+
+        <hr />
+
+        <div class="post-info">
+  			</div>
+
+        
+    </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>&copy; 2020</span>
+            
+            <span></span>
+            <span> <a href="/posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a></span>
+        </div>
+    </div>
+    <div class="footer__inner">
+        <div class="footer__content">
+
+        </div>
+    </div>
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>Powered by <a href="http://gohugo.io">Hugo</a></span>
+            <span>Made with &#10084; by <a href="https://github.com/st0n3">st0n3</a></span>
+            <span>Based on <a href="https://github.com/rhazdon">rhazdon</a></span>
+        </div>
+    </div>
+
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      extensions: ["tex2jax.js"],
+      
+      jax: ["input/TeX", "output/CommonHTML"],
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+        displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+        processEscapes: true
+      },
+      "HTML-CSS": { fonts: ["TeX"] },
+      displayAlign: "left"
+    });
+  </script>
+
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_CHTML"></script>
+
+
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+
+<script type="text/javascript" src="/bundle.min.4c3fb12a087ceed4a52cb5d57068a9795c7069617a01ca70f788052ad66e1791779e6c72686e1dc0ca13dc03b0203204b6566bb0dd1ee80de2b7ff4d8fe53db2.js" integrity="sha512-TD&#43;xKgh87tSlLLXVcGipeVxwaWF6Acpw94gFKtZuF5F3nmxyaG4dwMoT3AOwIDIEtlZrsN0e6A3it/9Nj&#43;U9sg=="></script>
+
+
+
+    </body>
+</html>

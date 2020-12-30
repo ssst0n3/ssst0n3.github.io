@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author"
+    content="">
+<meta name="description"
+    content="正确使用Go DockerSDK(gomod) 1. 背景 1.1 go语言特性: 标准导入路径(canonical import path)  Go 1.4 introduces an annotation for package clauses in Go source that identify a canonical import path for the package. If an import is attempted using a path that is not canonical, the go command will refuse to compile the importing package.
+https://golang.org/doc/go1.4#canonicalimports
+ go1.4 引入了一个特性，在package后可以使用注释声明导入这个包的标准路径, 叫做canonical import path。如果导入某个包的路径与这个canonical import path不同，则go命令会拒绝编译该包。
+例如：
+package pdf // import &amp;quot;rsc.io/pdf&amp;quot; 1.2 docker项目更名 docker详细开发现状参见: docker开发现状" />
+<meta name="keywords" content="" />
+<meta name="robots" content="noodp" />
+<link rel="canonical" href="/post/%E5%BC%80%E5%8F%91/golang/Docker-SDK/%E6%AD%A3%E7%A1%AE%E4%BD%BF%E7%94%A8Go-DockerSDKgomod.html" />
+
+
+<title>
+    
+    正确使用Go DockerSDK(gomod) :: welcome to st0n3&#39;s blog 
+    
+</title>
+
+
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.2.1/css/flag-icon.min.css" rel="stylesheet"
+    type="text/css">
+
+
+
+<link rel="stylesheet" href="/main.min.de959d61dd13c2cd41136acd491ffb0749779e1afe37b1fed6d5cba0b7e1938d.css">
+
+
+
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#252627">
+<link rel="shortcut icon" href="/favicon.ico">
+<meta name="theme-color" content="#252627"><meta itemprop="name" content="正确使用Go DockerSDK(gomod)">
+<meta itemprop="description" content="正确使用Go DockerSDK(gomod) 1. 背景 1.1 go语言特性: 标准导入路径(canonical import path)  Go 1.4 introduces an annotation for package clauses in Go source that identify a canonical import path for the package. If an import is attempted using a path that is not canonical, the go command will refuse to compile the importing package.
+https://golang.org/doc/go1.4#canonicalimports
+ go1.4 引入了一个特性，在package后可以使用注释声明导入这个包的标准路径, 叫做canonical import path。如果导入某个包的路径与这个canonical import path不同，则go命令会拒绝编译该包。
+例如：
+package pdf // import &quot;rsc.io/pdf&quot; 1.2 docker项目更名 docker详细开发现状参见: docker开发现状">
+<meta itemprop="datePublished" content="2019-12-29T17:30:00+00:00" />
+<meta itemprop="dateModified" content="2019-12-29T17:30:00+00:00" />
+<meta itemprop="wordCount" content="246">
+
+
+
+<meta itemprop="keywords" content="" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="正确使用Go DockerSDK(gomod)"/>
+<meta name="twitter:description" content="正确使用Go DockerSDK(gomod) 1. 背景 1.1 go语言特性: 标准导入路径(canonical import path)  Go 1.4 introduces an annotation for package clauses in Go source that identify a canonical import path for the package. If an import is attempted using a path that is not canonical, the go command will refuse to compile the importing package.
+https://golang.org/doc/go1.4#canonicalimports
+ go1.4 引入了一个特性，在package后可以使用注释声明导入这个包的标准路径, 叫做canonical import path。如果导入某个包的路径与这个canonical import path不同，则go命令会拒绝编译该包。
+例如：
+package pdf // import &quot;rsc.io/pdf&quot; 1.2 docker项目更名 docker详细开发现状参见: docker开发现状"/>
+
+
+
+
+<meta property="article:published_time" content="2019-12-29 17:30:00 &#43;0000 UTC" />
+
+
+
+
+
+
+
+    </head>
+
+    <body class="dark-theme">
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text">$ cd /home/st0n3</span>
+            <span class="logo__cursor"></span>
+        
+    </div>
+</a>
+
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="/aboutme.html">About</a></li><li><a href="/post.html">Blog</a></li><li><a href="/hackerbot">Hackerbot</a></li><li><a href="/skill_tree/">SkillTree</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+
+            <span class="theme-toggle"><svg class="theme-toggler" width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M22 41C32.4934 41 41 32.4934 41 22C41 11.5066 32.4934 3 22
+  3C11.5066 3 3 11.5066 3 22C3 32.4934 11.5066 41 22 41ZM7 22C7
+  13.7157 13.7157 7 22 7V37C13.7157 37 7 30.2843 7 22Z"/>
+</svg>
+</span>
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
+                
+    <main class="post">
+
+        <div class="post-info">
+            
+            </p>
+        </div>
+
+        <article>
+            <h2 class="post-title"><a href="/post/%E5%BC%80%E5%8F%91/golang/Docker-SDK/%E6%AD%A3%E7%A1%AE%E4%BD%BF%E7%94%A8Go-DockerSDKgomod.html">正确使用Go DockerSDK(gomod)</a></h2>
+
+            
+
+            <div class="post-content">
+                <h1 id="正确使用go-dockersdkgomod">正确使用Go DockerSDK(gomod)</h1>
+<h2 id="1-背景">1. 背景</h2>
+<h3 id="11-go语言特性-标准导入路径canonical-import-path">1.1 go语言特性: 标准导入路径(canonical import path)</h3>
+<blockquote>
+<p>Go 1.4 introduces an annotation for package clauses in Go source that identify a canonical import path for the package. If an import is attempted using a path that is not canonical, the go command will refuse to compile the importing package.</p>
+<p><a href="https://golang.org/doc/go1.4#canonicalimports">https://golang.org/doc/go1.4#canonicalimports</a></p>
+</blockquote>
+<p>go1.4 引入了一个特性，在package后可以使用注释声明导入这个包的标准路径, 叫做canonical import path。如果导入某个包的路径与这个canonical import path不同，则go命令会拒绝编译该包。</p>
+<p>例如：</p>
+<pre><code>package pdf // import &quot;rsc.io/pdf&quot;
+</code></pre><h3 id="12-docker项目更名">1.2 docker项目更名</h3>
+<p>docker详细开发现状参见: <a href="/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/%E6%B5%8B%E8%AF%95%E5%AF%B9%E8%B1%A1/%E5%BA%94%E7%94%A8%E5%AE%89%E5%85%A8/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/docker/docker%E6%BA%90%E7%A0%81%E5%AE%A1%E8%AE%A1/docker%E5%BC%80%E5%8F%91%E7%8E%B0%E7%8A%B6.html">docker开发现状</a></p>
+<p>这里要了解的是，docker曾在2017年将项目迁移到github.com/moby/moby</p>
+<h3 id="13-docker项目的依赖管理方式">1.3 docker项目的依赖管理方式</h3>
+<p>go语言在1.11版本时发布了gomod特性来管理依赖，非常好用，但也有一些用起来不方便的地方，例如必须依赖于tag来管理版本。</p>
+<p>docker未使用gomod管理依赖，使用的方法是在vendor中明细每个依赖的commit记录:</p>
+<ul>
+<li><a href="https://github.com/docker/engine/blob/master/vendor.conf">docker/engine/vendor.conf</a></li>
+<li><a href="https://github.com/docker/cli/blob/master/vendor.conf">docker/cli/vendor.conf</a></li>
+</ul>
+<p>例如docker/cli/vendor.conf中导入了github.com/docker/docker的commit记录，这使得github.com/docker/docker即使没有发布更新的release记录，也能进行更新。</p>
+<pre><code>github.com/docker/docker                            a09e6e323e55e1a9b21df9c2c555f5668df3ac9b
+github.com/docker/docker-credential-helpers         54f0238b6bf101fc3ad3b34114cb5520beb562f5 # v0.6.3
+github.com/docker/go                                d30aec9fd63c35133f8f79c3412ad91a3b08be06 # Contains a customized version of canonical/json and is used by Notary. The package is periodically rebased on current Go versions.
+</code></pre><h2 id="2-目的-使用最新版本的docker">2. 目的： 使用最新版本的docker</h2>
+<h2 id="3-问题与原因">3. 问题与原因</h2>
+<h3 id="31-dockerdocker版本过低">3.1 docker/docker版本过低</h3>
+<p>根据官方库的指导，应该使用<code>import github.com/docker/docker/client</code>，而github.com/moby/moby/client是不存在的</p>
+<ul>
+<li><a href="https://github.com/moby/moby/tree/master/client">https://github.com/moby/moby/tree/master/client</a></li>
+<li><a href="https://docs.docker.com/develop/sdk/">https://docs.docker.com/develop/sdk/</a></li>
+</ul>
+<h3 id="32-sirupsenlogrus更名冲突">3.2 Sirupsen/logrus更名冲突</h3>
+<pre><code>go: finding github.com/docker/libtrust latest
+go: finding github.com/vbatts/tar-split/tar/storage latest
+go: finding github.com/vbatts/tar-split/tar/asm latest
+go: finding github.com/vbatts/tar-split/tar latest
+go: extracting github.com/Sirupsen/logrus v1.4.2
+go: finding github.com/opencontainers/runtime-spec/specs-go latest
+go: finding github.com/docker/distribution/digest latest
+go: finding github.com/docker/docker/errdefs latest
+go: github.com/Sirupsen/logrus@v1.4.2: parsing go.mod: unexpected module path &quot;github.com/sirupsen/logrus&quot;
+go: error loading module requirements
+</code></pre><h2 id="4-解决方案">4. 解决方案</h2>
+<p>因为历史原因，docker仓库从github.com/docker/docker更换到github.com/moby/moby, 而github.com/docker/docker已于release1.13.1停止更新，因此我们的项目中如果import path是github.com/docker/docker, 是只能获取到v1.13.1的。</p>
+<p>而docker又不愿意更换import path, 所以才有此问题。(docker使用的custom import path)</p>
+<p>参考这个issue, <a href="https://github.com/golang/go/issues/28489,">https://github.com/golang/go/issues/28489,</a> 可以在gomod中替换仓库地址而不更改import path</p>
+<p>在go.mod文件中添加replace语句</p>
+<pre><code>require (
+	github.com/docker/docker v1.13.1
+)
+
+replace github.com/docker/docker =&gt; github.com/docker/engine v19.03.5
+// 使用具体commit亦可
+// replace github.com/docker/docker =&gt; github.com/docker/engine v0.0.0-20191113042239-ea84732a7725
+
+</code></pre><p>其中docker-engine的最新版本可以在此地址查询：https://github.com/docker/engine/releases，但是这里不能使用latest，只能使用固定版本号</p>
+<p>如果有多个docker库时，需要注意每个库版本的对应关系。例如docker/cli调用了docker/docker库，他们的对应关系可以在docker/cli/vendor.conf中查询到。我们可以如此调用：</p>
+<pre><code>require (
+	github.com/docker/cli v0.0.0-20191220145525-ba63a92655c0
+	github.com/docker/docker v1.13.1
+	github.com/docker/swarmkit v1.12.0 // indirect
+)
+
+replace github.com/docker/cli =&gt; github.com/docker/cli v0.0.0-20191220145525-ba63a92655c0
+replace github.com/docker/docker =&gt; github.com/docker/docker v0.7.3-0.20191025225506-a09e6e323e55
+replace github.com/docker/swarmkit =&gt; github.com/docker/swarmkit v1.12.1-0.20190717134425-7dded76ec532
+</code></pre><p>当然直接在require语句中写清楚commit记录也是可以的。</p>
+<p>也可以使用在docker/engine中查询到tag记录，执行go mod tidy来获取对应的commit记录
+require (
+github.com/docker/docker v19.03.12
+)</p>
+<p>例如使用以上语句声明docker版本，执行go mod tidy命令时，会自动替换成commit时间-hash的形式。</p>
+<pre><code>$ go mod tidy
+go: downloading github.com/docker/docker v0.0.0-20200618181300-9dc6525e6118
+</code></pre>
+            </div>
+        </article>
+
+        <hr />
+
+        <div class="post-info">
+  			</div>
+
+        
+    </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>&copy; 2020</span>
+            
+            <span></span>
+            <span> <a href="/posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a></span>
+        </div>
+    </div>
+    <div class="footer__inner">
+        <div class="footer__content">
+
+        </div>
+    </div>
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>Powered by <a href="http://gohugo.io">Hugo</a></span>
+            <span>Made with &#10084; by <a href="https://github.com/st0n3">st0n3</a></span>
+            <span>Based on <a href="https://github.com/rhazdon">rhazdon</a></span>
+        </div>
+    </div>
+
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+
+<script type="text/javascript" src="/bundle.min.4c3fb12a087ceed4a52cb5d57068a9795c7069617a01ca70f788052ad66e1791779e6c72686e1dc0ca13dc03b0203204b6566bb0dd1ee80de2b7ff4d8fe53db2.js" integrity="sha512-TD&#43;xKgh87tSlLLXVcGipeVxwaWF6Acpw94gFKtZuF5F3nmxyaG4dwMoT3AOwIDIEtlZrsN0e6A3it/9Nj&#43;U9sg=="></script>
+
+
+
+    </body>
+</html>

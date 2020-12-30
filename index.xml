@@ -6,82 +6,119 @@
     <description>Recent content on welcome to st0n3&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 28 Aug 2020 13:53:00 +0800</lastBuildDate>
-    
-	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Wed, 30 Dec 2020 07:32:29 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>强网杯-Qualifier-2020/强网先锋/baby_crt writeup</title>
-      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/ctf/crypto/%E6%95%B0%E8%AE%BA/%E5%BC%BA%E7%BD%91%E6%9D%AF-qualifier-2020_%E5%BC%BA%E7%BD%91%E5%85%88%E9%94%8B_baby_crt_writeup.html</link>
-      <pubDate>Fri, 28 Aug 2020 13:53:00 +0800</pubDate>
+      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/CTF/crypto/%E6%95%B0%E8%AE%BA/%E5%BC%BA%E7%BD%91%E6%9D%AF-Qualifier-2020%E5%BC%BA%E7%BD%91%E5%85%88%E9%94%8Bbaby_crt-writeup.html</link>
+      <pubDate>Wed, 30 Dec 2020 07:32:29 +0000</pubDate>
       
-      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/ctf/crypto/%E6%95%B0%E8%AE%BA/%E5%BC%BA%E7%BD%91%E6%9D%AF-qualifier-2020_%E5%BC%BA%E7%BD%91%E5%85%88%E9%94%8B_baby_crt_writeup.html</guid>
-      <description>描述信息  分值：105 已解答：77 第一名：WM 第二名：激流勇进队 第三名：L3H_Sec  附件下载
+      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/CTF/crypto/%E6%95%B0%E8%AE%BA/%E5%BC%BA%E7%BD%91%E6%9D%AF-Qualifier-2020%E5%BC%BA%E7%BD%91%E5%85%88%E9%94%8Bbaby_crt-writeup.html</guid>
+      <description>强网杯-Qualifier-2020/强网先锋/baby_crt writeup 描述信息  分值：105 已解答：77 第一名：WM 第二名：激流勇进队 第三名：L3H_Sec  附件下载
 题目分析 题目提供了两个文件
  task.py: 提供了具体的加密算法，但生成flag的大素数p未知 output0: 三个数，分别对应task.py中的n,m,sig  task.py文件内容不长，可以快速翻译为数学语言如下：
-典型RSA相关的参数： $$ \begin{align} \begin{cases} &amp;amp; e = 65537 \\
-&amp;amp; p,q未知, n = p\cdot q \\
-&amp;amp; e\cdot d \equiv 1\mod n \end{cases} \end{align} $$
-基于d派生的相关参数: $$ \begin{cases} \begin{align} &amp;amp; t_1, t_2是16 bit的素数 \\
-&amp;amp; gcd(d,t_{1,2}-1)==1 \\
-&amp;amp; t_{1,2} \equiv 3 \mod 4 \\
-&amp;amp; e_{t_1} \cdot d \equiv 1 \equiv \mod t_1 \\</description>
+典型RSA相关的参数： $$ \begin{align} \begin{cases} &amp;amp; e = 65537 \newline &amp;amp; p,q未知, n = p\cdot q \newline &amp;amp; e\cdot d \equiv 1\mod n \end{cases} \end{align} $$
+基于d派生的相关参数: $$ \begin{cases} \begin{align} &amp;amp; t_1, t_2是16 bit的素数 \newline &amp;amp; gcd(d,t_{1,2}-1)==1 \newline &amp;amp; t_{1,2} \equiv 3 \mod 4 \newline &amp;amp; e_{t_1} \cdot d \equiv 1 \equiv \mod t_1 \newline &amp;amp; e_{t_2} \cdot d \equiv 1 \equiv \mod t_2 \end{align} \end{cases} $$</description>
+    </item>
+    
+    <item>
+      <title>容器安全研究的三重境界</title>
+      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6%E5%85%A8%E6%99%AF/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6%E7%9A%84%E4%B8%89%E9%87%8D%E5%A2%83%E7%95%8C.html</link>
+      <pubDate>Tue, 29 Dec 2020 11:07:11 +0000</pubDate>
+      
+      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6%E5%85%A8%E6%99%AF/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6%E7%9A%84%E4%B8%89%E9%87%8D%E5%A2%83%E7%95%8C.html</guid>
+      <description>容器安全研究的三重境界 与其他形态的技术相比，容器安全的漏洞更聚集在设计层面，而非实现层面，准确得说，非编码层面。
+编码层面的漏洞更容易发现，且更容易自动化发现，但这种“优势”不会一直存在。因此，必然将形成漏洞越来越难挖的局面。而对容器技术而言，这个时间点来得相当早。这使得深入容器安全显得不那么容易，使研究者沮丧，但这也会极大地锻炼安全研究者的思维能力。
+一、四级安全性 如果我们作以下定义：
+ 将理想状态的安全定义为“理想模型” 将实际设计的结果定义为“设计模型” 将真实实现的代码定义为“实现模型”  我们将会得到4个不同级别的安全性： $$ \begin{equation} \left\lbrace \begin{array}{lr} 理想模型 \newline 设计模型 \newline 实现模型 \newline 编码漏洞 \end{array} \right. \end{equation} $$
+以及3个可供挖掘漏洞的空间：
+1. 编码漏洞 该类问题通常与语言本身强相关，较为显著的包括C语言带来的内存安全类问题、PHP弱类型引发的问题等。各语言都有一些不同的、隐蔽的特性，如果开发者不能熟知这些特性，则可能会埋藏漏洞。
+这类问题的发现手段多，包括Fuzz,代码审计等。呈现出的漏洞数量也相当可观。
+2. 三种模型间的差距  分别分析出设计模型和实现模型，将二者对比，即可得出实现层面的漏洞 将设计模型与理想模型对比，则可得出设计层面的漏洞  二、三重境界 1. 设计漏洞 寻找设计层面的漏洞，我们需要回答两个问题
+ 什么是容器的理想模型？ 某容器相关的项目，当前的设计模型是什么样的  对于容器来说，问题2是容易回答的，oci有翔实的specification。
+难点在于解答问题一，或者我们是否有已知的安全设计模式可以套上去？
+我暂时没有发现有可以直接使用的方法论，也许我们可以自行总结一套。这方面，后续我可以尝试用很长一个篇幅解答。
+2. 实现漏洞 我们将追求放低至发现实现层面的漏洞，需要做的事情就简单多了
+ 熟读oci specification 走读容器相关项目的代码  看，简单多了——至少是可执行的！
+3. 编码漏洞 开篇即谈到了，容器安全的漏洞更聚集于非编码层面。但这个论述的对象主要是针对容器相关产品自身而言的，但如果将范围扩大至容器生态链呢？
+例如
+ docker所调用的各组件，甚至各LSM模块 由各云厂商以开源形式贡献至k8s的CNI &amp;hellip;  这样看，我们还是有希望在此层面挖掘相关漏洞的，但可能需要将挖掘范围扩大、将漏洞挖掘的方法进行微调，以适应于发现容器类漏洞。
+三、结语 对容器来说，少有编码层面的漏洞可以挖，没有办法；对其他类型的技术栈来说，现在编码层面还有很大的研究空间，但已经有这种趋势，也应该尽早布局。
+如果安全也有修仙一样的等级的话，挖掘编码层漏洞的集大成者就像是斗宗强者。当然很厉害了，但是上层似乎还有更广阔的空间。</description>
+    </item>
+    
+    <item>
+      <title>一个好用的乘法逆元扩展结论</title>
+      <link>/post/%E7%A6%BB%E6%95%A3%E6%95%B0%E5%AD%A6/%E4%B8%80%E4%B8%AA%E5%A5%BD%E7%94%A8%E7%9A%84%E4%B9%98%E6%B3%95%E9%80%86%E5%85%83%E6%89%A9%E5%B1%95%E7%BB%93%E8%AE%BA.html</link>
+      <pubDate>Wed, 28 Oct 2020 04:08:34 +0000</pubDate>
+      
+      <guid>/post/%E7%A6%BB%E6%95%A3%E6%95%B0%E5%AD%A6/%E4%B8%80%E4%B8%AA%E5%A5%BD%E7%94%A8%E7%9A%84%E4%B9%98%E6%B3%95%E9%80%86%E5%85%83%E6%89%A9%E5%B1%95%E7%BB%93%E8%AE%BA.html</guid>
+      <description>一个好用的乘法逆元扩展结论 比赛中遇到的一个好用的定理，不知道有没有名字，记录一下
+$$ \begin{align} &amp;amp; p^{-1} \cdot p \equiv 1 \mod q \newline &amp;amp; q^{-1} \cdot q \equiv 1 \mod p \newline &amp;amp; \Longleftrightarrow \newline &amp;amp; p^{-1}\cdot p+q^{-1}\cdot q \equiv 1 \mod p\cdot q \end{align} $$
+1. 证明 (1) $$ \begin{align} &amp;amp; 1 \equiv p^{-1} \cdot p \mod q \
+&amp;amp; 1 \equiv q^{-1} \cdot q \mod p \end{align} $$
+由中国剩余定理： $$ \begin{align} 1 &amp;amp; = \sum^{k}_{i=1}a_ic_i \mod p\cdot q \</description>
+    </item>
+    
+    <item>
+      <title>为什么需要技能树</title>
+      <link>/post/%E5%BC%80%E5%8F%91/myproject/%E6%8A%80%E8%83%BD%E6%A0%91/%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81%E6%8A%80%E8%83%BD%E6%A0%91.html</link>
+      <pubDate>Wed, 14 Oct 2020 10:06:13 +0000</pubDate>
+      
+      <guid>/post/%E5%BC%80%E5%8F%91/myproject/%E6%8A%80%E8%83%BD%E6%A0%91/%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81%E6%8A%80%E8%83%BD%E6%A0%91.html</guid>
+      <description> 结构化：数据结构化 系统性：知识系统性 可视化：成长可视化  </description>
     </item>
     
     <item>
       <title>漏洞分析与复现模板</title>
       <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90%E4%B8%8E%E5%A4%8D%E7%8E%B0%E6%A8%A1%E6%9D%BF.html</link>
-      <pubDate>Mon, 20 Jul 2020 10:00:00 +0800</pubDate>
+      <pubDate>Mon, 20 Jul 2020 02:00:00 +0000</pubDate>
       
       <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90%E4%B8%8E%E5%A4%8D%E7%8E%B0%E6%A8%A1%E6%9D%BF.html</guid>
-      <description>一、基本信息    条目 详情 备注     项目地址 https://github.com/spring-cloud/spring-cloud-config    发布日期 2019-04-16    CVE-ID CVE-2019-3799 https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2019-3799   EDB-ID EDB-46772 https://www.exploit-db.com/exploits/46772   cvedetails https://www.cvedetails.com/cve/CVE-2019-3799/ \   影响范围 spring-cloud-config 2.1.0-2.1.1, 2.0.0-2.0.3, 1.4.0-1.4.5 及更旧版本 \   修复版本 2.1.2, 2.0.4, 1.4.6 \   CVSS 7.5 CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N     二、组件简介 三、漏洞介绍 1. 简介 2. 影响 四、漏洞复现 五、漏洞分析 六、总结 参考链接 </description>
+      <description>漏洞分析与复现模板 一、基本信息    条目 详情 备注     项目地址 https://github.com/spring-cloud/spring-cloud-config    发布日期 2019-04-16    CVE-ID CVE-2019-3799 https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2019-3799   EDB-ID EDB-46772 https://www.exploit-db.com/exploits/46772   cvedetails https://www.cvedetails.com/cve/CVE-2019-3799/ \   影响范围 spring-cloud-config 2.1.0-2.1.1, 2.0.0-2.0.3, 1.4.0-1.4.5 及更旧版本 \   修复版本 2.1.2, 2.0.4, 1.4.6 \   CVSS 7.5 CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N     二、组件简介 三、漏洞介绍 1. 简介 2. 影响 四、漏洞复现 五、漏洞分析 六、总结 参考链接 </description>
     </item>
     
     <item>
       <title>docker中apparmor的加载过程</title>
       <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E8%BF%9B%E7%A8%8B%E5%AE%B9%E5%99%A8/docker/docker%E5%AE%89%E5%85%A8%E7%9A%84%E5%85%B3%E9%94%AE%E6%8A%80%E6%9C%AF/linux%E5%86%85%E6%A0%B8%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/apparmor/docker%E4%B8%ADapparmor%E7%9A%84%E5%8A%A0%E8%BD%BD%E8%BF%87%E7%A8%8B.html</link>
-      <pubDate>Wed, 01 Jul 2020 17:49:00 +0800</pubDate>
+      <pubDate>Wed, 01 Jul 2020 09:49:00 +0000</pubDate>
       
       <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E8%BF%9B%E7%A8%8B%E5%AE%B9%E5%99%A8/docker/docker%E5%AE%89%E5%85%A8%E7%9A%84%E5%85%B3%E9%94%AE%E6%8A%80%E6%9C%AF/linux%E5%86%85%E6%A0%B8%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/apparmor/docker%E4%B8%ADapparmor%E7%9A%84%E5%8A%A0%E8%BD%BD%E8%BF%87%E7%A8%8B.html</guid>
-      <description>判断操作系统是否启用apparmor，如果支持就安装名为docker-default的规则。 https://github.com/moby/moby/blob/master/daemon/apparmor_default.go
+      <description>docker中apparmor的加载过程 判断操作系统是否启用apparmor，如果支持就安装名为docker-default的规则。 https://github.com/moby/moby/blob/master/daemon/apparmor_default.go
 const ( unconfinedAppArmorProfile = &amp;quot;unconfined&amp;quot; defaultAppArmorProfile = &amp;quot;docker-default&amp;quot; ) func ensureDefaultAppArmorProfile() error { if apparmor.IsEnabled() { loaded, err := aaprofile.IsLoaded(defaultAppArmorProfile) if err != nil { return fmt.Errorf(&amp;quot;Could not check if %s AppArmor profile was loaded: %s&amp;quot;, defaultAppArmorProfile, err) } // Nothing to do. if loaded { return nil } // Load the profile. if err := aaprofile.InstallDefault(defaultAppArmorProfile); err != nil { return fmt.Errorf(&amp;quot;AppArmor enabled on system but the %s profile could not be loaded: %s&amp;quot;, defaultAppArmorProfile, err) } } return nil } 其中判断是否启用apparmor代码如下，主要是判断apparmor相关文件是否存在。</description>
     </item>
     
     <item>
       <title>方舟生存进化: docker一键部署</title>
-      <link>/post/%E6%B8%B8%E6%88%8F/%E6%96%B9%E8%88%9F%E7%94%9F%E5%AD%98%E8%BF%9B%E5%8C%96_docker%E4%B8%80%E9%94%AE%E9%83%A8%E7%BD%B2.html</link>
-      <pubDate>Fri, 26 Jun 2020 22:00:00 +0800</pubDate>
+      <link>/post/%E6%B8%B8%E6%88%8F/%E6%96%B9%E8%88%9F%E7%94%9F%E5%AD%98%E8%BF%9B%E5%8C%96-docker%E4%B8%80%E9%94%AE%E9%83%A8%E7%BD%B2.html</link>
+      <pubDate>Fri, 26 Jun 2020 14:00:00 +0000</pubDate>
       
-      <guid>/post/%E6%B8%B8%E6%88%8F/%E6%96%B9%E8%88%9F%E7%94%9F%E5%AD%98%E8%BF%9B%E5%8C%96_docker%E4%B8%80%E9%94%AE%E9%83%A8%E7%BD%B2.html</guid>
-      <description>前段时间epic白给了方舟，俺也在方舟度过了153个小时的时间了，简单分享下部署方舟服务器的过程。
+      <guid>/post/%E6%B8%B8%E6%88%8F/%E6%96%B9%E8%88%9F%E7%94%9F%E5%AD%98%E8%BF%9B%E5%8C%96-docker%E4%B8%80%E9%94%AE%E9%83%A8%E7%BD%B2.html</guid>
+      <description>方舟生存进化: docker一键部署 前段时间epic白给了方舟，俺也在方舟度过了153个小时的时间了，简单分享下部署方舟服务器的过程。
 1. quick-start 创建docker-compose.yml文件, 执行docker-compose up -d拉起容器
 version: &#39;3&#39; services: ark: container_name: ark image: thmhoag/arkserver volumes: - steam:/home/steam/Steam - ark:/ark ports: - &amp;quot;27015:27015&amp;quot; - &amp;quot;27015:27015/udp&amp;quot; - &amp;quot;7777:7777&amp;quot; - &amp;quot;7777:7777/udp&amp;quot; - &amp;quot;7778:7778&amp;quot; - &amp;quot;7778:7778/udp&amp;quot; - &amp;quot;7779:7779&amp;quot; - &amp;quot;7779:7779/udp&amp;quot; - &amp;quot;32330:32330&amp;quot; environment: - am_ark_SessionName=my_ark - am_ark_GameModIds=889745138,751991809,1404697612 - am_ark_ServerPVE=True restart: always volumes: steam: name: steam ark: name: ark 在steam里添加游戏服务器，就可以愉快得开始啦。
 steam-&amp;gt;查看-&amp;gt;服务器-&amp;gt;收藏夹-&amp;gt;添加服务器-&amp;gt;输入服务器ip:27015-&amp;gt;将此地址添加至收藏夹
 2. 解释 这个部署方案源于两个开源项目:
  https://github.com/FezVrasta/ark-server-tools https://github.com/thmhoag/arkserver  前者实现了arkmanager工具，后者实现了容器化部署。
 docker-compose.yml文件中，配置了多个端口，其中27015是steam与服务器交互的端口，7777-7779(可自定义)是自定义的服务器端口，32330(可选)是服务器命令行管理工具RCON的连接端口。
-可以通过指定环境变量来将服务器配置传递给arkmanager，可以配置的参数参考 https://github.com/FezVrasta/ark-server-tools#configuration-files/
-注意配置环境变量时，在名称前加上am_前缀。
-例如，如果要配置服务器管理员密码，可以传递这样的环境变量:</description>
+可以通过指定环境变量来将服务器配置传递给arkmanager，可以配置的参数参考 https://github.com/FezVrasta/ark-server-tools#configuration-files/</description>
     </item>
     
     <item>
       <title>letsencrypt通过dns获取证书</title>
-      <link>/post/it%E6%9D%82%E8%B4%A7%E9%93%BA/letsencrypt%E9%80%9A%E8%BF%87dns%E8%8E%B7%E5%8F%96%E8%AF%81%E4%B9%A6.html</link>
-      <pubDate>Mon, 11 May 2020 15:36:00 +0800</pubDate>
+      <link>/post/IT%E6%9D%82%E8%B4%A7%E9%93%BA/letsencrypt%E9%80%9A%E8%BF%87dns%E8%8E%B7%E5%8F%96%E8%AF%81%E4%B9%A6.html</link>
+      <pubDate>Mon, 11 May 2020 07:36:00 +0000</pubDate>
       
-      <guid>/post/it%E6%9D%82%E8%B4%A7%E9%93%BA/letsencrypt%E9%80%9A%E8%BF%87dns%E8%8E%B7%E5%8F%96%E8%AF%81%E4%B9%A6.html</guid>
-      <description>sudo certbot certonly --manual --preferred-challenges dns Saving debug log to /var/log/letsencrypt/letsencrypt.log Plugins selected: Authenticator manual, Installer None Please enter in your domain name(s) (comma and/or space separated) (Enter &#39;c&#39; to cancel): hackerbot.st0n3.xyz Cert is due for renewal, auto-renewing... Renewing an existing certificate Performing the following challenges: dns-01 challenge for hackerbot.st0n3.xyz - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - NOTE: The IP of this machine will be publicly logged as having requested this certificate.</description>
+      <guid>/post/IT%E6%9D%82%E8%B4%A7%E9%93%BA/letsencrypt%E9%80%9A%E8%BF%87dns%E8%8E%B7%E5%8F%96%E8%AF%81%E4%B9%A6.html</guid>
+      <description>letsencrypt通过dns获取证书 sudo certbot certonly --manual --preferred-challenges dns Saving debug log to /var/log/letsencrypt/letsencrypt.log Plugins selected: Authenticator manual, Installer None Please enter in your domain name(s) (comma and/or space separated) (Enter &#39;c&#39; to cancel): hackerbot.st0n3.xyz Cert is due for renewal, auto-renewing... Renewing an existing certificate Performing the following challenges: dns-01 challenge for hackerbot.st0n3.xyz - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - NOTE: The IP of this machine will be publicly logged as having requested this certificate.</description>
     </item>
     
     <item>
       <title>docker-compose使用host网络</title>
-      <link>/post/it%E6%9D%82%E8%B4%A7%E9%93%BA/docker-compose%E4%BD%BF%E7%94%A8host%E7%BD%91%E7%BB%9C.html</link>
-      <pubDate>Mon, 11 May 2020 14:25:00 +0800</pubDate>
+      <link>/post/IT%E6%9D%82%E8%B4%A7%E9%93%BA/docker-compose%E4%BD%BF%E7%94%A8host%E7%BD%91%E7%BB%9C.html</link>
+      <pubDate>Mon, 11 May 2020 06:25:00 +0000</pubDate>
       
-      <guid>/post/it%E6%9D%82%E8%B4%A7%E9%93%BA/docker-compose%E4%BD%BF%E7%94%A8host%E7%BD%91%E7%BB%9C.html</guid>
-      <description>根据官方文档, 如果使用stack命令部署，可以使用networks参数配置，如果直接使用docker-compose, 使用network_mode参数配置。
+      <guid>/post/IT%E6%9D%82%E8%B4%A7%E9%93%BA/docker-compose%E4%BD%BF%E7%94%A8host%E7%BD%91%E7%BB%9C.html</guid>
+      <description>docker-compose使用host网络 根据官方文档, 如果使用stack命令部署，可以使用networks参数配置，如果直接使用docker-compose, 使用network_mode参数配置。
  Use the host’s networking stack, or no networking. Equivalent to docker run &amp;ndash;net=host or docker run &amp;ndash;net=none. Only used if you use docker stack commands. If you use the docker-compose command, use network_mode instead. &amp;mdash;-compose file reference: https://docs.docker.com/compose/compose-file/#devices
  stack version: &amp;quot;3.8&amp;quot; services: web: networks: hostnet: {} networks: hostnet: external: true name: host docker-compose services: web: network_mode: &amp;quot;host&amp;quot; 问题 如果在docker-compose中使用networks参数配置系统默认网卡，会报以下错误：
 Creating zerotier-one ... error ERROR: for zerotier-one network-scoped alias is supported only for containers in user defined networks ERROR: for one network-scoped alias is supported only for containers in user defined networks ERROR: Encountered errors while bringing up the project.</description>
@@ -89,22 +126,22 @@ Creating zerotier-one ... error ERROR: for zerotier-one network-scoped alias is 
     
     <item>
       <title>vscode terminal字符间距过宽</title>
-      <link>/post/it%E6%9D%82%E8%B4%A7%E9%93%BA/vscode_terminal%E5%AD%97%E7%AC%A6%E9%97%B4%E8%B7%9D%E8%BF%87%E5%AE%BD.html</link>
-      <pubDate>Fri, 08 May 2020 23:42:00 +0800</pubDate>
+      <link>/post/IT%E6%9D%82%E8%B4%A7%E9%93%BA/vscode-terminal%E5%AD%97%E7%AC%A6%E9%97%B4%E8%B7%9D%E8%BF%87%E5%AE%BD.html</link>
+      <pubDate>Fri, 08 May 2020 15:42:00 +0000</pubDate>
       
-      <guid>/post/it%E6%9D%82%E8%B4%A7%E9%93%BA/vscode_terminal%E5%AD%97%E7%AC%A6%E9%97%B4%E8%B7%9D%E8%BF%87%E5%AE%BD.html</guid>
-      <description>kali linux 2020.1b, vscode terminal 1.44.2 的字符间距过宽。
+      <guid>/post/IT%E6%9D%82%E8%B4%A7%E9%93%BA/vscode-terminal%E5%AD%97%E7%AC%A6%E9%97%B4%E8%B7%9D%E8%BF%87%E5%AE%BD.html</guid>
+      <description>vscode terminal字符间距过宽 kali linux 2020.1b, vscode terminal 1.44.2 的字符间距过宽。
 修改&amp;quot;terminal.integrated.fontFamily&amp;quot;可以设置字体，但是我尝试了很多种字体都无效，仅发现修改为&amp;quot;Hack&amp;quot;字体有效。
 坐等社区解决</description>
     </item>
     
     <item>
       <title>kali linux常用配置</title>
-      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E5%B7%A5%E5%85%B7/kali/kali_linux%E5%B8%B8%E7%94%A8%E9%85%8D%E7%BD%AE.html</link>
-      <pubDate>Fri, 10 Apr 2020 20:30:00 +0800</pubDate>
+      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E5%B7%A5%E5%85%B7/kali/kali-linux%E5%B8%B8%E7%94%A8%E9%85%8D%E7%BD%AE.html</link>
+      <pubDate>Fri, 10 Apr 2020 12:30:00 +0000</pubDate>
       
-      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E5%B7%A5%E5%85%B7/kali/kali_linux%E5%B8%B8%E7%94%A8%E9%85%8D%E7%BD%AE.html</guid>
-      <description>持续更新
+      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E5%B7%A5%E5%85%B7/kali/kali-linux%E5%B8%B8%E7%94%A8%E9%85%8D%E7%BD%AE.html</guid>
+      <description>kali linux常用配置 持续更新
 适用kali linux 2020.1b amd64
 1. qterminal使用login shell kali linux 2020.1b amd64将默认的terminal切换成了qterminal，使用qterminal默认打开的bash的non-login bash，不会自动加载profile。
 可以配置一下快捷键：菜单-&amp;gt;设置-&amp;gt;键盘-&amp;gt;应用程序快捷键
@@ -118,11 +155,11 @@ apt-get update gnome-terminal 同时修改一下首选应用程序中的terminal
     
     <item>
       <title>VolgaCTF2020Qualifier Crypto Guess writeup</title>
-      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/ctf/crypto/%E9%9D%9E%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86/%E7%A6%BB%E6%95%A3%E5%AF%B9%E6%95%B0/elgamal/volgactf2020qualifier_crypto_guess_writeup.html</link>
-      <pubDate>Wed, 01 Apr 2020 13:53:00 +0800</pubDate>
+      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/CTF/crypto/%E9%9D%9E%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86/%E7%A6%BB%E6%95%A3%E5%AF%B9%E6%95%B0/ElGamal/VolgaCTF2020Qualifier-Crypto-Guess-writeup.html</link>
+      <pubDate>Wed, 01 Apr 2020 05:53:00 +0000</pubDate>
       
-      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/ctf/crypto/%E9%9D%9E%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86/%E7%A6%BB%E6%95%A3%E5%AF%B9%E6%95%B0/elgamal/volgactf2020qualifier_crypto_guess_writeup.html</guid>
-      <description>上周末玩了下VolgaCTF 2020 Qualifier(https://ctftime.org/event/933), 只做了几道密码题，因为其他题都没有思路T_T 。整体感觉俄罗斯人的脑洞很大，数学功底很好。其中有一道ElGamal相关的密码题，虽然没感觉在现实中有什么实际用途，但是学到了一些重要的性质。
+      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/CTF/crypto/%E9%9D%9E%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86/%E7%A6%BB%E6%95%A3%E5%AF%B9%E6%95%B0/ElGamal/VolgaCTF2020Qualifier-Crypto-Guess-writeup.html</guid>
+      <description>VolgaCTF2020Qualifier Crypto Guess writeup 上周末玩了下VolgaCTF 2020 Qualifier(https://ctftime.org/event/933), 只做了几道密码题，因为其他题都没有思路T_T 。整体感觉俄罗斯人的脑洞很大，数学功底很好。其中有一道ElGamal相关的密码题，虽然没感觉在现实中有什么实际用途，但是学到了一些重要的性质。
 我的解法比较简单，但是好像是非预期解。赛后，在这篇wp里发现了一个更完美的解法：标准解法的wp(https://www.josephsurin.me/posts/2020-03-30-volgactf-2020-qualifier-writeups#guess) 。我会在第三节记录下我的解法，在第四节简单翻译下标准解法。
 一、题目信息  Guess
 Try to guess all encrypted bits and get your reward!
@@ -137,17 +174,17 @@ This task has been rated by 73 teams. The average rating is 3.99 (5.00 max).
     
     <item>
       <title>SPN线性密码分析</title>
-      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%90%86%E8%AE%BA/%E5%AF%86%E7%A0%81%E5%AD%A6/%E5%AF%86%E7%A0%81%E5%88%86%E6%9E%90/spn%E7%BA%BF%E6%80%A7%E5%AF%86%E7%A0%81%E5%88%86%E6%9E%90.html</link>
-      <pubDate>Tue, 24 Mar 2020 09:01:00 +0800</pubDate>
+      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%90%86%E8%AE%BA/%E5%AF%86%E7%A0%81%E5%AD%A6/%E5%AF%86%E7%A0%81%E5%88%86%E6%9E%90/SPN%E7%BA%BF%E6%80%A7%E5%AF%86%E7%A0%81%E5%88%86%E6%9E%90.html</link>
+      <pubDate>Tue, 24 Mar 2020 01:01:00 +0000</pubDate>
       
-      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%90%86%E8%AE%BA/%E5%AF%86%E7%A0%81%E5%AD%A6/%E5%AF%86%E7%A0%81%E5%88%86%E6%9E%90/spn%E7%BA%BF%E6%80%A7%E5%AF%86%E7%A0%81%E5%88%86%E6%9E%90.html</guid>
-      <description>在学习SPN线性密码分析时，我找了很多资料。但是很多时候都感觉这些材料不算细致，我也遇到了非常多的困惑，所以希望能细致入微的记录一下。
+      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%90%86%E8%AE%BA/%E5%AF%86%E7%A0%81%E5%AD%A6/%E5%AF%86%E7%A0%81%E5%88%86%E6%9E%90/SPN%E7%BA%BF%E6%80%A7%E5%AF%86%E7%A0%81%E5%88%86%E6%9E%90.html</guid>
+      <description>SPN线性密码分析 在学习SPN线性密码分析时，我找了很多资料。但是很多时候都感觉这些材料不算细致，我也遇到了非常多的困惑，所以希望能细致入微的记录一下。
 本文基本上是 A Tutorial on Linear and Differential Cryptanalysis 的翻译，用自己的语言复述了一遍，加了部分自己的理解。
 一、块加密 块加密(Block Cipher)，或称为分组加密，是一种对称加密算法。它将明文分成多个等长的块（block），使用确定的算法和对称密钥对每组分别加密解密。通常来说，每个块使用的加密算法是相同的，但是密码组件不一定相同，例如不同块的S盒不一定相同。
 二、SPN SPN——代换-置换网络(Substitution–permutation network), 是一系列被应用于分组密码中相关的数学运算，最典型的就是AES。这种加密网络使用明文块和密钥块作为输入，并通过交错的若干“轮”代换操作和置换操作产生密文块。代换（Substitution）和置换（Permutation）的组件分别被称作S盒（替换盒，S-boxes）和P盒（排列盒，P-boxes）。
 我在解SPN和Feistel相关算法的密码时，常常会觉得代换密码和置换密码的区别十分有限，非常困惑，后来我在写本文时想通了，如果你也有这个困惑，可以参考一下我的这篇博客：代换密码和置换密码在块加密中的作用与区别
-下图是 Heys 在 A Tutorial on Linear and Differential Cryptanalysis 中设计的一个非常基础的&amp;quot;Toy Cipher&amp;rdquo;。
-我们可以通过这个基础的&amp;quot;Toy Cipher&amp;rdquo;，来学习一下SPN。
+下图是 Heys 在 A Tutorial on Linear and Differential Cryptanalysis 中设计的一个非常基础的&amp;quot;Toy Cipher&amp;quot;。
+我们可以通过这个基础的&amp;quot;Toy Cipher&amp;quot;，来学习一下SPN。
 这个SPN密码中，输入16bit的明文和16bit的密钥，输出16bit的密文。分为4个块，每个块中, 分别有4bit明文、密文。共有4轮加密，每一轮加密由3个过程组成：
  轮密钥异或 代换 (Substitution) 置换 (Permutation)  在第四轮，没有置换过程，增加了一个轮密钥异或的过程。
 没有置换是因为置换密码主要起到的是扩散功能，使字母分布失去统计特征。置换密码是一个完全线性的过程，因此在最后一轮中，置换加密不会提升安全性。
@@ -159,34 +196,33 @@ This task has been rated by 73 teams. The average rating is 3.99 (5.00 max).
     
     <item>
       <title>正确使用Go DockerSDK(gomod)</title>
-      <link>/post/%E5%BC%80%E5%8F%91/go/docker-sdk/%E6%AD%A3%E7%A1%AE%E4%BD%BF%E7%94%A8go-dockersdkgomod.html</link>
-      <pubDate>Mon, 30 Dec 2019 01:30:00 +0800</pubDate>
+      <link>/post/%E5%BC%80%E5%8F%91/golang/Docker-SDK/%E6%AD%A3%E7%A1%AE%E4%BD%BF%E7%94%A8Go-DockerSDKgomod.html</link>
+      <pubDate>Sun, 29 Dec 2019 17:30:00 +0000</pubDate>
       
-      <guid>/post/%E5%BC%80%E5%8F%91/go/docker-sdk/%E6%AD%A3%E7%A1%AE%E4%BD%BF%E7%94%A8go-dockersdkgomod.html</guid>
-      <description>1. 背景 1.1 go语言特性: 标准导入路径(canonical import path)  Go 1.4 introduces an annotation for package clauses in Go source that identify a canonical import path for the package. If an import is attempted using a path that is not canonical, the go command will refuse to compile the importing package.
+      <guid>/post/%E5%BC%80%E5%8F%91/golang/Docker-SDK/%E6%AD%A3%E7%A1%AE%E4%BD%BF%E7%94%A8Go-DockerSDKgomod.html</guid>
+      <description>正确使用Go DockerSDK(gomod) 1. 背景 1.1 go语言特性: 标准导入路径(canonical import path)  Go 1.4 introduces an annotation for package clauses in Go source that identify a canonical import path for the package. If an import is attempted using a path that is not canonical, the go command will refuse to compile the importing package.
 https://golang.org/doc/go1.4#canonicalimports
  go1.4 引入了一个特性，在package后可以使用注释声明导入这个包的标准路径, 叫做canonical import path。如果导入某个包的路径与这个canonical import path不同，则go命令会拒绝编译该包。
 例如：
-package pdf // import &amp;quot;rsc.io/pdf&amp;quot; 1.2 docker项目更名 docker详细开发现状参见: docker开发现状
-这里要了解的是，docker曾在2017年将项目迁移到github.com/moby/moby</description>
+package pdf // import &amp;quot;rsc.io/pdf&amp;quot; 1.2 docker项目更名 docker详细开发现状参见: docker开发现状</description>
     </item>
     
     <item>
       <title>如何使用BootstrapVue</title>
-      <link>/post/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/vue/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8bootstrapvue.html</link>
-      <pubDate>Fri, 04 Oct 2019 13:58:00 +0800</pubDate>
+      <link>/post/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/Vue/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8BootstrapVue.html</link>
+      <pubDate>Fri, 04 Oct 2019 05:58:00 +0000</pubDate>
       
-      <guid>/post/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/vue/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8bootstrapvue.html</guid>
-      <description>一、使用WebStorm创建Vue项目 二、在main.js引用BootstrapVue import BootstrapVue from &amp;#39;bootstrap-vue&amp;#39; import &amp;#39;bootstrap/dist/css/bootstrap.css&amp;#39; import &amp;#39;bootstrap-vue/dist/bootstrap-vue.css&amp;#39; Vue.use(BootstrapVue) 三、现在可以使用BootstrapVue了 &amp;lt;b-btn variant=&amp;#34;info&amp;#34;&amp;gt;submit&amp;lt;/b-btn&amp;gt; </description>
+      <guid>/post/%E5%BC%80%E5%8F%91/%E5%89%8D%E7%AB%AF/Vue/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8BootstrapVue.html</guid>
+      <description>如何使用BootstrapVue 一、使用WebStorm创建Vue项目 二、在main.js引用BootstrapVue import BootstrapVue from &amp;#39;bootstrap-vue&amp;#39; import &amp;#39;bootstrap/dist/css/bootstrap.css&amp;#39; import &amp;#39;bootstrap-vue/dist/bootstrap-vue.css&amp;#39; Vue.use(BootstrapVue) 三、现在可以使用BootstrapVue了 &amp;lt;b-btn variant=&amp;#34;info&amp;#34;&amp;gt;submit&amp;lt;/b-btn&amp;gt; </description>
     </item>
     
     <item>
       <title>pwnable.tw-100-start</title>
-      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/ctf/pwn/linux_pwn/stack_overflow/pwnable.tw-100-start.html</link>
-      <pubDate>Tue, 03 Sep 2019 02:13:00 +0800</pubDate>
+      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/CTF/pwn/linux-pwn/stack-overflow/pwnable.tw-100-start.html</link>
+      <pubDate>Mon, 02 Sep 2019 18:13:00 +0000</pubDate>
       
-      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/ctf/pwn/linux_pwn/stack_overflow/pwnable.tw-100-start.html</guid>
-      <description>1. 代码分析 1.1 文件信息 这是一个32位的Elf文件
+      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/CTF/pwn/linux-pwn/stack-overflow/pwnable.tw-100-start.html</guid>
+      <description>pwnable.tw-100-start 1. 代码分析 1.1 文件信息 这是一个32位的Elf文件
 $ file start start: ELF 32-bit LSB executable, Intel 80386, version 1 (SYSV), statically linked, not stripped checksec显示未开启任何安全保护机制
 $ checksec start [*] &amp;#39;/home/st0n3/ctfs/pwnable.tw/100_Start/challenges/start&amp;#39; Arch: i386-32-little RELRO: No RELRO Stack: No canary found NX: NX disabled PIE: No PIE (0x8048000) 1.2 汇编代码 使用r2分析汇编，只有一个entry0入口函数。
 $ r2 start Warning: Cannot initialize dynamic strings [0x08048060]&amp;gt; aaa [x] Analyze all flags starting with sym. and entry0 (aa) [x] Analyze function calls (aac) [x] Analyze len bytes of instructions for references (aar) [x] Constructing a function name for fcn.</description>
@@ -194,20 +230,20 @@ $ r2 start Warning: Cannot initialize dynamic strings [0x08048060]&amp;gt; aaa [
     
     <item>
       <title>p32 or p64 or struct ?</title>
-      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/ctf/pwn/pwntools/p32-or-p64-or-struct.html</link>
-      <pubDate>Sun, 01 Sep 2019 23:47:00 +0800</pubDate>
+      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/CTF/pwn/pwntools/p32-or-p64-or-struct.html</link>
+      <pubDate>Sun, 01 Sep 2019 15:47:00 +0000</pubDate>
       
-      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/ctf/pwn/pwntools/p32-or-p64-or-struct.html</guid>
-      <description>&amp;gt;&amp;gt;&amp;gt; from pwn import * &amp;gt;&amp;gt;&amp;gt; import struct &amp;gt;&amp;gt;&amp;gt; p32(0xdeadbeef) &amp;#39;\xef\xbe\xad\xde&amp;#39; &amp;gt;&amp;gt;&amp;gt; struct.pack(&amp;#34;I&amp;#34;,0xdeadbeef) == p32(0xdeadbeef) True &amp;gt;&amp;gt;&amp;gt; p64(0xdeadbeef) &amp;#39;\xef\xbe\xad\xde\x00\x00\x00\x00&amp;#39; &amp;gt;&amp;gt;&amp;gt; struct.pack(&amp;#34;l&amp;#34;,0xdeadbeef) == p64(0xdeadbeef) True reference  pwntools doc struct doc  </description>
+      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/CTF/pwn/pwntools/p32-or-p64-or-struct.html</guid>
+      <description>p32 or p64 or struct ? &amp;gt;&amp;gt;&amp;gt; from pwn import * &amp;gt;&amp;gt;&amp;gt; import struct &amp;gt;&amp;gt;&amp;gt; p32(0xdeadbeef) &amp;#39;\xef\xbe\xad\xde&amp;#39; &amp;gt;&amp;gt;&amp;gt; struct.pack(&amp;#34;I&amp;#34;,0xdeadbeef) == p32(0xdeadbeef) True &amp;gt;&amp;gt;&amp;gt; p64(0xdeadbeef) &amp;#39;\xef\xbe\xad\xde\x00\x00\x00\x00&amp;#39; &amp;gt;&amp;gt;&amp;gt; struct.pack(&amp;#34;l&amp;#34;,0xdeadbeef) == p64(0xdeadbeef) True reference  pwntools doc struct doc  </description>
     </item>
     
     <item>
-      <title>Go os exec坑</title>
-      <link>/post/%E5%BC%80%E5%8F%91/go/go%E5%9D%91/go-os-exec%E5%9D%91.html</link>
-      <pubDate>Tue, 27 Aug 2019 23:00:00 +0800</pubDate>
+      <title>Go os/exec坑</title>
+      <link>/post/%E5%BC%80%E5%8F%91/golang/go%E5%9D%91/Go-osexec%E5%9D%91.html</link>
+      <pubDate>Tue, 27 Aug 2019 15:00:00 +0000</pubDate>
       
-      <guid>/post/%E5%BC%80%E5%8F%91/go/go%E5%9D%91/go-os-exec%E5%9D%91.html</guid>
-      <description>cp: cannot stat ‘./test/*’: No such file or directory out, err := exec.Command(&amp;#34;cp&amp;#34;, &amp;#34;./test/*&amp;#34;, &amp;#34;/tmp&amp;#34;).CombinedOutput() logrus.Info(cmd) logrus.Info(string(out)) 这里的*不会被认为是通配符，而是认为是个文件。
+      <guid>/post/%E5%BC%80%E5%8F%91/golang/go%E5%9D%91/Go-osexec%E5%9D%91.html</guid>
+      <description>Go os/exec坑 cp: cannot stat ‘./test/*’: No such file or directory out, err := exec.Command(&amp;#34;cp&amp;#34;, &amp;#34;./test/*&amp;#34;, &amp;#34;/tmp&amp;#34;).CombinedOutput() logrus.Info(cmd) logrus.Info(string(out)) 这里的*不会被认为是通配符，而是认为是个文件。
 https://stackoverflow.com/questions/31467153/golang-failed-exec-command-that-works-in-terminal
 使用以下方法避免
 cmd := &amp;#34;cp ./test/* /tmp -r&amp;#34; out, err := exec.Command(&amp;#34;sh&amp;#34;, &amp;#34;-c&amp;#34;, cmd).CombinedOutput() logrus.Info(cmd) logrus.Info(string(out)) </description>
@@ -216,10 +252,11 @@ cmd := &amp;#34;cp ./test/* /tmp -r&amp;#34; out, err := exec.Command(&amp;#34;s
     <item>
       <title>linux下如何优雅得网速监控</title>
       <link>/post/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E6%9C%AC/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/linux/linux%E4%B8%8B%E5%A6%82%E4%BD%95%E4%BC%98%E9%9B%85%E5%BE%97%E7%BD%91%E9%80%9F%E7%9B%91%E6%8E%A7.html</link>
-      <pubDate>Mon, 19 Aug 2019 01:05:00 +0800</pubDate>
+      <pubDate>Sun, 18 Aug 2019 17:05:00 +0000</pubDate>
       
       <guid>/post/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E6%9C%AC/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/linux/linux%E4%B8%8B%E5%A6%82%E4%BD%95%E4%BC%98%E9%9B%85%E5%BE%97%E7%BD%91%E9%80%9F%E7%9B%91%E6%8E%A7.html</guid>
-      <description>安装nload sudo apt-get install nload 使用 nload -u K wlan0</description>
+      <description>linux下如何优雅得网速监控 安装nload sudo apt-get install nload 使用 nload -u K wlan0
+Device wlan0 [100.66.25.144] (1/1): ================================================================================= Incoming: # #. ## | Curr: 51.75 kByte/s ## #| Avg: 20.50 kByte/s .## |## Min: 0.00 kByte/s ### ###| Max: 1159.04 kByte/s .. |### ####. Ttl: 1.50 GByte Outgoing: Curr: 2.62 kByte/s Avg: 1.95 kByte/s Min: 0.00 kByte/s Max: 39.50 kByte/s Ttl: 63.47 MByte </description>
     </item>
     
   </channel>
