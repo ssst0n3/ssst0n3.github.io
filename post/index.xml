@@ -6,7 +6,23 @@
     <description>Recent content in Post on welcome to st0n3&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 29 Dec 2020 11:07:11 +0000</lastBuildDate><atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 30 Dec 2020 11:48:56 +0000</lastBuildDate><atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>oscp tips</title>
+      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E4%BA%BA%E6%89%8D%E7%AB%9E%E4%BA%89%E5%8A%9B/%E5%AE%89%E5%85%A8%E8%81%8C%E4%B8%9A%E8%AE%A4%E8%AF%81/oscp/oscp%E8%80%83%E8%AF%95%E6%94%BB%E7%95%A5/oscp-tips.html</link>
+      <pubDate>Wed, 30 Dec 2020 11:48:56 +0000</pubDate>
+      
+      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E4%BA%BA%E6%89%8D%E7%AB%9E%E4%BA%89%E5%8A%9B/%E5%AE%89%E5%85%A8%E8%81%8C%E4%B8%9A%E8%AE%A4%E8%AF%81/oscp/oscp%E8%80%83%E8%AF%95%E6%94%BB%E7%95%A5/oscp-tips.html</guid>
+      <description>oscp tips 许久前通过了oscp考试，一直想记录一下的。但是优先级排在了升级博客后面，最近弄完了才有空写一下。
+TL;DR  开局全端口扫描 识别兔子洞 随手截图真的很重要  每个local.txt和proof.txt都需要有截图才记分   证书仅体现是否通过，如果有把握通过，可以不用全部搞定，留点时间检查一下截图是否齐全 这只是考试  如果平时工作与渗透很相关了，这个考试应该很简单，但需要转变一下思路，不要用做真实渗透的思路去应对这场考试    整体上而言，如果学员希望入门安全，oscp还是很超值的，教材囊括广泛、表述翔实简单，推荐在校学生报名。
+如果学员已经在工作中大量接触渗透测试了，则不太划算（除非公司报销）。因为oscp的实验和考试已经有点落后现实了。可能唯一有帮助的就是可以横向扩展知识面，但其实我们不必什么都学的。
+一、考试 1. 识别兔子洞 考试的时候很多题都有一个奇奇怪怪的web服务，上面甚至可能托管了一些源代码，但是研究一段时间后，发现基本上都没啥用。
+还有一些机器开了21,135,139,445之类的，也有很大概率仅仅是用来给学员上传文件用的，对攻击没有帮助。
+因此可以留个心眼，扫到这些端口先晾着，优先关注一些奇奇怪怪的端口。一些不常见的端口，大概率是有猫腻的。
+我列了一个表格，对于梳理自己的思路很有帮助
+   port process interesting comment     21 ftp anonymous support seems upload tools   80 http xxxx local privilege escalation   135 msrpc  seems upload tools   139 smb  seems upload tools   445 smb  seems upload tools   xxxx xxxx xxxx RCE   xxxx      xxxx      8090 http  seems rabbit hole    2.</description>
+    </item>
+    
     <item>
       <title>容器安全研究的三重境界</title>
       <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6%E5%85%A8%E6%99%AF/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6%E7%9A%84%E4%B8%89%E9%87%8D%E5%A2%83%E7%95%8C.html</link>
