@@ -175,7 +175,7 @@ st0n3@yoga:~$ ./ctf.expect spawn ssh -o StrictHostKeyChecking=no ctf@1.2.3.4 ctf
 <h2 id="2-环境搭建">2. 环境搭建</h2>
 <p>根据上述分析，我们很容易可以构造这样一个贴近实战的漏洞利用链：CVE-2020-8558&mdash;&gt;k8s 10250&mdash;&gt;CVE-2020-15257</p>
 <p>其环境大致如下：</p>
-<img src="http://img.st0n3.org/xctf_huaweicloud-qualifier-2020/upload_6105bd795f84c67aacd21f31a02a53aa.png" width="400px">
+<img src="//img.st0n3.org/xctf_huaweicloud-qualifier-2020/upload_6105bd795f84c67aacd21f31a02a53aa.png" width="400px">
 <p>我将上述环境搭建在了qemu里，选手可以ssh进入qemu中的容器内，发现漏洞并逃逸至qemu。</p>
 <p>上述qemu被封装在了一个docker镜像中（所以实际环境是一个docker in qemu in docker的环境），可以使用以下配置启动环境</p>
 <pre><code>version: '3'
