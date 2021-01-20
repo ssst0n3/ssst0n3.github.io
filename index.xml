@@ -13,7 +13,8 @@
       <pubDate>Wed, 20 Jan 2021 03:02:04 +0000</pubDate>
       
       <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/CTF/%E5%87%BA%E9%A2%98/xctf_huaweicloud-qualifer-2020/%E5%87%BA%E9%A2%98%E6%8A%A5%E5%91%8A-xctf-hwc_qualifier_2020containernday_container_escape.html</guid>
-      <description>出题报告: xctf-hwc_qualifier_2020/container/nday_container_escape 2020年XCTF华为云专题赛线上赛中，出了一个容器相关的题目，记录一下。
+      <description>出题报告: nday_container_escape xctf-hwc_qualifier_2020/container/nday_container_escape
+2020年XCTF华为云专题赛线上赛中，出了一个容器相关的题目，记录一下。
 这类题目在国内比赛中还算少见（似乎是首次？），遗憾的是比赛结束时该题仍是0解，可能跟当天赛程非常紧凑有关。
 1. 背景 在筹备比赛题目的时间里，有一个新爆出的漏洞CVE-2020-15257比较火。漏洞出现在docker的关键组件containerd中，当一个容器拥有host网络命名空间时，可以导致容器逃逸。这首次揭示了network namespace的安全风险，具有一定的借鉴意义。
 但是，这个漏洞从实践层面上看又有一点鸡肋：
