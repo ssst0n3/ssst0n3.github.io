@@ -6,7 +6,108 @@
     <description>Recent content in Post on welcome to st0n3&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 30 Dec 2020 11:48:56 +0000</lastBuildDate><atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 20 Jan 2021 03:02:04 +0000</lastBuildDate><atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>出题报告: xctf-hwc_qualifier_2020/container/nday_container_escape</title>
+      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/CTF/%E5%87%BA%E9%A2%98/xctf_huaweicloud-qualifer-2020/%E5%87%BA%E9%A2%98%E6%8A%A5%E5%91%8A-xctf-hwc_qualifier_2020containernday_container_escape.html</link>
+      <pubDate>Wed, 20 Jan 2021 03:02:04 +0000</pubDate>
+      
+      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/CTF/%E5%87%BA%E9%A2%98/xctf_huaweicloud-qualifer-2020/%E5%87%BA%E9%A2%98%E6%8A%A5%E5%91%8A-xctf-hwc_qualifier_2020containernday_container_escape.html</guid>
+      <description>出题报告: xctf-hwc_qualifier_2020/container/nday_container_escape 2020年XCTF华为云专题赛线上赛中，出了一个容器相关的题目，记录一下。
+这类题目在国内比赛中还算少见（似乎是首次？），遗憾的是比赛结束时该题仍是0解，可能跟当天赛程非常紧凑有关。
+1. 背景 在筹备比赛题目的时间里，有一个新爆出的漏洞CVE-2020-15257比较火。漏洞出现在docker的关键组件containerd中，当一个容器拥有host网络命名空间时，可以导致容器逃逸。这首次揭示了network namespace的安全风险，具有一定的借鉴意义。
+但是，这个漏洞从实践层面上看又有一点鸡肋：
+ host网络通常较少在实际场景中出现（因为端口转发通常已足够使用） host网络在CIS docker基线中是一个禁止项，因此成熟的生产环境中，几乎不会出现该场景 即使使用了host网络的容器，不一定公网可访问，不一定存在命令执行漏洞  为此漏洞的利用场景受限感到惋惜的同时，我希望能构建一个更常用的环境，放大其利用场景。
+CVE-2020-8558就是一个绝佳的放大器(不起眼，实战中不一定修复)，该漏洞是由于kube-proxy默认设置了route_localnet，允许邻近主机绕过localhost边界。
+因此我们可能从一个非host网络容器逃逸！
+2. 环境搭建 根据上述分析，我们很容易可以构造这样一个贴近实战的漏洞利用链：CVE-2020-8558&amp;mdash;&amp;gt;k8s 10250&amp;mdash;&amp;gt;CVE-2020-15257
+其环境大致如下：
+我将上述环境搭建在了qemu里，选手可以ssh进入qemu中的容器内，发现漏洞并逃逸至qemu。
+上述qemu被封装在了一个docker镜像中（所以实际环境是一个docker in qemu in docker的环境），可以使用以下配置启动环境
+version: &#39;3&#39; services: challenge: image: swr.cn-north-1.myhuaweicloud.com/hwstaff_pub_pentest/ctf_nday_docker_escape:v0.1 ports: - &amp;quot;2222:22&amp;quot; 3. writeup 3.1 信息收集 以ctf/ctf进入环境，我们大致会看到这样一些信息，此时我们位于一个容器内，该容器由k8s启动的
+st0n3@yoga:~$ ./ctf.expect spawn ssh -o StrictHostKeyChecking=no ctf@1.2.3.4 ctf@1.2.3.4&#39;s password: Welcome to Ubuntu 20.04.1 LTS (GNU/Linux 5.4.0-47-generic x86_64) ... ++ sudo KUBECONFIG=/etc/kubernetes/admin.conf kubectl get pods --selector=app=ubuntu --template &#39;{{range .</description>
+    </item>
+    
+    <item>
+      <title>容器安全研究的误区</title>
+      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6%E5%85%A8%E6%99%AF/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6%E7%9A%84%E8%AF%AF%E5%8C%BA.html</link>
+      <pubDate>Tue, 19 Jan 2021 07:48:58 +0000</pubDate>
+      
+      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6%E5%85%A8%E6%99%AF/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6%E7%9A%84%E8%AF%AF%E5%8C%BA.html</guid>
+      <description>容器安全研究的误区 不要follow网上的分析文章</description>
+    </item>
+    
+    <item>
+      <title>csrf put/delete poc generate</title>
+      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/%E6%B5%8B%E8%AF%95%E5%AF%B9%E8%B1%A1/%E5%BA%94%E7%94%A8%E5%AE%89%E5%85%A8/web%E5%AE%89%E5%85%A8/csrf/csrf-putdelete-poc-generate.html</link>
+      <pubDate>Wed, 06 Jan 2021 03:58:56 +0000</pubDate>
+      
+      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/%E6%B5%8B%E8%AF%95%E5%AF%B9%E8%B1%A1/%E5%BA%94%E7%94%A8%E5%AE%89%E5%85%A8/web%E5%AE%89%E5%85%A8/csrf/csrf-putdelete-poc-generate.html</guid>
+      <description>csrf put/delete poc generate csrf应该怎么构造post或delete 的rest请求？试了一下表单提交和jquery请求都没成功
+fetch(url, {method: &amp;quot;POST&amp;quot;, body: data} ).then(response =&amp;gt; {console.log(response)}) https://developer.mozilla.org/zh-CN/docs/Web/API/Fetch_API/Using_Fetch
+比较新的浏览器都支持fetch接口了吧。。</description>
+    </item>
+    
+    <item>
+      <title>snap proxy</title>
+      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E8%BF%9B%E7%A8%8B%E5%AE%B9%E5%99%A8/%E6%A1%8C%E9%9D%A2%E5%AE%B9%E5%99%A8/snap/snap-proxy.html</link>
+      <pubDate>Tue, 05 Jan 2021 09:58:42 +0000</pubDate>
+      
+      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E8%BF%9B%E7%A8%8B%E5%AE%B9%E5%99%A8/%E6%A1%8C%E9%9D%A2%E5%AE%B9%E5%99%A8/snap/snap-proxy.html</guid>
+      <description>snap proxy $ sudo vim /etc/environment $ cat /etc/environment http_proxy=http://127.0.0.1:8118 http_proxy=https://127.0.0.1:8118 $ sudo service snap restart $ sudo snap get core proxy Key Value proxy.http http://127.0.0.1:8118 proxy.https http://127.0.0.1:8118 </description>
+    </item>
+    
+    <item>
+      <title>Flatpak简介</title>
+      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E8%BF%9B%E7%A8%8B%E5%AE%B9%E5%99%A8/%E6%A1%8C%E9%9D%A2%E5%AE%B9%E5%99%A8/Flatpak/Flatpak%E7%AE%80%E4%BB%8B.html</link>
+      <pubDate>Mon, 04 Jan 2021 07:06:24 +0000</pubDate>
+      
+      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E8%BF%9B%E7%A8%8B%E5%AE%B9%E5%99%A8/%E6%A1%8C%E9%9D%A2%E5%AE%B9%E5%99%A8/Flatpak/Flatpak%E7%AE%80%E4%BB%8B.html</guid>
+      <description>Flatpak简介 redhat虽然在rkt项目上与docker竞争失败后，但走出了一条桌面容器的道路，感觉可以弯道超车。
+https://developers.redhat.com/blog/2020/08/12/introducing-the-red-hat-flatpak-runtime-for-desktop-containers/
+ T: 以后桌面APP也有container了？ W: 好像已经支持很多了，我在我的debian上可耻得装上了redhat的flatpak.. T: 能跑起来一个常用的应用么，比如gedit之类的？ W: https://flathub.org/home T: 连 minecraft都跑起来了 。。  </description>
+    </item>
+    
+    <item>
+      <title>docker安装</title>
+      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E8%BF%9B%E7%A8%8B%E5%AE%B9%E5%99%A8/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%B9%E5%99%A8/docker/docker%E5%9F%BA%E7%A1%80/docker%E5%AE%89%E8%A3%85.html</link>
+      <pubDate>Mon, 04 Jan 2021 04:15:41 +0000</pubDate>
+      
+      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E8%BF%9B%E7%A8%8B%E5%AE%B9%E5%99%A8/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%B9%E5%99%A8/docker/docker%E5%9F%BA%E7%A1%80/docker%E5%AE%89%E8%A3%85.html</guid>
+      <description>docker安装 安装社区版 docker-ce
+ 主要参考  https://docs.docker.com/engine/install/ubuntu/   额外强调：  GFW环境配置    以华为云环境为例
+安装操作系统维护版本 docker.io
+辅助工具安装 docker-compose</description>
+    </item>
+    
+    <item>
+      <title>docker简介</title>
+      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E8%BF%9B%E7%A8%8B%E5%AE%B9%E5%99%A8/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%B9%E5%99%A8/docker/docker%E5%9F%BA%E7%A1%80/docker%E7%AE%80%E4%BB%8B.html</link>
+      <pubDate>Mon, 04 Jan 2021 04:09:06 +0000</pubDate>
+      
+      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E8%BF%9B%E7%A8%8B%E5%AE%B9%E5%99%A8/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%B9%E5%99%A8/docker/docker%E5%9F%BA%E7%A1%80/docker%E7%AE%80%E4%BB%8B.html</guid>
+      <description>docker简介 发展历史  2013-03-26: docker宣布开源 2013-06-25: docker加入Linux基金会  使用情况 docker公司与社区 开源与企业版本 </description>
+    </item>
+    
+    <item>
+      <title>开源软件安全研究方法</title>
+      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%BC%80%E6%BA%90%E8%BD%AF%E4%BB%B6%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6%E6%96%B9%E6%B3%95.html</link>
+      <pubDate>Mon, 04 Jan 2021 03:46:56 +0000</pubDate>
+      
+      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%BC%80%E6%BA%90%E8%BD%AF%E4%BB%B6%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6%E6%96%B9%E6%B3%95.html</guid>
+      <description>开源软件安全研究方法 0. 背景 过去很长一段时间，我的主要精力都花在容器安全上。容器是一个很大的概念，涉及领域众多，如果缺少一套高屋建瓴的、可行的方法论，将会被困在局部的知识点上，而无法系统性得分析出关键的容器安全风险。下面是基于前期容器安全研究总结了一套通用方法论，其中每个叶子节点都可以写成一篇文章，用于承载相关知识点的具体内容，如果一个节点的所有子节点都形成了翔实的文档，则可以认为完成了这个节点的研究工作。
+1. 软件基础 磨刀不误砍柴工，首先能熟练使用该软件的主要功能，才有可能在其中发现有建设性的安全风险。
+1.1 软件简介 1.2 安装 1.3 快速使用 1.4 软件主要功能介绍 1.5 其他关于该软件的重要介绍 2. 开源情况 2.1 开源基本情况  开发语言 LICENSE branch, tag 项目主要贡献者 项目上下游情况  2.2 issue,commit管理概况 issues和commits记录了开发的详细过程，这中间可能包括了一些隐蔽的问题，包括：未显性以漏洞形式发布但由团队自行发现修复、直接以版本特性更新解决了漏洞、甚至开发团队无感知地解决了问题。
+对于一些关键文件的commits记录，则需要重点关注。
+2.3 已知漏洞数量与分布情况 分析已知漏洞数量与分布情况有助于快速识别，历史上安全研究人员的关注点，进而有助于自己分析未来的研究方向。
+2.4 如何报告该项目的漏洞 3. 如何第一时间知悉该软件安全情报 google announce, 例如：
+ https://groups.google.com/forum/feed/kubernetes-announce/msgs/rss_v2_0.xml?num=50 https://groups.google.com/forum/feed/golang-announce/msgs/rss_v2_0.xml?num=50  4. 历史漏洞分析与复现 有规范的、成体系的分析、复现并存留实验环境，可以利用vagrant或docker记录、分享漏洞环境。
+5. 安全关键技术 软件安全性所依赖的关键技术
+6. 软件使用(配置)安全 7. 安全风险分析 软件自身安全
+8. 设计分析 文档走读、设计模式分析、威胁建模、理想模型与设计模型对比
+9. 源码审计 9.1 代码审计范围 9.2 issues与commits分析 9.3 代码结构分析 9.4 安全强相关文件 9.</description>
+    </item>
+    
     <item>
       <title>oscp tips</title>
       <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E4%BA%BA%E6%89%8D%E7%AB%9E%E4%BA%89%E5%8A%9B/%E5%AE%89%E5%85%A8%E8%81%8C%E4%B8%9A%E8%AE%A4%E8%AF%81/oscp/oscp%E8%80%83%E8%AF%95%E6%94%BB%E7%95%A5/oscp-tips.html</link>
@@ -95,10 +196,10 @@ $$ \begin{align} &amp;amp; p^{-1} \cdot p \equiv 1 \mod q \newline &amp;amp; q^{
     
     <item>
       <title>docker中apparmor的加载过程</title>
-      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E8%BF%9B%E7%A8%8B%E5%AE%B9%E5%99%A8/docker/docker%E5%AE%89%E5%85%A8%E7%9A%84%E5%85%B3%E9%94%AE%E6%8A%80%E6%9C%AF/linux%E5%86%85%E6%A0%B8%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/apparmor/docker%E4%B8%ADapparmor%E7%9A%84%E5%8A%A0%E8%BD%BD%E8%BF%87%E7%A8%8B.html</link>
+      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E8%BF%9B%E7%A8%8B%E5%AE%B9%E5%99%A8/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%B9%E5%99%A8/docker/docker%E5%AE%89%E5%85%A8%E7%9A%84%E5%85%B3%E9%94%AE%E6%8A%80%E6%9C%AF/linux%E5%86%85%E6%A0%B8%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/apparmor/docker%E4%B8%ADapparmor%E7%9A%84%E5%8A%A0%E8%BD%BD%E8%BF%87%E7%A8%8B.html</link>
       <pubDate>Wed, 01 Jul 2020 09:49:00 +0000</pubDate>
       
-      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E8%BF%9B%E7%A8%8B%E5%AE%B9%E5%99%A8/docker/docker%E5%AE%89%E5%85%A8%E7%9A%84%E5%85%B3%E9%94%AE%E6%8A%80%E6%9C%AF/linux%E5%86%85%E6%A0%B8%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/apparmor/docker%E4%B8%ADapparmor%E7%9A%84%E5%8A%A0%E8%BD%BD%E8%BF%87%E7%A8%8B.html</guid>
+      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E8%BF%9B%E7%A8%8B%E5%AE%B9%E5%99%A8/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%B9%E5%99%A8/docker/docker%E5%AE%89%E5%85%A8%E7%9A%84%E5%85%B3%E9%94%AE%E6%8A%80%E6%9C%AF/linux%E5%86%85%E6%A0%B8%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/apparmor/docker%E4%B8%ADapparmor%E7%9A%84%E5%8A%A0%E8%BD%BD%E8%BF%87%E7%A8%8B.html</guid>
       <description>docker中apparmor的加载过程 判断操作系统是否启用apparmor，如果支持就安装名为docker-default的规则。 https://github.com/moby/moby/blob/master/daemon/apparmor_default.go
 const ( unconfinedAppArmorProfile = &amp;quot;unconfined&amp;quot; defaultAppArmorProfile = &amp;quot;docker-default&amp;quot; ) func ensureDefaultAppArmorProfile() error { if apparmor.IsEnabled() { loaded, err := aaprofile.IsLoaded(defaultAppArmorProfile) if err != nil { return fmt.Errorf(&amp;quot;Could not check if %s AppArmor profile was loaded: %s&amp;quot;, defaultAppArmorProfile, err) } // Nothing to do. if loaded { return nil } // Load the profile. if err := aaprofile.InstallDefault(defaultAppArmorProfile); err != nil { return fmt.Errorf(&amp;quot;AppArmor enabled on system but the %s profile could not be loaded: %s&amp;quot;, defaultAppArmorProfile, err) } } return nil } 其中判断是否启用apparmor代码如下，主要是判断apparmor相关文件是否存在。</description>
     </item>
