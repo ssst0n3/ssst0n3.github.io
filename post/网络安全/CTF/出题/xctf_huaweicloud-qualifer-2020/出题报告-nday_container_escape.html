@@ -19,7 +19,7 @@ CVE-2020-8558就是一个绝佳的放大器(不起眼，实战中不一定修复
 其环境大致如下：
 我将上述环境搭建在了qemu里，选手可以ssh进入qemu中的容器内，发现漏洞并逃逸至qemu。
 上述qemu被封装在了一个docker镜像中（所以实际环境是一个docker in qemu in docker的环境），可以使用以下配置启动环境
-version: &#39;3&#39; services: challenge: image: swr.cn-north-1.myhuaweicloud.com/hwstaff_pub_pentest/ctf_nday_docker_escape:v0.1 ports: - &amp;quot;2222:22&amp;quot; 3. writeup 3.1 信息收集 以ctf/ctf进入环境，我们大致会看到这样一些信息，此时我们位于一个容器内，该容器由k8s启动的
+version: &#39;3&#39; services: challenge: image: swr.cn-north-1.myhuaweicloud.com/huaweictf/ctf_nday_docker_escape:v0.1 ports: - &amp;quot;2222:22&amp;quot; 3. writeup 3.1 信息收集 以ctf/ctf进入环境，我们大致会看到这样一些信息，此时我们位于一个容器内，该容器由k8s启动的
 st0n3@yoga:~$ ./ctf.expect spawn ssh -o StrictHostKeyChecking=no ctf@1.2.3.4 ctf@1.2.3.4&#39;s password: Welcome to Ubuntu 20.04.1 LTS (GNU/Linux 5.4.0-47-generic x86_64) ... &#43;&#43; sudo KUBECONFIG=/etc/kubernetes/admin.conf kubectl get pods --selector=app=ubuntu --template &#39;{{range ." />
 <meta name="keywords" content="" />
 <meta name="robots" content="noodp" />
@@ -62,7 +62,7 @@ CVE-2020-8558就是一个绝佳的放大器(不起眼，实战中不一定修复
 其环境大致如下：
 我将上述环境搭建在了qemu里，选手可以ssh进入qemu中的容器内，发现漏洞并逃逸至qemu。
 上述qemu被封装在了一个docker镜像中（所以实际环境是一个docker in qemu in docker的环境），可以使用以下配置启动环境
-version: &#39;3&#39; services: challenge: image: swr.cn-north-1.myhuaweicloud.com/hwstaff_pub_pentest/ctf_nday_docker_escape:v0.1 ports: - &quot;2222:22&quot; 3. writeup 3.1 信息收集 以ctf/ctf进入环境，我们大致会看到这样一些信息，此时我们位于一个容器内，该容器由k8s启动的
+version: &#39;3&#39; services: challenge: image: swr.cn-north-1.myhuaweicloud.com/huaweictf/ctf_nday_docker_escape:v0.1 ports: - &quot;2222:22&quot; 3. writeup 3.1 信息收集 以ctf/ctf进入环境，我们大致会看到这样一些信息，此时我们位于一个容器内，该容器由k8s启动的
 st0n3@yoga:~$ ./ctf.expect spawn ssh -o StrictHostKeyChecking=no ctf@1.2.3.4 ctf@1.2.3.4&#39;s password: Welcome to Ubuntu 20.04.1 LTS (GNU/Linux 5.4.0-47-generic x86_64) ... &#43;&#43; sudo KUBECONFIG=/etc/kubernetes/admin.conf kubectl get pods --selector=app=ubuntu --template &#39;{{range .">
 <meta itemprop="datePublished" content="2021-01-20T03:02:04+00:00" />
 <meta itemprop="dateModified" content="2021-01-20T03:02:04+00:00" />
@@ -85,7 +85,7 @@ CVE-2020-8558就是一个绝佳的放大器(不起眼，实战中不一定修复
 其环境大致如下：
 我将上述环境搭建在了qemu里，选手可以ssh进入qemu中的容器内，发现漏洞并逃逸至qemu。
 上述qemu被封装在了一个docker镜像中（所以实际环境是一个docker in qemu in docker的环境），可以使用以下配置启动环境
-version: &#39;3&#39; services: challenge: image: swr.cn-north-1.myhuaweicloud.com/hwstaff_pub_pentest/ctf_nday_docker_escape:v0.1 ports: - &quot;2222:22&quot; 3. writeup 3.1 信息收集 以ctf/ctf进入环境，我们大致会看到这样一些信息，此时我们位于一个容器内，该容器由k8s启动的
+version: &#39;3&#39; services: challenge: image: swr.cn-north-1.myhuaweicloud.com/huaweictf/ctf_nday_docker_escape:v0.1 ports: - &quot;2222:22&quot; 3. writeup 3.1 信息收集 以ctf/ctf进入环境，我们大致会看到这样一些信息，此时我们位于一个容器内，该容器由k8s启动的
 st0n3@yoga:~$ ./ctf.expect spawn ssh -o StrictHostKeyChecking=no ctf@1.2.3.4 ctf@1.2.3.4&#39;s password: Welcome to Ubuntu 20.04.1 LTS (GNU/Linux 5.4.0-47-generic x86_64) ... &#43;&#43; sudo KUBECONFIG=/etc/kubernetes/admin.conf kubectl get pods --selector=app=ubuntu --template &#39;{{range ."/>
 
 
@@ -181,7 +181,7 @@ st0n3@yoga:~$ ./ctf.expect spawn ssh -o StrictHostKeyChecking=no ctf@1.2.3.4 ctf
 <pre><code>version: '3'
 services:
         challenge:
-                image: swr.cn-north-1.myhuaweicloud.com/hwstaff_pub_pentest/ctf_nday_docker_escape:v0.1
+                image: swr.cn-north-1.myhuaweicloud.com/huaweictf/ctf_nday_docker_escape:v0.1
                 ports:
                         - &quot;2222:22&quot;
 </code></pre><h2 id="3-writeup">3. writeup</h2>

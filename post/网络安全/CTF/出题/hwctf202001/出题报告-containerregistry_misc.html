@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author"
+    content="">
+<meta name="description"
+    content="出题报告: container/registry_misc hwctf202001/container/registry_misc
+题目描述 请获取该镜像仓库中的flag.txt docker pull swr.cn-south-1.myhuaweicloud.com/huaweictf/registry_misc:v2
+ 难度: 2/5 预计解题时间: 3h  出题目的  引导选手发现并学习registry v2 api 引导选手理解业界镜像仓库的实现原理  writeup 直接执行docker pull发现无法下载镜像
+st0n3@yoga:~$ docker pull swr.cn-south-1.myhuaweicloud.com/huaweictf/registry_misc:v2 Error response from daemon: mediaType in manifest should be &#39;application/vnd.docker.distribution.manifest.v2&#43;json&#39; not &#39;&#39; 根据题目描述、报错信息，经过搜索引擎搜索一段时间后，可以发现该镜像的格式不正确，所以docker daemon无法识别。
+根据docker registry v2的官方文档(https://docs.docker.com/registry/spec/api/), 可以发现registry v2的api, 根据这些api应该可以下载文件内容
+经过一段时间的学习，可以发现manifest是描述一个镜像的关键文件
+GET /v2/&amp;lt;name&amp;gt;/manifests/&amp;lt;reference&amp;gt; Host: &amp;lt;registry host&amp;gt; Authorization: &amp;lt;scheme&amp;gt; &amp;lt;token&amp;gt; 查看该镜像的manifest如下
+╭─st0n3@yoga in ~ ╰$ curl -s -k -H &amp;quot;Authorization: Bearer x&amp;quot; -H &amp;quot;Accept: application/vnd." />
+<meta name="keywords" content="" />
+<meta name="robots" content="noodp" />
+<link rel="canonical" href="/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/CTF/%E5%87%BA%E9%A2%98/hwctf202001/%E5%87%BA%E9%A2%98%E6%8A%A5%E5%91%8A-containerregistry_misc.html" />
+
+
+<title>
+    
+    出题报告: container/registry_misc :: welcome to st0n3&#39;s blog 
+    
+</title>
+
+
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.2.1/css/flag-icon.min.css" rel="stylesheet"
+    type="text/css">
+
+
+
+<link rel="stylesheet" href="/main.min.de959d61dd13c2cd41136acd491ffb0749779e1afe37b1fed6d5cba0b7e1938d.css">
+
+
+
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#252627">
+<link rel="shortcut icon" href="/favicon.ico">
+<meta name="theme-color" content="#252627"><meta itemprop="name" content="出题报告: container/registry_misc">
+<meta itemprop="description" content="出题报告: container/registry_misc hwctf202001/container/registry_misc
+题目描述 请获取该镜像仓库中的flag.txt docker pull swr.cn-south-1.myhuaweicloud.com/huaweictf/registry_misc:v2
+ 难度: 2/5 预计解题时间: 3h  出题目的  引导选手发现并学习registry v2 api 引导选手理解业界镜像仓库的实现原理  writeup 直接执行docker pull发现无法下载镜像
+st0n3@yoga:~$ docker pull swr.cn-south-1.myhuaweicloud.com/huaweictf/registry_misc:v2 Error response from daemon: mediaType in manifest should be &#39;application/vnd.docker.distribution.manifest.v2&#43;json&#39; not &#39;&#39; 根据题目描述、报错信息，经过搜索引擎搜索一段时间后，可以发现该镜像的格式不正确，所以docker daemon无法识别。
+根据docker registry v2的官方文档(https://docs.docker.com/registry/spec/api/), 可以发现registry v2的api, 根据这些api应该可以下载文件内容
+经过一段时间的学习，可以发现manifest是描述一个镜像的关键文件
+GET /v2/&lt;name&gt;/manifests/&lt;reference&gt; Host: &lt;registry host&gt; Authorization: &lt;scheme&gt; &lt;token&gt; 查看该镜像的manifest如下
+╭─st0n3@yoga in ~ ╰$ curl -s -k -H &quot;Authorization: Bearer x&quot; -H &quot;Accept: application/vnd.">
+<meta itemprop="datePublished" content="2021-01-25T02:36:55+00:00" />
+<meta itemprop="dateModified" content="2021-01-25T02:36:55+00:00" />
+<meta itemprop="wordCount" content="262">
+
+
+
+<meta itemprop="keywords" content="" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="出题报告: container/registry_misc"/>
+<meta name="twitter:description" content="出题报告: container/registry_misc hwctf202001/container/registry_misc
+题目描述 请获取该镜像仓库中的flag.txt docker pull swr.cn-south-1.myhuaweicloud.com/huaweictf/registry_misc:v2
+ 难度: 2/5 预计解题时间: 3h  出题目的  引导选手发现并学习registry v2 api 引导选手理解业界镜像仓库的实现原理  writeup 直接执行docker pull发现无法下载镜像
+st0n3@yoga:~$ docker pull swr.cn-south-1.myhuaweicloud.com/huaweictf/registry_misc:v2 Error response from daemon: mediaType in manifest should be &#39;application/vnd.docker.distribution.manifest.v2&#43;json&#39; not &#39;&#39; 根据题目描述、报错信息，经过搜索引擎搜索一段时间后，可以发现该镜像的格式不正确，所以docker daemon无法识别。
+根据docker registry v2的官方文档(https://docs.docker.com/registry/spec/api/), 可以发现registry v2的api, 根据这些api应该可以下载文件内容
+经过一段时间的学习，可以发现manifest是描述一个镜像的关键文件
+GET /v2/&lt;name&gt;/manifests/&lt;reference&gt; Host: &lt;registry host&gt; Authorization: &lt;scheme&gt; &lt;token&gt; 查看该镜像的manifest如下
+╭─st0n3@yoga in ~ ╰$ curl -s -k -H &quot;Authorization: Bearer x&quot; -H &quot;Accept: application/vnd."/>
+
+
+
+
+<meta property="article:published_time" content="2021-01-25 02:36:55 &#43;0000 UTC" />
+
+
+
+
+
+
+
+    </head>
+
+    <body class="dark-theme">
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text">$ cd /home/st0n3</span>
+            <span class="logo__cursor"></span>
+        
+    </div>
+</a>
+
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="/aboutme.html">About</a></li><li><a href="/post.html">Blog</a></li><li><a href="/hackerbot">Hackerbot</a></li><li><a href="/skill_tree/">SkillTree</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+
+            <span class="theme-toggle"><svg class="theme-toggler" width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M22 41C32.4934 41 41 32.4934 41 22C41 11.5066 32.4934 3 22
+  3C11.5066 3 3 11.5066 3 22C3 32.4934 11.5066 41 22 41ZM7 22C7
+  13.7157 13.7157 7 22 7V37C13.7157 37 7 30.2843 7 22Z"/>
+</svg>
+</span>
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
+                
+    <main class="post">
+
+        <div class="post-info">
+            
+            </p>
+        </div>
+
+        <article>
+            <h2 class="post-title"><a href="/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/CTF/%E5%87%BA%E9%A2%98/hwctf202001/%E5%87%BA%E9%A2%98%E6%8A%A5%E5%91%8A-containerregistry_misc.html">出题报告: container/registry_misc</a></h2>
+
+            
+
+            <div class="post-content">
+                <h1 id="出题报告-containerregistry_misc">出题报告: container/registry_misc</h1>
+<p><small>hwctf202001/container/registry_misc</small></p>
+<h2 id="题目描述">题目描述</h2>
+<p>请获取该镜像仓库中的flag.txt
+docker pull swr.cn-south-1.myhuaweicloud.com/huaweictf/registry_misc:v2</p>
+<ul>
+<li>难度: 2/5</li>
+<li>预计解题时间: 3h</li>
+</ul>
+<h2 id="出题目的">出题目的</h2>
+<ul>
+<li>引导选手发现并学习registry v2 api</li>
+<li>引导选手理解业界镜像仓库的实现原理</li>
+</ul>
+<h2 id="writeup">writeup</h2>
+<p>直接执行docker pull发现无法下载镜像</p>
+<pre><code class="language-!" data-lang="!">st0n3@yoga:~$ docker pull swr.cn-south-1.myhuaweicloud.com/huaweictf/registry_misc:v2
+Error response from daemon: mediaType in manifest should be 'application/vnd.docker.distribution.manifest.v2+json' not ''
+</code></pre><p>根据题目描述、报错信息，经过搜索引擎搜索一段时间后，可以发现该镜像的格式不正确，所以docker daemon无法识别。</p>
+<p>根据<a href="https://docs.docker.com/registry/spec/api/">docker registry v2的官方文档(https://docs.docker.com/registry/spec/api/)</a>, 可以发现registry v2的api, 根据这些api应该可以下载文件内容</p>
+<p>经过一段时间的学习，可以发现manifest是描述一个镜像的关键文件</p>
+<pre><code>GET /v2/&lt;name&gt;/manifests/&lt;reference&gt;
+Host: &lt;registry host&gt;
+Authorization: &lt;scheme&gt; &lt;token&gt;
+</code></pre><p>查看该镜像的manifest如下</p>
+<pre><code>╭─st0n3@yoga in ~ 
+╰$ curl -s -k -H &quot;Authorization: Bearer x&quot; -H &quot;Accept: application/vnd.docker.distribution.manifest.v2+json, application/vnd.docker.distribution.manifest.list.v2+json, application/vnd.oci.image.manifest.v1+json, application/vnd.oci.image.index.v1+json, */*&quot; https://swr.cn-south-1.myhuaweicloud.com/v2/huaweictf/registry_misc/manifests/v2 | python -m json.tool
+{
+    &quot;config&quot;: {
+        &quot;digest&quot;: &quot;sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a&quot;,
+        &quot;mediaType&quot;: &quot;application/vnd.unknown.config.v1+json&quot;,
+        &quot;size&quot;: 2
+    },
+    &quot;layers&quot;: [
+        {
+            &quot;annotations&quot;: {
+                &quot;org.opencontainers.image.title&quot;: &quot;flag.txt.sha256&quot;
+            },
+            &quot;digest&quot;: &quot;sha256:6adb790c8a0650571d57e93b10e5d3afb1905cd89ce6d65ea69ad5025ce697b6&quot;,
+            &quot;mediaType&quot;: &quot;application/vnd.oci.image.layer.v1.tar&quot;,
+            &quot;size&quot;: 75
+        }
+    ],
+    &quot;schemaVersion&quot;: 2
+}
+
+</code></pre><p>发现其中有一个layer名为flag.txt.sha256, 但是没有发现flag.txt ? 先使用blob api下载下来再说</p>
+<pre><code>GET /v2/&lt;name&gt;/blobs/&lt;digest&gt;
+Host: &lt;registry host&gt;
+Authorization: &lt;scheme&gt; &lt;token&gt;
+</code></pre><p>直接访问发现会302,直接follow 即可获取flag.txt.sha256的内容</p>
+<pre><code>╭─st0n3@yoga in ~ 
+╰$ curl -L -s -k -H &quot;Authorization: Bearer x&quot; -H &quot;Accept: application/vnd.docker.distribution.manifest.v2+json, application/vnd.docker.distribution.manifest.list.v2+json, application/vnd.oci.image.manifest.v1+json, application/vnd.oci.image.index.v1+json, */*&quot; https://swr.cn-south-1.myhuaweicloud.com/v2/huaweictf/registry_misc/blobs/sha256:6adb790c8a0650571d57e93b10e5d3afb1905cd89ce6d65ea69ad5025ce697b6    
+69bccaa2d38b8f08503667662c99113a512e46581bc003b131d06de69c0f5e0d  flag.txt
+</code></pre><p>看起来像是执行了<code>sha256 flag.txt</code>命令的结果</p>
+<p>难道flag.txt即使不存在于镜像文件中，我们也能下载？</p>
+<pre><code>╭─st0n3@yoga in ~ 
+╰$ curl -L -s -k -H &quot;Authorization: Bearer x&quot; -H &quot;Accept: application/vnd.docker.distribution.manifest.v2+json, application/vnd.docker.distribution.manifest.list.v2+json, application/vnd.oci.image.manifest.v1+json, application/vnd.oci.image.index.v1+json, */*&quot; https://swr.cn-south-1.myhuaweicloud.com/v2/huaweictf/registry_misc/blobs/sha256:69bccaa2d38b8f08503667662c99113a512e46581bc003b131d06de69c0f5e0d
+flag{ssssssssst0n3}
+</code></pre><p>成功了！</p>
+<p>我们理一下，题目大概是这样的流程</p>
+<ol>
+<li>上传了一个flag.txt到镜像仓库huaweictf/registry_misc:v2中</li>
+<li>上传了flag.txt.sha256到镜像仓库huaweictf/registry_misc:v2中</li>
+<li>此时flag.txt被覆盖了，看起来，我们应该无法再获取flag.txt</li>
+</ol>
+<p>而实际上，历史上传的layer，会一直存在于镜像仓库中，能下载它的前提是知道它的sha256。</p>
+<h2 id="exp">exp</h2>
+<pre><code class="language-go=" data-lang="go=">package main
+
+import (
+	&quot;github.com/ssst0n3/awesome_libs/awesome_error&quot;
+	&quot;github.com/ssst0n3/awesome_libs/log&quot;
+	&quot;github.com/ssst0n3/registry_v2_client/registry&quot;
+)
+
+var (
+	serviceAddress = &quot;swr.cn-south-1.myhuaweicloud.com&quot;
+	repositoryName = &quot;huaweictf/registry_misc&quot;
+	reference      = &quot;v2&quot;
+	r              = registry.NewRegistry(serviceAddress, &quot;&quot;, &quot;&quot;, false)
+)
+
+func DownloadAllLayers() {
+	manifest, err := r.GetManifest(repositoryName, reference)
+	awesome_error.CheckFatal(err)
+	for _, layer := range manifest.Layers {
+		blob, err := r.FetchBlob(repositoryName, layer.Digest.String(), true)
+		awesome_error.CheckFatal(err)
+		log.Logger.Info(string(blob))
+	}
+}
+
+func GetFlag() {
+	// read from flag.txt.sha256
+	digest := &quot;sha256:69bccaa2d38b8f08503667662c99113a512e46581bc003b131d06de69c0f5e0d&quot;
+	blob, err := r.FetchBlob(repositoryName, digest, true)
+	awesome_error.CheckFatal(err)
+	log.Logger.Info(string(blob))
+}
+
+func main() {
+	// get content of file flag.txt.sha256
+	DownloadAllLayers()
+	// get content of flag.txt
+	GetFlag()
+}
+
+</code></pre>
+            </div>
+        </article>
+
+        <hr />
+
+        <div class="post-info">
+  			</div>
+
+        
+    </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>&copy; 2021</span>
+            
+            <span></span>
+            <span> <a href="/posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a></span>
+        </div>
+    </div>
+    <div class="footer__inner">
+        <div class="footer__content">
+
+        </div>
+    </div>
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>Powered by <a href="http://gohugo.io">Hugo</a></span>
+            <span>Made with &#10084; by <a href="https://github.com/st0n3">st0n3</a></span>
+            <span>Based on <a href="https://github.com/rhazdon">rhazdon</a></span>
+        </div>
+    </div>
+
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      extensions: ["tex2jax.js"],
+      
+      jax: ["input/TeX", "output/CommonHTML"],
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+        displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+        processEscapes: true
+      },
+      "HTML-CSS": { fonts: ["TeX"] },
+      displayAlign: "left"
+    });
+  </script>
+
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_CHTML"></script>
+
+
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+
+<script type="text/javascript" src="/bundle.min.4c3fb12a087ceed4a52cb5d57068a9795c7069617a01ca70f788052ad66e1791779e6c72686e1dc0ca13dc03b0203204b6566bb0dd1ee80de2b7ff4d8fe53db2.js" integrity="sha512-TD&#43;xKgh87tSlLLXVcGipeVxwaWF6Acpw94gFKtZuF5F3nmxyaG4dwMoT3AOwIDIEtlZrsN0e6A3it/9Nj&#43;U9sg=="></script>
+
+
+
+    </body>
+</html>

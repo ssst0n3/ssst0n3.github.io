@@ -6,7 +6,23 @@
     <description>Recent content in Post on welcome to st0n3&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 20 Jan 2021 03:02:04 +0000</lastBuildDate><atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 25 Jan 2021 02:36:55 +0000</lastBuildDate><atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>出题报告: container/registry_misc</title>
+      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/CTF/%E5%87%BA%E9%A2%98/hwctf202001/%E5%87%BA%E9%A2%98%E6%8A%A5%E5%91%8A-containerregistry_misc.html</link>
+      <pubDate>Mon, 25 Jan 2021 02:36:55 +0000</pubDate>
+      
+      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/CTF/%E5%87%BA%E9%A2%98/hwctf202001/%E5%87%BA%E9%A2%98%E6%8A%A5%E5%91%8A-containerregistry_misc.html</guid>
+      <description>出题报告: container/registry_misc hwctf202001/container/registry_misc
+题目描述 请获取该镜像仓库中的flag.txt docker pull swr.cn-south-1.myhuaweicloud.com/huaweictf/registry_misc:v2
+ 难度: 2/5 预计解题时间: 3h  出题目的  引导选手发现并学习registry v2 api 引导选手理解业界镜像仓库的实现原理  writeup 直接执行docker pull发现无法下载镜像
+st0n3@yoga:~$ docker pull swr.cn-south-1.myhuaweicloud.com/huaweictf/registry_misc:v2 Error response from daemon: mediaType in manifest should be &#39;application/vnd.docker.distribution.manifest.v2+json&#39; not &#39;&#39; 根据题目描述、报错信息，经过搜索引擎搜索一段时间后，可以发现该镜像的格式不正确，所以docker daemon无法识别。
+根据docker registry v2的官方文档(https://docs.docker.com/registry/spec/api/), 可以发现registry v2的api, 根据这些api应该可以下载文件内容
+经过一段时间的学习，可以发现manifest是描述一个镜像的关键文件
+GET /v2/&amp;lt;name&amp;gt;/manifests/&amp;lt;reference&amp;gt; Host: &amp;lt;registry host&amp;gt; Authorization: &amp;lt;scheme&amp;gt; &amp;lt;token&amp;gt; 查看该镜像的manifest如下
+╭─st0n3@yoga in ~ ╰$ curl -s -k -H &amp;quot;Authorization: Bearer x&amp;quot; -H &amp;quot;Accept: application/vnd.</description>
+    </item>
+    
     <item>
       <title>出题报告: nday_container_escape</title>
       <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/CTF/%E5%87%BA%E9%A2%98/xctf_huaweicloud-qualifer-2020/%E5%87%BA%E9%A2%98%E6%8A%A5%E5%91%8A-nday_container_escape.html</link>
@@ -25,7 +41,7 @@ CVE-2020-8558就是一个绝佳的放大器(不起眼，实战中不一定修复
 其环境大致如下：
 我将上述环境搭建在了qemu里，选手可以ssh进入qemu中的容器内，发现漏洞并逃逸至qemu。
 上述qemu被封装在了一个docker镜像中（所以实际环境是一个docker in qemu in docker的环境），可以使用以下配置启动环境
-version: &#39;3&#39; services: challenge: image: swr.cn-north-1.myhuaweicloud.com/hwstaff_pub_pentest/ctf_nday_docker_escape:v0.1 ports: - &amp;quot;2222:22&amp;quot; 3. writeup 3.1 信息收集 以ctf/ctf进入环境，我们大致会看到这样一些信息，此时我们位于一个容器内，该容器由k8s启动的
+version: &#39;3&#39; services: challenge: image: swr.cn-north-1.myhuaweicloud.com/huaweictf/ctf_nday_docker_escape:v0.1 ports: - &amp;quot;2222:22&amp;quot; 3. writeup 3.1 信息收集 以ctf/ctf进入环境，我们大致会看到这样一些信息，此时我们位于一个容器内，该容器由k8s启动的
 st0n3@yoga:~$ ./ctf.expect spawn ssh -o StrictHostKeyChecking=no ctf@1.2.3.4 ctf@1.2.3.4&#39;s password: Welcome to Ubuntu 20.04.1 LTS (GNU/Linux 5.4.0-47-generic x86_64) ... ++ sudo KUBECONFIG=/etc/kubernetes/admin.conf kubectl get pods --selector=app=ubuntu --template &#39;{{range .</description>
     </item>
     
@@ -87,7 +103,9 @@ https://developers.redhat.com/blog/2020/08/12/introducing-the-red-hat-flatpak-ru
       <pubDate>Mon, 04 Jan 2021 04:09:06 +0000</pubDate>
       
       <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E8%BF%9B%E7%A8%8B%E5%AE%B9%E5%99%A8/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%B9%E5%99%A8/docker/docker%E5%9F%BA%E7%A1%80/docker%E7%AE%80%E4%BB%8B.html</guid>
-      <description>docker简介 发展历史  2013-03-26: docker宣布开源 2013-06-25: docker加入Linux基金会  使用情况 docker公司与社区 开源与企业版本 </description>
+      <description>docker简介 发展历史  2013-03-26: docker宣布开源 2013-05: docker index(即docker hub)发布 2013-06-25: docker加入Linux基金会 2013-10-29: 研发docker的公司dotCloud更名为Docker  版本命名规则 0.x &amp;mdash;&amp;gt; 1.0
+https://github.com/moby/moby/blob/master/CHANGELOG.md
+使用情况 docker公司与社区 开源与企业版本 </description>
     </item>
     
     <item>
