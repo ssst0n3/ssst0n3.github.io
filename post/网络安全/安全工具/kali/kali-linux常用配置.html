@@ -58,7 +58,7 @@ apt-get update gnome-terminal 同时修改一下首选应用程序中的terminal
 4. 更改桌面文件夹为英文 cp ~/.config/user-dirs.dirs ~/.config/user-dirs.dirs.bak sed -i &quot;s/桌面/Desktop/g&quot; ~/.config/user-dirs.dirs sed -i &quot;s/下载/Downloads/g&quot; ~/.config/user-dirs.dirs sed -i &quot;s/模板/Templates/g&quot; ~/.config/user-dirs.dirs sed -i &quot;s/公共/Public/g&quot; ~/.config/user-dirs.dirs sed -i &quot;s/文档/Documents/g&quot; ~/.config/user-dirs.dirs sed -i &quot;s/音乐/Music/g&quot; ~/.config/user-dirs.dirs sed -i &quot;s/图片/Pictures/g&quot; ~/.config/user-dirs.dirs sed -i &quot;s/视频/Videos/g&quot; ~/.">
 <meta itemprop="datePublished" content="2020-04-10T12:30:00+00:00" />
 <meta itemprop="dateModified" content="2020-04-10T12:30:00+00:00" />
-<meta itemprop="wordCount" content="98">
+<meta itemprop="wordCount" content="105">
 
 
 
@@ -178,7 +178,10 @@ mv 文档 Documents
 mv 音乐 Music
 mv 图片 Pictures
 mv 视频 Videos
-</code></pre>
+</code></pre><h2 id="5-怎样解决双系统windows10时间快和linux时间差问题">5. 怎样解决双系统Windows10时间快和Linux时间差问题？</h2>
+<pre><code>timedatectl set-local-rtc 1 --adjust-system-clock
+</code></pre><p><a href="https://www.zhihu.com/question/46525639/answer/157272414">https://www.zhihu.com/question/46525639/answer/157272414</a></p>
+
             </div>
         </article>
 
