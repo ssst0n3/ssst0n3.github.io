@@ -129,7 +129,7 @@ TL;DR  开局全端口扫描 识别兔子洞 随手截图真的很重要  每个
 $$ \begin{align} &amp;amp; p^{-1} \cdot p \equiv 1 \mod q \newline &amp;amp; q^{-1} \cdot q \equiv 1 \mod p \newline &amp;amp; \Longleftrightarrow \newline &amp;amp; p^{-1}\cdot p+q^{-1}\cdot q \equiv 1 \mod p\cdot q \end{align} $$
 1. 证明 (1) $$ \begin{align} &amp;amp; 1 \equiv p^{-1} \cdot p \mod q \
 &amp;amp; 1 \equiv q^{-1} \cdot q \mod p \end{align} $$
-由中国剩余定理： $$ \begin{align} 1 &amp;amp; = \sum^{k}_{i=1}a_ic_i \mod p\cdot q \</description>
+由中国剩余定理： $$ \begin{align} 1 &amp;amp; = \sum^{k}_{i=1}a_ic_i \mod p\cdot q \newline &amp;amp; =1\cdot q\cdot q^{-1} + 1\cdot p\cdot p^{-1} \mod p\cdot q \newline &amp;amp; =q\cdot q^{-1} + p\cdot p^{-1} \mod p\cdot q \end{align} $$</description>
     </item>
     
     <item>
