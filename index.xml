@@ -13,7 +13,8 @@
       <pubDate>Thu, 04 Mar 2021 06:37:29 +0000</pubDate>
       
       <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E8%BF%9B%E7%A8%8B%E5%AE%B9%E5%99%A8/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%B9%E5%99%A8/docker/%E5%AE%89%E5%85%A8%E9%A3%8E%E9%99%A9/%E9%95%9C%E5%83%8F%E5%AE%89%E5%85%A8/%E6%9E%84%E5%BB%BA%E5%AE%89%E5%85%A8/CVE-2021-21979-APP_KEY-is-fixed-in-docker-image-bitnami/laravel/Original-Mails-with-Bitnami-for-CVE-2021-21979.html</guid>
-      <description>Original Mails with Bitnami for CVE-2021-21979 [1] [Vulnerability Report] APP_KEY is fixed in docker image bitnami/laravel st0n3 ss ssst0n3@gmail.com	23 February 2021 at 15:58 To: security@vmware.com
+      <description>Original Mails with Bitnami for CVE-2021-21979 [1] [Vulnerability Report] APP_KEY is fixed in docker image bitnami/laravel st0n3 ss ssst0n3@gmail.com	23 February 2021 at 15:58
+To: security@vmware.com
 Hello, bitnami!
 I am a security researcher. Seems I have found a vulnerability in docker image bitnami/laravel. Please check it, thank you!
  1. Description if file /app/config/database.php not exists when users use image bitnami/laravel, the file /app/.env will be replaced by file /tmp/app/.env.</description>
