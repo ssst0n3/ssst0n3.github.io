@@ -6,20 +6,7 @@
     <description>Recent content on welcome to st0n3&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 25 Mar 2021 09:49:33 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>出题思路: container/sysfs_overwrite</title>
-      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/CTF/%E5%87%BA%E9%A2%98/%E5%87%BA%E9%A2%98%E6%80%9D%E8%B7%AF/%E5%87%BA%E9%A2%98%E6%80%9D%E8%B7%AF-containersysfs_overwrite.html</link>
-      <pubDate>Thu, 25 Mar 2021 09:49:33 +0000</pubDate>
-      
-      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/CTF/%E5%87%BA%E9%A2%98/%E5%87%BA%E9%A2%98%E6%80%9D%E8%B7%AF/%E5%87%BA%E9%A2%98%E6%80%9D%E8%B7%AF-containersysfs_overwrite.html</guid>
-      <description> tags: ctf,出题,container 出题思路: container/sysfs_overwrite 根据容器依赖内部文件系统实现的功能设计赛题
-例如
- /dev/console,/dev/pts 控制输出位置，是否可以通过覆盖来读取输出 sysfs有cgroups结果，可否根据cgroup内容打印flag /sys/kernel/notes记录了内核版本, 根据攻击者是否能篡改它判断是否返回flag /sys/fs/cgroup/pids.max，根据攻击者是否能篡改它判断是否返回flag  eg. FROM image_from_user COPY flag / COPY checker / ENTRYPOINT /checker
-checker:
- cat /sys/fs/cgroup/xxx  </description>
-    </item>
-    
+    <lastBuildDate>Thu, 04 Mar 2021 11:33:26 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>[漏洞报告]APP_KEY在容器镜像bitnami/laravel中是固定的</title>
       <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E8%BF%9B%E7%A8%8B%E5%AE%B9%E5%99%A8/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%B9%E5%99%A8/docker/%E5%AE%89%E5%85%A8%E9%A3%8E%E9%99%A9/%E9%95%9C%E5%83%8F%E5%AE%89%E5%85%A8/%E6%9E%84%E5%BB%BA%E5%AE%89%E5%85%A8/CVE-2021-21979-APP_KEY-is-fixed-in-docker-image-bitnami/laravel/%E6%BC%8F%E6%B4%9E%E6%8A%A5%E5%91%8AAPP_KEY%E5%9C%A8%E5%AE%B9%E5%99%A8%E9%95%9C%E5%83%8Fbitnamilaravel%E4%B8%AD%E6%98%AF%E5%9B%BA%E5%AE%9A%E7%9A%84.html</link>
