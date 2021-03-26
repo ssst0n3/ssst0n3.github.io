@@ -6,7 +6,20 @@
     <description>Recent content on welcome to st0n3&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 04 Mar 2021 11:33:26 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 25 Mar 2021 09:49:33 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>出题思路: container/sysfs_overwrite</title>
+      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/CTF/%E5%87%BA%E9%A2%98/%E5%87%BA%E9%A2%98%E6%80%9D%E8%B7%AF/%E5%87%BA%E9%A2%98%E6%80%9D%E8%B7%AF-containersysfs_overwrite.html</link>
+      <pubDate>Thu, 25 Mar 2021 09:49:33 +0000</pubDate>
+      
+      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/CTF/%E5%87%BA%E9%A2%98/%E5%87%BA%E9%A2%98%E6%80%9D%E8%B7%AF/%E5%87%BA%E9%A2%98%E6%80%9D%E8%B7%AF-containersysfs_overwrite.html</guid>
+      <description> tags: ctf,出题,container 出题思路: container/sysfs_overwrite 根据容器依赖内部文件系统实现的功能设计赛题
+例如
+ /dev/console,/dev/pts 控制输出位置，是否可以通过覆盖来读取输出 sysfs有cgroups结果，可否根据cgroup内容打印flag /sys/kernel/notes记录了内核版本, 根据攻击者是否能篡改它判断是否返回flag /sys/fs/cgroup/pids.max，根据攻击者是否能篡改它判断是否返回flag  eg. FROM image_from_user COPY flag / COPY checker / ENTRYPOINT /checker
+checker:
+ cat /sys/fs/cgroup/xxx  </description>
+    </item>
+    
     <item>
       <title>[漏洞报告]APP_KEY在容器镜像bitnami/laravel中是固定的</title>
       <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E8%BF%9B%E7%A8%8B%E5%AE%B9%E5%99%A8/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%B9%E5%99%A8/docker/%E5%AE%89%E5%85%A8%E9%A3%8E%E9%99%A9/%E9%95%9C%E5%83%8F%E5%AE%89%E5%85%A8/%E6%9E%84%E5%BB%BA%E5%AE%89%E5%85%A8/CVE-2021-21979-APP_KEY-is-fixed-in-docker-image-bitnami/laravel/%E6%BC%8F%E6%B4%9E%E6%8A%A5%E5%91%8AAPP_KEY%E5%9C%A8%E5%AE%B9%E5%99%A8%E9%95%9C%E5%83%8Fbitnamilaravel%E4%B8%AD%E6%98%AF%E5%9B%BA%E5%AE%9A%E7%9A%84.html</link>
@@ -45,13 +58,13 @@ I am a security researcher. Seems I have found a vulnerability in docker image b
     
     <item>
       <title>CVE-2019-16884分析与复现</title>
-      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E8%BF%9B%E7%A8%8B%E5%AE%B9%E5%99%A8/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%B9%E5%99%A8/docker/%E5%8E%86%E5%8F%B2%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90%E4%B8%8E%E5%A4%8D%E7%8E%B0/docker%E8%BD%AF%E4%BB%B6%E8%87%AA%E8%BA%AB%E6%BC%8F%E6%B4%9E/runtime/runc/%E5%86%85%E6%A0%B8%E7%BB%84%E4%BB%B6%E4%BD%BF%E7%94%A8%E4%B8%8D%E5%BD%93/CVE-2019-16884-runc-through-1.0.0-rc8-as-used-in-Docker-through-19.03.2-ce-and-other-products-allows-AppArmor-restriction-bypass-beca/CVE-2019-16884%E5%88%86%E6%9E%90%E4%B8%8E%E5%A4%8D%E7%8E%B0.html</link>
+      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E8%BF%9B%E7%A8%8B%E5%AE%B9%E5%99%A8/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%B9%E5%99%A8/docker/%E5%8E%86%E5%8F%B2%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90%E4%B8%8E%E5%A4%8D%E7%8E%B0/linux-security-features/what-you-can-actually-do/LSM/apparmor/CVE-2019-16884-runc-through-1.0.0-rc8-as-used-in-Docker-through-19.03.2-ce-and-other-products-allows-AppArmor-restriction-bypass-beca/CVE-2019-16884%E5%88%86%E6%9E%90%E4%B8%8E%E5%A4%8D%E7%8E%B0.html</link>
       <pubDate>Fri, 26 Feb 2021 03:56:21 +0000</pubDate>
       
-      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E8%BF%9B%E7%A8%8B%E5%AE%B9%E5%99%A8/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%B9%E5%99%A8/docker/%E5%8E%86%E5%8F%B2%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90%E4%B8%8E%E5%A4%8D%E7%8E%B0/docker%E8%BD%AF%E4%BB%B6%E8%87%AA%E8%BA%AB%E6%BC%8F%E6%B4%9E/runtime/runc/%E5%86%85%E6%A0%B8%E7%BB%84%E4%BB%B6%E4%BD%BF%E7%94%A8%E4%B8%8D%E5%BD%93/CVE-2019-16884-runc-through-1.0.0-rc8-as-used-in-Docker-through-19.03.2-ce-and-other-products-allows-AppArmor-restriction-bypass-beca/CVE-2019-16884%E5%88%86%E6%9E%90%E4%B8%8E%E5%A4%8D%E7%8E%B0.html</guid>
-      <description>CVE-2019-16884分析与复现 一、基本信息    条目 详情 备注     项目地址 https://github.com/opencontainers/runc    发布日期 2019-09-25    CVE-ID CVE-2019-16884 https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2019-16884   EDB-ID \ \   cvedetails https://www.cvedetails.com/cve/CVE-2019-16884/ \   影响范围 runc &amp;lt;= 1.0.0-rc8    修复版本 1.0.0-rc9 \   CVSS 7.5 CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:H/A:N     二、runc简介 // TODO
+      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E8%BF%9B%E7%A8%8B%E5%AE%B9%E5%99%A8/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%B9%E5%99%A8/docker/%E5%8E%86%E5%8F%B2%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90%E4%B8%8E%E5%A4%8D%E7%8E%B0/linux-security-features/what-you-can-actually-do/LSM/apparmor/CVE-2019-16884-runc-through-1.0.0-rc8-as-used-in-Docker-through-19.03.2-ce-and-other-products-allows-AppArmor-restriction-bypass-beca/CVE-2019-16884%E5%88%86%E6%9E%90%E4%B8%8E%E5%A4%8D%E7%8E%B0.html</guid>
+      <description>CVE-2019-16884分析与复现 一、基本信息    条目 详情 备注     项目地址 https://github.com/opencontainers/runc    发布日期 2019-09-25    CVE-ID CVE-2019-16884 https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2019-16884   EDB-ID \ \   cvedetails https://www.cvedetails.com/cve/CVE-2019-16884/ \   影响范围 runc &amp;lt;= 1.0.0-rc8    修复版本 1.0.0-rc9 d736ef14f0288d6993a1845745d6756cfc9ddd5a   CVSS 7.5 CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:H/A:N     二、runc简介 runc是一个根据OCI规范实现的CLI工具，用于生成和运行容器，docker的runtime使用的就是runc。
 三、漏洞简介 1. 简介 在容器镜像中可以声明一个VOLUME, 挂载至/proc, 欺骗runc使其认为AppArmor已经成功应用，从而绕过AppArmor策略。
-这个漏洞由Adam Iwaniuk发现，并在DragonSector CTF期间披露。
+这个漏洞由Adam Iwaniuk发现，并在DragonSector CTF 2019期间披露。
 这个CTF题目挑战将一个文件挂载到/flag-&amp;lt;random&amp;gt;，并使用 AppArmor 策略拒绝访问该文件。选手可以利用这个漏洞来禁用这个策略并读取文件。</description>
     </item>
     
