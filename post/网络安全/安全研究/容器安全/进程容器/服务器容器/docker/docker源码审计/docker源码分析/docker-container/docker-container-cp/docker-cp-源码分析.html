@@ -64,7 +64,7 @@ https://github.com/docker/cli/blob/v20.10.6/cli/command/container/cp.go#L43
 func NewCopyCommand(dockerCli command.Cli) *cobra.Command { var opts copyOptions cmd := &amp;cobra.Command{ ... Args: cli.ExactArgs(2), RunE: func(cmd *cobra.">
 <meta itemprop="datePublished" content="2021-04-27T08:27:47+00:00" />
 <meta itemprop="dateModified" content="2021-04-27T08:27:47+00:00" />
-<meta itemprop="wordCount" content="1665">
+<meta itemprop="wordCount" content="1724">
 
 
 
@@ -709,6 +709,23 @@ apiPath := &quot;/containers/&quot; + containerID + &quot;/archive&quot;
 		fatal(err)
 	}
 	...
+}
+</code></pre><h4 id="432-lcowfs">4.3.2 lcowfs</h4>
+<p>lcowfs中调用<code>extractarchive</code>实现解包</p>
+<p><a href="https://github.com/moby/moby/blob/v20.10.6/daemon/graphdriver/lcow/remotefs.go#L77">https://github.com/moby/moby/blob/v20.10.6/daemon/graphdriver/lcow/remotefs.go#L77</a></p>
+<pre><code class="language-go=" data-lang="go=">func (l *lcowfs) ExtractArchive(src io.Reader, dst string, opts *archive.TarOptions) error {
+    ...
+    if err := l.runRemoteFSProcess(input, nil, remotefs.ExtractArchiveCmd, dst); err != nil {
+}
+</code></pre><p><code>extractarchive</code>命令对应<code>ExtractArchive</code>函数</p>
+<p><a href="https://github.com/moby/moby/blob/v20.10.6/vendor/github.com/Microsoft/opengcs/service/gcsutils/remotefs/remotefs.go#L47">https://github.com/moby/moby/blob/v20.10.6/vendor/github.com/Microsoft/opengcs/service/gcsutils/remotefs/remotefs.go#L47</a></p>
+<pre><code class="language-go=" data-lang="go=">var Commands = map[string]Func{
+    ...
+    ExtractArchiveCmd: ExtractArchive,
+</code></pre><p><code>ExtractArchive</code>函数中调用<code>archive.Untar</code></p>
+<pre><code class="language-go=" data-lang="go=">func ExtractArchive(in io.Reader, out io.Writer, args []string) error {
+    ...
+    if err := archive.Untar(in, args[0], opts); err != nil {
 }
 </code></pre>
             </div>
