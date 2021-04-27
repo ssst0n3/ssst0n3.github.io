@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author"
+    content="">
+<meta name="description"
+    content="docker考古:如何确定docker-ce与containerd.io版本对应关系 以ubuntu focal为例
+确认docker-ce组件release时间 https://download.docker.com/linux/ubuntu/dists/focal/pool/stable/amd64/
+根据docker-ce的发布时间及docker-ce中的依赖关系，可以确定一个containerd.io的大致范围，选取较新版本即可。
+../ containerd.io_1.2.13-2_amd64.deb 2020-07-28 16:39:02 20.4 MiB containerd.io_1.3.7-1_amd64.deb 2020-10-08 20:39:20 23.2 MiB containerd.io_1.3.9-1_amd64.deb 2020-11-30 22:57:53 23.2 MiB containerd.io_1.4.3-1_amd64.deb 2020-12-09 01:55:15 26.8 MiB containerd.io_1.4.3-2_amd64.deb 2021-04-08 00:35:52 27.0 MiB containerd.io_1.4.4-1_amd64.deb 2021-04-08 00:35:53 27.0 MiB docker-ce-cli_19.03.10~3-0~ubuntu-focal_amd64.deb 2020-07-28 16:39:03 39.3 MiB docker-ce-cli_19.03.11~3-0~ubuntu-focal_amd64.deb 2020-07-28 16:39:04 39.3 MiB docker-ce-cli_19.03.12~3-0~ubuntu-focal_amd64.deb 2020-07-28 16:39:05 39.3 MiB docker-ce-cli_19.03.13~3-0~ubuntu-focal_amd64.deb 2020-10-08 20:39:21 42.1 MiB docker-ce-cli_19.03.14~3-0~ubuntu-focal_amd64.deb 2020-12-08 16:25:36 42.1 MiB docker-ce-cli_19.03.15~3-0~ubuntu-focal_amd64.deb 2021-02-25 07:28:46 42.1 MiB docker-ce-cli_19.03.9~3-0~ubuntu-focal_amd64.deb 2020-07-28 16:39:06 39." />
+<meta name="keywords" content="" />
+<meta name="robots" content="noodp" />
+<link rel="canonical" href="/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E8%BF%9B%E7%A8%8B%E5%AE%B9%E5%99%A8/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%B9%E5%99%A8/docker/%E5%8E%86%E5%8F%B2%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90%E4%B8%8E%E5%A4%8D%E7%8E%B0/%E5%A6%82%E4%BD%95%E8%8E%B7%E5%8F%96%E6%97%A7%E7%89%88%E6%9C%ACdocker/docker%E8%80%83%E5%8F%A4%E5%A6%82%E4%BD%95%E7%A1%AE%E5%AE%9Adocker-ce%E4%B8%8Econtainerd.io%E7%89%88%E6%9C%AC%E5%AF%B9%E5%BA%94%E5%85%B3%E7%B3%BB.html" />
+
+
+<title>
+    
+    docker考古:如何确定docker-ce与containerd.io版本对应关系 :: welcome to st0n3&#39;s blog 
+    
+</title>
+
+
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.2.1/css/flag-icon.min.css" rel="stylesheet"
+    type="text/css">
+
+
+
+<link rel="stylesheet" href="/main.min.de959d61dd13c2cd41136acd491ffb0749779e1afe37b1fed6d5cba0b7e1938d.css">
+
+
+
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#252627">
+<link rel="shortcut icon" href="/favicon.ico">
+<meta name="theme-color" content="#252627"><meta itemprop="name" content="docker考古:如何确定docker-ce与containerd.io版本对应关系">
+<meta itemprop="description" content="docker考古:如何确定docker-ce与containerd.io版本对应关系 以ubuntu focal为例
+确认docker-ce组件release时间 https://download.docker.com/linux/ubuntu/dists/focal/pool/stable/amd64/
+根据docker-ce的发布时间及docker-ce中的依赖关系，可以确定一个containerd.io的大致范围，选取较新版本即可。
+../ containerd.io_1.2.13-2_amd64.deb 2020-07-28 16:39:02 20.4 MiB containerd.io_1.3.7-1_amd64.deb 2020-10-08 20:39:20 23.2 MiB containerd.io_1.3.9-1_amd64.deb 2020-11-30 22:57:53 23.2 MiB containerd.io_1.4.3-1_amd64.deb 2020-12-09 01:55:15 26.8 MiB containerd.io_1.4.3-2_amd64.deb 2021-04-08 00:35:52 27.0 MiB containerd.io_1.4.4-1_amd64.deb 2021-04-08 00:35:53 27.0 MiB docker-ce-cli_19.03.10~3-0~ubuntu-focal_amd64.deb 2020-07-28 16:39:03 39.3 MiB docker-ce-cli_19.03.11~3-0~ubuntu-focal_amd64.deb 2020-07-28 16:39:04 39.3 MiB docker-ce-cli_19.03.12~3-0~ubuntu-focal_amd64.deb 2020-07-28 16:39:05 39.3 MiB docker-ce-cli_19.03.13~3-0~ubuntu-focal_amd64.deb 2020-10-08 20:39:21 42.1 MiB docker-ce-cli_19.03.14~3-0~ubuntu-focal_amd64.deb 2020-12-08 16:25:36 42.1 MiB docker-ce-cli_19.03.15~3-0~ubuntu-focal_amd64.deb 2021-02-25 07:28:46 42.1 MiB docker-ce-cli_19.03.9~3-0~ubuntu-focal_amd64.deb 2020-07-28 16:39:06 39.">
+<meta itemprop="datePublished" content="2021-04-23T09:13:15+00:00" />
+<meta itemprop="dateModified" content="2021-04-23T09:13:15+00:00" />
+<meta itemprop="wordCount" content="312">
+
+
+
+<meta itemprop="keywords" content="" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="docker考古:如何确定docker-ce与containerd.io版本对应关系"/>
+<meta name="twitter:description" content="docker考古:如何确定docker-ce与containerd.io版本对应关系 以ubuntu focal为例
+确认docker-ce组件release时间 https://download.docker.com/linux/ubuntu/dists/focal/pool/stable/amd64/
+根据docker-ce的发布时间及docker-ce中的依赖关系，可以确定一个containerd.io的大致范围，选取较新版本即可。
+../ containerd.io_1.2.13-2_amd64.deb 2020-07-28 16:39:02 20.4 MiB containerd.io_1.3.7-1_amd64.deb 2020-10-08 20:39:20 23.2 MiB containerd.io_1.3.9-1_amd64.deb 2020-11-30 22:57:53 23.2 MiB containerd.io_1.4.3-1_amd64.deb 2020-12-09 01:55:15 26.8 MiB containerd.io_1.4.3-2_amd64.deb 2021-04-08 00:35:52 27.0 MiB containerd.io_1.4.4-1_amd64.deb 2021-04-08 00:35:53 27.0 MiB docker-ce-cli_19.03.10~3-0~ubuntu-focal_amd64.deb 2020-07-28 16:39:03 39.3 MiB docker-ce-cli_19.03.11~3-0~ubuntu-focal_amd64.deb 2020-07-28 16:39:04 39.3 MiB docker-ce-cli_19.03.12~3-0~ubuntu-focal_amd64.deb 2020-07-28 16:39:05 39.3 MiB docker-ce-cli_19.03.13~3-0~ubuntu-focal_amd64.deb 2020-10-08 20:39:21 42.1 MiB docker-ce-cli_19.03.14~3-0~ubuntu-focal_amd64.deb 2020-12-08 16:25:36 42.1 MiB docker-ce-cli_19.03.15~3-0~ubuntu-focal_amd64.deb 2021-02-25 07:28:46 42.1 MiB docker-ce-cli_19.03.9~3-0~ubuntu-focal_amd64.deb 2020-07-28 16:39:06 39."/>
+
+
+
+
+<meta property="article:published_time" content="2021-04-23 09:13:15 &#43;0000 UTC" />
+
+
+
+
+
+
+
+    </head>
+
+    <body class="dark-theme">
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text">$ cd /home/st0n3</span>
+            <span class="logo__cursor"></span>
+        
+    </div>
+</a>
+
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="/aboutme.html">About</a></li><li><a href="/post.html">Blog</a></li><li><a href="/hackerbot">Hackerbot</a></li><li><a href="/skill_tree/">SkillTree</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+
+            <span class="theme-toggle"><svg class="theme-toggler" width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M22 41C32.4934 41 41 32.4934 41 22C41 11.5066 32.4934 3 22
+  3C11.5066 3 3 11.5066 3 22C3 32.4934 11.5066 41 22 41ZM7 22C7
+  13.7157 13.7157 7 22 7V37C13.7157 37 7 30.2843 7 22Z"/>
+</svg>
+</span>
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
+                
+    <main class="post">
+
+        <div class="post-info">
+            
+            </p>
+        </div>
+
+        <article>
+            <h2 class="post-title"><a href="/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E8%BF%9B%E7%A8%8B%E5%AE%B9%E5%99%A8/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%B9%E5%99%A8/docker/%E5%8E%86%E5%8F%B2%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90%E4%B8%8E%E5%A4%8D%E7%8E%B0/%E5%A6%82%E4%BD%95%E8%8E%B7%E5%8F%96%E6%97%A7%E7%89%88%E6%9C%ACdocker/docker%E8%80%83%E5%8F%A4%E5%A6%82%E4%BD%95%E7%A1%AE%E5%AE%9Adocker-ce%E4%B8%8Econtainerd.io%E7%89%88%E6%9C%AC%E5%AF%B9%E5%BA%94%E5%85%B3%E7%B3%BB.html">docker考古:如何确定docker-ce与containerd.io版本对应关系</a></h2>
+
+            
+
+            <div class="post-content">
+                <h1 id="docker考古如何确定docker-ce与containerdio版本对应关系">docker考古:如何确定docker-ce与containerd.io版本对应关系</h1>
+<p>以ubuntu focal为例</p>
+<h2 id="确认docker-ce组件release时间">确认docker-ce组件release时间</h2>
+<p><a href="https://download.docker.com/linux/ubuntu/dists/focal/pool/stable/amd64/">https://download.docker.com/linux/ubuntu/dists/focal/pool/stable/amd64/</a></p>
+<p>根据docker-ce的发布时间及docker-ce中的依赖关系，可以确定一个containerd.io的大致范围，选取较新版本即可。</p>
+<pre><code>../
+containerd.io_1.2.13-2_amd64.deb                    2020-07-28 16:39:02 20.4 MiB
+containerd.io_1.3.7-1_amd64.deb                     2020-10-08 20:39:20 23.2 MiB
+containerd.io_1.3.9-1_amd64.deb                     2020-11-30 22:57:53 23.2 MiB
+containerd.io_1.4.3-1_amd64.deb                     2020-12-09 01:55:15 26.8 MiB
+containerd.io_1.4.3-2_amd64.deb                     2021-04-08 00:35:52 27.0 MiB
+containerd.io_1.4.4-1_amd64.deb                     2021-04-08 00:35:53 27.0 MiB
+docker-ce-cli_19.03.10~3-0~ubuntu-focal_amd64.deb   2020-07-28 16:39:03 39.3 MiB
+docker-ce-cli_19.03.11~3-0~ubuntu-focal_amd64.deb   2020-07-28 16:39:04 39.3 MiB
+docker-ce-cli_19.03.12~3-0~ubuntu-focal_amd64.deb   2020-07-28 16:39:05 39.3 MiB
+docker-ce-cli_19.03.13~3-0~ubuntu-focal_amd64.deb   2020-10-08 20:39:21 42.1 MiB
+docker-ce-cli_19.03.14~3-0~ubuntu-focal_amd64.deb   2020-12-08 16:25:36 42.1 MiB
+docker-ce-cli_19.03.15~3-0~ubuntu-focal_amd64.deb   2021-02-25 07:28:46 42.1 MiB
+docker-ce-cli_19.03.9~3-0~ubuntu-focal_amd64.deb    2020-07-28 16:39:06 39.3 MiB
+docker-ce-cli_20.10.0~3-0~ubuntu-focal_amd64.deb    2020-12-09 01:55:17 37.3 MiB
+docker-ce-cli_20.10.1~3-0~ubuntu-focal_amd64.deb    2021-02-25 07:28:52 39.5 MiB
+docker-ce-cli_20.10.2~3-0~ubuntu-focal_amd64.deb    2021-02-25 07:28:52 39.5 MiB
+docker-ce-cli_20.10.3~3-0~ubuntu-focal_amd64.deb    2021-02-25 07:28:53 39.5 MiB
+docker-ce-cli_20.10.4~3-0~ubuntu-focal_amd64.deb    2021-02-26 15:21:41 39.5 MiB
+docker-ce-cli_20.10.5~3-0~ubuntu-focal_amd64.deb    2021-04-08 00:32:24 39.5 MiB
+docker-ce-cli_20.10.6~3-0~ubuntu-focal_amd64.deb    2021-04-12 11:34:34 39.5 MiB
+docker-ce_19.03.10~3-0~ubuntu-focal_amd64.deb       2020-07-28 16:39:06 21.5 MiB
+docker-ce_19.03.11~3-0~ubuntu-focal_amd64.deb       2020-07-28 16:39:07 21.5 MiB
+docker-ce_19.03.12~3-0~ubuntu-focal_amd64.deb       2020-07-28 16:39:07 21.5 MiB
+docker-ce_19.03.13~3-0~ubuntu-focal_amd64.deb       2020-10-08 20:39:21 21.5 MiB
+docker-ce_19.03.14~3-0~ubuntu-focal_amd64.deb       2020-12-08 16:25:36 21.7 MiB
+docker-ce_19.03.15~3-0~ubuntu-focal_amd64.deb       2021-02-25 07:28:55 21.7 MiB
+docker-ce_19.03.9~3-0~ubuntu-focal_amd64.deb        2020-07-28 16:39:08 21.5 MiB
+docker-ce_20.10.0~3-0~ubuntu-focal_amd64.deb        2020-12-09 01:55:21 23.6 MiB
+docker-ce_20.10.1~3-0~ubuntu-focal_amd64.deb        2021-02-25 07:28:56 23.6 MiB
+docker-ce_20.10.2~3-0~ubuntu-focal_amd64.deb        2021-02-25 07:28:56 23.6 MiB
+docker-ce_20.10.3~3-0~ubuntu-focal_amd64.deb        2021-02-25 07:28:57 23.6 MiB
+docker-ce_20.10.4~3-0~ubuntu-focal_amd64.deb        2021-02-26 15:21:46 23.6 MiB
+docker-ce_20.10.5~3-0~ubuntu-focal_amd64.deb        2021-04-08 00:32:25 23.6 MiB
+docker-ce_20.10.6~3-0~ubuntu-focal_amd64.deb        2021-04-12 11:34:37 23.6 MiB
+docker-scan-plugin_0.7.0~ubuntu-focal_amd64.deb     2021-04-12 11:34:38 3.7 MiB
+</code></pre><p>下载docker-ce安装包，解压查看control.tar.xz中的control文件，可以获取到依赖信息</p>
+<pre><code>st0n3@yoga:~/Downloads$ unar docker-ce_19.03.15_3-0_ubuntu-focal_amd64.deb 
+docker-ce_19.03.15_3-0_ubuntu-focal_amd64.deb: Ar
+  debian-binary  (4 B)... OK.
+  control.tar.xz  (2228 B)... OK.
+  data.tar.xz  (22752660 B)... OK.
+  _gpgbuilder  (1266 B)... OK.
+Successfully extracted to &quot;docker-ce_19.03.15_3-0_ubuntu-focal_amd64&quot;.
+st0n3@yoga:~/Downloads/docker-ce_19.03.15_3-0_ubuntu-focal_amd64$ unar control.tar.xz 
+control.tar.xz: Tar in XZ
+  ./  (dir)... OK.
+  ./conffiles  (61 B)... OK.
+  ./control  (1205 B)... OK.
+  ./md5sums  (440 B)... OK.
+  ./postinst  (2929 B)... OK.
+  ./postrm  (1209 B)... OK.
+  ./prerm  (179 B)... OK.
+Successfully extracted to &quot;control&quot;.
+st0n3@yoga:~/Downloads/docker-ce_19.03.15_3-0_ubuntu-focal_amd64$ cd control/
+st0n3@yoga:~/Downloads/docker-ce_19.03.15_3-0_ubuntu-focal_amd64/control$ ls
+conffiles  control  md5sums  postinst  postrm  prerm
+st0n3@yoga:~/Downloads/docker-ce_19.03.15_3-0_ubuntu-focal_amd64/control$ cat control 
+Package: docker-ce
+Version: 5:19.03.15~3-0~ubuntu-focal
+Architecture: amd64
+Maintainer: Docker &lt;support@docker.com&gt;
+Installed-Size: 107156
+Depends: docker-ce-cli, containerd.io (&gt;= 1.2.2-3), iptables, libseccomp2 (&gt;= 2.3.0), libc6 (&gt;= 2.8), libdevmapper1.02.1 (&gt;= 2:1.02.97), libsystemd0
+Recommends: aufs-tools, ca-certificates, cgroupfs-mount | cgroup-lite, git, pigz, xz-utils, libltdl7, apparmor
+Conflicts: docker (&lt;&lt; 1.5~), docker-engine, docker-engine-cs, docker.io, lxc-docker, lxc-docker-virtual-package
+...
+st0n3@yoga:~/Downloads/docker-ce_19.03.15_3-0_ubuntu-focal_amd64/control$ 
+</code></pre><h2 id="nightly">nightly</h2>
+<p>// TODO</p>
+
+            </div>
+        </article>
+
+        <hr />
+
+        <div class="post-info">
+  			</div>
+
+        
+    </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>&copy; 2021</span>
+            
+            <span></span>
+            <span> <a href="/posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a></span>
+        </div>
+    </div>
+    <div class="footer__inner">
+        <div class="footer__content">
+
+        </div>
+    </div>
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>Powered by <a href="http://gohugo.io">Hugo</a></span>
+            <span>Made with &#10084; by <a href="https://github.com/st0n3">st0n3</a></span>
+            <span>Based on <a href="https://github.com/rhazdon">rhazdon</a></span>
+        </div>
+    </div>
+
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      extensions: ["tex2jax.js"],
+      
+      jax: ["input/TeX", "output/CommonHTML"],
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+        displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+        processEscapes: true
+      },
+      "HTML-CSS": { fonts: ["TeX"] },
+      displayAlign: "left"
+    });
+  </script>
+
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_CHTML"></script>
+
+
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+
+<script type="text/javascript" src="/bundle.min.4c3fb12a087ceed4a52cb5d57068a9795c7069617a01ca70f788052ad66e1791779e6c72686e1dc0ca13dc03b0203204b6566bb0dd1ee80de2b7ff4d8fe53db2.js" integrity="sha512-TD&#43;xKgh87tSlLLXVcGipeVxwaWF6Acpw94gFKtZuF5F3nmxyaG4dwMoT3AOwIDIEtlZrsN0e6A3it/9Nj&#43;U9sg=="></script>
+
+
+
+    </body>
+</html>

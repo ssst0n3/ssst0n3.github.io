@@ -6,7 +6,40 @@
     <description>Recent content on welcome to st0n3&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 04 Mar 2021 11:33:26 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 27 Apr 2021 08:27:47 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>docker cp 源码分析</title>
+      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E8%BF%9B%E7%A8%8B%E5%AE%B9%E5%99%A8/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%B9%E5%99%A8/docker/docker%E6%BA%90%E7%A0%81%E5%AE%A1%E8%AE%A1/docker%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/docker-container/docker-container-cp/docker-cp-%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90.html</link>
+      <pubDate>Tue, 27 Apr 2021 08:27:47 +0000</pubDate>
+      
+      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E8%BF%9B%E7%A8%8B%E5%AE%B9%E5%99%A8/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%B9%E5%99%A8/docker/docker%E6%BA%90%E7%A0%81%E5%AE%A1%E8%AE%A1/docker%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/docker-container/docker-container-cp/docker-cp-%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90.html</guid>
+      <description>docker cp 源码分析 本文编写时，最新release为v20.10.6, 因此代码均为v20.10.6分支的代码
+1. docker cp简介 在容器和宿主机的文件系统直接复制文件。执行cp命令的入口有两个，分别是docker container cp和docker cp, 两者作用相同， 后者可能在未来会被删除。
+https://docs.docker.com/engine/reference/commandline/container_cp/
+2. 源码入口位置 由cli接收cp命令参数,发送至docker engine api
+cli与engine api的代码入口分别位于:
+https://github.com/docker/cli/blob/v20.10.6/cli/command/container/cp.go#L43
+https://github.com/moby/moby/blob/v20.10.6/api/server/router/container/copy.go
+3. docker-cli 执行cp命令的两个入口分别位于
+https://github.com/docker/cli/blob/v20.10.6/cli/command/container/cmd.go#L20
+func NewContainerCommand(dockerCli command.Cli) *cobra.Command { ... cmd.AddCommand( ... NewCopyCommand(dockerCli), ... https://github.com/docker/cli/blob/v20.10.6/cli/command/commands/commands.go#L96
+func AddCommands(cmd *cobra.Command, dockerCli command.Cli) { ... cmd.AddCommand( ... hide(container.NewCopyCommand(dockerCli)), ... 两者分别用docker cp命令和docker container cp命令，两者都调用同一个函数NewCopyCommand。
+https://github.com/docker/cli/blob/v20.10.6/cli/command/container/cp.go#L43
+func NewCopyCommand(dockerCli command.Cli) *cobra.Command { var opts copyOptions cmd := &amp;amp;cobra.Command{ ... Args: cli.ExactArgs(2), RunE: func(cmd *cobra.</description>
+    </item>
+    
+    <item>
+      <title>docker考古:如何确定docker-ce与containerd.io版本对应关系</title>
+      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E8%BF%9B%E7%A8%8B%E5%AE%B9%E5%99%A8/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%B9%E5%99%A8/docker/%E5%8E%86%E5%8F%B2%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90%E4%B8%8E%E5%A4%8D%E7%8E%B0/%E5%A6%82%E4%BD%95%E8%8E%B7%E5%8F%96%E6%97%A7%E7%89%88%E6%9C%ACdocker/docker%E8%80%83%E5%8F%A4%E5%A6%82%E4%BD%95%E7%A1%AE%E5%AE%9Adocker-ce%E4%B8%8Econtainerd.io%E7%89%88%E6%9C%AC%E5%AF%B9%E5%BA%94%E5%85%B3%E7%B3%BB.html</link>
+      <pubDate>Fri, 23 Apr 2021 09:13:15 +0000</pubDate>
+      
+      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E8%BF%9B%E7%A8%8B%E5%AE%B9%E5%99%A8/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%B9%E5%99%A8/docker/%E5%8E%86%E5%8F%B2%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90%E4%B8%8E%E5%A4%8D%E7%8E%B0/%E5%A6%82%E4%BD%95%E8%8E%B7%E5%8F%96%E6%97%A7%E7%89%88%E6%9C%ACdocker/docker%E8%80%83%E5%8F%A4%E5%A6%82%E4%BD%95%E7%A1%AE%E5%AE%9Adocker-ce%E4%B8%8Econtainerd.io%E7%89%88%E6%9C%AC%E5%AF%B9%E5%BA%94%E5%85%B3%E7%B3%BB.html</guid>
+      <description>docker考古:如何确定docker-ce与containerd.io版本对应关系 以ubuntu focal为例
+确认docker-ce组件release时间 https://download.docker.com/linux/ubuntu/dists/focal/pool/stable/amd64/
+根据docker-ce的发布时间及docker-ce中的依赖关系，可以确定一个containerd.io的大致范围，选取较新版本即可。
+../ containerd.io_1.2.13-2_amd64.deb 2020-07-28 16:39:02 20.4 MiB containerd.io_1.3.7-1_amd64.deb 2020-10-08 20:39:20 23.2 MiB containerd.io_1.3.9-1_amd64.deb 2020-11-30 22:57:53 23.2 MiB containerd.io_1.4.3-1_amd64.deb 2020-12-09 01:55:15 26.8 MiB containerd.io_1.4.3-2_amd64.deb 2021-04-08 00:35:52 27.0 MiB containerd.io_1.4.4-1_amd64.deb 2021-04-08 00:35:53 27.0 MiB docker-ce-cli_19.03.10~3-0~ubuntu-focal_amd64.deb 2020-07-28 16:39:03 39.3 MiB docker-ce-cli_19.03.11~3-0~ubuntu-focal_amd64.deb 2020-07-28 16:39:04 39.3 MiB docker-ce-cli_19.03.12~3-0~ubuntu-focal_amd64.deb 2020-07-28 16:39:05 39.3 MiB docker-ce-cli_19.03.13~3-0~ubuntu-focal_amd64.deb 2020-10-08 20:39:21 42.1 MiB docker-ce-cli_19.03.14~3-0~ubuntu-focal_amd64.deb 2020-12-08 16:25:36 42.1 MiB docker-ce-cli_19.03.15~3-0~ubuntu-focal_amd64.deb 2021-02-25 07:28:46 42.1 MiB docker-ce-cli_19.03.9~3-0~ubuntu-focal_amd64.deb 2020-07-28 16:39:06 39.</description>
+    </item>
+    
     <item>
       <title>[漏洞报告]APP_KEY在容器镜像bitnami/laravel中是固定的</title>
       <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E8%BF%9B%E7%A8%8B%E5%AE%B9%E5%99%A8/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%B9%E5%99%A8/docker/%E5%AE%89%E5%85%A8%E9%A3%8E%E9%99%A9/%E9%95%9C%E5%83%8F%E5%AE%89%E5%85%A8/%E6%9E%84%E5%BB%BA%E5%AE%89%E5%85%A8/CVE-2021-21979-APP_KEY-is-fixed-in-docker-image-bitnami/laravel/%E6%BC%8F%E6%B4%9E%E6%8A%A5%E5%91%8AAPP_KEY%E5%9C%A8%E5%AE%B9%E5%99%A8%E9%95%9C%E5%83%8Fbitnamilaravel%E4%B8%AD%E6%98%AF%E5%9B%BA%E5%AE%9A%E7%9A%84.html</link>
@@ -49,10 +82,9 @@ I am a security researcher. Seems I have found a vulnerability in docker image b
       <pubDate>Fri, 26 Feb 2021 03:56:21 +0000</pubDate>
       
       <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E8%BF%9B%E7%A8%8B%E5%AE%B9%E5%99%A8/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%B9%E5%99%A8/docker/%E5%8E%86%E5%8F%B2%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90%E4%B8%8E%E5%A4%8D%E7%8E%B0/linux-security-features/what-you-can-actually-do/LSM/apparmor/CVE-2019-16884/CVE-2019-16884%E5%88%86%E6%9E%90%E4%B8%8E%E5%A4%8D%E7%8E%B0.html</guid>
-      <description>CVE-2019-16884分析与复现 一、基本信息    条目 详情 备注     项目地址 https://github.com/opencontainers/runc    发布日期 2019-09-25    CVE-ID CVE-2019-16884 https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2019-16884   EDB-ID \ \   cvedetails https://www.cvedetails.com/cve/CVE-2019-16884/ \   影响范围 runc &amp;lt;= 1.0.0-rc8    修复版本 1.0.0-rc9 d736ef14f0288d6993a1845745d6756cfc9ddd5a   CVSS 7.5 CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:H/A:N     二、runc简介 runc是一个根据OCI规范实现的CLI工具，用于生成和运行容器，docker的runtime使用的就是runc。
-三、漏洞简介 1. 简介 在容器镜像中可以声明一个VOLUME, 挂载至/proc, 欺骗runc使其认为AppArmor已经成功应用，从而绕过AppArmor策略。
-这个漏洞由Adam Iwaniuk发现，并在DragonSector CTF 2019期间披露。
-这个CTF题目挑战将一个文件挂载到/flag-&amp;lt;random&amp;gt;，并使用 AppArmor 策略拒绝访问该文件。选手可以利用这个漏洞来禁用这个策略并读取文件。</description>
+      <description>CVE-2019-16884分析与复现 一、基本信息    条目 详情 备注     项目地址 https://github.com/opencontainers/runc    发布日期 2019-09-25    CVE-ID CVE-2019-16884 https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2019-16884   EDB-ID \ \   exploits https://twitter.com/adam_iwaniuk/status/1175741830136291328
+https://gist.github.com/leoluk/2513b6bbff8aa5cd623f3d7d7f20871a    cvedetails https://www.cvedetails.com/cve/CVE-2019-16884/ \   影响范围 runc &amp;lt;= 1.0.0-rc8    修复版本 1.0.0-rc9 d736ef14f0288d6993a1845745d6756cfc9ddd5a   CVSS 7.5 CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:H/A:N     二、runc简介 runc是一个根据OCI规范实现的CLI工具，用于生成和运行容器，docker的runtime使用的就是runc。
+三、漏洞简介 1. 简介 在容器镜像中可以声明一个VOLUME, 挂载至/proc, 欺骗runc使其认为AppArmor已经成功应用，从而绕过AppArmor策略。</description>
     </item>
     
     <item>
@@ -211,7 +243,8 @@ $$ \begin{align} &amp;amp; p^{-1} \cdot p \equiv 1 \mod q \newline &amp;amp; q^{
       <pubDate>Mon, 20 Jul 2020 02:00:00 +0000</pubDate>
       
       <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90%E4%B8%8E%E5%A4%8D%E7%8E%B0%E6%A8%A1%E6%9D%BF.html</guid>
-      <description>漏洞分析与复现模板 一、基本信息    条目 详情 备注     项目地址 https://github.com/spring-cloud/spring-cloud-config    发布日期 2019-04-16    CVE-ID CVE-2019-3799 https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2019-3799   EDB-ID EDB-46772 https://www.exploit-db.com/exploits/46772   cvedetails https://www.cvedetails.com/cve/CVE-2019-3799/ \   影响范围 spring-cloud-config 2.1.0-2.1.1, 2.0.0-2.0.3, 1.4.0-1.4.5 及更旧版本 \   修复版本 2.1.2, 2.0.4, 1.4.6 \   CVSS 7.5 CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N     二、组件简介 三、漏洞介绍 1. 简介 2. 影响 四、漏洞复现 五、漏洞分析 六、漏洞修复分析 1. 修复分析 2.</description>
+      <description>漏洞分析与复现模板 一、基本信息    条目 详情 备注     项目地址 https://github.com/spring-cloud/spring-cloud-config    发布日期 2019-04-16    CVE-ID CVE-2019-3799 https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2019-3799   EDB-ID EDB-46772 https://www.exploit-db.com/exploits/46772   exploits exp1
+exp2    cvedetails https://www.cvedetails.com/cve/CVE-2019-3799/ \   影响范围 spring-cloud-config 2.1.0-2.1.1, 2.0.0-2.0.3, 1.4.0-1.4.5 及更旧版本 \   修复版本 2.1.2, 2.0.4, 1.4.6 \   CVSS 7.5 CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N    发现人 https://twitter.com/wcbowling     二、组件简介 三、漏洞介绍 1.</description>
     </item>
     
     <item>

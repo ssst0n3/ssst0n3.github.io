@@ -7,7 +7,8 @@
 <meta name="author"
     content="">
 <meta name="description"
-    content="漏洞分析与复现模板 一、基本信息    条目 详情 备注     项目地址 https://github.com/spring-cloud/spring-cloud-config    发布日期 2019-04-16    CVE-ID CVE-2019-3799 https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2019-3799   EDB-ID EDB-46772 https://www.exploit-db.com/exploits/46772   cvedetails https://www.cvedetails.com/cve/CVE-2019-3799/ \   影响范围 spring-cloud-config 2.1.0-2.1.1, 2.0.0-2.0.3, 1.4.0-1.4.5 及更旧版本 \   修复版本 2.1.2, 2.0.4, 1.4.6 \   CVSS 7.5 CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N     二、组件简介 三、漏洞介绍 1. 简介 2. 影响 四、漏洞复现 五、漏洞分析 六、漏洞修复分析 1. 修复分析 2." />
+    content="漏洞分析与复现模板 一、基本信息    条目 详情 备注     项目地址 https://github.com/spring-cloud/spring-cloud-config    发布日期 2019-04-16    CVE-ID CVE-2019-3799 https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2019-3799   EDB-ID EDB-46772 https://www.exploit-db.com/exploits/46772   exploits exp1
+exp2    cvedetails https://www.cvedetails.com/cve/CVE-2019-3799/ \   影响范围 spring-cloud-config 2.1.0-2.1.1, 2.0.0-2.0.3, 1.4.0-1.4.5 及更旧版本 \   修复版本 2.1.2, 2.0.4, 1.4.6 \   CVSS 7.5 CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N    发现人 https://twitter.com/wcbowling     二、组件简介 三、漏洞介绍 1." />
 <meta name="keywords" content="" />
 <meta name="robots" content="noodp" />
 <link rel="canonical" href="/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90%E4%B8%8E%E5%A4%8D%E7%8E%B0%E6%A8%A1%E6%9D%BF.html" />
@@ -37,17 +38,19 @@
 <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#252627">
 <link rel="shortcut icon" href="/favicon.ico">
 <meta name="theme-color" content="#252627"><meta itemprop="name" content="漏洞分析与复现模板">
-<meta itemprop="description" content="漏洞分析与复现模板 一、基本信息    条目 详情 备注     项目地址 https://github.com/spring-cloud/spring-cloud-config    发布日期 2019-04-16    CVE-ID CVE-2019-3799 https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2019-3799   EDB-ID EDB-46772 https://www.exploit-db.com/exploits/46772   cvedetails https://www.cvedetails.com/cve/CVE-2019-3799/ \   影响范围 spring-cloud-config 2.1.0-2.1.1, 2.0.0-2.0.3, 1.4.0-1.4.5 及更旧版本 \   修复版本 2.1.2, 2.0.4, 1.4.6 \   CVSS 7.5 CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N     二、组件简介 三、漏洞介绍 1. 简介 2. 影响 四、漏洞复现 五、漏洞分析 六、漏洞修复分析 1. 修复分析 2.">
+<meta itemprop="description" content="漏洞分析与复现模板 一、基本信息    条目 详情 备注     项目地址 https://github.com/spring-cloud/spring-cloud-config    发布日期 2019-04-16    CVE-ID CVE-2019-3799 https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2019-3799   EDB-ID EDB-46772 https://www.exploit-db.com/exploits/46772   exploits exp1
+exp2    cvedetails https://www.cvedetails.com/cve/CVE-2019-3799/ \   影响范围 spring-cloud-config 2.1.0-2.1.1, 2.0.0-2.0.3, 1.4.0-1.4.5 及更旧版本 \   修复版本 2.1.2, 2.0.4, 1.4.6 \   CVSS 7.5 CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N    发现人 https://twitter.com/wcbowling     二、组件简介 三、漏洞介绍 1.">
 <meta itemprop="datePublished" content="2020-07-20T02:00:00+00:00" />
 <meta itemprop="dateModified" content="2020-07-20T02:00:00+00:00" />
-<meta itemprop="wordCount" content="48">
+<meta itemprop="wordCount" content="60">
 
 
 
 <meta itemprop="keywords" content="" />
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="漏洞分析与复现模板"/>
-<meta name="twitter:description" content="漏洞分析与复现模板 一、基本信息    条目 详情 备注     项目地址 https://github.com/spring-cloud/spring-cloud-config    发布日期 2019-04-16    CVE-ID CVE-2019-3799 https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2019-3799   EDB-ID EDB-46772 https://www.exploit-db.com/exploits/46772   cvedetails https://www.cvedetails.com/cve/CVE-2019-3799/ \   影响范围 spring-cloud-config 2.1.0-2.1.1, 2.0.0-2.0.3, 1.4.0-1.4.5 及更旧版本 \   修复版本 2.1.2, 2.0.4, 1.4.6 \   CVSS 7.5 CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N     二、组件简介 三、漏洞介绍 1. 简介 2. 影响 四、漏洞复现 五、漏洞分析 六、漏洞修复分析 1. 修复分析 2."/>
+<meta name="twitter:description" content="漏洞分析与复现模板 一、基本信息    条目 详情 备注     项目地址 https://github.com/spring-cloud/spring-cloud-config    发布日期 2019-04-16    CVE-ID CVE-2019-3799 https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2019-3799   EDB-ID EDB-46772 https://www.exploit-db.com/exploits/46772   exploits exp1
+exp2    cvedetails https://www.cvedetails.com/cve/CVE-2019-3799/ \   影响范围 spring-cloud-config 2.1.0-2.1.1, 2.0.0-2.0.3, 1.4.0-1.4.5 及更旧版本 \   修复版本 2.1.2, 2.0.4, 1.4.6 \   CVSS 7.5 CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N    发现人 https://twitter.com/wcbowling     二、组件简介 三、漏洞介绍 1."/>
 
 
 
@@ -150,6 +153,11 @@
 <td><a href="https://www.exploit-db.com/exploits/46772">https://www.exploit-db.com/exploits/46772</a></td>
 </tr>
 <tr>
+<td>exploits</td>
+<td>exp1<br>exp2</td>
+<td></td>
+</tr>
+<tr>
 <td>cvedetails</td>
 <td><a href="https://www.cvedetails.com/cve/CVE-2019-3799/">https://www.cvedetails.com/cve/CVE-2019-3799/</a></td>
 <td>\</td>
@@ -169,6 +177,11 @@
 <td>7.5 CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N</td>
 <td></td>
 </tr>
+<tr>
+<td>发现人</td>
+<td><a href="https://twitter.com/wcbowling">https://twitter.com/wcbowling</a></td>
+<td></td>
+</tr>
 </tbody>
 </table>
 <h2 id="二组件简介">二、组件简介</h2>
@@ -180,7 +193,34 @@
 <h2 id="六漏洞修复分析">六、漏洞修复分析</h2>
 <h3 id="1-修复分析">1. 修复分析</h3>
 <h3 id="2-当前修复局限性">2. 当前修复局限性</h3>
-<h2 id="六总结">六、总结</h2>
+<h2 id="七同类问题排查方法">七、同类问题排查方法</h2>
+<table>
+<thead>
+<tr>
+<th>level</th>
+<th>排查方法</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>设计层</td>
+<td></td>
+</tr>
+<tr>
+<td>安全模型</td>
+<td></td>
+</tr>
+<tr>
+<td>Fuzz</td>
+<td></td>
+</tr>
+<tr>
+<td>codeql</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h2 id="八总结">八、总结</h2>
 <h2 id="参考链接">参考链接</h2>
 
             </div>
