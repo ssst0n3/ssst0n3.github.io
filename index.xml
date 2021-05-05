@@ -6,26 +6,29 @@
     <description>Recent content on welcome to st0n3&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 27 Apr 2021 08:27:47 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 05 May 2021 15:32:10 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>docker cp 源码分析</title>
-      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E8%BF%9B%E7%A8%8B%E5%AE%B9%E5%99%A8/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%B9%E5%99%A8/docker/docker%E6%BA%90%E7%A0%81%E5%AE%A1%E8%AE%A1/docker%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/docker-container/docker-container-cp/docker-cp-%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90.html</link>
-      <pubDate>Tue, 27 Apr 2021 08:27:47 +0000</pubDate>
+      <title>[漏洞报告] CVE-2021-31856: Meshery sql注入</title>
+      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E8%BF%9B%E7%A8%8B%E5%AE%B9%E5%99%A8/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%B9%E5%99%A8/docker/%E7%94%9F%E6%80%81%E5%AE%89%E5%85%A8/Solutions/Service-Mesh/meshery/CVE-2021-31856/%E6%BC%8F%E6%B4%9E%E6%8A%A5%E5%91%8A-CVE-2021-31856-Meshery-sql%E6%B3%A8%E5%85%A5.html</link>
+      <pubDate>Wed, 05 May 2021 15:32:10 +0000</pubDate>
       
-      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E8%BF%9B%E7%A8%8B%E5%AE%B9%E5%99%A8/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%B9%E5%99%A8/docker/docker%E6%BA%90%E7%A0%81%E5%AE%A1%E8%AE%A1/docker%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/docker-container/docker-container-cp/docker-cp-%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90.html</guid>
-      <description>docker cp 源码分析 本文编写时，最新release为v20.10.6, 因此代码均为v20.10.6分支的代码
-1. docker cp简介 在容器和宿主机的文件系统直接复制文件。执行cp命令的入口有两个，分别是docker container cp和docker cp, 两者作用相同， 后者可能在未来会被删除。
-https://docs.docker.com/engine/reference/commandline/container_cp/
-2. 源码入口位置 由cli接收cp命令参数,发送至docker engine api
-cli与engine api的代码入口分别位于:
-https://github.com/docker/cli/blob/v20.10.6/cli/command/container/cp.go#L43
-https://github.com/moby/moby/blob/v20.10.6/api/server/router/container/copy.go
-3. docker-cli 执行cp命令的两个入口分别位于
-https://github.com/docker/cli/blob/v20.10.6/cli/command/container/cmd.go#L20
-func NewContainerCommand(dockerCli command.Cli) *cobra.Command { ... cmd.AddCommand( ... NewCopyCommand(dockerCli), ... https://github.com/docker/cli/blob/v20.10.6/cli/command/commands/commands.go#L96
-func AddCommands(cmd *cobra.Command, dockerCli command.Cli) { ... cmd.AddCommand( ... hide(container.NewCopyCommand(dockerCli)), ... 两者分别用docker cp命令和docker container cp命令，两者都调用同一个函数NewCopyCommand。
-https://github.com/docker/cli/blob/v20.10.6/cli/command/container/cp.go#L43
-func NewCopyCommand(dockerCli command.Cli) *cobra.Command { var opts copyOptions cmd := &amp;amp;cobra.Command{ ... Args: cli.ExactArgs(2), RunE: func(cmd *cobra.</description>
+      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E8%BF%9B%E7%A8%8B%E5%AE%B9%E5%99%A8/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%B9%E5%99%A8/docker/%E7%94%9F%E6%80%81%E5%AE%89%E5%85%A8/Solutions/Service-Mesh/meshery/CVE-2021-31856/%E6%BC%8F%E6%B4%9E%E6%8A%A5%E5%91%8A-CVE-2021-31856-Meshery-sql%E6%B3%A8%E5%85%A5.html</guid>
+      <description>[漏洞报告] CVE-2021-31856: Meshery sql注入 最近，我在学习codeql时，偶然间发现了Meshery中的一个sql注入漏洞。问题本身比较简单，但codeql在其中的作用，可以作为其效果的示例，我会在后续的文章中尝试介绍一下如何使用codeql发现类似漏洞。
+报告给meshery4天后，他们完成了修复,并帮我申请了CVE编号（CVE-2021-31856）。
+    item 描述     项目地址 https://github.com/layer5io/meshery   公布日期 2021-04-28   CVE-ID CVE-2021-31856   影响版本 v0.5.2   修复版本 v0.5.3
+https://github.com/layer5io/meshery/pull/2745   CVSS 7.5 CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N   作者 https://github.com/ssst0n3    1. 描述 Meshery是CNCF成员之一(https://landscape.cncf.io/?category=cncf-members&amp;amp;fullscreen=yes&amp;amp;grouping=category&amp;amp;selected=meshery)。作为服务网格管理平面，Meshery 支持任何服务网格及其工作负载的采用、操作和管理。
+GetMesheryPatterns() 函数(位于meshery/models/meshery_pattern_persister.go)存在一个SQL注入漏洞，注入点是/api/experimental/patternfile?order=id%3Bselect(randomblob(1000000000))&amp;amp;page=0&amp;amp;page_size=0中的order参数。
+2. PoC http://&amp;lt;IP&amp;gt;:9081/api/experimental/patternfile?order=id%3Bselect(randomblob(1000000000))&amp;amp;page=0&amp;amp;page_size=0 watch the video
+Your browser doesn&#39;t support HTML5 video. Here is a link to the video instead.</description>
+    </item>
+    
+    <item>
+      <title>[Vulnerability Report] CVE-2021-31856: A Sql Injection in Meshery</title>
+      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E8%BF%9B%E7%A8%8B%E5%AE%B9%E5%99%A8/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%B9%E5%99%A8/docker/%E7%94%9F%E6%80%81%E5%AE%89%E5%85%A8/Solutions/Service-Mesh/meshery/CVE-2021-31856/Vulnerability-Report-CVE-2021-31856-A-Sql-Injection-in-Meshery.html</link>
+      <pubDate>Wed, 05 May 2021 13:33:53 +0000</pubDate>
+      
+      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E8%BF%9B%E7%A8%8B%E5%AE%B9%E5%99%A8/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%B9%E5%99%A8/docker/%E7%94%9F%E6%80%81%E5%AE%89%E5%85%A8/Solutions/Service-Mesh/meshery/CVE-2021-31856/Vulnerability-Report-CVE-2021-31856-A-Sql-Injection-in-Meshery.html</guid>
+      <description>[Vulnerability Report] CVE-2021-31856: A Sql Injection in Meshery    item details note     project https://github.com/layer5io/meshery    date announced 2021-04-28    CVE-ID CVE-2021-31856 https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2021-31856   EDB-ID \    Vulnerable Version v0.5.2 \   Patched Version v0.5.3 https://github.com/layer5io/meshery/pull/2745   CVSS 7.5 CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N    Author https://github.com/ssst0n3     1. Description GetMesheryPatterns() function in meshery/models/meshery_pattern_persister.go has SQL Injection vulnerability via the /api/experimental/patternfile?</description>
     </item>
     
     <item>
@@ -245,7 +248,7 @@ $$ \begin{align} &amp;amp; p^{-1} \cdot p \equiv 1 \mod q \newline &amp;amp; q^{
       
       <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90%E4%B8%8E%E5%A4%8D%E7%8E%B0%E6%A8%A1%E6%9D%BF.html</guid>
       <description>漏洞分析与复现模板 一、基本信息    条目 详情 备注     项目地址 https://github.com/spring-cloud/spring-cloud-config    发布日期 2019-04-16    CVE-ID CVE-2019-3799 https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2019-3799   EDB-ID EDB-46772 https://www.exploit-db.com/exploits/46772   exploits exp1
-exp2    cvedetails https://www.cvedetails.com/cve/CVE-2019-3799/ \   影响范围 spring-cloud-config 2.1.0-2.1.1, 2.0.0-2.0.3, 1.4.0-1.4.5 及更旧版本 \   修复版本 2.1.2, 2.0.4, 1.4.6 \   CVSS 7.5 CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N    发现人 https://twitter.com/wcbowling     二、组件简介 三、漏洞介绍 1.</description>
+exp2    cvedetails https://www.cvedetails.com/cve/CVE-2019-3799/ \   影响范围 spring-cloud-config 2.1.0-2.1.1, 2.0.0-2.0.3, 1.4.0-1.4.5 及更旧版本 \   修复版本 2.1.2, 2.0.4, 1.4.6 \   CVSS 8.3 CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:L    发现人 http://github.com/ssst0n3     二、组件简介 三、漏洞详情 1.</description>
     </item>
     
     <item>
