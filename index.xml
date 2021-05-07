@@ -42,7 +42,7 @@ Your browser doesn&#39;t support HTML5 video. Here is a link to the video instea
  The reexec package facilitates the busybox style reexec of the docker binary that we require because of the forking limitations of using Go.
  fork函数将运行着的程序分成2个（几乎）完全一样的进程，每个进程都启动一个从代码的同一位置开始执行的线程。
 在Go语言中，由于屏蔽了进程、线程的概念，而只提供了goroutine的概念，导致我们无法直接操作fork调用。我们常用的os/exec是相当于fork+exec的方案，它启动一个新的子进程，执行不共享任何内存或 Go 运行时的不同可执行文件。
-因此docker自行实现了reexec库，来提供类似与fork的能力，但并不是一个特别高深的概念，实现也很简单。实际上，reexec仍然会调用os/exec调用一个子进程，与直接使用os/exec的区别在于这个子进程的二进制文件是docker本身，它执行的代码是docker中的一个函数。
+因此docker自行实现了reexec库，来提供类似于fork的能力，但并不是一个特别高深的概念，实现也很简单。实际上，reexec仍然会调用os/exec调用一个子进程，与直接使用os/exec的区别在于这个子进程的二进制文件是docker本身，它执行的代码是docker中的一个函数。
 2. reexec库使用介绍 在具体分析reexec前，我们先看一下reexec的使用。
 在程序主体逻辑执行前，调用reexec.Init(),这个函数用于判断当前进入程序主体逻辑，还是进入reexec子命令。
 https://github.com/moby/moby/blob/v20.10.6/cmd/dockerd/docker.go#L72-L74
@@ -52,6 +52,27 @@ reexec.Register(&amp;quot;docker-tar&amp;quot;, tar) 在使用时，调用reexec
 https://github.com/moby/moby/blob/v20.10.6/pkg/chrootarchive/archive_unix.go#L178
 cmd := reexec.Command(&amp;quot;docker-tar&amp;quot;, relSrc, root) 使用时只需增加以上3个调用即可。
 3. reexec实现分析 3.1 reexec.</description>
+    </item>
+    
+    <item>
+      <title>docker cp 源码分析</title>
+      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E8%BF%9B%E7%A8%8B%E5%AE%B9%E5%99%A8/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%B9%E5%99%A8/docker/docker%E6%BA%90%E7%A0%81%E5%AE%A1%E8%AE%A1/docker%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/docker-container/docker-container-cp/docker-cp-%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90.html</link>
+      <pubDate>Tue, 27 Apr 2021 08:27:47 +0000</pubDate>
+      
+      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E8%BF%9B%E7%A8%8B%E5%AE%B9%E5%99%A8/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%B9%E5%99%A8/docker/docker%E6%BA%90%E7%A0%81%E5%AE%A1%E8%AE%A1/docker%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/docker-container/docker-container-cp/docker-cp-%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90.html</guid>
+      <description>tags: container,源码分析 docker cp 源码分析 本文编写时，最新release为v20.10.6, 因此代码均为v20.10.6分支的代码
+1. docker cp简介 在容器和宿主机的文件系统直接复制文件。执行cp命令的入口有两个，分别是docker container cp和docker cp, 两者作用相同， 后者可能在未来会被删除。
+https://docs.docker.com/engine/reference/commandline/container_cp/
+2. 源码入口位置 由cli接收cp命令参数,发送至docker engine api
+cli与engine api的代码入口分别位于:
+https://github.com/docker/cli/blob/v20.10.6/cli/command/container/cp.go#L43
+https://github.com/moby/moby/blob/v20.10.6/api/server/router/container/copy.go
+3. docker-cli 执行cp命令的两个入口分别位于
+https://github.com/docker/cli/blob/v20.10.6/cli/command/container/cmd.go#L20
+func NewContainerCommand(dockerCli command.Cli) *cobra.Command { ... cmd.AddCommand( ... NewCopyCommand(dockerCli), ... https://github.com/docker/cli/blob/v20.10.6/cli/command/commands/commands.go#L96
+func AddCommands(cmd *cobra.Command, dockerCli command.Cli) { ... cmd.AddCommand( ... hide(container.NewCopyCommand(dockerCli)), ... 两者分别用docker cp命令和docker container cp命令，两者都调用同一个函数NewCopyCommand。
+https://github.com/docker/cli/blob/v20.10.6/cli/command/container/cp.go#L43
+func NewCopyCommand(dockerCli command.Cli) *cobra.Command { var opts copyOptions cmd := &amp;amp;cobra.Command{ ... Args: cli.</description>
     </item>
     
     <item>

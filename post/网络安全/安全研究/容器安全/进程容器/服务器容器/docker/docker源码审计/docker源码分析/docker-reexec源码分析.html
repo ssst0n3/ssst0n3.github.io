@@ -12,7 +12,7 @@
  The reexec package facilitates the busybox style reexec of the docker binary that we require because of the forking limitations of using Go.
  fork函数将运行着的程序分成2个（几乎）完全一样的进程，每个进程都启动一个从代码的同一位置开始执行的线程。
 在Go语言中，由于屏蔽了进程、线程的概念，而只提供了goroutine的概念，导致我们无法直接操作fork调用。我们常用的os/exec是相当于fork&#43;exec的方案，它启动一个新的子进程，执行不共享任何内存或 Go 运行时的不同可执行文件。
-因此docker自行实现了reexec库，来提供类似与fork的能力，但并不是一个特别高深的概念，实现也很简单。实际上，reexec仍然会调用os/exec调用一个子进程，与直接使用os/exec的区别在于这个子进程的二进制文件是docker本身，它执行的代码是docker中的一个函数。
+因此docker自行实现了reexec库，来提供类似于fork的能力，但并不是一个特别高深的概念，实现也很简单。实际上，reexec仍然会调用os/exec调用一个子进程，与直接使用os/exec的区别在于这个子进程的二进制文件是docker本身，它执行的代码是docker中的一个函数。
 2. reexec库使用介绍 在具体分析reexec前，我们先看一下reexec的使用。
 在程序主体逻辑执行前，调用reexec.Init(),这个函数用于判断当前进入程序主体逻辑，还是进入reexec子命令。
 https://github.com/moby/moby/blob/v20.10.6/cmd/dockerd/docker.go#L72-L74
@@ -56,7 +56,7 @@ cmd := reexec.Command(&amp;quot;docker-tar&amp;quot;, relSrc, root) 使用时只
  The reexec package facilitates the busybox style reexec of the docker binary that we require because of the forking limitations of using Go.
  fork函数将运行着的程序分成2个（几乎）完全一样的进程，每个进程都启动一个从代码的同一位置开始执行的线程。
 在Go语言中，由于屏蔽了进程、线程的概念，而只提供了goroutine的概念，导致我们无法直接操作fork调用。我们常用的os/exec是相当于fork&#43;exec的方案，它启动一个新的子进程，执行不共享任何内存或 Go 运行时的不同可执行文件。
-因此docker自行实现了reexec库，来提供类似与fork的能力，但并不是一个特别高深的概念，实现也很简单。实际上，reexec仍然会调用os/exec调用一个子进程，与直接使用os/exec的区别在于这个子进程的二进制文件是docker本身，它执行的代码是docker中的一个函数。
+因此docker自行实现了reexec库，来提供类似于fork的能力，但并不是一个特别高深的概念，实现也很简单。实际上，reexec仍然会调用os/exec调用一个子进程，与直接使用os/exec的区别在于这个子进程的二进制文件是docker本身，它执行的代码是docker中的一个函数。
 2. reexec库使用介绍 在具体分析reexec前，我们先看一下reexec的使用。
 在程序主体逻辑执行前，调用reexec.Init(),这个函数用于判断当前进入程序主体逻辑，还是进入reexec子命令。
 https://github.com/moby/moby/blob/v20.10.6/cmd/dockerd/docker.go#L72-L74
@@ -80,7 +80,7 @@ cmd := reexec.Command(&quot;docker-tar&quot;, relSrc, root) 使用时只需增�
  The reexec package facilitates the busybox style reexec of the docker binary that we require because of the forking limitations of using Go.
  fork函数将运行着的程序分成2个（几乎）完全一样的进程，每个进程都启动一个从代码的同一位置开始执行的线程。
 在Go语言中，由于屏蔽了进程、线程的概念，而只提供了goroutine的概念，导致我们无法直接操作fork调用。我们常用的os/exec是相当于fork&#43;exec的方案，它启动一个新的子进程，执行不共享任何内存或 Go 运行时的不同可执行文件。
-因此docker自行实现了reexec库，来提供类似与fork的能力，但并不是一个特别高深的概念，实现也很简单。实际上，reexec仍然会调用os/exec调用一个子进程，与直接使用os/exec的区别在于这个子进程的二进制文件是docker本身，它执行的代码是docker中的一个函数。
+因此docker自行实现了reexec库，来提供类似于fork的能力，但并不是一个特别高深的概念，实现也很简单。实际上，reexec仍然会调用os/exec调用一个子进程，与直接使用os/exec的区别在于这个子进程的二进制文件是docker本身，它执行的代码是docker中的一个函数。
 2. reexec库使用介绍 在具体分析reexec前，我们先看一下reexec的使用。
 在程序主体逻辑执行前，调用reexec.Init(),这个函数用于判断当前进入程序主体逻辑，还是进入reexec子命令。
 https://github.com/moby/moby/blob/v20.10.6/cmd/dockerd/docker.go#L72-L74
@@ -171,7 +171,7 @@ cmd := reexec.Command(&quot;docker-tar&quot;, relSrc, root) 使用时只需增�
 </blockquote>
 <p>fork函数将运行着的程序分成2个（几乎）完全一样的进程，每个进程都启动一个从代码的同一位置开始执行的线程。</p>
 <p>在Go语言中，由于屏蔽了进程、线程的概念，而只提供了<code>goroutine</code>的概念，导致我们无法直接操作<code>fork</code>调用。我们常用的<code>os/exec</code>是相当于<code>fork+exec</code>的方案，它启动一个新的子进程，执行不共享任何内存或 Go 运行时的不同可执行文件。</p>
-<p>因此docker自行实现了reexec库，来提供类似与fork的能力，但并不是一个特别高深的概念，实现也很简单。实际上，reexec仍然会调用<code>os/exec</code>调用一个子进程，与直接使用<code>os/exec</code>的区别在于这个子进程的二进制文件是docker本身，它执行的代码是docker中的一个函数。</p>
+<p>因此docker自行实现了reexec库，来提供类似于fork的能力，但并不是一个特别高深的概念，实现也很简单。实际上，reexec仍然会调用<code>os/exec</code>调用一个子进程，与直接使用<code>os/exec</code>的区别在于这个子进程的二进制文件是docker本身，它执行的代码是docker中的一个函数。</p>
 <h2 id="2-reexec库使用介绍">2. reexec库使用介绍</h2>
 <p>在具体分析reexec前，我们先看一下reexec的使用。</p>
 <p>在程序主体逻辑执行前，调用<code>reexec.Init()</code>,这个函数用于判断当前进入程序主体逻辑，还是进入reexec子命令。</p>
