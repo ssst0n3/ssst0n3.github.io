@@ -13,7 +13,7 @@
       <pubDate>Wed, 05 May 2021 15:32:10 +0000</pubDate>
       
       <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E8%BF%9B%E7%A8%8B%E5%AE%B9%E5%99%A8/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%B9%E5%99%A8/docker/%E7%94%9F%E6%80%81%E5%AE%89%E5%85%A8/Solutions/Service-Mesh/meshery/CVE-2021-31856/%E6%BC%8F%E6%B4%9E%E6%8A%A5%E5%91%8A-CVE-2021-31856-Meshery-sql%E6%B3%A8%E5%85%A5.html</guid>
-      <description>[漏洞报告] CVE-2021-31856: Meshery sql注入 最近，我在学习codeql时，偶然间发现了Meshery中的一个sql注入漏洞。问题本身比较简单，但codeql在其中的作用，可以作为其效果的示例，我会在后续的文章中尝试介绍一下如何使用codeql发现类似漏洞。
+      <description>tags: container,漏洞报告 [漏洞报告] CVE-2021-31856: Meshery sql注入 最近，我在学习codeql时，偶然间发现了Meshery中的一个sql注入漏洞。问题本身比较简单，但codeql在其中的作用，可以作为其效果的示例，我会在后续的文章中尝试介绍一下如何使用codeql发现类似漏洞。
 报告给meshery4天后，他们完成了修复,并帮我申请了CVE编号（CVE-2021-31856）。
     item 描述     项目地址 https://github.com/layer5io/meshery   公布日期 2021-04-28   CVE-ID CVE-2021-31856   影响版本 v0.5.2   修复版本 v0.5.3
 https://github.com/layer5io/meshery/pull/2745   CVSS 7.5 CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N   作者 https://github.com/ssst0n3    1. 描述 Meshery是CNCF成员之一(https://landscape.cncf.io/?category=cncf-members&amp;amp;fullscreen=yes&amp;amp;grouping=category&amp;amp;selected=meshery)。作为服务网格管理平面，Meshery 支持任何服务网格及其工作负载的采用、操作和管理。
@@ -28,7 +28,30 @@ Your browser doesn&#39;t support HTML5 video. Here is a link to the video instea
       <pubDate>Wed, 05 May 2021 13:33:53 +0000</pubDate>
       
       <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E8%BF%9B%E7%A8%8B%E5%AE%B9%E5%99%A8/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%B9%E5%99%A8/docker/%E7%94%9F%E6%80%81%E5%AE%89%E5%85%A8/Solutions/Service-Mesh/meshery/CVE-2021-31856/Vulnerability-Report-CVE-2021-31856-A-Sql-Injection-in-Meshery.html</guid>
-      <description>[Vulnerability Report] CVE-2021-31856: A Sql Injection in Meshery    item details note     project https://github.com/layer5io/meshery    date announced 2021-04-28    CVE-ID CVE-2021-31856 https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2021-31856   EDB-ID \    Vulnerable Version v0.5.2 \   Patched Version v0.5.3 https://github.com/layer5io/meshery/pull/2745   CVSS 7.5 CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N    Author https://github.com/ssst0n3     1. Description GetMesheryPatterns() function in meshery/models/meshery_pattern_persister.go has SQL Injection vulnerability via the /api/experimental/patternfile?</description>
+      <description>tags: container,漏洞报告 [Vulnerability Report] CVE-2021-31856: A Sql Injection in Meshery    item details note     project https://github.com/layer5io/meshery    date announced 2021-04-28    CVE-ID CVE-2021-31856 https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2021-31856   EDB-ID \    Vulnerable Version v0.5.2 \   Patched Version v0.5.3 https://github.com/layer5io/meshery/pull/2745   CVSS 7.5 CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N    Author https://github.com/ssst0n3     1. Description GetMesheryPatterns() function in meshery/models/meshery_pattern_persister.</description>
+    </item>
+    
+    <item>
+      <title>docker reexec源码分析</title>
+      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E8%BF%9B%E7%A8%8B%E5%AE%B9%E5%99%A8/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%B9%E5%99%A8/docker/docker%E6%BA%90%E7%A0%81%E5%AE%A1%E8%AE%A1/docker%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/docker-reexec%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90.html</link>
+      <pubDate>Tue, 04 May 2021 11:15:40 +0000</pubDate>
+      
+      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E8%BF%9B%E7%A8%8B%E5%AE%B9%E5%99%A8/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%B9%E5%99%A8/docker/docker%E6%BA%90%E7%A0%81%E5%AE%A1%E8%AE%A1/docker%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/docker-reexec%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90.html</guid>
+      <description>tags: container,源码分析 docker reexec源码分析 本文编写时，最新release为v20.10.6, 因此代码均为v20.10.6分支的代码
+1. reexec简介 reexec库位于pkg下，是一个相对独立且可以由外部使用的模块。根据readme, reexec模块是为了提供重新调用docker二进制文件的能力，类似fork的概念。
+ The reexec package facilitates the busybox style reexec of the docker binary that we require because of the forking limitations of using Go.
+ fork函数将运行着的程序分成2个（几乎）完全一样的进程，每个进程都启动一个从代码的同一位置开始执行的线程。
+在Go语言中，由于屏蔽了进程、线程的概念，而只提供了goroutine的概念，导致我们无法直接操作fork调用。我们常用的os/exec是相当于fork+exec的方案，它启动一个新的子进程，执行不共享任何内存或 Go 运行时的不同可执行文件。
+因此docker自行实现了reexec库，来提供类似与fork的能力，但并不是一个特别高深的概念，实现也很简单。实际上，reexec仍然会调用os/exec调用一个子进程，与直接使用os/exec的区别在于这个子进程的二进制文件是docker本身，它执行的代码是docker中的一个函数。
+2. reexec库使用介绍 在具体分析reexec前，我们先看一下reexec的使用。
+在程序主体逻辑执行前，调用reexec.Init(),这个函数用于判断当前进入程序主体逻辑，还是进入reexec子命令。
+https://github.com/moby/moby/blob/v20.10.6/cmd/dockerd/docker.go#L72-L74
+func main() { if reexec.Init() { return } ... 以docker-tar为例，要向reexec,将tar函数注册名为docker-tar的“命令”。
+https://github.com/moby/moby/blob/v20.10.6/pkg/chrootarchive/init_unix.go#L17
+reexec.Register(&amp;quot;docker-tar&amp;quot;, tar) 在使用时，调用reexec.Command获得一个os/exec.Cmd实例。后续使用和使用os/exec库一致。
+https://github.com/moby/moby/blob/v20.10.6/pkg/chrootarchive/archive_unix.go#L178
+cmd := reexec.Command(&amp;quot;docker-tar&amp;quot;, relSrc, root) 使用时只需增加以上3个调用即可。
+3. reexec实现分析 3.1 reexec.</description>
     </item>
     
     <item>
@@ -49,7 +72,7 @@ Your browser doesn&#39;t support HTML5 video. Here is a link to the video instea
       <pubDate>Thu, 04 Mar 2021 11:33:26 +0000</pubDate>
       
       <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E8%BF%9B%E7%A8%8B%E5%AE%B9%E5%99%A8/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%B9%E5%99%A8/docker/%E5%AE%89%E5%85%A8%E9%A3%8E%E9%99%A9/%E9%95%9C%E5%83%8F%E5%AE%89%E5%85%A8/%E6%9E%84%E5%BB%BA%E5%AE%89%E5%85%A8/CVE-2021-21979-APP_KEY-is-fixed-in-docker-image-bitnami/laravel/%E6%BC%8F%E6%B4%9E%E6%8A%A5%E5%91%8AAPP_KEY%E5%9C%A8%E5%AE%B9%E5%99%A8%E9%95%9C%E5%83%8Fbitnamilaravel%E4%B8%AD%E6%98%AF%E5%9B%BA%E5%AE%9A%E7%9A%84.html</guid>
-      <description>[漏洞报告]CVE-2021-21979: APP_KEY在容器镜像bitnami/laravel中是固定的 最近，我在思考容器供应链安全时，发现了一个容器镜像构建产生的漏洞(CVE-2021-21979)。问题本身比较简单，但具有较强的启发意义，可以作为一个绝佳的示例。
+      <description>tags: container,漏洞报告 [漏洞报告]CVE-2021-21979: APP_KEY在容器镜像bitnami/laravel中是固定的 最近，我在思考容器供应链安全时，发现了一个容器镜像构建产生的漏洞(CVE-2021-21979)。问题本身比较简单，但具有较强的启发意义，可以作为一个绝佳的示例。
 这个问题在2021.02.23报告给bitnami,在2021.02.24就完成了修复,并帮我申请了CVE编号。
 https://github.com/bitnami/bitnami-docker-laravel/issues/139
 1. 漏洞简介 用户使用image bitnami/laravel时，如果文件/app/config/database.php不存在，则文件/app/.env将被文件/tmp/app/.env覆盖。
@@ -247,7 +270,7 @@ $$ \begin{align} &amp;amp; p^{-1} \cdot p \equiv 1 \mod q \newline &amp;amp; q^{
       <pubDate>Mon, 20 Jul 2020 02:00:00 +0000</pubDate>
       
       <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90%E4%B8%8E%E5%A4%8D%E7%8E%B0%E6%A8%A1%E6%9D%BF.html</guid>
-      <description>漏洞分析与复现模板 一、基本信息    条目 详情 备注     项目地址 https://github.com/spring-cloud/spring-cloud-config    发布日期 2019-04-16    CVE-ID CVE-2019-3799 https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2019-3799   EDB-ID EDB-46772 https://www.exploit-db.com/exploits/46772   exploits exp1
+      <description>tags: 漏洞分析 漏洞分析与复现模板 一、基本信息    条目 详情 备注     项目地址 https://github.com/spring-cloud/spring-cloud-config    发布日期 2019-04-16    CVE-ID CVE-2019-3799 https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2019-3799   EDB-ID EDB-46772 https://www.exploit-db.com/exploits/46772   exploits exp1
 exp2    cvedetails https://www.cvedetails.com/cve/CVE-2019-3799/ \   影响范围 spring-cloud-config 2.1.0-2.1.1, 2.0.0-2.0.3, 1.4.0-1.4.5 及更旧版本 \   修复版本 2.1.2, 2.0.4, 1.4.6 \   CVSS 8.3 CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:L    发现人 http://github.com/ssst0n3     二、组件简介 三、漏洞详情 1.</description>
     </item>
     
