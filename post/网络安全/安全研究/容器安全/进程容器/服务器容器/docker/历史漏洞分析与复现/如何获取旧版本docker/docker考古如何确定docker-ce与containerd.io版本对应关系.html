@@ -7,10 +7,10 @@
 <meta name="author"
     content="">
 <meta name="description"
-    content="docker考古:如何确定docker-ce与containerd.io版本对应关系 以ubuntu focal为例
+    content="tags: container docker考古:如何确定docker-ce与containerd.io版本对应关系 以ubuntu focal为例
 确认docker-ce组件release时间 https://download.docker.com/linux/ubuntu/dists/focal/pool/stable/amd64/
 根据docker-ce的发布时间及docker-ce中的依赖关系，可以确定一个containerd.io的大致范围，选取较新版本即可。
-../ containerd.io_1.2.13-2_amd64.deb 2020-07-28 16:39:02 20.4 MiB containerd.io_1.3.7-1_amd64.deb 2020-10-08 20:39:20 23.2 MiB containerd.io_1.3.9-1_amd64.deb 2020-11-30 22:57:53 23.2 MiB containerd.io_1.4.3-1_amd64.deb 2020-12-09 01:55:15 26.8 MiB containerd.io_1.4.3-2_amd64.deb 2021-04-08 00:35:52 27.0 MiB containerd.io_1.4.4-1_amd64.deb 2021-04-08 00:35:53 27.0 MiB docker-ce-cli_19.03.10~3-0~ubuntu-focal_amd64.deb 2020-07-28 16:39:03 39.3 MiB docker-ce-cli_19.03.11~3-0~ubuntu-focal_amd64.deb 2020-07-28 16:39:04 39.3 MiB docker-ce-cli_19.03.12~3-0~ubuntu-focal_amd64.deb 2020-07-28 16:39:05 39.3 MiB docker-ce-cli_19.03.13~3-0~ubuntu-focal_amd64.deb 2020-10-08 20:39:21 42.1 MiB docker-ce-cli_19.03.14~3-0~ubuntu-focal_amd64.deb 2020-12-08 16:25:36 42.1 MiB docker-ce-cli_19.03.15~3-0~ubuntu-focal_amd64.deb 2021-02-25 07:28:46 42.1 MiB docker-ce-cli_19.03.9~3-0~ubuntu-focal_amd64.deb 2020-07-28 16:39:06 39." />
+../ containerd.io_1.2.13-2_amd64.deb 2020-07-28 16:39:02 20.4 MiB containerd.io_1.3.7-1_amd64.deb 2020-10-08 20:39:20 23.2 MiB containerd.io_1.3.9-1_amd64.deb 2020-11-30 22:57:53 23.2 MiB containerd.io_1.4.3-1_amd64.deb 2020-12-09 01:55:15 26.8 MiB containerd.io_1.4.3-2_amd64.deb 2021-04-08 00:35:52 27.0 MiB containerd.io_1.4.4-1_amd64.deb 2021-04-08 00:35:53 27.0 MiB docker-ce-cli_19.03.10~3-0~ubuntu-focal_amd64.deb 2020-07-28 16:39:03 39.3 MiB docker-ce-cli_19.03.11~3-0~ubuntu-focal_amd64.deb 2020-07-28 16:39:04 39.3 MiB docker-ce-cli_19.03.12~3-0~ubuntu-focal_amd64.deb 2020-07-28 16:39:05 39.3 MiB docker-ce-cli_19.03.13~3-0~ubuntu-focal_amd64.deb 2020-10-08 20:39:21 42.1 MiB docker-ce-cli_19.03.14~3-0~ubuntu-focal_amd64.deb 2020-12-08 16:25:36 42.1 MiB docker-ce-cli_19.03.15~3-0~ubuntu-focal_amd64.deb 2021-02-25 07:28:46 42.1 MiB docker-ce-cli_19." />
 <meta name="keywords" content="" />
 <meta name="robots" content="noodp" />
 <link rel="canonical" href="/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E8%BF%9B%E7%A8%8B%E5%AE%B9%E5%99%A8/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%B9%E5%99%A8/docker/%E5%8E%86%E5%8F%B2%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90%E4%B8%8E%E5%A4%8D%E7%8E%B0/%E5%A6%82%E4%BD%95%E8%8E%B7%E5%8F%96%E6%97%A7%E7%89%88%E6%9C%ACdocker/docker%E8%80%83%E5%8F%A4%E5%A6%82%E4%BD%95%E7%A1%AE%E5%AE%9Adocker-ce%E4%B8%8Econtainerd.io%E7%89%88%E6%9C%AC%E5%AF%B9%E5%BA%94%E5%85%B3%E7%B3%BB.html" />
@@ -40,23 +40,23 @@
 <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#252627">
 <link rel="shortcut icon" href="/favicon.ico">
 <meta name="theme-color" content="#252627"><meta itemprop="name" content="docker考古:如何确定docker-ce与containerd.io版本对应关系">
-<meta itemprop="description" content="docker考古:如何确定docker-ce与containerd.io版本对应关系 以ubuntu focal为例
+<meta itemprop="description" content="tags: container docker考古:如何确定docker-ce与containerd.io版本对应关系 以ubuntu focal为例
 确认docker-ce组件release时间 https://download.docker.com/linux/ubuntu/dists/focal/pool/stable/amd64/
 根据docker-ce的发布时间及docker-ce中的依赖关系，可以确定一个containerd.io的大致范围，选取较新版本即可。
-../ containerd.io_1.2.13-2_amd64.deb 2020-07-28 16:39:02 20.4 MiB containerd.io_1.3.7-1_amd64.deb 2020-10-08 20:39:20 23.2 MiB containerd.io_1.3.9-1_amd64.deb 2020-11-30 22:57:53 23.2 MiB containerd.io_1.4.3-1_amd64.deb 2020-12-09 01:55:15 26.8 MiB containerd.io_1.4.3-2_amd64.deb 2021-04-08 00:35:52 27.0 MiB containerd.io_1.4.4-1_amd64.deb 2021-04-08 00:35:53 27.0 MiB docker-ce-cli_19.03.10~3-0~ubuntu-focal_amd64.deb 2020-07-28 16:39:03 39.3 MiB docker-ce-cli_19.03.11~3-0~ubuntu-focal_amd64.deb 2020-07-28 16:39:04 39.3 MiB docker-ce-cli_19.03.12~3-0~ubuntu-focal_amd64.deb 2020-07-28 16:39:05 39.3 MiB docker-ce-cli_19.03.13~3-0~ubuntu-focal_amd64.deb 2020-10-08 20:39:21 42.1 MiB docker-ce-cli_19.03.14~3-0~ubuntu-focal_amd64.deb 2020-12-08 16:25:36 42.1 MiB docker-ce-cli_19.03.15~3-0~ubuntu-focal_amd64.deb 2021-02-25 07:28:46 42.1 MiB docker-ce-cli_19.03.9~3-0~ubuntu-focal_amd64.deb 2020-07-28 16:39:06 39.">
+../ containerd.io_1.2.13-2_amd64.deb 2020-07-28 16:39:02 20.4 MiB containerd.io_1.3.7-1_amd64.deb 2020-10-08 20:39:20 23.2 MiB containerd.io_1.3.9-1_amd64.deb 2020-11-30 22:57:53 23.2 MiB containerd.io_1.4.3-1_amd64.deb 2020-12-09 01:55:15 26.8 MiB containerd.io_1.4.3-2_amd64.deb 2021-04-08 00:35:52 27.0 MiB containerd.io_1.4.4-1_amd64.deb 2021-04-08 00:35:53 27.0 MiB docker-ce-cli_19.03.10~3-0~ubuntu-focal_amd64.deb 2020-07-28 16:39:03 39.3 MiB docker-ce-cli_19.03.11~3-0~ubuntu-focal_amd64.deb 2020-07-28 16:39:04 39.3 MiB docker-ce-cli_19.03.12~3-0~ubuntu-focal_amd64.deb 2020-07-28 16:39:05 39.3 MiB docker-ce-cli_19.03.13~3-0~ubuntu-focal_amd64.deb 2020-10-08 20:39:21 42.1 MiB docker-ce-cli_19.03.14~3-0~ubuntu-focal_amd64.deb 2020-12-08 16:25:36 42.1 MiB docker-ce-cli_19.03.15~3-0~ubuntu-focal_amd64.deb 2021-02-25 07:28:46 42.1 MiB docker-ce-cli_19.">
 <meta itemprop="datePublished" content="2021-04-23T09:13:15+00:00" />
 <meta itemprop="dateModified" content="2021-04-23T09:13:15+00:00" />
-<meta itemprop="wordCount" content="312">
+<meta itemprop="wordCount" content="314">
 
 
 
 <meta itemprop="keywords" content="" />
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="docker考古:如何确定docker-ce与containerd.io版本对应关系"/>
-<meta name="twitter:description" content="docker考古:如何确定docker-ce与containerd.io版本对应关系 以ubuntu focal为例
+<meta name="twitter:description" content="tags: container docker考古:如何确定docker-ce与containerd.io版本对应关系 以ubuntu focal为例
 确认docker-ce组件release时间 https://download.docker.com/linux/ubuntu/dists/focal/pool/stable/amd64/
 根据docker-ce的发布时间及docker-ce中的依赖关系，可以确定一个containerd.io的大致范围，选取较新版本即可。
-../ containerd.io_1.2.13-2_amd64.deb 2020-07-28 16:39:02 20.4 MiB containerd.io_1.3.7-1_amd64.deb 2020-10-08 20:39:20 23.2 MiB containerd.io_1.3.9-1_amd64.deb 2020-11-30 22:57:53 23.2 MiB containerd.io_1.4.3-1_amd64.deb 2020-12-09 01:55:15 26.8 MiB containerd.io_1.4.3-2_amd64.deb 2021-04-08 00:35:52 27.0 MiB containerd.io_1.4.4-1_amd64.deb 2021-04-08 00:35:53 27.0 MiB docker-ce-cli_19.03.10~3-0~ubuntu-focal_amd64.deb 2020-07-28 16:39:03 39.3 MiB docker-ce-cli_19.03.11~3-0~ubuntu-focal_amd64.deb 2020-07-28 16:39:04 39.3 MiB docker-ce-cli_19.03.12~3-0~ubuntu-focal_amd64.deb 2020-07-28 16:39:05 39.3 MiB docker-ce-cli_19.03.13~3-0~ubuntu-focal_amd64.deb 2020-10-08 20:39:21 42.1 MiB docker-ce-cli_19.03.14~3-0~ubuntu-focal_amd64.deb 2020-12-08 16:25:36 42.1 MiB docker-ce-cli_19.03.15~3-0~ubuntu-focal_amd64.deb 2021-02-25 07:28:46 42.1 MiB docker-ce-cli_19.03.9~3-0~ubuntu-focal_amd64.deb 2020-07-28 16:39:06 39."/>
+../ containerd.io_1.2.13-2_amd64.deb 2020-07-28 16:39:02 20.4 MiB containerd.io_1.3.7-1_amd64.deb 2020-10-08 20:39:20 23.2 MiB containerd.io_1.3.9-1_amd64.deb 2020-11-30 22:57:53 23.2 MiB containerd.io_1.4.3-1_amd64.deb 2020-12-09 01:55:15 26.8 MiB containerd.io_1.4.3-2_amd64.deb 2021-04-08 00:35:52 27.0 MiB containerd.io_1.4.4-1_amd64.deb 2021-04-08 00:35:53 27.0 MiB docker-ce-cli_19.03.10~3-0~ubuntu-focal_amd64.deb 2020-07-28 16:39:03 39.3 MiB docker-ce-cli_19.03.11~3-0~ubuntu-focal_amd64.deb 2020-07-28 16:39:04 39.3 MiB docker-ce-cli_19.03.12~3-0~ubuntu-focal_amd64.deb 2020-07-28 16:39:05 39.3 MiB docker-ce-cli_19.03.13~3-0~ubuntu-focal_amd64.deb 2020-10-08 20:39:21 42.1 MiB docker-ce-cli_19.03.14~3-0~ubuntu-focal_amd64.deb 2020-12-08 16:25:36 42.1 MiB docker-ce-cli_19.03.15~3-0~ubuntu-focal_amd64.deb 2021-02-25 07:28:46 42.1 MiB docker-ce-cli_19."/>
 
 
 
@@ -127,7 +127,9 @@
             
 
             <div class="post-content">
-                <h1 id="docker考古如何确定docker-ce与containerdio版本对应关系">docker考古:如何确定docker-ce与containerd.io版本对应关系</h1>
+                <hr>
+<h2 id="tags-container">tags: container</h2>
+<h1 id="docker考古如何确定docker-ce与containerdio版本对应关系">docker考古:如何确定docker-ce与containerd.io版本对应关系</h1>
 <p>以ubuntu focal为例</p>
 <h2 id="确认docker-ce组件release时间">确认docker-ce组件release时间</h2>
 <p><a href="https://download.docker.com/linux/ubuntu/dists/focal/pool/stable/amd64/">https://download.docker.com/linux/ubuntu/dists/focal/pool/stable/amd64/</a></p>
