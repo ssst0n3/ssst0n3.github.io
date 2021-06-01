@@ -138,6 +138,17 @@ func NewCopyCommand(dockerCli command.Cli) *cobra.Command { var opts copyOptions
     </item>
     
     <item>
+      <title>CVE-2019-14271分析与复现</title>
+      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E8%BF%9B%E7%A8%8B%E5%AE%B9%E5%99%A8/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%B9%E5%99%A8/docker/%E5%8E%86%E5%8F%B2%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90%E4%B8%8E%E5%A4%8D%E7%8E%B0/docker-software/plumbing/docker-cp/CVE-2019-14271/%E5%88%86%E6%9E%90/CVE-2019-14271%E5%88%86%E6%9E%90%E4%B8%8E%E5%A4%8D%E7%8E%B0.html</link>
+      <pubDate>Tue, 30 Mar 2021 06:32:34 +0000</pubDate>
+      
+      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E8%BF%9B%E7%A8%8B%E5%AE%B9%E5%99%A8/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%B9%E5%99%A8/docker/%E5%8E%86%E5%8F%B2%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90%E4%B8%8E%E5%A4%8D%E7%8E%B0/docker-software/plumbing/docker-cp/CVE-2019-14271/%E5%88%86%E6%9E%90/CVE-2019-14271%E5%88%86%E6%9E%90%E4%B8%8E%E5%A4%8D%E7%8E%B0.html</guid>
+      <description>tags: container,漏洞分析 docker CVE-2019-14271分析与复现 一、基本信息    条目 详情 备注     项目地址 https://github.com/moby/moby    发布日期 2019-07-25    CVE-ID CVE-2019-14271 https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2019-14271   EDB-ID \    exploits swr.cn-southwest-2.myhuaweicloud.com/container_pentest/cve-2019-14271:v0.1
+https://bestwing.me/CVE-2019-14271-docker-escape.html
+https://unit42.paloaltonetworks.com/docker-patched-the-most-severe-copy-vulnerability-to-date-with-cve-2019-14271/    cvedetails https://www.cvedetails.com/cve/CVE-2019-14271/    影响范围 19.03.0&amp;lt;= docker &amp;lt; 19.03.1    修复版本 v19.03.1 紧急修复 https://github.com/moby/moby/pull/39612    v19.03.8 完整修复 https://github.com/moby/moby/commit/aa6a9891b09cce3d9004121294301a30d45d998d#diff-630ba09448af522154f38ef7685ef1f44b0f3e9430f80829a03ce24f400f3754   CVSS 9.8 CVSS:3.</description>
+    </item>
+    
+    <item>
       <title>[漏洞报告]APP_KEY在容器镜像bitnami/laravel中是固定的</title>
       <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E8%BF%9B%E7%A8%8B%E5%AE%B9%E5%99%A8/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%B9%E5%99%A8/docker/%E5%AE%89%E5%85%A8%E9%A3%8E%E9%99%A9/%E9%95%9C%E5%83%8F%E5%AE%89%E5%85%A8/%E6%9E%84%E5%BB%BA%E5%AE%89%E5%85%A8/CVE-2021-21979-APP_KEY-is-fixed-in-docker-image-bitnami/laravel/%E6%BC%8F%E6%B4%9E%E6%8A%A5%E5%91%8AAPP_KEY%E5%9C%A8%E5%AE%B9%E5%99%A8%E9%95%9C%E5%83%8Fbitnamilaravel%E4%B8%AD%E6%98%AF%E5%9B%BA%E5%AE%9A%E7%9A%84.html</link>
       <pubDate>Thu, 04 Mar 2021 11:33:26 +0000</pubDate>
