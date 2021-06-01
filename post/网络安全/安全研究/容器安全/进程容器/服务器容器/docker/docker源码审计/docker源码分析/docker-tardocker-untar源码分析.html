@@ -54,7 +54,7 @@ echo &quot;{}&quot; &gt; /tmp/json mkdir /tmp/test cp /etc/hosts /tmp/test/ dock
 TarOptions struct { IncludeFiles []string ExcludePatterns []string Compression Compression NoLchown bool UIDMaps []idtools.IDMap GIDMaps []idtools.IDMap ChownOpts *idtools.Identity IncludeSourceDir bool // WhiteoutFormat is the expected on disk format for whiteout files.">
 <meta itemprop="datePublished" content="2021-06-01T08:59:53+00:00" />
 <meta itemprop="dateModified" content="2021-06-01T08:59:53+00:00" />
-<meta itemprop="wordCount" content="680">
+<meta itemprop="wordCount" content="1097">
 
 
 
@@ -338,10 +338,15 @@ func AddPrefix(path string) string {
             ...
         }
     ...
-</code></pre><p>如果配置了压缩选项，则输出时进行压缩（docker-tar不压缩,即不涉及）</p>
+</code></pre><p>创建一组pipe读写流（pipe的读和写是一对一匹配的，是一个在内存中的同步的管道）,下面会向pipeWriter写入tar包，然后把Reader传出去由其他逻辑读取：
+<a href="https://github.com/moby/moby/blob/v20.10.6/pkg/archive/archive.go#L735">https://github.com/moby/moby/blob/v20.10.6/pkg/archive/archive.go#L735</a></p>
 <pre><code class="language-go!" data-lang="go!">func TarWithOptions(srcPath string, options *TarOptions) (io.ReadCloser, error) {
     ...
     pipeReader, pipeWriter := io.Pipe()
+    ...
+</code></pre><p>如果配置了压缩选项，则输出时进行压缩（docker-tar不压缩,即不涉及）</p>
+<pre><code class="language-go!" data-lang="go!">func TarWithOptions(srcPath string, options *TarOptions) (io.ReadCloser, error) {
+    ...
     compressWriter, err := CompressStream(pipeWriter, options.Compression)
     ...
 </code></pre><p>压缩的格式有不压缩、Gzip两种</p>
@@ -369,7 +374,12 @@ func AddPrefix(path string) string {
 <li>如果配置了OverlayWhiteoutFormat, 而且使用了user ns, 则报错。</li>
 </ul>
 <p>第二种情况是在20.10才实现的,因为overlay2不再支持 在user ns中使用OverlayWhiteout了，所以可以直接报错。在这之前，在user ns中处理Whiteout有一个相当复杂的过程（详见 <a href="https://github.com/moby/moby/commit/c1e7924f7cb85f1ee0ad168eb9d6b74790ef4b65">https://github.com/moby/moby/commit/c1e7924f7cb85f1ee0ad168eb9d6b74790ef4b65</a> ）。</p>
-<p>这里提到的whiteout是一种</p>
+<blockquote>
+<p>这里提到的whiteout是一种文件格式，是为了隐藏下层分支的空白文件，详见：
+<a href="https://github.com/opencontainers/image-spec/blob/master/layer.md#whiteouts">https://github.com/opencontainers/image-spec/blob/master/layer.md#whiteouts</a>
+<a href="http://aufs.sourceforge.net/aufs.html">http://aufs.sourceforge.net/aufs.html</a>
+<a href="https://www.kernel.org/doc/Documentation/filesystems/overlayfs.txt">https://www.kernel.org/doc/Documentation/filesystems/overlayfs.txt</a></p>
+</blockquote>
 <p><a href="https://github.com/moby/moby/blob/v20.10.6/pkg/archive/archive.go#L742">https://github.com/moby/moby/blob/v20.10.6/pkg/archive/archive.go#L742</a></p>
 <pre><code class="language-go!" data-lang="go!">func TarWithOptions(srcPath string, options *TarOptions) (io.ReadCloser, error) {
     ...
@@ -384,8 +394,136 @@ func AddPrefix(path string) string {
 	}
 	return nil, nil
 }
-</code></pre><p><a href="https://github.com/moby/moby/commit/6322dfc217a3c28ea4d7c66f43394146b3862801#diff-19981b1219ed310dd16f9b9bf52c4a782b5ef410821df203d1b8272a3c5a8688">https://github.com/moby/moby/commit/6322dfc217a3c28ea4d7c66f43394146b3862801#diff-19981b1219ed310dd16f9b9bf52c4a782b5ef410821df203d1b8272a3c5a8688</a></p>
-<h3 id="32-docker-untar">3.2 docker-untar</h3>
+</code></pre><p>剩下的操作在一个goroutine中执行，这样整个函数不会阻塞在这里，可以继续执行其他逻辑：</p>
+<p><a href="https://github.com/moby/moby/blob/v20.10.6/pkg/archive/archive.go#L747">https://github.com/moby/moby/blob/v20.10.6/pkg/archive/archive.go#L747</a></p>
+<pre><code class="language-go!" data-lang="go!">func TarWithOptions(srcPath string, options *TarOptions) (io.ReadCloser, error) {
+    ...
+    go func() {
+    ...
+    }()
+
+    return pipeReader, nil
+}
+</code></pre><p>生成TarAppender，配置选项中的UIDMaps和GIDMaps和ChownOpts会在这里用到(docker-tar不涉及)
+<a href="https://github.com/moby/moby/blob/v20.10.6/pkg/archive/archive.go#L748-L753">https://github.com/moby/moby/blob/v20.10.6/pkg/archive/archive.go#L748-L753</a></p>
+<pre><code class="language-go!" data-lang="go!">ta := newTarAppender(
+    idtools.NewIDMappingsFromMaps(options.UIDMaps, options.GIDMaps),
+    compressWriter,
+    options.ChownOpts,
+)
+ta.WhiteoutConverter = whiteoutConverter
+</code></pre><p><a href="https://github.com/moby/moby/blob/v20.10.6/pkg/archive/archive.go#L434">https://github.com/moby/moby/blob/v20.10.6/pkg/archive/archive.go#L434</a></p>
+<pre><code class="language-go!" data-lang="go!">func newTarAppender(idMapping *idtools.IdentityMapping, writer io.Writer, chownOpts *idtools.Identity) *tarAppender {
+	return &amp;tarAppender{
+		SeenFiles:       make(map[uint64]string),
+		TarWriter:       tar.NewWriter(writer),
+		Buffer:          pools.BufioWriter32KPool.Get(nil),
+		IdentityMapping: idMapping,
+		ChownOpts:       chownOpts,
+	}
+}
+</code></pre><p>检查srcPath是否为目录，如果不是，要取其上级目录
+<a href="https://github.com/moby/moby/blob/v20.10.6/pkg/archive/archive.go#L776-L793">https://github.com/moby/moby/blob/v20.10.6/pkg/archive/archive.go#L776-L793</a></p>
+<pre><code class="language-go!" data-lang="go!">stat, err := os.Lstat(srcPath)
+if err != nil {
+    return
+}
+
+if !stat.IsDir() {
+    // We can't later join a non-dir with any includes because the
+    // 'walk' will error if &quot;file/.&quot; is stat-ed and &quot;file&quot; is not a
+    // directory. So, we must split the source path and use the
+    // basename as the include.
+    if len(options.IncludeFiles) &gt; 0 {
+        logrus.Warn(&quot;Tar: Can't archive a file with includes&quot;)
+    }
+
+    dir, base := SplitPathDirEntry(srcPath)
+    srcPath = dir
+    options.IncludeFiles = []string{base}
+}
+</code></pre><p>下面是进入到一个循环，对include的每一个路径做遍历
+<a href="https://github.com/moby/moby/blob/v20.10.6/pkg/archive/archive.go#L801">https://github.com/moby/moby/blob/v20.10.6/pkg/archive/archive.go#L801</a></p>
+<pre><code class="language-go!" data-lang="go!">seen := make(map[string]bool)
+
+for _, include := range options.IncludeFiles {
+    rebaseName := options.RebaseNames[include]
+
+    walkRoot := getWalkRoot(srcPath, include)
+    filepath.Walk(walkRoot, func(filePath string, f os.FileInfo, err error) error {
+    ...
+    })
+}
+</code></pre><p>对遍历到的每一个路径，执行这样的一个函数。我们省略了一些判断是否跳过路径的逻辑。</p>
+<p>在打包时，写入到tar包中的文件路径会取决于rebaseName选项做替换。
+<a href="https://github.com/moby/moby/blob/v20.10.6/pkg/archive/archive.go#L805-L895">https://github.com/moby/moby/blob/v20.10.6/pkg/archive/archive.go#L805-L895</a></p>
+<pre><code class="language-go!" data-lang="go!">func(filePath string, f os.FileInfo, err error) error {
+    ...
+
+    // Rename the base resource.
+    if rebaseName != &quot;&quot; {
+        var replacement string
+        if rebaseName != string(filepath.Separator) {
+            // Special case the root directory to replace with an
+            // empty string instead so that we don't end up with
+            // double slashes in the paths.
+            replacement = rebaseName
+        }
+
+        relFilePath = strings.Replace(relFilePath, include, replacement, 1)
+    }
+
+    if err := ta.addTarFile(filePath, relFilePath); err != nil {
+        logrus.Errorf(&quot;Can't add file %s to tar: %s&quot;, filePath, err)
+        // if pipe is broken, stop writing tar stream to it
+        if err == io.ErrClosedPipe {
+            return err
+        }
+    }
+    return nil
+}
+</code></pre><p>具体添加文件到tar包，是执行的addTarfile函数
+<a href="https://github.com/moby/moby/blob/v20.10.6/pkg/archive/archive.go#L457">https://github.com/moby/moby/blob/v20.10.6/pkg/archive/archive.go#L457</a></p>
+<p>如果该文件是软链接，则取其链接的地址</p>
+<pre><code class="language-go!" data-lang="go!">func (ta *tarAppender) addTarFile(path, name string) error {
+	fi, err := os.Lstat(path)
+	if err != nil {
+		return err
+	}
+
+	var link string
+	if fi.Mode()&amp;os.ModeSymlink != 0 {
+		var err error
+		link, err = os.Readlink(path)
+		if err != nil {
+			return err
+		}
+	}
+    ...
+	return nil
+}
+</code></pre><p>读取路径的文件头信息
+<a href="https://github.com/moby/moby/blob/v20.10.6/pkg/archive/archive.go#L472">https://github.com/moby/moby/blob/v20.10.6/pkg/archive/archive.go#L472</a></p>
+<pre><code class="language-go!" data-lang="go!">hdr, err := FileInfoHeader(name, fi, link)
+</code></pre><p>FileInfoHeader函数是创建一些常用的文件头信息，这些信息主要是go官方库archive/tar的FileInfoHeader提供的，然后做了一些简单的处理。但是在19.03增加了vendor/archive/tar, 替换了官方库(<a href="https://github.com/moby/moby/commit/aa6a9891b09cce3d9004121294301a30d45d998d#diff-630ba09448af522154f38ef7685ef1f44b0f3e9430f80829a03ce24f400f3754">https://github.com/moby/moby/commit/aa6a9891b09cce3d9004121294301a30d45d998d#diff-630ba09448af522154f38ef7685ef1f44b0f3e9430f80829a03ce24f400f3754</a>)。</p>
+<p><a href="https://github.com/moby/moby/blob/v20.10.6/pkg/archive/archive.go#L360-L375">https://github.com/moby/moby/blob/v20.10.6/pkg/archive/archive.go#L360-L375</a></p>
+<pre><code class="language-go!" data-lang="go!">func FileInfoHeader(name string, fi os.FileInfo, link string) (*tar.Header, error) {
+	hdr, err := tar.FileInfoHeader(fi, link)
+	if err != nil {
+		return nil, err
+	}
+	hdr.Format = tar.FormatPAX
+	hdr.ModTime = hdr.ModTime.Truncate(time.Second)
+	hdr.AccessTime = time.Time{}
+	hdr.ChangeTime = time.Time{}
+	hdr.Mode = fillGo18FileTypeBits(int64(chmodTarEntry(os.FileMode(hdr.Mode))), fi)
+	hdr.Name = canonicalTarName(name, fi.IsDir())
+	if err := setHeaderForSpecialDevice(hdr, name, fi.Sys()); err != nil {
+		return nil, err
+	}
+	return hdr, nil
+}
+</code></pre><h3 id="32-docker-untar">3.2 docker-untar</h3>
 
             </div>
         </article>
