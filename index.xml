@@ -6,7 +6,23 @@
     <description>Recent content on welcome to st0n3&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 20 May 2021 09:29:12 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 01 Jun 2021 08:59:53 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>docker-tar,docker-untar源码分析</title>
+      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E8%BF%9B%E7%A8%8B%E5%AE%B9%E5%99%A8/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%B9%E5%99%A8/docker/docker%E6%BA%90%E7%A0%81%E5%AE%A1%E8%AE%A1/docker%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/docker-tardocker-untar%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90.html</link>
+      <pubDate>Tue, 01 Jun 2021 08:59:53 +0000</pubDate>
+      
+      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E8%BF%9B%E7%A8%8B%E5%AE%B9%E5%99%A8/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%B9%E5%99%A8/docker/docker%E6%BA%90%E7%A0%81%E5%AE%A1%E8%AE%A1/docker%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/docker-tardocker-untar%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90.html</guid>
+      <description>tags: 源码分析,container docker-tar,docker-untar源码分析 本文编写时，最新release为v20.10.6, 因此代码均为v20.10.6分支的代码
+1. 简介 docker-tar和docker-untar是dockerd的两个子命令，是docker cp命令在容器内的延伸，分别提供在容器内打包、解包的能力。
+2. 使用 2.1 代码使用 参考 docker reexec源码分析。
+2.2 二进制使用 除了通过以类似fork的形式在代码中使用，docker-tar也可以通过二进制的形式使用，但这种形式不常见。这种使用方式的价值在于能方便得直接进入docker-tar的逻辑，在分析docker-tar实现、或研究相关的安全问题时，比较方便、直观。
+将dockerd复制一份，得到docker-tar的二进制文件，两者使用相同的二进制文件，通过执行时的不同的cmdline，进入不同的代码逻辑。
+cp /usr/bin/dockerd /usr/bin/docker-tar docker-tar的stdin是json格式的配置选项，arg1是需要打包的路径，arg2是chroot的目录，stdout会输出打包好的文件。
+echo &amp;quot;{}&amp;quot; &amp;gt; /tmp/json mkdir /tmp/test cp /etc/hosts /tmp/test/ docker-tar &amp;lt; /tmp/json /test/hosts /tmp/ &amp;gt; /tmp/test.tar docker-tar具体接收的配置选项参见： https://github.com/moby/moby/blob/v20.10.6/pkg/archive/archive.go#L37
+TarOptions struct { IncludeFiles []string ExcludePatterns []string Compression Compression NoLchown bool UIDMaps []idtools.IDMap GIDMaps []idtools.IDMap ChownOpts *idtools.Identity IncludeSourceDir bool // WhiteoutFormat is the expected on disk format for whiteout files.</description>
+    </item>
+    
     <item>
       <title>docker本地开发环境搭建</title>
       <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E8%BF%9B%E7%A8%8B%E5%AE%B9%E5%99%A8/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%B9%E5%99%A8/docker/docker%E6%BA%90%E7%A0%81%E5%AE%A1%E8%AE%A1/%E5%A6%82%E4%BD%95%E5%BC%80%E5%8F%91%E5%B9%B6%E7%BC%96%E8%AF%91%E4%BB%A3%E7%A0%81/docker%E6%9C%AC%E5%9C%B0%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA.html</link>
@@ -19,7 +35,7 @@
 git clone https://github.com/moby/moby.git   将代码移动到GoSrc,并将路径中的moby/moby替换为docker/docker
 mkdir -p $GOPATH/src/github.com/docker cp moby $GOPATH/src/github.com/docker/docker -r   使用IDE打开即可   修改代码，push
   clone修改的代码，然后build
-  </description>
+  问题澄清 为什么不用go mod下载的代码  gomod仅下载tags下的代码，遗失很多commits细节 gomod不下载github.com/moby/moby/vendor下的代码，这会导致很多代码不一致（即moby/vendor中的代码不一定与gosrc下的代码一致,例如archive）  </description>
     </item>
     
     <item>
@@ -48,6 +64,7 @@ root@7fd23c4e7515:/go/src/github.com/docker/docker/bundles/binary-daemon# ./dock
       <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E8%BF%9B%E7%A8%8B%E5%AE%B9%E5%99%A8/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%B9%E5%99%A8/docker/%E7%94%9F%E6%80%81%E5%AE%89%E5%85%A8/Solutions/Service-Mesh/meshery/CVE-2021-31856/%E6%BC%8F%E6%B4%9E%E6%8A%A5%E5%91%8A-CVE-2021-31856-Meshery-sql%E6%B3%A8%E5%85%A5.html</guid>
       <description>tags: container,漏洞报告 [漏洞报告] CVE-2021-31856: Meshery sql注入 最近，我在学习codeql时，偶然间发现了Meshery中的一个sql注入漏洞。问题本身比较简单，但codeql在其中的作用，可以作为其效果的示例，我会在后续的文章中尝试介绍一下如何使用codeql发现类似漏洞。
 报告给meshery4天后，他们完成了修复,并帮我申请了CVE编号（CVE-2021-31856）。
+https://docs.meshery.io/project/security-vulnerabilities#list-of-announced-vulnerabilities
     item 描述     项目地址 https://github.com/layer5io/meshery   公布日期 2021-04-28   CVE-ID CVE-2021-31856   影响版本 v0.5.2   修复版本 v0.5.3
 https://github.com/layer5io/meshery/pull/2745   CVSS 7.5 CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N   作者 https://github.com/ssst0n3    1. 描述 Meshery是CNCF成员之一(https://landscape.cncf.io/?category=cncf-members&amp;amp;fullscreen=yes&amp;amp;grouping=category&amp;amp;selected=meshery)。作为服务网格管理平面，Meshery 支持任何服务网格及其工作负载的采用、操作和管理。
 GetMesheryPatterns() 函数(位于meshery/models/meshery_pattern_persister.go)存在一个SQL注入漏洞，注入点是/api/experimental/patternfile?order=id%3Bselect(randomblob(1000000000))&amp;amp;page=0&amp;amp;page_size=0中的order参数。

@@ -453,7 +453,7 @@ return client.CopyToContainer(ctx, copyConfig.container, resolvedDstPath, conten
     stat, err = container.StatPath(resolvedPath, absPath)
     ...
 }
-</code></pre><p>关键在于打包的过程</p>
+</code></pre><p>关键在于打包的过程:</p>
 <p><a href="https://github.com/moby/moby/blob/v20.10.6/daemon/archive.go#L231-L263">https://github.com/moby/moby/blob/v20.10.6/daemon/archive.go#L231-L263</a></p>
 <pre><code class="language-go=" data-lang="go=">driver := container.BaseFS
 ...

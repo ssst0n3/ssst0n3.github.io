@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author"
+    content="">
+<meta name="description"
+    content="tags: 源码分析,container docker-tar,docker-untar源码分析 本文编写时，最新release为v20.10.6, 因此代码均为v20.10.6分支的代码
+1. 简介 docker-tar和docker-untar是dockerd的两个子命令，是docker cp命令在容器内的延伸，分别提供在容器内打包、解包的能力。
+2. 使用 2.1 代码使用 参考 docker reexec源码分析。
+2.2 二进制使用 除了通过以类似fork的形式在代码中使用，docker-tar也可以通过二进制的形式使用，但这种形式不常见。这种使用方式的价值在于能方便得直接进入docker-tar的逻辑，在分析docker-tar实现、或研究相关的安全问题时，比较方便、直观。
+将dockerd复制一份，得到docker-tar的二进制文件，两者使用相同的二进制文件，通过执行时的不同的cmdline，进入不同的代码逻辑。
+cp /usr/bin/dockerd /usr/bin/docker-tar docker-tar的stdin是json格式的配置选项，arg1是需要打包的路径，arg2是chroot的目录，stdout会输出打包好的文件。
+echo &amp;quot;{}&amp;quot; &amp;gt; /tmp/json mkdir /tmp/test cp /etc/hosts /tmp/test/ docker-tar &amp;lt; /tmp/json /test/hosts /tmp/ &amp;gt; /tmp/test.tar docker-tar具体接收的配置选项参见： https://github.com/moby/moby/blob/v20.10.6/pkg/archive/archive.go#L37
+TarOptions struct { IncludeFiles []string ExcludePatterns []string Compression Compression NoLchown bool UIDMaps []idtools.IDMap GIDMaps []idtools.IDMap ChownOpts *idtools.Identity IncludeSourceDir bool // WhiteoutFormat is the expected on disk format for whiteout files." />
+<meta name="keywords" content="" />
+<meta name="robots" content="noodp" />
+<link rel="canonical" href="/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E8%BF%9B%E7%A8%8B%E5%AE%B9%E5%99%A8/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%B9%E5%99%A8/docker/docker%E6%BA%90%E7%A0%81%E5%AE%A1%E8%AE%A1/docker%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/docker-tardocker-untar%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90.html" />
+
+
+<title>
+    
+    docker-tar,docker-untar源码分析 :: welcome to st0n3&#39;s blog 
+    
+</title>
+
+
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.2.1/css/flag-icon.min.css" rel="stylesheet"
+    type="text/css">
+
+
+
+<link rel="stylesheet" href="/main.min.de959d61dd13c2cd41136acd491ffb0749779e1afe37b1fed6d5cba0b7e1938d.css">
+
+
+
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#252627">
+<link rel="shortcut icon" href="/favicon.ico">
+<meta name="theme-color" content="#252627"><meta itemprop="name" content="docker-tar,docker-untar源码分析">
+<meta itemprop="description" content="tags: 源码分析,container docker-tar,docker-untar源码分析 本文编写时，最新release为v20.10.6, 因此代码均为v20.10.6分支的代码
+1. 简介 docker-tar和docker-untar是dockerd的两个子命令，是docker cp命令在容器内的延伸，分别提供在容器内打包、解包的能力。
+2. 使用 2.1 代码使用 参考 docker reexec源码分析。
+2.2 二进制使用 除了通过以类似fork的形式在代码中使用，docker-tar也可以通过二进制的形式使用，但这种形式不常见。这种使用方式的价值在于能方便得直接进入docker-tar的逻辑，在分析docker-tar实现、或研究相关的安全问题时，比较方便、直观。
+将dockerd复制一份，得到docker-tar的二进制文件，两者使用相同的二进制文件，通过执行时的不同的cmdline，进入不同的代码逻辑。
+cp /usr/bin/dockerd /usr/bin/docker-tar docker-tar的stdin是json格式的配置选项，arg1是需要打包的路径，arg2是chroot的目录，stdout会输出打包好的文件。
+echo &quot;{}&quot; &gt; /tmp/json mkdir /tmp/test cp /etc/hosts /tmp/test/ docker-tar &lt; /tmp/json /test/hosts /tmp/ &gt; /tmp/test.tar docker-tar具体接收的配置选项参见： https://github.com/moby/moby/blob/v20.10.6/pkg/archive/archive.go#L37
+TarOptions struct { IncludeFiles []string ExcludePatterns []string Compression Compression NoLchown bool UIDMaps []idtools.IDMap GIDMaps []idtools.IDMap ChownOpts *idtools.Identity IncludeSourceDir bool // WhiteoutFormat is the expected on disk format for whiteout files.">
+<meta itemprop="datePublished" content="2021-06-01T08:59:53+00:00" />
+<meta itemprop="dateModified" content="2021-06-01T08:59:53+00:00" />
+<meta itemprop="wordCount" content="680">
+
+
+
+<meta itemprop="keywords" content="" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="docker-tar,docker-untar源码分析"/>
+<meta name="twitter:description" content="tags: 源码分析,container docker-tar,docker-untar源码分析 本文编写时，最新release为v20.10.6, 因此代码均为v20.10.6分支的代码
+1. 简介 docker-tar和docker-untar是dockerd的两个子命令，是docker cp命令在容器内的延伸，分别提供在容器内打包、解包的能力。
+2. 使用 2.1 代码使用 参考 docker reexec源码分析。
+2.2 二进制使用 除了通过以类似fork的形式在代码中使用，docker-tar也可以通过二进制的形式使用，但这种形式不常见。这种使用方式的价值在于能方便得直接进入docker-tar的逻辑，在分析docker-tar实现、或研究相关的安全问题时，比较方便、直观。
+将dockerd复制一份，得到docker-tar的二进制文件，两者使用相同的二进制文件，通过执行时的不同的cmdline，进入不同的代码逻辑。
+cp /usr/bin/dockerd /usr/bin/docker-tar docker-tar的stdin是json格式的配置选项，arg1是需要打包的路径，arg2是chroot的目录，stdout会输出打包好的文件。
+echo &quot;{}&quot; &gt; /tmp/json mkdir /tmp/test cp /etc/hosts /tmp/test/ docker-tar &lt; /tmp/json /test/hosts /tmp/ &gt; /tmp/test.tar docker-tar具体接收的配置选项参见： https://github.com/moby/moby/blob/v20.10.6/pkg/archive/archive.go#L37
+TarOptions struct { IncludeFiles []string ExcludePatterns []string Compression Compression NoLchown bool UIDMaps []idtools.IDMap GIDMaps []idtools.IDMap ChownOpts *idtools.Identity IncludeSourceDir bool // WhiteoutFormat is the expected on disk format for whiteout files."/>
+
+
+
+
+<meta property="article:published_time" content="2021-06-01 08:59:53 &#43;0000 UTC" />
+
+
+
+
+
+
+
+    </head>
+
+    <body class="dark-theme">
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text">$ cd /home/st0n3</span>
+            <span class="logo__cursor"></span>
+        
+    </div>
+</a>
+
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="/aboutme.html">About</a></li><li><a href="/post.html">Blog</a></li><li><a href="/hackerbot">Hackerbot</a></li><li><a href="/skill_tree/">SkillTree</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+
+            <span class="theme-toggle"><svg class="theme-toggler" width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M22 41C32.4934 41 41 32.4934 41 22C41 11.5066 32.4934 3 22
+  3C11.5066 3 3 11.5066 3 22C3 32.4934 11.5066 41 22 41ZM7 22C7
+  13.7157 13.7157 7 22 7V37C13.7157 37 7 30.2843 7 22Z"/>
+</svg>
+</span>
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
+                
+    <main class="post">
+
+        <div class="post-info">
+            
+            </p>
+        </div>
+
+        <article>
+            <h2 class="post-title"><a href="/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E8%BF%9B%E7%A8%8B%E5%AE%B9%E5%99%A8/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%B9%E5%99%A8/docker/docker%E6%BA%90%E7%A0%81%E5%AE%A1%E8%AE%A1/docker%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/docker-tardocker-untar%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90.html">docker-tar,docker-untar源码分析</a></h2>
+
+            
+
+            <div class="post-content">
+                <hr>
+<h2 id="tags-源码分析container">tags: 源码分析,container</h2>
+<h1 id="docker-tardocker-untar源码分析">docker-tar,docker-untar源码分析</h1>
+<p><small>本文编写时，最新release为v20.10.6, 因此代码均为v20.10.6分支的代码</small></p>
+<h2 id="1-简介">1. 简介</h2>
+<p>docker-tar和docker-untar是dockerd的两个子命令，是docker cp命令在容器内的延伸，分别提供在容器内打包、解包的能力。</p>
+<h2 id="2-使用">2. 使用</h2>
+<h3 id="21-代码使用">2.1 代码使用</h3>
+<p>参考 <a href="https://ssst0n3.github.io/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E8%BF%9B%E7%A8%8B%E5%AE%B9%E5%99%A8/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%B9%E5%99%A8/docker/docker%E6%BA%90%E7%A0%81%E5%AE%A1%E8%AE%A1/docker%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/docker-reexec%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90.html">docker reexec源码分析</a>。</p>
+<h3 id="22-二进制使用">2.2 二进制使用</h3>
+<p>除了通过以类似fork的形式在代码中使用，docker-tar也可以通过二进制的形式使用，但这种形式不常见。这种使用方式的价值在于能方便得直接进入docker-tar的逻辑，在分析docker-tar实现、或研究相关的安全问题时，比较方便、直观。</p>
+<p>将dockerd复制一份，得到docker-tar的二进制文件，两者使用相同的二进制文件，通过执行时的不同的cmdline，进入不同的代码逻辑。</p>
+<pre><code>cp /usr/bin/dockerd /usr/bin/docker-tar
+</code></pre><p>docker-tar的stdin是json格式的配置选项，arg1是需要打包的路径，arg2是chroot的目录，stdout会输出打包好的文件。</p>
+<pre><code>echo &quot;{}&quot; &gt; /tmp/json
+mkdir /tmp/test
+cp /etc/hosts /tmp/test/
+docker-tar &lt; /tmp/json /test/hosts /tmp/ &gt; /tmp/test.tar
+</code></pre><p>docker-tar具体接收的配置选项参见：
+<a href="https://github.com/moby/moby/blob/v20.10.6/pkg/archive/archive.go#L37">https://github.com/moby/moby/blob/v20.10.6/pkg/archive/archive.go#L37</a></p>
+<pre><code class="language-go!" data-lang="go!">TarOptions struct {
+    IncludeFiles     []string
+    ExcludePatterns  []string
+    Compression      Compression
+    NoLchown         bool
+    UIDMaps          []idtools.IDMap
+    GIDMaps          []idtools.IDMap
+    ChownOpts        *idtools.Identity
+    IncludeSourceDir bool
+    // WhiteoutFormat is the expected on disk format for whiteout files.
+    // This format will be converted to the standard format on pack
+    // and from the standard format on unpack.
+    WhiteoutFormat WhiteoutFormat
+    // When unpacking, specifies whether overwriting a directory with a
+    // non-directory is allowed and vice versa.
+    NoOverwriteDirNonDir bool
+    // For each include when creating an archive, the included name will be
+    // replaced with the matching name from this map.
+    RebaseNames map[string]string
+    InUserNS    bool
+}
+</code></pre><p>docker-untar的使用类似, 通过stdin传入打包后的文件，从fd3读取json格式的配置选项，arg1是解压到的目录，arg2是chroot的目录。</p>
+<pre><code>cp /usr/bin/dockerd /usr/bin/docker-untar
+echo &quot;{}&quot; &gt; /tmp/json
+mkdir -p /tmp/test
+docker-untar &lt;/tmp/test.tar  3&lt;/tmp/json /test/ /tmp/
+</code></pre><p>其中，docker-untar具体接收的配置选项与docker-tar相同。</p>
+<h2 id="3-实现分析">3. 实现分析</h2>
+<p>docker-tar,docker-untar的前段的调用流程、代码，我们已在<a href="https://ssst0n3.github.io/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E8%BF%9B%E7%A8%8B%E5%AE%B9%E5%99%A8/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%B9%E5%99%A8/docker/docker%E6%BA%90%E7%A0%81%E5%AE%A1%E8%AE%A1/docker%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/docker-reexec%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90.html">docker reexec源码分析</a>一文中分析过。下面，我们直接从<code>docker-tar</code>,<code>docker-untar</code>的具体实现展开。</p>
+<h3 id="31-docker-tar">3.1 docker-tar</h3>
+<p><code>tar()</code>函数是<code>docker-tar</code>的起始入口。实现了参数解析、chroot、打包、输出四部分功能，下文详细展开。</p>
+<p><a href="https://github.com/moby/moby/blob/v20.10.6/pkg/chrootarchive/archive_unix.go#L121">https://github.com/moby/moby/blob/v20.10.6/pkg/chrootarchive/archive_unix.go#L121</a></p>
+<pre><code class="language-go!" data-lang="go!">func tar() {
+    runtime.LockOSThread()
+    flag.Parse()
+
+    src := flag.Arg(0)
+    var root string
+    if len(flag.Args()) &gt; 1 {
+        root = flag.Arg(1)
+    }
+
+    if root == &quot;&quot; {
+        root = src
+    }
+
+    if err := realChroot(root); err != nil {
+        fatal(err)
+    }
+
+    var options archive.TarOptions
+    if err := json.NewDecoder(os.Stdin).Decode(&amp;options); err != nil {
+        fatal(err)
+    }
+
+    rdr, err := archive.TarWithOptions(src, &amp;options)
+    if err != nil {
+        fatal(err)
+    }
+    defer rdr.Close()
+
+    if _, err := io.Copy(os.Stdout, rdr); err != nil {
+        fatal(err)
+    }
+
+    os.Exit(0)
+}
+</code></pre><h4 id="311-参数解析">3.1.1 参数解析</h4>
+<p>涉及参数解析的代码如下，其中</p>
+<ul>
+<li>arg1为src，和配置选项一起传递给archive.TarWithOptions函数，用于具体打包。src指要打包的路径。</li>
+<li>arg2为root，在开始打包前，会先chroot到该路径，以防止相关安全问题。如果没有传入arg2, 则root的取值为src。</li>
+<li>stdin为打包的配置选项</li>
+<li>打包完毕后，会输出到stdout</li>
+</ul>
+<pre><code class="language-go!" data-lang="go!">func tar() {
+    ...
+    
+    flag.Parse()
+
+    src := flag.Arg(0)
+    var root string
+    if len(flag.Args()) &gt; 1 {
+        root = flag.Arg(1)
+    }
+
+    if root == &quot;&quot; {
+        root = src
+    }
+    
+    ...
+
+    var options archive.TarOptions
+    if err := json.NewDecoder(os.Stdin).Decode(&amp;options); err != nil {
+        fatal(err)
+    }
+
+    ...
+}
+</code></pre><h4 id="312-chroot">3.1.2 chroot</h4>
+<p>chroot调用的函数名为realChroot, 是为了与docker自己实现的privot_root区别开，实际调用的是传统的chroot。</p>
+<p><a href="https://github.com/moby/moby/blob/v20.10.6/pkg/chrootarchive/archive_unix.go#L135-L137">https://github.com/moby/moby/blob/v20.10.6/pkg/chrootarchive/archive_unix.go#L135-L137</a></p>
+<pre><code class="language-go!" data-lang="go!">if err := realChroot(root); err != nil {
+    fatal(err)
+}
+</code></pre><p><a href="https://github.com/moby/moby/blob/v20.10.6/pkg/chrootarchive/chroot_linux.go#L106">https://github.com/moby/moby/blob/v20.10.6/pkg/chrootarchive/chroot_linux.go#L106</a></p>
+<pre><code class="language-go!" data-lang="go!">func realChroot(path string) error {
+    if err := unix.Chroot(path); err != nil {
+        return fmt.Errorf(&quot;Error after fallback to chroot: %v&quot;, err)
+    }
+    if err := unix.Chdir(&quot;/&quot;); err != nil {
+        return fmt.Errorf(&quot;Error changing to new root after chroot: %v&quot;, err)
+    }
+    return nil
+}
+</code></pre><h4 id="313-打包">3.1.3 打包</h4>
+<p><a href="https://github.com/moby/moby/blob/v20.10.6/pkg/chrootarchive/archive_unix.go#L144">https://github.com/moby/moby/blob/v20.10.6/pkg/chrootarchive/archive_unix.go#L144</a></p>
+<pre><code class="language-go!" data-lang="go!">func tar() {
+    ...
+    rdr, err := archive.TarWithOptions(src, &amp;options)
+    ...
+}
+</code></pre><p>调用archive库的<code>TarWithOptions</code>函数完成打包
+<a href="https://github.com/moby/moby/blob/v20.10.6/pkg/archive/archive.go#L724">https://github.com/moby/moby/blob/v20.10.6/pkg/archive/archive.go#L724</a></p>
+<p>如果是windows平台，可能会有路径过长的问题。对于linux平台，不作任何修改。</p>
+<p><a href="https://github.com/moby/moby/blob/v20.10.6/pkg/archive/archive.go#L728">https://github.com/moby/moby/blob/v20.10.6/pkg/archive/archive.go#L728</a></p>
+<pre><code class="language-go!" data-lang="go!">func TarWithOptions(srcPath string, options *TarOptions) (io.ReadCloser, error) {
+
+	// Fix the source path to work with long path names. This is a no-op
+	// on platforms other than Windows.
+	srcPath = fixVolumePathPrefix(srcPath)
+
+</code></pre><p>参考windows官方文档，我们知道windows有专门的处理长路径的表示方式</p>
+<blockquote>
+<p><a href="https://stackoverflow.com/questions/21194530/what-does-mean-when-prepended-to-a-file-path">https://stackoverflow.com/questions/21194530/what-does-mean-when-prepended-to-a-file-path</a></p>
+<p><a href="https://docs.microsoft.com/zh-cn/windows/win32/fileio/naming-a-file?redirectedfrom=MSDN#short-vs-long-names">https://docs.microsoft.com/zh-cn/windows/win32/fileio/naming-a-file?redirectedfrom=MSDN#short-vs-long-names</a></p>
+</blockquote>
+<p><a href="https://github.com/moby/moby/blob/v20.10.6/pkg/archive/archive_windows.go#L14">https://github.com/moby/moby/blob/v20.10.6/pkg/archive/archive_windows.go#L14</a></p>
+<pre><code class="language-go!" data-lang="go!">func fixVolumePathPrefix(srcPath string) string {
+	return longpath.AddPrefix(srcPath)
+}
+
+const Prefix = `\\?\`
+
+func AddPrefix(path string) string {
+	if !strings.HasPrefix(path, Prefix) {
+		if strings.HasPrefix(path, `\\`) {
+			// This is a UNC path, so we need to add 'UNC' to the path as well.
+			path = Prefix + `UNC` + path[1:]
+		} else {
+			path = Prefix + path
+		}
+	}
+	return path
+}
+</code></pre><p>如果打包的配置选项中有<code>options.ExcludePatterns</code>， 则在打包时会排除掉这些文件。(docker-tar不涉及)。
+<a href="https://github.com/moby/moby/blob/v20.10.6/pkg/archive/archive.go#L730">https://github.com/moby/moby/blob/v20.10.6/pkg/archive/archive.go#L730</a></p>
+<pre><code class="language-go!" data-lang="go!">func TarWithOptions(srcPath string, options *TarOptions) (io.ReadCloser, error) {
+    ...
+    pm, err := fileutils.NewPatternMatcher(options.ExcludePatterns)
+    ...
+    for _, include := range options.IncludeFiles {
+        ...
+        skip, err = pm.Matches(relFilePath)
+        ...
+    }
+    if skip {
+        ...
+        if !pm.Exclusions() {
+            return filepath.SkipDir
+        }
+        ...
+        for _, pat := range pm.Patterns() {
+            if !pat.Exclusion() {
+                continue
+            }
+            ...
+        }
+    ...
+</code></pre><p>如果配置了压缩选项，则输出时进行压缩（docker-tar不压缩,即不涉及）</p>
+<pre><code class="language-go!" data-lang="go!">func TarWithOptions(srcPath string, options *TarOptions) (io.ReadCloser, error) {
+    ...
+    pipeReader, pipeWriter := io.Pipe()
+    compressWriter, err := CompressStream(pipeWriter, options.Compression)
+    ...
+</code></pre><p>压缩的格式有不压缩、Gzip两种</p>
+<p><a href="https://github.com/moby/moby/blob/v20.10.6/pkg/archive/archive.go#L234">https://github.com/moby/moby/blob/v20.10.6/pkg/archive/archive.go#L234</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">CompressStream</span>(<span style="color:#a6e22e">dest</span> <span style="color:#a6e22e">io</span>.<span style="color:#a6e22e">Writer</span>, <span style="color:#a6e22e">compression</span> <span style="color:#a6e22e">Compression</span>) (<span style="color:#a6e22e">io</span>.<span style="color:#a6e22e">WriteCloser</span>, <span style="color:#66d9ef">error</span>) {
+	<span style="color:#a6e22e">p</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">pools</span>.<span style="color:#a6e22e">BufioWriter32KPool</span>
+	<span style="color:#a6e22e">buf</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">p</span>.<span style="color:#a6e22e">Get</span>(<span style="color:#a6e22e">dest</span>)
+	<span style="color:#66d9ef">switch</span> <span style="color:#a6e22e">compression</span> {
+	<span style="color:#66d9ef">case</span> <span style="color:#a6e22e">Uncompressed</span>:
+		<span style="color:#a6e22e">writeBufWrapper</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">p</span>.<span style="color:#a6e22e">NewWriteCloserWrapper</span>(<span style="color:#a6e22e">buf</span>, <span style="color:#a6e22e">buf</span>)
+		<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">writeBufWrapper</span>, <span style="color:#66d9ef">nil</span>
+	<span style="color:#66d9ef">case</span> <span style="color:#a6e22e">Gzip</span>:
+		<span style="color:#a6e22e">gzWriter</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">gzip</span>.<span style="color:#a6e22e">NewWriter</span>(<span style="color:#a6e22e">dest</span>)
+		<span style="color:#a6e22e">writeBufWrapper</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">p</span>.<span style="color:#a6e22e">NewWriteCloserWrapper</span>(<span style="color:#a6e22e">buf</span>, <span style="color:#a6e22e">gzWriter</span>)
+		<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">writeBufWrapper</span>, <span style="color:#66d9ef">nil</span>
+	<span style="color:#66d9ef">case</span> <span style="color:#a6e22e">Bzip2</span>, <span style="color:#a6e22e">Xz</span>:
+		<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>, <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Errorf</span>(<span style="color:#e6db74">&#34;Unsupported compression format %s&#34;</span>, (<span style="color:#f92672">&amp;</span><span style="color:#a6e22e">compression</span>).<span style="color:#a6e22e">Extension</span>())
+	<span style="color:#66d9ef">default</span>:
+		<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>, <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Errorf</span>(<span style="color:#e6db74">&#34;Unsupported compression format %s&#34;</span>, (<span style="color:#f92672">&amp;</span><span style="color:#a6e22e">compression</span>).<span style="color:#a6e22e">Extension</span>())
+	}
+}
+</code></pre></div><p>在使用ns时处理Whiteout，具体来说就是</p>
+<ul>
+<li>如果配置了OverlayWhiteoutFormat，并且没有使用user ns, 则后续会处理Whiteout。</li>
+<li>如果配置了OverlayWhiteoutFormat, 而且使用了user ns, 则报错。</li>
+</ul>
+<p>第二种情况是在20.10才实现的,因为overlay2不再支持 在user ns中使用OverlayWhiteout了，所以可以直接报错。在这之前，在user ns中处理Whiteout有一个相当复杂的过程（详见 <a href="https://github.com/moby/moby/commit/c1e7924f7cb85f1ee0ad168eb9d6b74790ef4b65">https://github.com/moby/moby/commit/c1e7924f7cb85f1ee0ad168eb9d6b74790ef4b65</a> ）。</p>
+<p>这里提到的whiteout是一种</p>
+<p><a href="https://github.com/moby/moby/blob/v20.10.6/pkg/archive/archive.go#L742">https://github.com/moby/moby/blob/v20.10.6/pkg/archive/archive.go#L742</a></p>
+<pre><code class="language-go!" data-lang="go!">func TarWithOptions(srcPath string, options *TarOptions) (io.ReadCloser, error) {
+    ...
+    whiteoutConverter, err := getWhiteoutConverter(options.WhiteoutFormat, options.InUserNS)
+</code></pre><p><a href="https://github.com/moby/moby/blob/v20.10.6/pkg/archive/archive_linux.go#L14">https://github.com/moby/moby/blob/v20.10.6/pkg/archive/archive_linux.go#L14</a></p>
+<pre><code class="language-go!" data-lang="go!">func getWhiteoutConverter(format WhiteoutFormat, inUserNS bool) (tarWhiteoutConverter, error) {
+	if format == OverlayWhiteoutFormat {
+		if inUserNS {
+			return nil, errors.New(&quot;specifying OverlayWhiteoutFormat is not allowed in userns&quot;)
+		}
+		return overlayWhiteoutConverter{}, nil
+	}
+	return nil, nil
+}
+</code></pre><p><a href="https://github.com/moby/moby/commit/6322dfc217a3c28ea4d7c66f43394146b3862801#diff-19981b1219ed310dd16f9b9bf52c4a782b5ef410821df203d1b8272a3c5a8688">https://github.com/moby/moby/commit/6322dfc217a3c28ea4d7c66f43394146b3862801#diff-19981b1219ed310dd16f9b9bf52c4a782b5ef410821df203d1b8272a3c5a8688</a></p>
+<h3 id="32-docker-untar">3.2 docker-untar</h3>
+
+            </div>
+        </article>
+
+        <hr />
+
+        <div class="post-info">
+  			</div>
+
+        
+    </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>&copy; 2021</span>
+            
+            <span></span>
+            <span> <a href="/posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a></span>
+        </div>
+    </div>
+    <div class="footer__inner">
+        <div class="footer__content">
+
+        </div>
+    </div>
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>Powered by <a href="http://gohugo.io">Hugo</a></span>
+            <span>Made with &#10084; by <a href="https://github.com/st0n3">st0n3</a></span>
+            <span>Based on <a href="https://github.com/rhazdon">rhazdon</a></span>
+        </div>
+    </div>
+
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      extensions: ["tex2jax.js"],
+      
+      jax: ["input/TeX", "output/CommonHTML"],
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+        displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+        processEscapes: true
+      },
+      "HTML-CSS": { fonts: ["TeX"] },
+      displayAlign: "left"
+    });
+  </script>
+
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_CHTML"></script>
+
+
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+
+<script type="text/javascript" src="/bundle.min.4c3fb12a087ceed4a52cb5d57068a9795c7069617a01ca70f788052ad66e1791779e6c72686e1dc0ca13dc03b0203204b6566bb0dd1ee80de2b7ff4d8fe53db2.js" integrity="sha512-TD&#43;xKgh87tSlLLXVcGipeVxwaWF6Acpw94gFKtZuF5F3nmxyaG4dwMoT3AOwIDIEtlZrsN0e6A3it/9Nj&#43;U9sg=="></script>
+
+
+
+    </body>
+</html>
