@@ -54,7 +54,7 @@ echo &quot;{}&quot; &gt; /tmp/json mkdir /tmp/test cp /etc/hosts /tmp/test/ dock
 TarOptions struct { IncludeFiles []string ExcludePatterns []string Compression Compression NoLchown bool UIDMaps []idtools.IDMap GIDMaps []idtools.IDMap ChownOpts *idtools.Identity IncludeSourceDir bool // WhiteoutFormat is the expected on disk format for whiteout files.">
 <meta itemprop="datePublished" content="2021-06-01T08:59:53+00:00" />
 <meta itemprop="dateModified" content="2021-06-01T08:59:53+00:00" />
-<meta itemprop="wordCount" content="1097">
+<meta itemprop="wordCount" content="2468">
 
 
 
@@ -281,8 +281,10 @@ docker-untar &lt;/tmp/test.tar  3&lt;/tmp/json /test/ /tmp/
     rdr, err := archive.TarWithOptions(src, &amp;options)
     ...
 }
-</code></pre><p>调用archive库的<code>TarWithOptions</code>函数完成打包
+</code></pre><h5 id="3131-pkgarchivearchivegotarwithoptions">3.1.3.1 pkg/archive/archive.go/TarWithOptions</h5>
+<p>调用archive库的<code>TarWithOptions</code>函数完成打包
 <a href="https://github.com/moby/moby/blob/v20.10.6/pkg/archive/archive.go#L724">https://github.com/moby/moby/blob/v20.10.6/pkg/archive/archive.go#L724</a></p>
+<h5 id="3132-pkgarchivearchivegotarwithoptions-解决windows长路径问题">3.1.3.2 pkg/archive/archive.go/TarWithOptions: 解决windows长路径问题</h5>
 <p>如果是windows平台，可能会有路径过长的问题。对于linux平台，不作任何修改。</p>
 <p><a href="https://github.com/moby/moby/blob/v20.10.6/pkg/archive/archive.go#L728">https://github.com/moby/moby/blob/v20.10.6/pkg/archive/archive.go#L728</a></p>
 <pre><code class="language-go!" data-lang="go!">func TarWithOptions(srcPath string, options *TarOptions) (io.ReadCloser, error) {
@@ -314,7 +316,8 @@ func AddPrefix(path string) string {
 	}
 	return path
 }
-</code></pre><p>如果打包的配置选项中有<code>options.ExcludePatterns</code>， 则在打包时会排除掉这些文件。(docker-tar不涉及)。
+</code></pre><h5 id="3133-pkgarchivearchivegotarwithoptions-使用excludepattern跳过部分文件">3.1.3.3 pkg/archive/archive.go/TarWithOptions: 使用ExcludePattern跳过部分文件</h5>
+<p>如果打包的配置选项中有<code>options.ExcludePatterns</code>， 则在打包时会排除掉这些文件。(docker-tar不涉及)。
 <a href="https://github.com/moby/moby/blob/v20.10.6/pkg/archive/archive.go#L730">https://github.com/moby/moby/blob/v20.10.6/pkg/archive/archive.go#L730</a></p>
 <pre><code class="language-go!" data-lang="go!">func TarWithOptions(srcPath string, options *TarOptions) (io.ReadCloser, error) {
     ...
@@ -338,7 +341,8 @@ func AddPrefix(path string) string {
             ...
         }
     ...
-</code></pre><p>创建一组pipe读写流（pipe的读和写是一对一匹配的，是一个在内存中的同步的管道）,下面会向pipeWriter写入tar包，然后把Reader传出去由其他逻辑读取：
+</code></pre><h5 id="3134-pkgarchivearchivegotarwithoptions-输入输出和压缩">3.1.3.4 pkg/archive/archive.go/TarWithOptions: 输入输出和压缩</h5>
+<p>创建一组pipe读写流（pipe的读和写是一对一匹配的，是一个在内存中的同步的管道）,下面会向pipeWriter写入tar包，然后把Reader传出去由其他逻辑读取：
 <a href="https://github.com/moby/moby/blob/v20.10.6/pkg/archive/archive.go#L735">https://github.com/moby/moby/blob/v20.10.6/pkg/archive/archive.go#L735</a></p>
 <pre><code class="language-go!" data-lang="go!">func TarWithOptions(srcPath string, options *TarOptions) (io.ReadCloser, error) {
     ...
@@ -368,7 +372,8 @@ func AddPrefix(path string) string {
 		<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>, <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Errorf</span>(<span style="color:#e6db74">&#34;Unsupported compression format %s&#34;</span>, (<span style="color:#f92672">&amp;</span><span style="color:#a6e22e">compression</span>).<span style="color:#a6e22e">Extension</span>())
 	}
 }
-</code></pre></div><p>在使用ns时处理Whiteout，具体来说就是</p>
+</code></pre></div><h5 id="3135-pkgarchivearchivegotarwithoptions-处理whiteout转换">3.1.3.5 pkg/archive/archive.go/TarWithOptions: 处理whiteout转换</h5>
+<p>在使用ns时处理Whiteout，具体来说就是</p>
 <ul>
 <li>如果配置了OverlayWhiteoutFormat，并且没有使用user ns, 则后续会处理Whiteout。</li>
 <li>如果配置了OverlayWhiteoutFormat, 而且使用了user ns, 则报错。</li>
@@ -394,7 +399,8 @@ func AddPrefix(path string) string {
 	}
 	return nil, nil
 }
-</code></pre><p>剩下的操作在一个goroutine中执行，这样整个函数不会阻塞在这里，可以继续执行其他逻辑：</p>
+</code></pre><h5 id="3136-pkgarchivearchivegotarwithoptions-生成tarappender">3.1.3.6 pkg/archive/archive.go/TarWithOptions: 生成TarAppender</h5>
+<p>剩下的操作在一个goroutine中执行，这样整个函数不会阻塞在这里，可以继续执行其他逻辑：</p>
 <p><a href="https://github.com/moby/moby/blob/v20.10.6/pkg/archive/archive.go#L747">https://github.com/moby/moby/blob/v20.10.6/pkg/archive/archive.go#L747</a></p>
 <pre><code class="language-go!" data-lang="go!">func TarWithOptions(srcPath string, options *TarOptions) (io.ReadCloser, error) {
     ...
@@ -422,7 +428,8 @@ ta.WhiteoutConverter = whiteoutConverter
 		ChownOpts:       chownOpts,
 	}
 }
-</code></pre><p>检查srcPath是否为目录，如果不是，要取其上级目录
+</code></pre><h5 id="3137-pkgarchivearchivegotarwithoptions-遍历待打包路径">3.1.3.7 pkg/archive/archive.go/TarWithOptions: 遍历待打包路径</h5>
+<p>检查srcPath是否为目录，如果不是，要取其上级目录
 <a href="https://github.com/moby/moby/blob/v20.10.6/pkg/archive/archive.go#L776-L793">https://github.com/moby/moby/blob/v20.10.6/pkg/archive/archive.go#L776-L793</a></p>
 <pre><code class="language-go!" data-lang="go!">stat, err := os.Lstat(srcPath)
 if err != nil {
@@ -482,30 +489,34 @@ for _, include := range options.IncludeFiles {
     }
     return nil
 }
-</code></pre><p>具体添加文件到tar包，是执行的addTarfile函数
+</code></pre><h5 id="3138-pkgarchivearchivegoaddtarfile-处理软链接">3.1.3.8 pkg/archive/archive.go/addTarFile: 处理软链接</h5>
+<p>具体添加文件到tar包，是执行的addTarfile函数
 <a href="https://github.com/moby/moby/blob/v20.10.6/pkg/archive/archive.go#L457">https://github.com/moby/moby/blob/v20.10.6/pkg/archive/archive.go#L457</a></p>
 <p>如果该文件是软链接，则取其链接的地址</p>
 <pre><code class="language-go!" data-lang="go!">func (ta *tarAppender) addTarFile(path, name string) error {
-	fi, err := os.Lstat(path)
-	if err != nil {
-		return err
-	}
+    fi, err := os.Lstat(path)
+    if err != nil {
+        return err
+    }
 
-	var link string
-	if fi.Mode()&amp;os.ModeSymlink != 0 {
-		var err error
-		link, err = os.Readlink(path)
-		if err != nil {
-			return err
-		}
-	}
+    var link string
+    if fi.Mode()&amp;os.ModeSymlink != 0 {
+        var err error
+        link, err = os.Readlink(path)
+        if err != nil {
+            return err
+        }
+    }
     ...
-	return nil
 }
-</code></pre><p>读取路径的文件头信息
+</code></pre><h5 id="3139-pkgarchivearchivegoaddtarfile-从fileinfo中组装header">3.1.3.9 pkg/archive/archive.go/addTarFile: 从FileInfo中组装Header</h5>
+<p>读取路径的文件头信息
 <a href="https://github.com/moby/moby/blob/v20.10.6/pkg/archive/archive.go#L472">https://github.com/moby/moby/blob/v20.10.6/pkg/archive/archive.go#L472</a></p>
-<pre><code class="language-go!" data-lang="go!">hdr, err := FileInfoHeader(name, fi, link)
-</code></pre><p>FileInfoHeader函数是创建一些常用的文件头信息，这些信息主要是go官方库archive/tar的FileInfoHeader提供的，然后做了一些简单的处理。但是在19.03增加了vendor/archive/tar, 替换了官方库(<a href="https://github.com/moby/moby/commit/aa6a9891b09cce3d9004121294301a30d45d998d#diff-630ba09448af522154f38ef7685ef1f44b0f3e9430f80829a03ce24f400f3754">https://github.com/moby/moby/commit/aa6a9891b09cce3d9004121294301a30d45d998d#diff-630ba09448af522154f38ef7685ef1f44b0f3e9430f80829a03ce24f400f3754</a>)。</p>
+<pre><code class="language-go!" data-lang="go!">func (ta *tarAppender) addTarFile(path, name string) error {
+    ...
+    hdr, err := FileInfoHeader(name, fi, link)
+    ...
+</code></pre><p>FileInfoHeader函数是创建一些常用的文件头信息，这些信息主要是go官方库archive/tar的FileInfoHeader提供的，然后做了一些简单的处理。但是在19.03.8增加了vendor/archive/tar, 替换了官方库(<a href="https://github.com/moby/moby/commit/aa6a9891b09cce3d9004121294301a30d45d998d#diff-630ba09448af522154f38ef7685ef1f44b0f3e9430f80829a03ce24f400f3754">https://github.com/moby/moby/commit/aa6a9891b09cce3d9004121294301a30d45d998d#diff-630ba09448af522154f38ef7685ef1f44b0f3e9430f80829a03ce24f400f3754</a>)。</p>
 <p><a href="https://github.com/moby/moby/blob/v20.10.6/pkg/archive/archive.go#L360-L375">https://github.com/moby/moby/blob/v20.10.6/pkg/archive/archive.go#L360-L375</a></p>
 <pre><code class="language-go!" data-lang="go!">func FileInfoHeader(name string, fi os.FileInfo, link string) (*tar.Header, error) {
 	hdr, err := tar.FileInfoHeader(fi, link)
@@ -522,6 +533,395 @@ for _, include := range options.IncludeFiles {
 		return nil, err
 	}
 	return hdr, nil
+}
+</code></pre><p>因此，archive/tar在19.03.8(不含)之前，使用的是go的官方库archive/tar; 在19.03.8及之后的版本使用的是docker修改并复制到vendor/archive/tar的代码。</p>
+<h5 id="31310-gosrcarchivetarcommongo-从fileinfo中组装header">3.1.3.10 go/src/archive/tar/common.go: 从FileInfo中组装Header</h5>
+<p>从FileInfo中获取Name,ModTime,Perm等等信息
+<a href="https://github.com/golang/go/blob/go1.16/src/archive/tar/common.go#L629">https://github.com/golang/go/blob/go1.16/src/archive/tar/common.go#L629</a></p>
+<p>如果实现了sysStat方法，就调用这个方法。
+<a href="https://github.com/golang/go/blob/go1.16/src/archive/tar/common.go#L701-L703">https://github.com/golang/go/blob/go1.16/src/archive/tar/common.go#L701-L703</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">if</span> <span style="color:#a6e22e">sysStat</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">h</span>, <span style="color:#a6e22e">sysStat</span>(<span style="color:#a6e22e">fi</span>, <span style="color:#a6e22e">h</span>)
+}
+</code></pre></div><p>sysStat是一个函数的声明，如果不实现它，它就会是nil
+<a href="https://github.com/golang/go/blob/go1.16/src/archive/tar/common.go#L602">https://github.com/golang/go/blob/go1.16/src/archive/tar/common.go#L602</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">sysStat</span> <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">fi</span> <span style="color:#a6e22e">fs</span>.<span style="color:#a6e22e">FileInfo</span>, <span style="color:#a6e22e">h</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Header</span>) <span style="color:#66d9ef">error</span>
+</code></pre></div><p>unix系统会在init时，实现sysStat。
+<a href="https://github.com/golang/go/blob/go1.16/src/archive/tar/stat_unix.go#L18-L101">https://github.com/golang/go/blob/go1.16/src/archive/tar/stat_unix.go#L18-L101</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">init</span>() {
+    <span style="color:#a6e22e">sysStat</span> = <span style="color:#a6e22e">statUnix</span>
+}
+
+<span style="color:#66d9ef">func</span> <span style="color:#a6e22e">statUnix</span>(<span style="color:#a6e22e">fi</span> <span style="color:#a6e22e">fs</span>.<span style="color:#a6e22e">FileInfo</span>, <span style="color:#a6e22e">h</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Header</span>) <span style="color:#66d9ef">error</span> {
+    <span style="color:#f92672">...</span>
+</code></pre></div><h5 id="31311-gosrcarchivetarstat_unixgo-设置usernamegroupname和devmajordevminor的值">3.1.3.11 go/src/archive/tar/stat_unix.go: 设置username,groupname和Devmajor,Devminor的值</h5>
+<p>statUnix的功能主要是设置username,groupname和Devmajor,Devminor的值。</p>
+<p>设置username,groupname时，优先使用缓存，如果没有缓存，则会去/etc/passwd, /etc/group文件中去查找。
+<a href="https://github.com/golang/go/blob/go1.16/src/archive/tar/stat_unix.go#L37-L48">https://github.com/golang/go/blob/go1.16/src/archive/tar/stat_unix.go#L37-L48</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">if</span> <span style="color:#a6e22e">u</span>, <span style="color:#a6e22e">ok</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">userMap</span>.<span style="color:#a6e22e">Load</span>(<span style="color:#a6e22e">h</span>.<span style="color:#a6e22e">Uid</span>); <span style="color:#a6e22e">ok</span> {
+    <span style="color:#a6e22e">h</span>.<span style="color:#a6e22e">Uname</span> = <span style="color:#a6e22e">u</span>.(<span style="color:#66d9ef">string</span>)
+} <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">u</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">user</span>.<span style="color:#a6e22e">LookupId</span>(<span style="color:#a6e22e">strconv</span>.<span style="color:#a6e22e">Itoa</span>(<span style="color:#a6e22e">h</span>.<span style="color:#a6e22e">Uid</span>)); <span style="color:#a6e22e">err</span> <span style="color:#f92672">==</span> <span style="color:#66d9ef">nil</span> {
+    <span style="color:#a6e22e">h</span>.<span style="color:#a6e22e">Uname</span> = <span style="color:#a6e22e">u</span>.<span style="color:#a6e22e">Username</span>
+    <span style="color:#a6e22e">userMap</span>.<span style="color:#a6e22e">Store</span>(<span style="color:#a6e22e">h</span>.<span style="color:#a6e22e">Uid</span>, <span style="color:#a6e22e">h</span>.<span style="color:#a6e22e">Uname</span>)
+}
+<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">g</span>, <span style="color:#a6e22e">ok</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">groupMap</span>.<span style="color:#a6e22e">Load</span>(<span style="color:#a6e22e">h</span>.<span style="color:#a6e22e">Gid</span>); <span style="color:#a6e22e">ok</span> {
+    <span style="color:#a6e22e">h</span>.<span style="color:#a6e22e">Gname</span> = <span style="color:#a6e22e">g</span>.(<span style="color:#66d9ef">string</span>)
+} <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">g</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">user</span>.<span style="color:#a6e22e">LookupGroupId</span>(<span style="color:#a6e22e">strconv</span>.<span style="color:#a6e22e">Itoa</span>(<span style="color:#a6e22e">h</span>.<span style="color:#a6e22e">Gid</span>)); <span style="color:#a6e22e">err</span> <span style="color:#f92672">==</span> <span style="color:#66d9ef">nil</span> {
+    <span style="color:#a6e22e">h</span>.<span style="color:#a6e22e">Gname</span> = <span style="color:#a6e22e">g</span>.<span style="color:#a6e22e">Name</span>
+    <span style="color:#a6e22e">groupMap</span>.<span style="color:#a6e22e">Store</span>(<span style="color:#a6e22e">h</span>.<span style="color:#a6e22e">Gid</span>, <span style="color:#a6e22e">h</span>.<span style="color:#a6e22e">Gname</span>)
+}
+</code></pre></div><p>查找user,group是由go的<code>os/user</code>库提供的。先尝试通过当前用户获取用户信息，如果无法获知当前用户，或当前用户与目标uid不一致，则调用lookupUserId函数实现。
+<a href="https://github.com/golang/go/blob/go1.16/src/os/user/lookup.go#L41">https://github.com/golang/go/blob/go1.16/src/os/user/lookup.go#L41</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">LookupId</span>(<span style="color:#a6e22e">uid</span> <span style="color:#66d9ef">string</span>) (<span style="color:#f92672">*</span><span style="color:#a6e22e">User</span>, <span style="color:#66d9ef">error</span>) {
+	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">u</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">Current</span>(); <span style="color:#a6e22e">err</span> <span style="color:#f92672">==</span> <span style="color:#66d9ef">nil</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#a6e22e">u</span>.<span style="color:#a6e22e">Uid</span> <span style="color:#f92672">==</span> <span style="color:#a6e22e">uid</span> {
+		<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">u</span>, <span style="color:#a6e22e">err</span>
+	}
+	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">lookupUserId</span>(<span style="color:#a6e22e">uid</span>)
+}
+</code></pre></div><p>Current函数会调用current函数，并在第一次调用时缓存。
+<a href="https://github.com/golang/go/blob/go1.16/src/os/user/lookup.go#L14">https://github.com/golang/go/blob/go1.16/src/os/user/lookup.go#L14</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">Current</span>() (<span style="color:#f92672">*</span><span style="color:#a6e22e">User</span>, <span style="color:#66d9ef">error</span>) {
+	<span style="color:#a6e22e">cache</span>.<span style="color:#a6e22e">Do</span>(<span style="color:#66d9ef">func</span>() { <span style="color:#a6e22e">cache</span>.<span style="color:#a6e22e">u</span>, <span style="color:#a6e22e">cache</span>.<span style="color:#a6e22e">err</span> = <span style="color:#a6e22e">current</span>() })
+	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">cache</span>.<span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+		<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>, <span style="color:#a6e22e">cache</span>.<span style="color:#a6e22e">err</span>
+	}
+	<span style="color:#a6e22e">u</span> <span style="color:#f92672">:=</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">cache</span>.<span style="color:#a6e22e">u</span> <span style="color:#75715e">// copy
+</span><span style="color:#75715e"></span>	<span style="color:#66d9ef">return</span> <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">u</span>, <span style="color:#66d9ef">nil</span>
+}
+</code></pre></div><h5 id="31312-gosrcosuser-查找当前用户">3.1.3.12 go/src/os/user/ 查找当前用户</h5>
+<p>current函数的实现与编译器强相关。如果在编译时使用了cgo，编译器会编译<code>os/user/cgo_lookup_unix.go</code>中的相关代码，该文件在头部使用注释的形式声明了编译器类型;如果在编译时未使用cgo，会使用<code>os/user/lookup_stubs.go</code>中的代码。</p>
+<blockquote>
+<p>这个变化，是在 <a href="https://github.com/golang/go/issues/23265">https://github.com/golang/go/issues/23265</a> 中产生的。目的是解决之前版本中加载libnss相关so库，导致静态编译被打破的问题。</p>
+</blockquote>
+<p>依据编译器不同编译不同函数，是通过go语言的build tag特性实现的。</p>
+<p><code>os/user/cgo_lookup_unix.go</code>中的build tags如下</p>
+<p>(aix or darwin or dragonfly or freebsd or ((not android) and linux) or netbsd or openbsd or solaris) and (cgo and not osusergo)</p>
+<p>即要求必须使用cgo编译器，不能指定osusergo这个标签。</p>
+<p><a href="https://github.com/golang/go/blob/go1.16/src/os/user/cgo_lookup_unix.go#L5-L6">https://github.com/golang/go/blob/go1.16/src/os/user/cgo_lookup_unix.go#L5-L6</a></p>
+<pre><code>// +build aix darwin dragonfly freebsd !android,linux netbsd openbsd solaris
+// +build cgo,!osusergo
+</code></pre><p><code>os/user/lookup_stubs.go</code>中的build tags如下</p>
+<p>((not cgo) and (not windows) and (not plan9)) or android or (osusergo and (not windows) and (not plan9))</p>
+<p>可以粗略理解为未使用cgo时，会编译以下代码</p>
+<p><a href="https://github.com/golang/go/blob/go1.16/src/os/user/lookup_stubs.go#L5">https://github.com/golang/go/blob/go1.16/src/os/user/lookup_stubs.go#L5</a></p>
+<pre><code>// +build !cgo,!windows,!plan9 android osusergo,!windows,!plan9
+</code></pre><blockquote>
+<p>关于build tag参见：
+<a href="https://golang.org/cmd/go/#hdr-Build_constraints">https://golang.org/cmd/go/#hdr-Build_constraints</a>
+<a href="https://www.digitalocean.com/community/tutorials/customizing-go-binaries-with-build-tags">https://www.digitalocean.com/community/tutorials/customizing-go-binaries-with-build-tags</a></p>
+</blockquote>
+<h5 id="31313-gosrcosusercgo_lookup_unixgo-查找当前用户cgo版">3.1.3.13 go/src/os/user/cgo_lookup_unix.go 查找当前用户(cgo版)</h5>
+<p>cgo版本的current函数在实现具体功能时调用了nss中的<code>getpwuid_r</code>函数，然后将其拼装成go中的User结构体。即，在调用该函数时，是需要动态得加载nss相关的so库的。</p>
+<p><a href="https://github.com/golang/go/blob/go1.16/src/os/user/cgo_lookup_unix.go#L48">https://github.com/golang/go/blob/go1.16/src/os/user/cgo_lookup_unix.go#L48</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#75715e">// +build aix darwin dragonfly freebsd !android,linux netbsd openbsd solaris
+</span><span style="color:#75715e">// +build cgo,!osusergo
+</span><span style="color:#75715e"></span>
+<span style="color:#f92672">package</span> <span style="color:#a6e22e">user</span>
+
+<span style="color:#f92672">...</span>
+
+<span style="color:#75715e">/*
+</span><span style="color:#75715e">#cgo solaris CFLAGS: -D_POSIX_PTHREAD_SEMANTICS
+</span><span style="color:#75715e">#include &lt;unistd.h&gt;
+</span><span style="color:#75715e">#include &lt;sys/types.h&gt;
+</span><span style="color:#75715e">#include &lt;pwd.h&gt;
+</span><span style="color:#75715e">#include &lt;grp.h&gt;
+</span><span style="color:#75715e">#include &lt;stdlib.h&gt;
+</span><span style="color:#75715e">static int mygetpwuid_r(int uid, struct passwd *pwd,
+</span><span style="color:#75715e">	char *buf, size_t buflen, struct passwd **result) {
+</span><span style="color:#75715e">	return getpwuid_r(uid, pwd, buf, buflen, result);
+</span><span style="color:#75715e">}
+</span><span style="color:#75715e">static int mygetpwnam_r(const char *name, struct passwd *pwd,
+</span><span style="color:#75715e">	char *buf, size_t buflen, struct passwd **result) {
+</span><span style="color:#75715e">	return getpwnam_r(name, pwd, buf, buflen, result);
+</span><span style="color:#75715e">}
+</span><span style="color:#75715e">static int mygetgrgid_r(int gid, struct group *grp,
+</span><span style="color:#75715e">	char *buf, size_t buflen, struct group **result) {
+</span><span style="color:#75715e"> return getgrgid_r(gid, grp, buf, buflen, result);
+</span><span style="color:#75715e">}
+</span><span style="color:#75715e">static int mygetgrnam_r(const char *name, struct group *grp,
+</span><span style="color:#75715e">	char *buf, size_t buflen, struct group **result) {
+</span><span style="color:#75715e"> return getgrnam_r(name, grp, buf, buflen, result);
+</span><span style="color:#75715e">}
+</span><span style="color:#75715e">*/</span>
+<span style="color:#f92672">import</span> <span style="color:#e6db74">&#34;C&#34;</span>
+
+<span style="color:#66d9ef">func</span> <span style="color:#a6e22e">current</span>() (<span style="color:#f92672">*</span><span style="color:#a6e22e">User</span>, <span style="color:#66d9ef">error</span>) {
+	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">lookupUnixUid</span>(<span style="color:#a6e22e">syscall</span>.<span style="color:#a6e22e">Getuid</span>())
+}
+
+<span style="color:#66d9ef">func</span> <span style="color:#a6e22e">lookupUnixUid</span>(<span style="color:#a6e22e">uid</span> <span style="color:#66d9ef">int</span>) (<span style="color:#f92672">*</span><span style="color:#a6e22e">User</span>, <span style="color:#66d9ef">error</span>) {
+	<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">pwd</span> <span style="color:#a6e22e">C</span>.<span style="color:#a6e22e">struct_passwd</span>
+	<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">result</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">C</span>.<span style="color:#a6e22e">struct_passwd</span>
+
+	<span style="color:#a6e22e">buf</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">alloc</span>(<span style="color:#a6e22e">userBuffer</span>)
+	<span style="color:#66d9ef">defer</span> <span style="color:#a6e22e">buf</span>.<span style="color:#a6e22e">free</span>()
+
+	<span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">retryWithBuffer</span>(<span style="color:#a6e22e">buf</span>, <span style="color:#66d9ef">func</span>() <span style="color:#a6e22e">syscall</span>.<span style="color:#a6e22e">Errno</span> {
+		<span style="color:#75715e">// mygetpwuid_r is a wrapper around getpwuid_r to avoid using uid_t
+</span><span style="color:#75715e"></span>		<span style="color:#75715e">// because C.uid_t(uid) for unknown reasons doesn&#39;t work on linux.
+</span><span style="color:#75715e"></span>		<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">syscall</span>.<span style="color:#a6e22e">Errno</span>(<span style="color:#a6e22e">C</span>.<span style="color:#a6e22e">mygetpwuid_r</span>(<span style="color:#a6e22e">C</span>.int(<span style="color:#a6e22e">uid</span>),
+			<span style="color:#f92672">&amp;</span><span style="color:#a6e22e">pwd</span>,
+			(<span style="color:#f92672">*</span><span style="color:#a6e22e">C</span>.<span style="color:#a6e22e">char</span>)(<span style="color:#a6e22e">buf</span>.<span style="color:#a6e22e">ptr</span>),
+			<span style="color:#a6e22e">C</span>.<span style="color:#a6e22e">size_t</span>(<span style="color:#a6e22e">buf</span>.<span style="color:#a6e22e">size</span>),
+			<span style="color:#f92672">&amp;</span><span style="color:#a6e22e">result</span>))
+	})
+	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+		<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>, <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Errorf</span>(<span style="color:#e6db74">&#34;user: lookup userid %d: %v&#34;</span>, <span style="color:#a6e22e">uid</span>, <span style="color:#a6e22e">err</span>)
+	}
+	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">result</span> <span style="color:#f92672">==</span> <span style="color:#66d9ef">nil</span> {
+		<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>, <span style="color:#a6e22e">UnknownUserIdError</span>(<span style="color:#a6e22e">uid</span>)
+	}
+	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">buildUser</span>(<span style="color:#f92672">&amp;</span><span style="color:#a6e22e">pwd</span>), <span style="color:#66d9ef">nil</span>
+}
+
+<span style="color:#66d9ef">func</span> <span style="color:#a6e22e">buildUser</span>(<span style="color:#a6e22e">pwd</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">C</span>.<span style="color:#a6e22e">struct_passwd</span>) <span style="color:#f92672">*</span><span style="color:#a6e22e">User</span> {
+	<span style="color:#a6e22e">u</span> <span style="color:#f92672">:=</span> <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">User</span>{
+		<span style="color:#a6e22e">Uid</span>:      <span style="color:#a6e22e">strconv</span>.<span style="color:#a6e22e">FormatUint</span>(uint64(<span style="color:#a6e22e">pwd</span>.<span style="color:#a6e22e">pw_uid</span>), <span style="color:#ae81ff">10</span>),
+		<span style="color:#a6e22e">Gid</span>:      <span style="color:#a6e22e">strconv</span>.<span style="color:#a6e22e">FormatUint</span>(uint64(<span style="color:#a6e22e">pwd</span>.<span style="color:#a6e22e">pw_gid</span>), <span style="color:#ae81ff">10</span>),
+		<span style="color:#a6e22e">Username</span>: <span style="color:#a6e22e">C</span>.<span style="color:#a6e22e">GoString</span>(<span style="color:#a6e22e">pwd</span>.<span style="color:#a6e22e">pw_name</span>),
+		<span style="color:#a6e22e">Name</span>:     <span style="color:#a6e22e">C</span>.<span style="color:#a6e22e">GoString</span>(<span style="color:#a6e22e">pwd</span>.<span style="color:#a6e22e">pw_gecos</span>),
+		<span style="color:#a6e22e">HomeDir</span>:  <span style="color:#a6e22e">C</span>.<span style="color:#a6e22e">GoString</span>(<span style="color:#a6e22e">pwd</span>.<span style="color:#a6e22e">pw_dir</span>),
+	}
+	<span style="color:#75715e">// The pw_gecos field isn&#39;t quite standardized. Some docs
+</span><span style="color:#75715e"></span>	<span style="color:#75715e">// say: &#34;It is expected to be a comma separated list of
+</span><span style="color:#75715e"></span>	<span style="color:#75715e">// personal data where the first item is the full name of the
+</span><span style="color:#75715e"></span>	<span style="color:#75715e">// user.&#34;
+</span><span style="color:#75715e"></span>	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">strings</span>.<span style="color:#a6e22e">Index</span>(<span style="color:#a6e22e">u</span>.<span style="color:#a6e22e">Name</span>, <span style="color:#e6db74">&#34;,&#34;</span>); <span style="color:#a6e22e">i</span> <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">0</span> {
+		<span style="color:#a6e22e">u</span>.<span style="color:#a6e22e">Name</span> = <span style="color:#a6e22e">u</span>.<span style="color:#a6e22e">Name</span>[:<span style="color:#a6e22e">i</span>]
+	}
+	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">u</span>
+}
+</code></pre></div><h5 id="31314-gosrcosuserlookup_stubsgo-查找当前用户纯go版">3.1.3.14 go/src/os/user/lookup_stubs.go 查找当前用户(纯go版)</h5>
+<p>以上介绍的是使用cgo的情况，如果使用纯go编译器，走的是不同的分支。</p>
+<p>纯go编译器下，通过直接读取<code>/etc/passwd</code>文件实现。</p>
+<p><a href="https://github.com/golang/go/blob/go1.16/src/os/user/lookup_stubs.go#L21">https://github.com/golang/go/blob/go1.16/src/os/user/lookup_stubs.go#L21</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">current</span>() (<span style="color:#f92672">*</span><span style="color:#a6e22e">User</span>, <span style="color:#66d9ef">error</span>) {
+    <span style="color:#a6e22e">uid</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">currentUID</span>()
+    <span style="color:#75715e">// $USER and /etc/passwd may disagree; prefer the latter if we can get it.
+</span><span style="color:#75715e"></span>    <span style="color:#75715e">// See issue 27524 for more information.
+</span><span style="color:#75715e"></span>    <span style="color:#a6e22e">u</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">lookupUserId</span>(<span style="color:#a6e22e">uid</span>)
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">==</span> <span style="color:#66d9ef">nil</span> {
+        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">u</span>, <span style="color:#66d9ef">nil</span>
+    }
+
+    <span style="color:#a6e22e">homeDir</span>, <span style="color:#a6e22e">_</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">os</span>.<span style="color:#a6e22e">UserHomeDir</span>()
+    <span style="color:#f92672">...</span>
+}
+</code></pre></div><p><a href="https://github.com/golang/go/blob/go1.16/src/os/user/lookup_unix.go#L190">https://github.com/golang/go/blob/go1.16/src/os/user/lookup_unix.go#L190</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">userFile</span> = <span style="color:#e6db74">&#34;/etc/passwd&#34;</span>
+<span style="color:#f92672">...</span>
+<span style="color:#66d9ef">func</span> <span style="color:#a6e22e">lookupUserId</span>(<span style="color:#a6e22e">uid</span> <span style="color:#66d9ef">string</span>) (<span style="color:#f92672">*</span><span style="color:#a6e22e">User</span>, <span style="color:#66d9ef">error</span>) {
+    <span style="color:#a6e22e">f</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">os</span>.<span style="color:#a6e22e">Open</span>(<span style="color:#a6e22e">userFile</span>)
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>, <span style="color:#a6e22e">err</span>
+    }
+    <span style="color:#66d9ef">defer</span> <span style="color:#a6e22e">f</span>.<span style="color:#a6e22e">Close</span>()
+    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">findUserId</span>(<span style="color:#a6e22e">uid</span>, <span style="color:#a6e22e">f</span>)
+}
+
+</code></pre></div><h5 id="31315-gosrcosusercgo_lookup_unixgo-lookupuserid-cgo版">3.1.3.15 go/src/os/user/cgo_lookup_unix.go lookupUserId (cgo版)</h5>
+<p>如果Current函数报错或找到的user与目的userId不一致，则调用<code>lookupUserId</code>函数, 与current类似，这个函数也对cgo和纯go编译器有不同的实现。</p>
+<p>详细的实现和current的逻辑差不多，本文不详细分析。
+<a href="https://github.com/golang/go/blob/go1.16/src/os/user/cgo_lookup_unix.go#L81-L112">https://github.com/golang/go/blob/go1.16/src/os/user/cgo_lookup_unix.go#L81-L112</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">lookupUserId</span>(<span style="color:#a6e22e">uid</span> <span style="color:#66d9ef">string</span>) (<span style="color:#f92672">*</span><span style="color:#a6e22e">User</span>, <span style="color:#66d9ef">error</span>) {
+	<span style="color:#a6e22e">i</span>, <span style="color:#a6e22e">e</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">strconv</span>.<span style="color:#a6e22e">Atoi</span>(<span style="color:#a6e22e">uid</span>)
+	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">e</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+		<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>, <span style="color:#a6e22e">e</span>
+	}
+	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">lookupUnixUid</span>(<span style="color:#a6e22e">i</span>)
+}
+
+<span style="color:#66d9ef">func</span> <span style="color:#a6e22e">lookupUnixUid</span>(<span style="color:#a6e22e">uid</span> <span style="color:#66d9ef">int</span>) (<span style="color:#f92672">*</span><span style="color:#a6e22e">User</span>, <span style="color:#66d9ef">error</span>) {
+	<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">pwd</span> <span style="color:#a6e22e">C</span>.<span style="color:#a6e22e">struct_passwd</span>
+	<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">result</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">C</span>.<span style="color:#a6e22e">struct_passwd</span>
+
+	<span style="color:#a6e22e">buf</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">alloc</span>(<span style="color:#a6e22e">userBuffer</span>)
+	<span style="color:#66d9ef">defer</span> <span style="color:#a6e22e">buf</span>.<span style="color:#a6e22e">free</span>()
+
+	<span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">retryWithBuffer</span>(<span style="color:#a6e22e">buf</span>, <span style="color:#66d9ef">func</span>() <span style="color:#a6e22e">syscall</span>.<span style="color:#a6e22e">Errno</span> {
+		<span style="color:#75715e">// mygetpwuid_r is a wrapper around getpwuid_r to avoid using uid_t
+</span><span style="color:#75715e"></span>		<span style="color:#75715e">// because C.uid_t(uid) for unknown reasons doesn&#39;t work on linux.
+</span><span style="color:#75715e"></span>		<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">syscall</span>.<span style="color:#a6e22e">Errno</span>(<span style="color:#a6e22e">C</span>.<span style="color:#a6e22e">mygetpwuid_r</span>(<span style="color:#a6e22e">C</span>.int(<span style="color:#a6e22e">uid</span>),
+			<span style="color:#f92672">&amp;</span><span style="color:#a6e22e">pwd</span>,
+			(<span style="color:#f92672">*</span><span style="color:#a6e22e">C</span>.<span style="color:#a6e22e">char</span>)(<span style="color:#a6e22e">buf</span>.<span style="color:#a6e22e">ptr</span>),
+			<span style="color:#a6e22e">C</span>.<span style="color:#a6e22e">size_t</span>(<span style="color:#a6e22e">buf</span>.<span style="color:#a6e22e">size</span>),
+			<span style="color:#f92672">&amp;</span><span style="color:#a6e22e">result</span>))
+	})
+	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+		<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>, <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Errorf</span>(<span style="color:#e6db74">&#34;user: lookup userid %d: %v&#34;</span>, <span style="color:#a6e22e">uid</span>, <span style="color:#a6e22e">err</span>)
+	}
+	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">result</span> <span style="color:#f92672">==</span> <span style="color:#66d9ef">nil</span> {
+		<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>, <span style="color:#a6e22e">UnknownUserIdError</span>(<span style="color:#a6e22e">uid</span>)
+	}
+	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">buildUser</span>(<span style="color:#f92672">&amp;</span><span style="color:#a6e22e">pwd</span>), <span style="color:#66d9ef">nil</span>
+}
+</code></pre></div><h5 id="31316-gosrcosuserlookup_unixgo-lookupuserid-纯go版">3.1.3.16 go/src/os/user/lookup_unix.go lookupUserId (纯go版)</h5>
+<p>与current函数中调用到的函数一致
+<a href="https://github.com/golang/go/blob/go1.16/src/os/user/lookup_unix.go#L190">https://github.com/golang/go/blob/go1.16/src/os/user/lookup_unix.go#L190</a></p>
+<h5 id="31317-vendorarchivetarstat_unixgo">3.1.3.17 vendor/archive/tar/stat_unix.go</h5>
+<p>上文我们跟进了go官方库的实现，但是我们也提到了docker在19.03.8及之后的版本使用的是docker修改并复制到vendor/archive/tar的代码，下面我们会对这一部分的代码的主要区别做分析。</p>
+<p>与golang官方库相比，vendor下的代码删去了获取username,groupname的过程。</p>
+<p><a href="https://github.com/moby/moby/blob/v20.10.6/vendor/archive/tar/stat_unix.go#L19">https://github.com/moby/moby/blob/v20.10.6/vendor/archive/tar/stat_unix.go#L19</a></p>
+<p>以下代码在vendor下不存在</p>
+<pre><code class="language-go!" data-lang="go!">if u, ok := userMap.Load(h.Uid); ok {
+    h.Uname = u.(string)
+} else if u, err := user.LookupId(strconv.Itoa(h.Uid)); err == nil {
+    h.Uname = u.Username
+    userMap.Store(h.Uid, h.Uname)
+}
+if g, ok := groupMap.Load(h.Gid); ok {
+    h.Gname = g.(string)
+} else if g, err := user.LookupGroupId(strconv.Itoa(h.Gid)); err == nil {
+    h.Gname = g.Name
+    groupMap.Store(h.Gid, h.Gname)
+}
+</code></pre><h5 id="31318-pkgarchivearchivegoaddtarfile-读取文件capability添加至tar文件头">3.1.3.18 pkg/archive/archive.go/addTarFile: 读取文件capability添加至Tar文件头</h5>
+<p>前面已经读取了大部分文件头信息，这一部分添加文件的capability信息</p>
+<p><a href="https://github.com/moby/moby/blob/v20.10.6/pkg/archive/archive.go#L476">https://github.com/moby/moby/blob/v20.10.6/pkg/archive/archive.go#L476</a></p>
+<pre><code class="language-go!" data-lang="go!">func (ta *tarAppender) addTarFile(path, name string) error {
+    ...
+    hdr, err := FileInfoHeader(name, fi, link)
+    if err != nil {
+        return err
+    }
+    if err := ReadSecurityXattrToTarHeader(path, hdr); err != nil {
+        return err
+    }
+    ...
+</code></pre><p><a href="https://github.com/moby/moby/blob/v20.10.6/pkg/archive/archive.go#L404">https://github.com/moby/moby/blob/v20.10.6/pkg/archive/archive.go#L404</a></p>
+<pre><code class="language-go!" data-lang="go!">func ReadSecurityXattrToTarHeader(path string, hdr *tar.Header) error {
+    capability, _ := system.Lgetxattr(path, &quot;security.capability&quot;)
+    if capability != nil {
+        hdr.Xattrs = make(map[string]string)
+        hdr.Xattrs[&quot;security.capability&quot;] = string(capability)
+    }
+    return nil
+}
+</code></pre><p>这个功能的实现是通过Lgetxattr系统调用完成的。
+<a href="https://github.com/moby/moby/blob/v20.10.6/pkg/system/xattrs_linux.go#L8">https://github.com/moby/moby/blob/v20.10.6/pkg/system/xattrs_linux.go#L8</a></p>
+<pre><code class="language-go!" data-lang="go!">func Lgetxattr(path string, attr string) ([]byte, error) {
+    // Start with a 128 length byte array
+    dest := make([]byte, 128)
+    sz, errno := unix.Lgetxattr(path, attr, dest)
+
+    for errno == unix.ERANGE {
+        // Buffer too small, use zero-sized buffer to get the actual size
+        sz, errno = unix.Lgetxattr(path, attr, []byte{})
+        if errno != nil {
+            return nil, errno
+        }
+        dest = make([]byte, sz)
+        sz, errno = unix.Lgetxattr(path, attr, dest)
+    }
+
+    switch {
+    case errno == unix.ENODATA:
+        return nil, nil
+    case errno != nil:
+        return nil, errno
+    }
+
+    return dest[:sz], nil
+}
+</code></pre><h5 id="31319-pkgarchivearchivegoaddtarfile-处理硬链接">3.1.3.19 pkg/archive/archive.go/addTarFile: 处理硬链接</h5>
+<p><a href="https://github.com/moby/moby/blob/v20.10.6/pkg/archive/archive.go#L482-L496">https://github.com/moby/moby/blob/v20.10.6/pkg/archive/archive.go#L482-L496</a></p>
+<pre><code class="language-go!" data-lang="go!">func (ta *tarAppender) addTarFile(path, name string) error {
+    ...
+    if !fi.IsDir() &amp;&amp; hasHardlinks(fi) {
+        inode, err := getInodeFromStat(fi.Sys())
+        if err != nil {
+            return err
+        }
+        // a link should have a name that it links too
+        // and that linked name should be first in the tar archive
+        if oldpath, ok := ta.SeenFiles[inode]; ok {
+            hdr.Typeflag = tar.TypeLink
+            hdr.Linkname = oldpath
+            hdr.Size = 0 // This Must be here for the writer math to add up!
+        } else {
+            ta.SeenFiles[inode] = name
+        }
+    }
+    ...
+</code></pre><h5 id="31320-pkgarchivearchivegoaddtarfile-处理uidgid">3.1.3.20 pkg/archive/archive.go/addTarFile: 处理uid,gid</h5>
+<p>处理容器和宿主机文件的uid,gid映射，如果是Whiteout文件则不涉及。</p>
+<p><a href="https://github.com/moby/moby/blob/v20.10.6/pkg/archive/archive.go#L500-L520">https://github.com/moby/moby/blob/v20.10.6/pkg/archive/archive.go#L500-L520</a></p>
+<pre><code class="language-go!" data-lang="go!">func (ta *tarAppender) addTarFile(path, name string) error {
+    ...
+    isOverlayWhiteout := fi.Mode()&amp;os.ModeCharDevice != 0 &amp;&amp; hdr.Devmajor == 0 &amp;&amp; hdr.Devminor == 0
+
+    // handle re-mapping container ID mappings back to host ID mappings before
+    // writing tar headers/files. We skip whiteout files because they were written
+    // by the kernel and already have proper ownership relative to the host
+    if !isOverlayWhiteout &amp;&amp; !strings.HasPrefix(filepath.Base(hdr.Name), WhiteoutPrefix) &amp;&amp; !ta.IdentityMapping.Empty() {
+        fileIDPair, err := getFileUIDGID(fi.Sys())
+        if err != nil {
+            return err
+        }
+        hdr.Uid, hdr.Gid, err = ta.IdentityMapping.ToContainer(fileIDPair)
+        if err != nil {
+            return err
+        }
+    }
+    ...
+</code></pre><p>如果配置了ChownOpts，以该选项配置的UID, GID为准。</p>
+<pre><code class="language-go!" data-lang="go!">if ta.ChownOpts != nil {
+    hdr.Uid = ta.ChownOpts.UID
+    hdr.Gid = ta.ChownOpts.GID
+}
+...
+</code></pre><h5 id="31321-pkgarchivearchivegoaddtarfile-whiteout">3.1.3.21 pkg/archive/archive.go/addTarFile: whiteout</h5>
+<p><a href="https://github.com/moby/moby/blob/v20.10.6/pkg/archive/archive.go#L522-L542">https://github.com/moby/moby/blob/v20.10.6/pkg/archive/archive.go#L522-L542</a></p>
+<pre><code class="language-go!" data-lang="go!">func (ta *tarAppender) addTarFile(path, name string) error {
+    ...
+    if ta.WhiteoutConverter != nil {
+        wo, err := ta.WhiteoutConverter.ConvertWrite(hdr, path, fi)
+        if err != nil {
+            return err
+        }
+
+        if wo != nil {
+            if err := ta.TarWriter.WriteHeader(hdr); err != nil {
+                return err
+            }
+            if hdr.Typeflag == tar.TypeReg &amp;&amp; hdr.Size &gt; 0 {
+                return fmt.Errorf(&quot;tar: cannot use whiteout for non-empty file&quot;)
+            }
+            hdr = wo
+        }
+    }
+</code></pre><h5 id="31322-pkgarchivearchivegoaddtarfile-写入文件">3.1.3.22 pkg/archive/archive.go/addTarFile: 写入文件</h5>
+<p><a href="https://github.com/moby/moby/blob/v20.10.6/pkg/archive/archive.go#L544-L571">https://github.com/moby/moby/blob/v20.10.6/pkg/archive/archive.go#L544-L571</a></p>
+<pre><code class="language-go!" data-lang="go!">func (ta *tarAppender) addTarFile(path, name string) error {
+    ...
+    if err := ta.TarWriter.WriteHeader(hdr); err != nil {
+        return err
+    }
+
+    if hdr.Typeflag == tar.TypeReg &amp;&amp; hdr.Size &gt; 0 {
+        // We use system.OpenSequential to ensure we use sequential file
+        // access on Windows to avoid depleting the standby list.
+        // On Linux, this equates to a regular os.Open.
+        file, err := system.OpenSequential(path)
+        if err != nil {
+            return err
+        }
+
+        ta.Buffer.Reset(ta.TarWriter)
+        defer ta.Buffer.Reset(nil)
+        _, err = io.Copy(ta.Buffer, file)
+        file.Close()
+        if err != nil {
+            return err
+        }
+        err = ta.Buffer.Flush()
+        if err != nil {
+            return err
+        }
+    }
+
+    return nil
 }
 </code></pre><h3 id="32-docker-untar">3.2 docker-untar</h3>
 
