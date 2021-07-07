@@ -6,7 +6,17 @@
     <description>Recent content on welcome to st0n3&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 01 Jun 2021 08:59:53 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 07 Jul 2021 08:32:24 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>codeql漏洞挖掘或分析模板</title>
+      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/%E6%B5%8B%E8%AF%95%E6%96%B9%E6%B3%95/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95/%E9%9D%99%E6%80%81%E4%BB%A3%E7%A0%81%E6%89%AB%E6%8F%8F/AST/codeql/codeql%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%E6%88%96%E5%88%86%E6%9E%90%E5%AE%9E%E8%B7%B5/codeql%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%E6%88%96%E5%88%86%E6%9E%90%E6%A8%A1%E6%9D%BF.html</link>
+      <pubDate>Wed, 07 Jul 2021 08:32:24 +0000</pubDate>
+      
+      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/%E6%B5%8B%E8%AF%95%E6%96%B9%E6%B3%95/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95/%E9%9D%99%E6%80%81%E4%BB%A3%E7%A0%81%E6%89%AB%E6%8F%8F/AST/codeql/codeql%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%E6%88%96%E5%88%86%E6%9E%90%E5%AE%9E%E8%B7%B5/codeql%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%E6%88%96%E5%88%86%E6%9E%90%E6%A8%A1%E6%9D%BF.html</guid>
+      <description> tags: codeql codeql漏洞挖掘或分析模板    item details note     project url     CVE-ID mitre url    lgtm alert      一、codeql简介 二、项目简介 三、漏洞介绍 四、漏洞挖掘过程 介绍原始漏洞挖掘过程
+五、query </description>
+    </item>
+    
     <item>
       <title>docker-tar,docker-untar源码分析</title>
       <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E8%BF%9B%E7%A8%8B%E5%AE%B9%E5%99%A8/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%B9%E5%99%A8/docker/docker%E6%BA%90%E7%A0%81%E5%AE%A1%E8%AE%A1/docker%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/docker-tardocker-untar%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90.html</link>
@@ -143,9 +153,9 @@ func NewCopyCommand(dockerCli command.Cli) *cobra.Command { var opts copyOptions
       <pubDate>Tue, 30 Mar 2021 06:32:34 +0000</pubDate>
       
       <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E8%BF%9B%E7%A8%8B%E5%AE%B9%E5%99%A8/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%B9%E5%99%A8/docker/%E5%8E%86%E5%8F%B2%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90%E4%B8%8E%E5%A4%8D%E7%8E%B0/docker-software/plumbing/docker-cp/CVE-2019-14271/%E5%88%86%E6%9E%90/CVE-2019-14271%E5%88%86%E6%9E%90%E4%B8%8E%E5%A4%8D%E7%8E%B0.html</guid>
-      <description>tags: container,漏洞分析 docker CVE-2019-14271分析与复现 一、基本信息    条目 详情 备注     项目地址 https://github.com/moby/moby    发布日期 2019-07-25    CVE-ID CVE-2019-14271 https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2019-14271   EDB-ID \    exploits swr.cn-southwest-2.myhuaweicloud.com/container_pentest/cve-2019-14271:v0.1
+      <description>tags: container,漏洞分析 docker CVE-2019-14271分析与复现 一、基本信息    条目 详情 备注     项目地址 https://github.com/moby/moby    发布日期 2019-07-25    CVE-ID CVE-2019-14271    EDB-ID \    exploits swr.cn-southwest-2.myhuaweicloud.com/container_pentest/cve-2019-14271:v0.1
 https://bestwing.me/CVE-2019-14271-docker-escape.html
-https://unit42.paloaltonetworks.com/docker-patched-the-most-severe-copy-vulnerability-to-date-with-cve-2019-14271/    cvedetails https://www.cvedetails.com/cve/CVE-2019-14271/    官方公告影响范围 v19.03.0    实际影响范围 v18.09.9&amp;lt;=docker&amp;lt;v19.03.8    业界公告修复版本 v19.03.1 紧急修复 https://github.com/moby/moby/pull/39612   实际修复版本 v19.03.8 完整修复 https://github.com/moby/moby/commit/aa6a9891b09cce3d9004121294301a30d45d998d#diff-630ba09448af522154f38ef7685ef1f44b0f3e9430f80829a03ce24f400f3754   CVSS 9.</description>
+https://unit42.paloaltonetworks.com/docker-patched-the-most-severe-copy-vulnerability-to-date-with-cve-2019-14271/    cvedetails https://www.cvedetails.com/cve/CVE-2019-14271/    官方公告影响范围 v19.03.0    实际影响范围 v18.09.9&amp;lt;=docker&amp;lt;v19.03.8    业界公告修复版本 v19.03.1 紧急修复   实际修复版本 v19.03.8 完整修复   CVSS 9.8 CVSS:3.</description>
     </item>
     
     <item>
@@ -291,7 +301,7 @@ TL;DR  开局全端口扫描 识别兔子洞 随手截图真的很重要  每个
       <pubDate>Tue, 29 Dec 2020 11:07:11 +0000</pubDate>
       
       <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6%E5%85%A8%E6%99%AF/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6%E7%9A%84%E4%B8%89%E9%87%8D%E5%A2%83%E7%95%8C.html</guid>
-      <description>容器安全研究的三重境界 与其他形态的技术相比，容器安全的漏洞更聚集在设计层面，而非实现层面，准确得说，非编码层面。
+      <description>tags: container,方法论 容器安全研究的三重境界 与其他形态的技术相比，容器安全的漏洞更聚集在设计层面，而非实现层面，准确得说，非编码层面。
 编码层面的漏洞更容易发现，且更容易自动化发现，但这种“优势”不会一直存在。因此，必然将形成漏洞越来越难挖的局面。而对容器技术而言，这个时间点来得相当早。这使得深入容器安全显得不那么容易，使研究者沮丧，但这也会极大地锻炼安全研究者的思维能力。
 一、四级安全性 如果我们作以下定义：
  将理想状态的安全定义为“理想模型” 将实际设计的结果定义为“设计模型” 将真实实现的代码定义为“实现模型”  我们将会得到4个不同级别的安全性： $$ \begin{equation} \left\lbrace \begin{array}{lr} 理想模型 \newline 设计模型 \newline 实现模型 \newline 编码漏洞 \end{array} \right. \end{equation} $$
@@ -306,9 +316,7 @@ TL;DR  开局全端口扫描 识别兔子洞 随手截图真的很重要  每个
  熟读oci specification 走读容器相关项目的代码  看，简单多了——至少是可执行的！
 3. 编码漏洞 开篇即谈到了，容器安全的漏洞更聚集于非编码层面。但这个论述的对象主要是针对容器相关产品自身而言的，但如果将范围扩大至容器生态链呢？
 例如
- docker所调用的各组件，甚至各LSM模块 由各云厂商以开源形式贡献至k8s的CNI &amp;hellip;  这样看，我们还是有希望在此层面挖掘相关漏洞的，但可能需要将挖掘范围扩大、将漏洞挖掘的方法进行微调，以适应于发现容器类漏洞。
-三、结语 对容器来说，少有编码层面的漏洞可以挖，没有办法；对其他类型的技术栈来说，现在编码层面还有很大的研究空间，但已经有这种趋势，也应该尽早布局。
-如果安全也有修仙一样的等级的话，挖掘编码层漏洞的集大成者就像是斗宗强者。当然很厉害了，但是上层似乎还有更广阔的空间。</description>
+ docker所调用的各组件，甚至各LSM模块 由各云厂商以开源形式贡献至k8s的CNI &amp;hellip;  这样看，我们还是有希望在此层面挖掘相关漏洞的，但可能需要将挖掘范围扩大、将漏洞挖掘的方法进行微调，以适应于发现容器类漏洞。</description>
     </item>
     
     <item>
