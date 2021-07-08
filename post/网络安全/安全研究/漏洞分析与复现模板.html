@@ -42,7 +42,7 @@ exp2    cvedetails https://www.cvedetails.com/cve/CVE-2019-3799/ \   影响范�
 exp2    cvedetails https://www.cvedetails.com/cve/CVE-2019-3799/ \   影响范围 spring-cloud-config 2.1.0-2.1.1, 2.0.0-2.0.3, 1.4.0-1.4.5 及更旧版本 \   修复版本 2.1.2, 2.0.4, 1.4.6 \   CVSS 8.3 CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:L    发现人 http://github.com/ssst0n3     二、组件简介 三、漏洞详情 1.">
 <meta itemprop="datePublished" content="2020-07-20T02:00:00+00:00" />
 <meta itemprop="dateModified" content="2020-07-20T02:00:00+00:00" />
-<meta itemprop="wordCount" content="62">
+<meta itemprop="wordCount" content="97">
 
 
 
@@ -223,7 +223,56 @@ exp2    cvedetails https://www.cvedetails.com/cve/CVE-2019-3799/ \   影响范�
 </tbody>
 </table>
 <h2 id="八总结">八、总结</h2>
-<h2 id="参考链接">参考链接</h2>
+<h2 id="附">附</h2>
+<h3 id="参考链接">参考链接</h3>
+<h3 id="时间线">时间线</h3>
+<p>漏洞产生、发现、报告、修复的时间线</p>
+<p>eg: cve-2019-14271的时间线</p>
+<ul>
+<li>docker v17.06.1-ce-rc2 起增加vendor/archive/tar
+<ul>
+<li><a href="https://github.com/moby/moby/commit/89bacc278b3b6707d57b1b9f95a9221091bbde93">https://github.com/moby/moby/commit/89bacc278b3b6707d57b1b9f95a9221091bbde93</a></li>
+<li><a href="https://github.com/moby/moby/commit/72df48d1ad417401a5ce0a7ee82a3c8ba33e091c">https://github.com/moby/moby/commit/72df48d1ad417401a5ce0a7ee82a3c8ba33e091c</a></li>
+</ul>
+</li>
+<li>docker v18.05.0-ce-rc1 起使用go1.10
+<ul>
+<li><a href="https://github.com/moby/moby/blob/v18.05.0-ce-rc1/Dockerfile#L38">https://github.com/moby/moby/blob/v18.05.0-ce-rc1/Dockerfile#L38</a></li>
+<li><a href="https://github.com/moby/moby/commit/be8885525c4d1ef4a13bbd6396f60e8657bc5573#diff-dd2c0eb6ea5cfc6c4bd4eac30934e2d5746747af48fef6da689e85b752f39557">https://github.com/moby/moby/commit/be8885525c4d1ef4a13bbd6396f60e8657bc5573#diff-dd2c0eb6ea5cfc6c4bd4eac30934e2d5746747af48fef6da689e85b752f39557</a></li>
+</ul>
+</li>
+<li>docker v18.09.0起使用osusergo
+<ul>
+<li><a href="https://github.com/moby/moby/commit/70cdb1c66429582ecfdc5abed67189dd90ab7572#diff-50020d1afbd04b368ec34bed9b221ddd792210aac8f130a50e70b74fcb4a7e0c">https://github.com/moby/moby/commit/70cdb1c66429582ecfdc5abed67189dd90ab7572#diff-50020d1afbd04b368ec34bed9b221ddd792210aac8f130a50e70b74fcb4a7e0c</a></li>
+</ul>
+</li>
+<li>go1.11增加名为osusergo的build tag
+<ul>
+<li><a href="https://github.com/golang/go/commit/62f0127d81">https://github.com/golang/go/commit/62f0127d81</a></li>
+</ul>
+</li>
+<li>docker v18.09.9起升级go至1.11,删除了vendor/archive/tar
+<ul>
+<li><a href="https://github.com/moby/moby/commit/ebf396050d6e977df2669d5e7d3f38098719f7c2#diff-fc3997a1697456150eac42ad2a2f77c420757ce451fdaf4f95a509cfe6e70cdb">https://github.com/moby/moby/commit/ebf396050d6e977df2669d5e7d3f38098719f7c2#diff-fc3997a1697456150eac42ad2a2f77c420757ce451fdaf4f95a509cfe6e70cdb</a></li>
+<li><a href="https://github.com/moby/moby/commit/10fd0516b9f9f04d0f0e2c0755e704303f1a487f#diff-63d9c33e601a452591d5b82832ad760af4d1b4994675659217058ff5638c77e8">https://github.com/moby/moby/commit/10fd0516b9f9f04d0f0e2c0755e704303f1a487f#diff-63d9c33e601a452591d5b82832ad760af4d1b4994675659217058ff5638c77e8</a></li>
+</ul>
+</li>
+<li>docker v19.03.0 收到issue报告，分配漏洞编号CVE-2019-14271
+<ul>
+<li><a href="https://github.com/moby/moby/issues/39449">https://github.com/moby/moby/issues/39449</a></li>
+</ul>
+</li>
+<li>docker v19.03.1起，在chroot前主动加载nsswitch
+<ul>
+<li><a href="https://github.com/moby/moby/pull/39612">https://github.com/moby/moby/pull/39612</a></li>
+</ul>
+</li>
+<li>docker v19.03.8起，恢复vendor/archive/tar
+<ul>
+<li><a href="https://github.com/moby/moby/commit/aa6a9891b09cce3d9004121294301a30d45d998d#diff-630ba09448af522154f38ef7685ef1f44b0f3e9430f80829a03ce24f400f3754">https://github.com/moby/moby/commit/aa6a9891b09cce3d9004121294301a30d45d998d#diff-630ba09448af522154f38ef7685ef1f44b0f3e9430f80829a03ce24f400f3754</a></li>
+</ul>
+</li>
+</ul>
 
             </div>
         </article>
