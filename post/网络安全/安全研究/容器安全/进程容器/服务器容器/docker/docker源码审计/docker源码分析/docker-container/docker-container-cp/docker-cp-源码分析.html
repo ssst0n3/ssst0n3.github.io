@@ -471,7 +471,7 @@ content = ioutils.NewReadCloserWrapper(data, func() error {
 
 </code></pre><p>如果driver(container.BaseFS)有实现ArchivePath函数，则优先使用该函数。</p>
 <blockquote>
-<p>目前localfs均为实现该函数，仅发现remotefs(lcowfs)有此实现
+<p>目前localfs均未实现该函数，仅发现remotefs(lcowfs)有此实现
 <a href="https://github.com/moby/moby/blob/v20.10.6/daemon/graphdriver/lcow/remotefs.go#L83">https://github.com/moby/moby/blob/v20.10.6/daemon/graphdriver/lcow/remotefs.go#L83</a></p>
 </blockquote>
 <p>否则，使用<code>chrootarchive.Tar</code>打包</p>
@@ -575,7 +575,7 @@ func ArchivePath(in io.Reader, out io.Writer, args []string) error {
 }
 
 </code></pre><h3 id="43-putcontainersarchivecopytocontainer">4.3 putContainersArchive(CopyToContainer)</h3>
-<p><code>putContainersArchive</code>有4个由客户端传入的参数，分别是requestUri中传入的name(=ContainerID),query中传入的path(=dstPath), noOverwriteDirNonDir=true, copyUIDGID=true
+<p><code>putContainersArchive</code>有4个由客户端传入的参数，分别是requestUri中传入的name(=ContainerID),query中传入的path(=dstPath), noOverwriteDirNonDir(=true), copyUIDGID(=true)
 <a href="https://github.com/moby/moby/blob/v20.10.6/client/container_copy.go#L33-L59">https://github.com/moby/moby/blob/v20.10.6/client/container_copy.go#L33-L59</a></p>
 <pre><code class="language-go=" data-lang="go=">query.Set(&quot;path&quot;, filepath.ToSlash(dstPath)) // Normalize the paths used in the API.
 // Do not allow for an existing directory to be overwritten by a non-directory and vice versa.
