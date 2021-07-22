@@ -44,7 +44,7 @@ FROM alpine:3.14 AS A RUN mkdir &quot;/vol&quot; &amp;&amp; echo &quot;FOO&quot;
 Sending build context to Docker daemon 2.048kB Step 1/6 : FROM alpine:3.14 AS A ---&gt; d4ff818577bc Step 2/6 : RUN mkdir &quot;/vol&quot; &amp;&amp; echo &quot;FOO&quot; &gt; &quot;/vol/data&quot; ---&gt; Running in c10987fe0acd Removing intermediate container c10987fe0acd ---&gt; 8a7395e87d34 Step 3/6 : VOLUME /vol ---&gt; Running in 611a152bd6ac Removing intermediate container 611a152bd6ac ---&gt; 637ce773f44b Step 4/6 : FROM A AS B ---&gt; 637ce773f44b Step 5/6 : RUN sed -i s/FOO/BAR/g &quot;/vol/data&quot; &amp;&amp; cat /vol/data ---&gt; Running in ce1481fd1eb8 BAR Removing intermediate container ce1481fd1eb8 ---&gt; 873b7801b7c2 Step 6/6 : RUN cat /vol/data ---&gt; Running in bd0105a6d801 FOO Removing intermediate container bd0105a6d801 ---&gt; e721c33e07ef Successfully built e721c33e07ef 2.">
 <meta itemprop="datePublished" content="2021-07-22T05:50:35+00:00" />
 <meta itemprop="dateModified" content="2021-07-22T05:50:35+00:00" />
-<meta itemprop="wordCount" content="604">
+<meta itemprop="wordCount" content="605">
 
 
 
@@ -277,7 +277,7 @@ Successfully built 8b194e973d50
     ...
     return b.exportImage(state, rwLayer, imageMount.Image(), runConfigWithCommentCmd)
 }
-</code></pre><p>因此两者存在上述的差异。在上文我们已经分析了RUN指令不能修改VOLUME的大致原因，对于COPY指令为什么可以的原因是类似的，即COPY指令commit了layer的修改。</p>
+</code></pre><p>因此两者存在上述的差异。在上文我们已经分析了RUN指令不能修改VOLUME的大致原因，对于COPY指令为什么可以的原因是类似的，即COPY指令是修改了镜像的RWLayer，并commit了layer的修改; 而RUN指令是对容器新mount的volume，未commit修改。</p>
 <h2 id="reference">reference</h2>
 <ul>
 <li><a href="https://stackoverflow.com/questions/52086641/override-a-volume-when-building-docker-image-from-another-docker-image/54370666#54370666?newreg=56b1f0e82fd34204b3b7f8ac26ee4923">Stack Overflow: dockerfile - Override a volume when Building docker image from another docker image</a></li>
