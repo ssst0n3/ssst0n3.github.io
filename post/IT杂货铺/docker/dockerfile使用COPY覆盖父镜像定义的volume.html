@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author"
+    content="">
+<meta name="description"
+    content="tags: container dockerfile使用COPY覆盖父镜像定义的volume 1. 问题: dockerfile中对父镜像的volume的修改，会被丢弃 以下dockerfile在父镜像A中定义了一个volume, 地址为/vol。在新编译的B镜像中，我们对/vol下的文件做了修改。我们想要这个修改可以保留在新编译的镜像B中，但实际却无法做到。
+FROM alpine:3.14 AS A RUN mkdir &amp;quot;/vol&amp;quot; &amp;amp;&amp;amp; echo &amp;quot;FOO&amp;quot; &amp;gt; &amp;quot;/vol/data&amp;quot; VOLUME /vol FROM A AS B RUN sed -i s/FOO/BAR/g &amp;quot;/vol/data&amp;quot; &amp;amp;&amp;amp; cat /vol/data RUN cat /vol/data 编译上述dockerfile, 我们看到，在同一条RUN指令中，/vol/data的内容确实被修改成了BAR。但是，下一条RUN指令，/vol/data仍然是FOO。
+Sending build context to Docker daemon 2.048kB Step 1/6 : FROM alpine:3.14 AS A ---&amp;gt; d4ff818577bc Step 2/6 : RUN mkdir &amp;quot;/vol&amp;quot; &amp;amp;&amp;amp; echo &amp;quot;FOO&amp;quot; &amp;gt; &amp;quot;/vol/data&amp;quot; ---&amp;gt; Running in c10987fe0acd Removing intermediate container c10987fe0acd ---&amp;gt; 8a7395e87d34 Step 3/6 : VOLUME /vol ---&amp;gt; Running in 611a152bd6ac Removing intermediate container 611a152bd6ac ---&amp;gt; 637ce773f44b Step 4/6 : FROM A AS B ---&amp;gt; 637ce773f44b Step 5/6 : RUN sed -i s/FOO/BAR/g &amp;quot;/vol/data&amp;quot; &amp;amp;&amp;amp; cat /vol/data ---&amp;gt; Running in ce1481fd1eb8 BAR Removing intermediate container ce1481fd1eb8 ---&amp;gt; 873b7801b7c2 Step 6/6 : RUN cat /vol/data ---&amp;gt; Running in bd0105a6d801 FOO Removing intermediate container bd0105a6d801 ---&amp;gt; e721c33e07ef Successfully built e721c33e07ef 2." />
+<meta name="keywords" content="" />
+<meta name="robots" content="noodp" />
+<link rel="canonical" href="/post/IT%E6%9D%82%E8%B4%A7%E9%93%BA/docker/dockerfile%E4%BD%BF%E7%94%A8COPY%E8%A6%86%E7%9B%96%E7%88%B6%E9%95%9C%E5%83%8F%E5%AE%9A%E4%B9%89%E7%9A%84volume.html" />
+
+
+<title>
+    
+    dockerfile使用COPY覆盖父镜像定义的volume :: welcome to st0n3&#39;s blog 
+    
+</title>
+
+
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.2.1/css/flag-icon.min.css" rel="stylesheet"
+    type="text/css">
+
+
+
+<link rel="stylesheet" href="/main.min.de959d61dd13c2cd41136acd491ffb0749779e1afe37b1fed6d5cba0b7e1938d.css">
+
+
+
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#252627">
+<link rel="shortcut icon" href="/favicon.ico">
+<meta name="theme-color" content="#252627"><meta itemprop="name" content="dockerfile使用COPY覆盖父镜像定义的volume">
+<meta itemprop="description" content="tags: container dockerfile使用COPY覆盖父镜像定义的volume 1. 问题: dockerfile中对父镜像的volume的修改，会被丢弃 以下dockerfile在父镜像A中定义了一个volume, 地址为/vol。在新编译的B镜像中，我们对/vol下的文件做了修改。我们想要这个修改可以保留在新编译的镜像B中，但实际却无法做到。
+FROM alpine:3.14 AS A RUN mkdir &quot;/vol&quot; &amp;&amp; echo &quot;FOO&quot; &gt; &quot;/vol/data&quot; VOLUME /vol FROM A AS B RUN sed -i s/FOO/BAR/g &quot;/vol/data&quot; &amp;&amp; cat /vol/data RUN cat /vol/data 编译上述dockerfile, 我们看到，在同一条RUN指令中，/vol/data的内容确实被修改成了BAR。但是，下一条RUN指令，/vol/data仍然是FOO。
+Sending build context to Docker daemon 2.048kB Step 1/6 : FROM alpine:3.14 AS A ---&gt; d4ff818577bc Step 2/6 : RUN mkdir &quot;/vol&quot; &amp;&amp; echo &quot;FOO&quot; &gt; &quot;/vol/data&quot; ---&gt; Running in c10987fe0acd Removing intermediate container c10987fe0acd ---&gt; 8a7395e87d34 Step 3/6 : VOLUME /vol ---&gt; Running in 611a152bd6ac Removing intermediate container 611a152bd6ac ---&gt; 637ce773f44b Step 4/6 : FROM A AS B ---&gt; 637ce773f44b Step 5/6 : RUN sed -i s/FOO/BAR/g &quot;/vol/data&quot; &amp;&amp; cat /vol/data ---&gt; Running in ce1481fd1eb8 BAR Removing intermediate container ce1481fd1eb8 ---&gt; 873b7801b7c2 Step 6/6 : RUN cat /vol/data ---&gt; Running in bd0105a6d801 FOO Removing intermediate container bd0105a6d801 ---&gt; e721c33e07ef Successfully built e721c33e07ef 2.">
+<meta itemprop="datePublished" content="2021-07-22T05:50:35+00:00" />
+<meta itemprop="dateModified" content="2021-07-22T05:50:35+00:00" />
+<meta itemprop="wordCount" content="604">
+
+
+
+<meta itemprop="keywords" content="" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="dockerfile使用COPY覆盖父镜像定义的volume"/>
+<meta name="twitter:description" content="tags: container dockerfile使用COPY覆盖父镜像定义的volume 1. 问题: dockerfile中对父镜像的volume的修改，会被丢弃 以下dockerfile在父镜像A中定义了一个volume, 地址为/vol。在新编译的B镜像中，我们对/vol下的文件做了修改。我们想要这个修改可以保留在新编译的镜像B中，但实际却无法做到。
+FROM alpine:3.14 AS A RUN mkdir &quot;/vol&quot; &amp;&amp; echo &quot;FOO&quot; &gt; &quot;/vol/data&quot; VOLUME /vol FROM A AS B RUN sed -i s/FOO/BAR/g &quot;/vol/data&quot; &amp;&amp; cat /vol/data RUN cat /vol/data 编译上述dockerfile, 我们看到，在同一条RUN指令中，/vol/data的内容确实被修改成了BAR。但是，下一条RUN指令，/vol/data仍然是FOO。
+Sending build context to Docker daemon 2.048kB Step 1/6 : FROM alpine:3.14 AS A ---&gt; d4ff818577bc Step 2/6 : RUN mkdir &quot;/vol&quot; &amp;&amp; echo &quot;FOO&quot; &gt; &quot;/vol/data&quot; ---&gt; Running in c10987fe0acd Removing intermediate container c10987fe0acd ---&gt; 8a7395e87d34 Step 3/6 : VOLUME /vol ---&gt; Running in 611a152bd6ac Removing intermediate container 611a152bd6ac ---&gt; 637ce773f44b Step 4/6 : FROM A AS B ---&gt; 637ce773f44b Step 5/6 : RUN sed -i s/FOO/BAR/g &quot;/vol/data&quot; &amp;&amp; cat /vol/data ---&gt; Running in ce1481fd1eb8 BAR Removing intermediate container ce1481fd1eb8 ---&gt; 873b7801b7c2 Step 6/6 : RUN cat /vol/data ---&gt; Running in bd0105a6d801 FOO Removing intermediate container bd0105a6d801 ---&gt; e721c33e07ef Successfully built e721c33e07ef 2."/>
+
+
+
+
+<meta property="article:published_time" content="2021-07-22 05:50:35 &#43;0000 UTC" />
+
+
+
+
+
+
+
+    </head>
+
+    <body class="dark-theme">
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text">$ cd /home/st0n3</span>
+            <span class="logo__cursor"></span>
+        
+    </div>
+</a>
+
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="/aboutme.html">About</a></li><li><a href="/post.html">Blog</a></li><li><a href="/hackerbot">Hackerbot</a></li><li><a href="/skill_tree/">SkillTree</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+
+            <span class="theme-toggle"><svg class="theme-toggler" width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M22 41C32.4934 41 41 32.4934 41 22C41 11.5066 32.4934 3 22
+  3C11.5066 3 3 11.5066 3 22C3 32.4934 11.5066 41 22 41ZM7 22C7
+  13.7157 13.7157 7 22 7V37C13.7157 37 7 30.2843 7 22Z"/>
+</svg>
+</span>
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
+                
+    <main class="post">
+
+        <div class="post-info">
+            
+            </p>
+        </div>
+
+        <article>
+            <h2 class="post-title"><a href="/post/IT%E6%9D%82%E8%B4%A7%E9%93%BA/docker/dockerfile%E4%BD%BF%E7%94%A8COPY%E8%A6%86%E7%9B%96%E7%88%B6%E9%95%9C%E5%83%8F%E5%AE%9A%E4%B9%89%E7%9A%84volume.html">dockerfile使用COPY覆盖父镜像定义的volume</a></h2>
+
+            
+
+            <div class="post-content">
+                <hr>
+<h2 id="tags-container">tags: container</h2>
+<h1 id="dockerfile使用copy覆盖父镜像定义的volume">dockerfile使用COPY覆盖父镜像定义的volume</h1>
+<h2 id="1-问题-dockerfile中对父镜像的volume的修改会被丢弃">1. 问题: dockerfile中对父镜像的volume的修改，会被丢弃</h2>
+<p>以下dockerfile在父镜像A中定义了一个volume, 地址为/vol。在新编译的B镜像中，我们对/vol下的文件做了修改。我们想要这个修改可以保留在新编译的镜像B中，但实际却无法做到。</p>
+<pre><code class="language-dockerfile!" data-lang="dockerfile!">FROM alpine:3.14 AS A
+RUN mkdir &quot;/vol&quot; &amp;&amp; echo &quot;FOO&quot; &gt; &quot;/vol/data&quot;
+VOLUME /vol
+
+FROM A AS B
+RUN sed -i s/FOO/BAR/g &quot;/vol/data&quot; &amp;&amp; cat /vol/data
+RUN cat /vol/data
+</code></pre><p>编译上述dockerfile, 我们看到，在同一条RUN指令中，/vol/data的内容确实被修改成了BAR。但是，下一条RUN指令，/vol/data仍然是FOO。</p>
+<pre><code>Sending build context to Docker daemon  2.048kB
+Step 1/6 : FROM alpine:3.14 AS A
+ ---&gt; d4ff818577bc
+Step 2/6 : RUN mkdir &quot;/vol&quot; &amp;&amp; echo &quot;FOO&quot; &gt; &quot;/vol/data&quot;
+ ---&gt; Running in c10987fe0acd
+Removing intermediate container c10987fe0acd
+ ---&gt; 8a7395e87d34
+Step 3/6 : VOLUME /vol
+ ---&gt; Running in 611a152bd6ac
+Removing intermediate container 611a152bd6ac
+ ---&gt; 637ce773f44b
+Step 4/6 : FROM A AS B
+ ---&gt; 637ce773f44b
+Step 5/6 : RUN sed -i s/FOO/BAR/g &quot;/vol/data&quot; &amp;&amp; cat /vol/data
+ ---&gt; Running in ce1481fd1eb8
+BAR
+Removing intermediate container ce1481fd1eb8
+ ---&gt; 873b7801b7c2
+Step 6/6 : RUN cat /vol/data
+ ---&gt; Running in bd0105a6d801
+FOO
+Removing intermediate container bd0105a6d801
+ ---&gt; e721c33e07ef
+Successfully built e721c33e07ef
+</code></pre><h2 id="2-原因">2. 原因</h2>
+<p>在<a href="https://docs.docker.com/engine/reference/builder/#notes-about-specifying-volumes">docker的官方文档</a>中，我们可以看到对volume有这样的描述：</p>
+<blockquote>
+<p>Changing the volume from within the Dockerfile: If any build steps change the data within the volume after it has been declared, those changes will be discarded.</p>
+</blockquote>
+<p>即在Dockerfile中，在volume已声明后，对其的修改都会被丢弃。</p>
+<p>这也容易理解，因为每次RUN指令，都是通过启动一个容器来实现的。在容器内的volume是一个新的mount点，这和镜像的volume不同。如果在commit时，没有保留对volume的修改，则不会影响镜像的volume。</p>
+<h2 id="3-解决办法-copy">3. 解决办法: COPY</h2>
+<p>可以使用COPY指令，对VOLUME进行修改。</p>
+<p>以下dockerfile中，镜像D从镜像C中copy了文件，镜像E从本地copy了文件，这两种方法都可以修改VOLUME。</p>
+<pre><code class="language-dockerfile!" data-lang="dockerfile!">FROM alpine:3.14 AS A
+RUN mkdir &quot;/vol&quot; &amp;&amp; echo &quot;FOO&quot; &gt; &quot;/vol/data&quot;
+VOLUME /vol
+
+FROM A AS B
+RUN sed -i s/FOO/BAR/g &quot;/vol/data&quot; &amp;&amp; cat /vol/data
+RUN cat /vol/data
+
+FROM alpine:3.14 AS C
+RUN mkdir &quot;/vol&quot; &amp;&amp; echo &quot;BAR&quot; &gt; &quot;/vol/data&quot;
+
+FROM A AS D
+COPY --from=C /vol/data /vol/data
+RUN cat /vol/data
+RUN sed -i s/BAR/OFF/g &quot;/vol/data&quot; &amp;&amp; cat /vol/data
+RUN cat /vol/data
+
+FROM A AS E
+COPY local /vol/data
+RUN cat /vol/data
+RUN sed -i s/BAR/OFF/g &quot;/vol/data&quot; &amp;&amp; cat /vol/data
+RUN cat /vol/data
+</code></pre><p>但是我们也可以观察到，COPY指令确实可以修改VOLUME, 但是COPY之后, RUN指令还是不能修改VOLUME</p>
+<pre><code>Sending build context to Docker daemon  3.072kB
+Step 1/18 : FROM alpine:3.14 AS A
+ ---&gt; d4ff818577bc
+Step 2/18 : RUN mkdir &quot;/vol&quot; &amp;&amp; echo &quot;FOO&quot; &gt; &quot;/vol/data&quot;
+ ---&gt; Using cache
+ ---&gt; 8a7395e87d34
+Step 3/18 : VOLUME /vol
+ ---&gt; Using cache
+ ---&gt; 637ce773f44b
+Step 4/18 : FROM A AS B
+ ---&gt; 637ce773f44b
+Step 5/18 : RUN sed -i s/FOO/BAR/g &quot;/vol/data&quot; &amp;&amp; cat /vol/data
+ ---&gt; Using cache
+ ---&gt; 873b7801b7c2
+Step 6/18 : RUN cat /vol/data
+ ---&gt; Using cache
+ ---&gt; e721c33e07ef
+Step 7/18 : FROM alpine:3.14 AS C
+ ---&gt; d4ff818577bc
+Step 8/18 : RUN mkdir &quot;/vol&quot; &amp;&amp; echo &quot;BAR&quot; &gt; &quot;/vol/data&quot;
+ ---&gt; Using cache
+ ---&gt; cfcf70f1aa1d
+Step 9/18 : FROM A AS D
+ ---&gt; 637ce773f44b
+Step 10/18 : COPY --from=C /vol/data /vol/data
+ ---&gt; aba2b1406b7d
+Step 11/18 : RUN cat /vol/data
+ ---&gt; Running in 6d62b136f91d
+BAR
+Removing intermediate container 6d62b136f91d
+ ---&gt; e9b1fc3f97a0
+Step 12/18 : RUN sed -i s/BAR/OFF/g &quot;/vol/data&quot; &amp;&amp; cat /vol/data
+ ---&gt; Running in 0af235286554
+OFF
+Removing intermediate container 0af235286554
+ ---&gt; 9ddce12792c1
+Step 13/18 : RUN cat /vol/data
+ ---&gt; Running in 8df52a875f51
+BAR
+Removing intermediate container 8df52a875f51
+ ---&gt; 85fbbc714ddc
+Step 14/18 : FROM A AS E
+ ---&gt; 637ce773f44b
+Step 15/18 : COPY local /vol/data
+ ---&gt; 14891ecbb893
+Step 16/18 : RUN cat /vol/data
+ ---&gt; Running in 7e052e9fd375
+BAR
+Removing intermediate container 7e052e9fd375
+ ---&gt; 6e11f30e96a0
+Step 17/18 : RUN sed -i s/BAR/OFF/g &quot;/vol/data&quot; &amp;&amp; cat /vol/data
+ ---&gt; Running in 2148e7554efe
+OFF
+Removing intermediate container 2148e7554efe
+ ---&gt; 9819a6fd0a3e
+Step 18/18 : RUN cat /vol/data
+ ---&gt; Running in b07e64ef6680
+BAR
+Removing intermediate container b07e64ef6680
+ ---&gt; 8b194e973d50
+Successfully built 8b194e973d50
+</code></pre><h2 id="4-为什么copy指令可以">4. 为什么COPY指令可以？</h2>
+<p>翻阅源码，我们发现RUN指令是通过运行容器实现的：
+<a href="https://github.com/moby/moby/blob/master/builder/dockerfile/dispatchers.go#L384">https://github.com/moby/moby/blob/master/builder/dockerfile/dispatchers.go#L384</a></p>
+<pre><code class="language-go!" data-lang="go!">func dispatchRun(d dispatchRequest, c *instructions.RunCommand) error {
+    ...
+    if err := d.builder.containerManager.Run(d.builder.clientCtx, cID, d.builder.Stdout, d.builder.Stderr); err != nil {
+        ...
+    }
+
+    ...
+    return d.builder.commitContainer(d.state, cID, runConfigForCacheProbe)
+}
+</code></pre><p>而COPY指令没有运行容器的动作，是直接向RWLayer写入内容实现的：</p>
+<p><a href="https://github.com/moby/moby/blob/471fd27709777d2cce3251129887e14e8bb2e0c7/builder/dockerfile/internals.go#L217">https://github.com/moby/moby/blob/471fd27709777d2cce3251129887e14e8bb2e0c7/builder/dockerfile/internals.go#L217</a></p>
+<pre><code class="language-go!" data-lang="go!">func (b *Builder) performCopy(req dispatchRequest, inst copyInstruction) error {
+    ...
+    rwLayer, err := imageMount.NewRWLayer()
+    ...
+        if err := performCopyForInfo(destInfo, info, opts); err != nil {
+    ...
+    return b.exportImage(state, rwLayer, imageMount.Image(), runConfigWithCommentCmd)
+}
+</code></pre><p>因此两者存在上述的差异。在上文我们已经分析了RUN指令不能修改VOLUME的大致原因，对于COPY指令为什么可以的原因是类似的，即COPY指令commit了layer的修改。</p>
+<h2 id="reference">reference</h2>
+<ul>
+<li><a href="https://stackoverflow.com/questions/52086641/override-a-volume-when-building-docker-image-from-another-docker-image/54370666#54370666?newreg=56b1f0e82fd34204b3b7f8ac26ee4923">Stack Overflow: dockerfile - Override a volume when Building docker image from another docker image</a></li>
+<li><a href="https://docs.docker.com/engine/reference/builder/#notes-about-specifying-volumes">https://docs.docker.com/engine/reference/builder/#notes-about-specifying-volumes</a></li>
+<li><a href="https://docs.docker.com/engine/reference/builder/#copy">https://docs.docker.com/engine/reference/builder/#copy</a></li>
+<li><a href="https://stackoverflow.com/a/64479227/16492839">https://stackoverflow.com/a/64479227/16492839</a></li>
+</ul>
+
+            </div>
+        </article>
+
+        <hr />
+
+        <div class="post-info">
+  			</div>
+
+        
+    </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>&copy; 2021</span>
+            
+            <span></span>
+            <span> <a href="/posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a></span>
+        </div>
+    </div>
+    <div class="footer__inner">
+        <div class="footer__content">
+
+        </div>
+    </div>
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>Powered by <a href="http://gohugo.io">Hugo</a></span>
+            <span>Made with &#10084; by <a href="https://github.com/st0n3">st0n3</a></span>
+            <span>Based on <a href="https://github.com/rhazdon">rhazdon</a></span>
+        </div>
+    </div>
+
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      extensions: ["tex2jax.js"],
+      
+      jax: ["input/TeX", "output/CommonHTML"],
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+        displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+        processEscapes: true
+      },
+      "HTML-CSS": { fonts: ["TeX"] },
+      displayAlign: "left"
+    });
+  </script>
+
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_CHTML"></script>
+
+
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+
+<script type="text/javascript" src="/bundle.min.4c3fb12a087ceed4a52cb5d57068a9795c7069617a01ca70f788052ad66e1791779e6c72686e1dc0ca13dc03b0203204b6566bb0dd1ee80de2b7ff4d8fe53db2.js" integrity="sha512-TD&#43;xKgh87tSlLLXVcGipeVxwaWF6Acpw94gFKtZuF5F3nmxyaG4dwMoT3AOwIDIEtlZrsN0e6A3it/9Nj&#43;U9sg=="></script>
+
+
+
+    </body>
+</html>
