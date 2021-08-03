@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author"
+    content="">
+<meta name="description"
+    content="tags: container,源码分析 docker cli ConfigFile()源码分析 本文编写时，最新release为v20.10.7, 因此代码均为v20.10.7分支的代码
+在执行很多命令时，都需要读取docker cli的配置，即调用ConfigFile()，理解这个过程是有必要的。
+https://github.com/docker/cli/blob/v20.10.7/cli/command/cli.go#L127
+func (cli *DockerCli) ConfigFile() *configfile.ConfigFile { if cli.configFile == nil { cli.loadConfigFile() } return cli.configFile } func (cli *DockerCli) loadConfigFile() { cli.configFile = cliconfig.LoadDefaultConfigFile(cli.err) } LoadDefaultConfigFile实现如下
+https://github.com/docker/cli/blob/v20.10.7/cli/config/config.go#L151
+func LoadDefaultConfigFile(stderr io.Writer) *configfile.ConfigFile { configFile, err := Load(Dir()) if err != nil { fmt.Fprintf(stderr, &amp;quot;WARNING: Error loading config file: %v\n&amp;quot;, err) } if printLegacyFileWarning { _, _ = fmt.Fprintln(stderr, &amp;quot;WARNING: Support for the legacy ~/." />
+<meta name="keywords" content="" />
+<meta name="robots" content="noodp" />
+<link rel="canonical" href="/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E8%BF%9B%E7%A8%8B%E5%AE%B9%E5%99%A8/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%B9%E5%99%A8/docker/docker%E6%BA%90%E7%A0%81%E5%AE%A1%E8%AE%A1/docker%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/docker-cli-ConfigFile%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90.html" />
+
+
+<title>
+    
+    docker cli ConfigFile()源码分析 :: welcome to st0n3&#39;s blog 
+    
+</title>
+
+
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.2.1/css/flag-icon.min.css" rel="stylesheet"
+    type="text/css">
+
+
+
+<link rel="stylesheet" href="/main.min.de959d61dd13c2cd41136acd491ffb0749779e1afe37b1fed6d5cba0b7e1938d.css">
+
+
+
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#252627">
+<link rel="shortcut icon" href="/favicon.ico">
+<meta name="theme-color" content="#252627"><meta itemprop="name" content="docker cli ConfigFile()源码分析">
+<meta itemprop="description" content="tags: container,源码分析 docker cli ConfigFile()源码分析 本文编写时，最新release为v20.10.7, 因此代码均为v20.10.7分支的代码
+在执行很多命令时，都需要读取docker cli的配置，即调用ConfigFile()，理解这个过程是有必要的。
+https://github.com/docker/cli/blob/v20.10.7/cli/command/cli.go#L127
+func (cli *DockerCli) ConfigFile() *configfile.ConfigFile { if cli.configFile == nil { cli.loadConfigFile() } return cli.configFile } func (cli *DockerCli) loadConfigFile() { cli.configFile = cliconfig.LoadDefaultConfigFile(cli.err) } LoadDefaultConfigFile实现如下
+https://github.com/docker/cli/blob/v20.10.7/cli/config/config.go#L151
+func LoadDefaultConfigFile(stderr io.Writer) *configfile.ConfigFile { configFile, err := Load(Dir()) if err != nil { fmt.Fprintf(stderr, &quot;WARNING: Error loading config file: %v\n&quot;, err) } if printLegacyFileWarning { _, _ = fmt.Fprintln(stderr, &quot;WARNING: Support for the legacy ~/.">
+<meta itemprop="datePublished" content="2021-07-30T03:36:52+00:00" />
+<meta itemprop="dateModified" content="2021-07-30T03:36:52+00:00" />
+<meta itemprop="wordCount" content="492">
+
+
+
+<meta itemprop="keywords" content="" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="docker cli ConfigFile()源码分析"/>
+<meta name="twitter:description" content="tags: container,源码分析 docker cli ConfigFile()源码分析 本文编写时，最新release为v20.10.7, 因此代码均为v20.10.7分支的代码
+在执行很多命令时，都需要读取docker cli的配置，即调用ConfigFile()，理解这个过程是有必要的。
+https://github.com/docker/cli/blob/v20.10.7/cli/command/cli.go#L127
+func (cli *DockerCli) ConfigFile() *configfile.ConfigFile { if cli.configFile == nil { cli.loadConfigFile() } return cli.configFile } func (cli *DockerCli) loadConfigFile() { cli.configFile = cliconfig.LoadDefaultConfigFile(cli.err) } LoadDefaultConfigFile实现如下
+https://github.com/docker/cli/blob/v20.10.7/cli/config/config.go#L151
+func LoadDefaultConfigFile(stderr io.Writer) *configfile.ConfigFile { configFile, err := Load(Dir()) if err != nil { fmt.Fprintf(stderr, &quot;WARNING: Error loading config file: %v\n&quot;, err) } if printLegacyFileWarning { _, _ = fmt.Fprintln(stderr, &quot;WARNING: Support for the legacy ~/."/>
+
+
+
+
+<meta property="article:published_time" content="2021-07-30 03:36:52 &#43;0000 UTC" />
+
+
+
+
+
+
+
+    </head>
+
+    <body class="dark-theme">
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text">$ cd /home/st0n3</span>
+            <span class="logo__cursor"></span>
+        
+    </div>
+</a>
+
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="/aboutme.html">About</a></li><li><a href="/post.html">Blog</a></li><li><a href="/hackerbot">Hackerbot</a></li><li><a href="/skill_tree/">SkillTree</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+
+            <span class="theme-toggle"><svg class="theme-toggler" width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M22 41C32.4934 41 41 32.4934 41 22C41 11.5066 32.4934 3 22
+  3C11.5066 3 3 11.5066 3 22C3 32.4934 11.5066 41 22 41ZM7 22C7
+  13.7157 13.7157 7 22 7V37C13.7157 37 7 30.2843 7 22Z"/>
+</svg>
+</span>
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
+                
+    <main class="post">
+
+        <div class="post-info">
+            
+            </p>
+        </div>
+
+        <article>
+            <h2 class="post-title"><a href="/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E8%BF%9B%E7%A8%8B%E5%AE%B9%E5%99%A8/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%B9%E5%99%A8/docker/docker%E6%BA%90%E7%A0%81%E5%AE%A1%E8%AE%A1/docker%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/docker-cli-ConfigFile%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90.html">docker cli ConfigFile()源码分析</a></h2>
+
+            
+
+            <div class="post-content">
+                <hr>
+<h2 id="tags-container源码分析">tags: container,源码分析</h2>
+<h1 id="docker-cli-configfile源码分析">docker cli <code>ConfigFile()</code>源码分析</h1>
+<p><small>本文编写时，最新release为v20.10.7, 因此代码均为v20.10.7分支的代码</small></p>
+<p>在执行很多命令时，都需要读取docker cli的配置，即调用<code>ConfigFile()</code>，理解这个过程是有必要的。</p>
+<p><a href="https://github.com/docker/cli/blob/v20.10.7/cli/command/cli.go#L127">https://github.com/docker/cli/blob/v20.10.7/cli/command/cli.go#L127</a></p>
+<pre><code class="language-go!" data-lang="go!">func (cli *DockerCli) ConfigFile() *configfile.ConfigFile {
+    if cli.configFile == nil {
+        cli.loadConfigFile()
+    }
+    return cli.configFile
+}
+
+func (cli *DockerCli) loadConfigFile() {
+    cli.configFile = cliconfig.LoadDefaultConfigFile(cli.err)
+}
+</code></pre><p><code>LoadDefaultConfigFile</code>实现如下</p>
+<p><a href="https://github.com/docker/cli/blob/v20.10.7/cli/config/config.go#L151">https://github.com/docker/cli/blob/v20.10.7/cli/config/config.go#L151</a></p>
+<pre><code class="language-go!" data-lang="go!">func LoadDefaultConfigFile(stderr io.Writer) *configfile.ConfigFile {
+    configFile, err := Load(Dir())
+    if err != nil {
+        fmt.Fprintf(stderr, &quot;WARNING: Error loading config file: %v\n&quot;, err)
+    }
+    if printLegacyFileWarning {
+        _, _ = fmt.Fprintln(stderr, &quot;WARNING: Support for the legacy ~/.dockercfg configuration file and file-format is deprecated and will be removed in an upcoming release&quot;)
+    }
+    if !configFile.ContainsAuth() {
+        configFile.CredentialsStore = credentials.DetectDefaultStore(configFile.CredentialsStore)
+    }
+    return configFile
+}
+</code></pre><p>Config目录优先从环境变量<code>DOCKER_CONFIG</code>获取，如果未设置环境变量，则默认为<code>$HOME/.docker</code></p>
+<p><a href="https://github.com/docker/cli/blob/v20.10.7/cli/config/config.go#L63">https://github.com/docker/cli/blob/v20.10.7/cli/config/config.go#L63</a></p>
+<pre><code class="language-go!" data-lang="go!">const (
+    ...
+    configFileDir  = &quot;.docker&quot;
+    ...
+)
+
+func resetConfigDir() {
+    configDir = &quot;&quot;
+    initConfigDir = new(sync.Once)
+}
+
+func setConfigDir() {
+    if configDir != &quot;&quot; {
+        return
+    }
+    configDir = os.Getenv(&quot;DOCKER_CONFIG&quot;)
+    if configDir == &quot;&quot; {
+        configDir = filepath.Join(getHomeDir(), configFileDir)
+    }
+}
+
+// Dir returns the directory the configuration file is stored in
+func Dir() string {
+    initConfigDir.Do(setConfigDir)
+    return configDir
+}
+</code></pre><p>优先从<code>config.json</code>文件读取配置，如果不存在，则从<code>.dockercfg</code>文件读取</p>
+<p><a href="https://github.com/docker/cli/blob/v20.10.7/cli/config/config.go#L113">https://github.com/docker/cli/blob/v20.10.7/cli/config/config.go#L113</a></p>
+<pre><code class="language-go!" data-lang="go!">const (
+    ConfigFileName = &quot;config.json&quot;
+    ...
+    oldConfigfile  = &quot;.dockercfg&quot;
+)
+
+func Load(configDir string) (*configfile.ConfigFile, error) {
+    printLegacyFileWarning = false
+
+    if configDir == &quot;&quot; {
+        configDir = Dir()
+    }
+
+    filename := filepath.Join(configDir, ConfigFileName)
+    configFile := configfile.New(filename)
+
+    // Try happy path first - latest config file
+    if file, err := os.Open(filename); err == nil {
+        defer file.Close()
+        err = configFile.LoadFromReader(file)
+        if err != nil {
+            err = errors.Wrap(err, filename)
+        }
+        return configFile, err
+    } else if !os.IsNotExist(err) {
+        // if file is there but we can't stat it for any reason other
+        // than it doesn't exist then stop
+        return configFile, errors.Wrap(err, filename)
+    }
+
+    // Can't find latest config file so check for the old one
+    filename = filepath.Join(getHomeDir(), oldConfigfile)
+    if file, err := os.Open(filename); err == nil {
+        printLegacyFileWarning = true
+        defer file.Close()
+        if err := configFile.LegacyLoadFromReader(file); err != nil {
+            return configFile, errors.Wrap(err, filename)
+        }
+    }
+    return configFile, nil
+}
+</code></pre><p><code>config.json</code>文件解析过程如下，先使用json反序列化到ConfigFile结构体，如果有Auth字段，则使用base64解码，解析得到username, password</p>
+<p><a href="https://github.com/docker/cli/blob/v20.10.7/cli/config/configfile/file.go#L121">https://github.com/docker/cli/blob/v20.10.7/cli/config/configfile/file.go#L121</a></p>
+<pre><code class="language-go!" data-lang="go!">func (configFile *ConfigFile) LoadFromReader(configData io.Reader) error {
+    if err := json.NewDecoder(configData).Decode(&amp;configFile); err != nil &amp;&amp; !errors.Is(err, io.EOF) {
+        return err
+    }
+    var err error
+    for addr, ac := range configFile.AuthConfigs {
+        if ac.Auth != &quot;&quot; {
+            ac.Username, ac.Password, err = decodeAuth(ac.Auth)
+            if err != nil {
+                return err
+            }
+        }
+        ac.Auth = &quot;&quot;
+        ac.ServerAddress = addr
+        configFile.AuthConfigs[addr] = ac
+    }
+    return checkKubernetesConfiguration(configFile.Kubernetes)
+}
+
+
+// decodeAuth decodes a base64 encoded string and returns username and password
+func decodeAuth(authStr string) (string, string, error) {
+    if authStr == &quot;&quot; {
+        return &quot;&quot;, &quot;&quot;, nil
+    }
+
+    decLen := base64.StdEncoding.DecodedLen(len(authStr))
+    decoded := make([]byte, decLen)
+    authByte := []byte(authStr)
+    n, err := base64.StdEncoding.Decode(decoded, authByte)
+    if err != nil {
+        return &quot;&quot;, &quot;&quot;, err
+    }
+    if n &gt; decLen {
+        return &quot;&quot;, &quot;&quot;, errors.Errorf(&quot;Something went wrong decoding auth config&quot;)
+    }
+    arr := strings.SplitN(string(decoded), &quot;:&quot;, 2)
+    if len(arr) != 2 {
+        return &quot;&quot;, &quot;&quot;, errors.Errorf(&quot;Invalid auth configuration file&quot;)
+    }
+    password := strings.Trim(arr[1], &quot;\x00&quot;)
+    return arr[0], password, nil
+}
+</code></pre><p><code>.dockercfg</code>文件的解析过程类似， 略</p>
+<p>如果不存在认证相关的配置，则检测默认的<code>CredentialsStore</code></p>
+<pre><code class="language-go!" data-lang="go!">func LoadDefaultConfigFile(stderr io.Writer) *configfile.ConfigFile {
+    ...
+    if !configFile.ContainsAuth() {
+        configFile.CredentialsStore = credentials.DetectDefaultStore(configFile.CredentialsStore)
+    }
+    ...
+</code></pre>
+            </div>
+        </article>
+
+        <hr />
+
+        <div class="post-info">
+  			</div>
+
+        
+    </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>&copy; 2021</span>
+            
+            <span></span>
+            <span> <a href="/posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a></span>
+        </div>
+    </div>
+    <div class="footer__inner">
+        <div class="footer__content">
+
+        </div>
+    </div>
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>Powered by <a href="http://gohugo.io">Hugo</a></span>
+            <span>Made with &#10084; by <a href="https://github.com/st0n3">st0n3</a></span>
+            <span>Based on <a href="https://github.com/rhazdon">rhazdon</a></span>
+        </div>
+    </div>
+
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      extensions: ["tex2jax.js"],
+      
+      jax: ["input/TeX", "output/CommonHTML"],
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+        displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+        processEscapes: true
+      },
+      "HTML-CSS": { fonts: ["TeX"] },
+      displayAlign: "left"
+    });
+  </script>
+
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_CHTML"></script>
+
+
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+
+<script type="text/javascript" src="/bundle.min.4c3fb12a087ceed4a52cb5d57068a9795c7069617a01ca70f788052ad66e1791779e6c72686e1dc0ca13dc03b0203204b6566bb0dd1ee80de2b7ff4d8fe53db2.js" integrity="sha512-TD&#43;xKgh87tSlLLXVcGipeVxwaWF6Acpw94gFKtZuF5F3nmxyaG4dwMoT3AOwIDIEtlZrsN0e6A3it/9Nj&#43;U9sg=="></script>
+
+
+
+    </body>
+</html>

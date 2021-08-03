@@ -7,7 +7,7 @@
 <meta name="author"
     content="">
 <meta name="description"
-    content="Go os/exec坑 cp: cannot stat ‘./test/*’: No such file or directory out, err := exec.Command(&amp;#34;cp&amp;#34;, &amp;#34;./test/*&amp;#34;, &amp;#34;/tmp&amp;#34;).CombinedOutput() logrus.Info(cmd) logrus.Info(string(out)) 这里的*不会被认为是通配符，而是认为是个文件。
+    content=" tags: golang Go os/exec坑 cp: cannot stat ‘./test/*’: No such file or directory out, err := exec.Command(&amp;#34;cp&amp;#34;, &amp;#34;./test/*&amp;#34;, &amp;#34;/tmp&amp;#34;).CombinedOutput() logrus.Info(cmd) logrus.Info(string(out)) 这里的*不会被认为是通配符，而是认为是个文件。因为*作为globbing的功能是shell提供的，golang的os/exec库直接调用命令，不涉及shell。
 https://stackoverflow.com/questions/31467153/golang-failed-exec-command-that-works-in-terminal
 使用以下方法避免
 cmd := &amp;#34;cp ./test/* /tmp -r&amp;#34; out, err := exec.Command(&amp;#34;sh&amp;#34;, &amp;#34;-c&amp;#34;, cmd).CombinedOutput() logrus.Info(cmd) logrus.Info(string(out)) " />
@@ -40,20 +40,20 @@ cmd := &amp;#34;cp ./test/* /tmp -r&amp;#34; out, err := exec.Command(&amp;#34;s
 <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#252627">
 <link rel="shortcut icon" href="/favicon.ico">
 <meta name="theme-color" content="#252627"><meta itemprop="name" content="Go os/exec坑">
-<meta itemprop="description" content="Go os/exec坑 cp: cannot stat ‘./test/*’: No such file or directory out, err := exec.Command(&#34;cp&#34;, &#34;./test/*&#34;, &#34;/tmp&#34;).CombinedOutput() logrus.Info(cmd) logrus.Info(string(out)) 这里的*不会被认为是通配符，而是认为是个文件。
+<meta itemprop="description" content=" tags: golang Go os/exec坑 cp: cannot stat ‘./test/*’: No such file or directory out, err := exec.Command(&#34;cp&#34;, &#34;./test/*&#34;, &#34;/tmp&#34;).CombinedOutput() logrus.Info(cmd) logrus.Info(string(out)) 这里的*不会被认为是通配符，而是认为是个文件。因为*作为globbing的功能是shell提供的，golang的os/exec库直接调用命令，不涉及shell。
 https://stackoverflow.com/questions/31467153/golang-failed-exec-command-that-works-in-terminal
 使用以下方法避免
 cmd := &#34;cp ./test/* /tmp -r&#34; out, err := exec.Command(&#34;sh&#34;, &#34;-c&#34;, cmd).CombinedOutput() logrus.Info(cmd) logrus.Info(string(out)) ">
 <meta itemprop="datePublished" content="2019-08-27T15:00:00+00:00" />
 <meta itemprop="dateModified" content="2019-08-27T15:00:00+00:00" />
-<meta itemprop="wordCount" content="36">
+<meta itemprop="wordCount" content="38">
 
 
 
 <meta itemprop="keywords" content="" />
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Go os/exec坑"/>
-<meta name="twitter:description" content="Go os/exec坑 cp: cannot stat ‘./test/*’: No such file or directory out, err := exec.Command(&#34;cp&#34;, &#34;./test/*&#34;, &#34;/tmp&#34;).CombinedOutput() logrus.Info(cmd) logrus.Info(string(out)) 这里的*不会被认为是通配符，而是认为是个文件。
+<meta name="twitter:description" content=" tags: golang Go os/exec坑 cp: cannot stat ‘./test/*’: No such file or directory out, err := exec.Command(&#34;cp&#34;, &#34;./test/*&#34;, &#34;/tmp&#34;).CombinedOutput() logrus.Info(cmd) logrus.Info(string(out)) 这里的*不会被认为是通配符，而是认为是个文件。因为*作为globbing的功能是shell提供的，golang的os/exec库直接调用命令，不涉及shell。
 https://stackoverflow.com/questions/31467153/golang-failed-exec-command-that-works-in-terminal
 使用以下方法避免
 cmd := &#34;cp ./test/* /tmp -r&#34; out, err := exec.Command(&#34;sh&#34;, &#34;-c&#34;, cmd).CombinedOutput() logrus.Info(cmd) logrus.Info(string(out)) "/>
@@ -127,12 +127,14 @@ cmd := &#34;cp ./test/* /tmp -r&#34; out, err := exec.Command(&#34;sh&#34;, &#34
             
 
             <div class="post-content">
-                <h1 id="go-osexec坑">Go os/exec坑</h1>
+                <hr>
+<h2 id="tags-golang">tags: golang</h2>
+<h1 id="go-osexec坑">Go os/exec坑</h1>
 <h2 id="cp-cannot-stat-test-no-such-file-or-directory">cp: cannot stat ‘./test/*’: No such file or directory</h2>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#a6e22e">out</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">exec</span>.<span style="color:#a6e22e">Command</span>(<span style="color:#e6db74">&#34;cp&#34;</span>, <span style="color:#e6db74">&#34;./test/*&#34;</span>, <span style="color:#e6db74">&#34;/tmp&#34;</span>).<span style="color:#a6e22e">CombinedOutput</span>()
 <span style="color:#a6e22e">logrus</span>.<span style="color:#a6e22e">Info</span>(<span style="color:#a6e22e">cmd</span>)
 <span style="color:#a6e22e">logrus</span>.<span style="color:#a6e22e">Info</span>(string(<span style="color:#a6e22e">out</span>))
-</code></pre></div><p>这里的<code>*</code>不会被认为是通配符，而是认为是个文件。</p>
+</code></pre></div><p>这里的<code>*</code>不会被认为是通配符，而是认为是个文件。因为<code>*</code>作为globbing的功能是shell提供的，golang的<code>os/exec</code>库直接调用命令，不涉及shell。</p>
 <p><a href="https://stackoverflow.com/questions/31467153/golang-failed-exec-command-that-works-in-terminal">https://stackoverflow.com/questions/31467153/golang-failed-exec-command-that-works-in-terminal</a></p>
 <p>使用以下方法避免</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#a6e22e">cmd</span> <span style="color:#f92672">:=</span> <span style="color:#e6db74">&#34;cp ./test/* /tmp -r&#34;</span>

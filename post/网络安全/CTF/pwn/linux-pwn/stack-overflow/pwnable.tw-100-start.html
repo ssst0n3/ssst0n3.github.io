@@ -7,7 +7,7 @@
 <meta name="author"
     content="">
 <meta name="description"
-    content="pwnable.tw-100-start 1. 代码分析 1.1 文件信息 这是一个32位的Elf文件
+    content="tags: ctf,writeup,pwn pwnable.tw-100-start 1. 代码分析 1.1 文件信息 这是一个32位的Elf文件
 $ file start start: ELF 32-bit LSB executable, Intel 80386, version 1 (SYSV), statically linked, not stripped checksec显示未开启任何安全保护机制
 $ checksec start [*] &amp;#39;/home/st0n3/ctfs/pwnable.tw/100_Start/challenges/start&amp;#39; Arch: i386-32-little RELRO: No RELRO Stack: No canary found NX: NX disabled PIE: No PIE (0x8048000) 1.2 汇编代码 使用r2分析汇编，只有一个entry0入口函数。
 $ r2 start Warning: Cannot initialize dynamic strings [0x08048060]&amp;gt; aaa [x] Analyze all flags starting with sym. and entry0 (aa) [x] Analyze function calls (aac) [x] Analyze len bytes of instructions for references (aar) [x] Constructing a function name for fcn." />
@@ -40,20 +40,20 @@ $ r2 start Warning: Cannot initialize dynamic strings [0x08048060]&amp;gt; aaa [
 <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#252627">
 <link rel="shortcut icon" href="/favicon.ico">
 <meta name="theme-color" content="#252627"><meta itemprop="name" content="pwnable.tw-100-start">
-<meta itemprop="description" content="pwnable.tw-100-start 1. 代码分析 1.1 文件信息 这是一个32位的Elf文件
+<meta itemprop="description" content="tags: ctf,writeup,pwn pwnable.tw-100-start 1. 代码分析 1.1 文件信息 这是一个32位的Elf文件
 $ file start start: ELF 32-bit LSB executable, Intel 80386, version 1 (SYSV), statically linked, not stripped checksec显示未开启任何安全保护机制
 $ checksec start [*] &#39;/home/st0n3/ctfs/pwnable.tw/100_Start/challenges/start&#39; Arch: i386-32-little RELRO: No RELRO Stack: No canary found NX: NX disabled PIE: No PIE (0x8048000) 1.2 汇编代码 使用r2分析汇编，只有一个entry0入口函数。
 $ r2 start Warning: Cannot initialize dynamic strings [0x08048060]&gt; aaa [x] Analyze all flags starting with sym. and entry0 (aa) [x] Analyze function calls (aac) [x] Analyze len bytes of instructions for references (aar) [x] Constructing a function name for fcn.">
 <meta itemprop="datePublished" content="2019-09-02T18:13:00+00:00" />
 <meta itemprop="dateModified" content="2019-09-02T18:13:00+00:00" />
-<meta itemprop="wordCount" content="1021">
+<meta itemprop="wordCount" content="1023">
 
 
 
 <meta itemprop="keywords" content="" />
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="pwnable.tw-100-start"/>
-<meta name="twitter:description" content="pwnable.tw-100-start 1. 代码分析 1.1 文件信息 这是一个32位的Elf文件
+<meta name="twitter:description" content="tags: ctf,writeup,pwn pwnable.tw-100-start 1. 代码分析 1.1 文件信息 这是一个32位的Elf文件
 $ file start start: ELF 32-bit LSB executable, Intel 80386, version 1 (SYSV), statically linked, not stripped checksec显示未开启任何安全保护机制
 $ checksec start [*] &#39;/home/st0n3/ctfs/pwnable.tw/100_Start/challenges/start&#39; Arch: i386-32-little RELRO: No RELRO Stack: No canary found NX: NX disabled PIE: No PIE (0x8048000) 1.2 汇编代码 使用r2分析汇编，只有一个entry0入口函数。
 $ r2 start Warning: Cannot initialize dynamic strings [0x08048060]&gt; aaa [x] Analyze all flags starting with sym. and entry0 (aa) [x] Analyze function calls (aac) [x] Analyze len bytes of instructions for references (aar) [x] Constructing a function name for fcn."/>
@@ -127,7 +127,9 @@ $ r2 start Warning: Cannot initialize dynamic strings [0x08048060]&gt; aaa [x] A
             
 
             <div class="post-content">
-                <h1 id="pwnabletw-100-start">pwnable.tw-100-start</h1>
+                <hr>
+<h2 id="tags-ctfwriteuppwn">tags: ctf,writeup,pwn</h2>
+<h1 id="pwnabletw-100-start">pwnable.tw-100-start</h1>
 <h2 id="1-代码分析">1. 代码分析</h2>
 <h3 id="11-文件信息">1.1 文件信息</h3>
 <p>这是一个32位的Elf文件</p>
