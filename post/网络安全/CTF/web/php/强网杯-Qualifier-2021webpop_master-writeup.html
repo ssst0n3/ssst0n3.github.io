@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author"
+    content="">
+<meta name="description"
+    content="强网杯-Qualifier-2021/web/pop_master writeup  题目内容：听说你是pop链构建大师？ http://eci-2ze1vm55dfrb5qc64x2n.cloudeci1.ichunqiu.com:80
+ 网站代码： 链接：https://pan.baidu.com/s/1fjfhdnmrO5xJ88SN5uNNMg 提取码：t97q
+ class.php challenge.php  // wanglei: 一种基于ast的解法,可惜php没有codeql，否则就不用造一些轮子了 写了一个简易parser，会输出函数的有效调用关系（参数不会被修改的函数）。
+&amp;lt;?php require &#39;vendor/autoload.php&#39;; use PhpParser\{Node, NodeFinder}; use PhpParser\Error; use PhpParser\ParserFactory; function WhetherAssignExprWillBeExecuted($method_node, $assign_expr) { $nodeFinder = new NodeFinder; $if_stmts = $nodeFinder-&amp;gt;findInstanceOf($method_node, Node\Stmt\If_::class); $contains = false; foreach ($if_stmts as $if_stmt) { $assign_exprs_in_if = $nodeFinder-&amp;gt;findInstanceOf($if_stmt, Node\Expr\Assign::class); foreach ($assign_exprs_in_if as $assign_expr_in_if) { if ($assign_expr_in_if == $assign_expr) { $contains = true; break; } } if ($contains == true) { if ($if_stmt-&amp;gt;cond instanceof Node\Expr\BinaryOp\Greater) { if ($if_stmt-&amp;gt;cond-&amp;gt;left-&amp;gt;value &amp;gt;= $if_stmt-&amp;gt;cond-&amp;gt;right-&amp;gt;value) { return true; // in if; execute } else { return false; // in if; not execute } } else { // TODO error_reporting(&amp;quot;cond is not greater&amp;quot;); exit(-1); } } } $for_stmts = $nodeFinder-&amp;gt;findInstanceOf($method_node, Node\Stmt\For_::class); $contains = false; foreach ($for_stmts as $for_stmt) { $assign_exprs_in_for = $nodeFinder-&amp;gt;findInstanceOf($for_stmt, Node\Expr\Assign::class); foreach ($assign_exprs_in_for as $assign_expr_in_for) { if ($assign_expr_in_for == $assign_expr) { $contains = true; break; } } if ($contains == true) { assert($for_stmt-&amp;gt;cond[0] instanceof Node\Expr\BinaryOp\Smaller); if ($for_stmt-&amp;gt;cond[0]-&amp;gt;right-&amp;gt;value &amp;gt; 0) { return true; } else { return false; } } } return true; } $classes = array(); $code = &amp;lt;&amp;lt;&amp;lt; &#39;code&#39; &amp;lt;?" />
+<meta name="keywords" content="" />
+<meta name="robots" content="noodp" />
+<link rel="canonical" href="/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/CTF/web/php/%E5%BC%BA%E7%BD%91%E6%9D%AF-Qualifier-2021webpop_master-writeup.html" />
+
+
+<title>
+    
+    强网杯-Qualifier-2021/web/pop_master writeup :: welcome to st0n3&#39;s blog 
+    
+</title>
+
+
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.2.1/css/flag-icon.min.css" rel="stylesheet"
+    type="text/css">
+
+
+
+<link rel="stylesheet" href="/main.min.de959d61dd13c2cd41136acd491ffb0749779e1afe37b1fed6d5cba0b7e1938d.css">
+
+
+
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#252627">
+<link rel="shortcut icon" href="/favicon.ico">
+<meta name="theme-color" content="#252627"><meta itemprop="name" content="强网杯-Qualifier-2021/web/pop_master writeup">
+<meta itemprop="description" content="强网杯-Qualifier-2021/web/pop_master writeup  题目内容：听说你是pop链构建大师？ http://eci-2ze1vm55dfrb5qc64x2n.cloudeci1.ichunqiu.com:80
+ 网站代码： 链接：https://pan.baidu.com/s/1fjfhdnmrO5xJ88SN5uNNMg 提取码：t97q
+ class.php challenge.php  // wanglei: 一种基于ast的解法,可惜php没有codeql，否则就不用造一些轮子了 写了一个简易parser，会输出函数的有效调用关系（参数不会被修改的函数）。
+&lt;?php require &#39;vendor/autoload.php&#39;; use PhpParser\{Node, NodeFinder}; use PhpParser\Error; use PhpParser\ParserFactory; function WhetherAssignExprWillBeExecuted($method_node, $assign_expr) { $nodeFinder = new NodeFinder; $if_stmts = $nodeFinder-&gt;findInstanceOf($method_node, Node\Stmt\If_::class); $contains = false; foreach ($if_stmts as $if_stmt) { $assign_exprs_in_if = $nodeFinder-&gt;findInstanceOf($if_stmt, Node\Expr\Assign::class); foreach ($assign_exprs_in_if as $assign_expr_in_if) { if ($assign_expr_in_if == $assign_expr) { $contains = true; break; } } if ($contains == true) { if ($if_stmt-&gt;cond instanceof Node\Expr\BinaryOp\Greater) { if ($if_stmt-&gt;cond-&gt;left-&gt;value &gt;= $if_stmt-&gt;cond-&gt;right-&gt;value) { return true; // in if; execute } else { return false; // in if; not execute } } else { // TODO error_reporting(&quot;cond is not greater&quot;); exit(-1); } } } $for_stmts = $nodeFinder-&gt;findInstanceOf($method_node, Node\Stmt\For_::class); $contains = false; foreach ($for_stmts as $for_stmt) { $assign_exprs_in_for = $nodeFinder-&gt;findInstanceOf($for_stmt, Node\Expr\Assign::class); foreach ($assign_exprs_in_for as $assign_expr_in_for) { if ($assign_expr_in_for == $assign_expr) { $contains = true; break; } } if ($contains == true) { assert($for_stmt-&gt;cond[0] instanceof Node\Expr\BinaryOp\Smaller); if ($for_stmt-&gt;cond[0]-&gt;right-&gt;value &gt; 0) { return true; } else { return false; } } } return true; } $classes = array(); $code = &lt;&lt;&lt; &#39;code&#39; &lt;?">
+<meta itemprop="datePublished" content="2021-08-06T06:35:40+00:00" />
+<meta itemprop="dateModified" content="2021-08-06T06:35:40+00:00" />
+<meta itemprop="wordCount" content="644">
+
+
+
+<meta itemprop="keywords" content="" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="强网杯-Qualifier-2021/web/pop_master writeup"/>
+<meta name="twitter:description" content="强网杯-Qualifier-2021/web/pop_master writeup  题目内容：听说你是pop链构建大师？ http://eci-2ze1vm55dfrb5qc64x2n.cloudeci1.ichunqiu.com:80
+ 网站代码： 链接：https://pan.baidu.com/s/1fjfhdnmrO5xJ88SN5uNNMg 提取码：t97q
+ class.php challenge.php  // wanglei: 一种基于ast的解法,可惜php没有codeql，否则就不用造一些轮子了 写了一个简易parser，会输出函数的有效调用关系（参数不会被修改的函数）。
+&lt;?php require &#39;vendor/autoload.php&#39;; use PhpParser\{Node, NodeFinder}; use PhpParser\Error; use PhpParser\ParserFactory; function WhetherAssignExprWillBeExecuted($method_node, $assign_expr) { $nodeFinder = new NodeFinder; $if_stmts = $nodeFinder-&gt;findInstanceOf($method_node, Node\Stmt\If_::class); $contains = false; foreach ($if_stmts as $if_stmt) { $assign_exprs_in_if = $nodeFinder-&gt;findInstanceOf($if_stmt, Node\Expr\Assign::class); foreach ($assign_exprs_in_if as $assign_expr_in_if) { if ($assign_expr_in_if == $assign_expr) { $contains = true; break; } } if ($contains == true) { if ($if_stmt-&gt;cond instanceof Node\Expr\BinaryOp\Greater) { if ($if_stmt-&gt;cond-&gt;left-&gt;value &gt;= $if_stmt-&gt;cond-&gt;right-&gt;value) { return true; // in if; execute } else { return false; // in if; not execute } } else { // TODO error_reporting(&quot;cond is not greater&quot;); exit(-1); } } } $for_stmts = $nodeFinder-&gt;findInstanceOf($method_node, Node\Stmt\For_::class); $contains = false; foreach ($for_stmts as $for_stmt) { $assign_exprs_in_for = $nodeFinder-&gt;findInstanceOf($for_stmt, Node\Expr\Assign::class); foreach ($assign_exprs_in_for as $assign_expr_in_for) { if ($assign_expr_in_for == $assign_expr) { $contains = true; break; } } if ($contains == true) { assert($for_stmt-&gt;cond[0] instanceof Node\Expr\BinaryOp\Smaller); if ($for_stmt-&gt;cond[0]-&gt;right-&gt;value &gt; 0) { return true; } else { return false; } } } return true; } $classes = array(); $code = &lt;&lt;&lt; &#39;code&#39; &lt;?"/>
+
+
+
+
+<meta property="article:published_time" content="2021-08-06 06:35:40 &#43;0000 UTC" />
+
+
+
+
+
+
+
+    </head>
+
+    <body class="dark-theme">
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text">$ cd /home/st0n3</span>
+            <span class="logo__cursor"></span>
+        
+    </div>
+</a>
+
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="/aboutme.html">About</a></li><li><a href="/post.html">Blog</a></li><li><a href="/hackerbot">Hackerbot</a></li><li><a href="/skill_tree/">SkillTree</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+
+            <span class="theme-toggle"><svg class="theme-toggler" width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M22 41C32.4934 41 41 32.4934 41 22C41 11.5066 32.4934 3 22
+  3C11.5066 3 3 11.5066 3 22C3 32.4934 11.5066 41 22 41ZM7 22C7
+  13.7157 13.7157 7 22 7V37C13.7157 37 7 30.2843 7 22Z"/>
+</svg>
+</span>
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
+                
+    <main class="post">
+
+        <div class="post-info">
+            
+            </p>
+        </div>
+
+        <article>
+            <h2 class="post-title"><a href="/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/CTF/web/php/%E5%BC%BA%E7%BD%91%E6%9D%AF-Qualifier-2021webpop_master-writeup.html">强网杯-Qualifier-2021/web/pop_master writeup</a></h2>
+
+            
+
+            <div class="post-content">
+                <h1 id="强网杯-qualifier-2021webpop_master-writeup">强网杯-Qualifier-2021/web/pop_master writeup</h1>
+<blockquote>
+<p>题目内容：听说你是pop链构建大师？
+<a href="http://eci-2ze1vm55dfrb5qc64x2n.cloudeci1.ichunqiu.com">http://eci-2ze1vm55dfrb5qc64x2n.cloudeci1.ichunqiu.com</a>:80</p>
+</blockquote>
+<p>网站代码：
+链接：https://pan.baidu.com/s/1fjfhdnmrO5xJ88SN5uNNMg
+提取码：t97q</p>
+<ul>
+<li><a href="https://ctf-challenges.obs.cn-south-1.myhuaweicloud.com/2021/%E5%BC%BA%E7%BD%91%E6%9D%AF-Qualifier-2021/web/pop_master/class.php">class.php</a></li>
+<li><a href="https://ctf-challenges.obs.cn-south-1.myhuaweicloud.com/2021/%E5%BC%BA%E7%BD%91%E6%9D%AF-Qualifier-2021/web/pop_master/challenge.php">challenge.php</a></li>
+</ul>
+<p>// wanglei:
+一种基于ast的解法,可惜php没有codeql，否则就不用造一些轮子了
+写了一个简易parser，会输出函数的有效调用关系（参数不会被修改的函数）。</p>
+<pre><code class="language-php!" data-lang="php!">&lt;?php
+
+require 'vendor/autoload.php';
+
+use PhpParser\{Node, NodeFinder};
+use PhpParser\Error;
+use PhpParser\ParserFactory;
+
+function WhetherAssignExprWillBeExecuted($method_node, $assign_expr)
+{
+    $nodeFinder = new NodeFinder;
+    $if_stmts = $nodeFinder-&gt;findInstanceOf($method_node, Node\Stmt\If_::class);
+    $contains = false;
+    foreach ($if_stmts as $if_stmt) {
+        $assign_exprs_in_if = $nodeFinder-&gt;findInstanceOf($if_stmt, Node\Expr\Assign::class);
+        foreach ($assign_exprs_in_if as $assign_expr_in_if) {
+            if ($assign_expr_in_if == $assign_expr) {
+                $contains = true;
+                break;
+            }
+        }
+        if ($contains == true) {
+            if ($if_stmt-&gt;cond instanceof Node\Expr\BinaryOp\Greater) {
+                if ($if_stmt-&gt;cond-&gt;left-&gt;value &gt;= $if_stmt-&gt;cond-&gt;right-&gt;value) {
+                    return true; // in if; execute
+                } else {
+                    return false; // in if; not execute
+                }
+            } else {
+                // TODO
+                error_reporting(&quot;cond is not greater&quot;);
+                exit(-1);
+            }
+        }
+    }
+
+    $for_stmts = $nodeFinder-&gt;findInstanceOf($method_node, Node\Stmt\For_::class);
+    $contains = false;
+    foreach ($for_stmts as $for_stmt) {
+        $assign_exprs_in_for = $nodeFinder-&gt;findInstanceOf($for_stmt, Node\Expr\Assign::class);
+        foreach ($assign_exprs_in_for as $assign_expr_in_for) {
+            if ($assign_expr_in_for == $assign_expr) {
+                $contains = true;
+                break;
+            }
+        }
+        if ($contains == true) {
+            assert($for_stmt-&gt;cond[0] instanceof Node\Expr\BinaryOp\Smaller);
+            if ($for_stmt-&gt;cond[0]-&gt;right-&gt;value &gt; 0) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+
+$classes = array();
+
+$code = &lt;&lt;&lt; 'code'
+&lt;?php
+// test code
+
+code;
+
+$code = file_get_contents(&quot;class.php.txt&quot;);
+
+// get ast
+$parser = (new ParserFactory)-&gt;create(ParserFactory::PREFER_PHP7);
+try {
+    $ast = $parser-&gt;parse($code);
+} catch (Error $error) {
+    echo &quot;Parse error: {$error-&gt;getMessage()}\n&quot;;
+    return;
+}
+//var_dump($ast);
+
+$nodeFinder = new NodeFinder;
+$class_nodes = $nodeFinder-&gt;findInstanceOf($ast, Node\Stmt\Class_::class);
+foreach ($class_nodes as $class_node) {
+    $classes[$class_node-&gt;name-&gt;toString()] = array();
+    $method_nodes = $nodeFinder-&gt;findInstanceOf($class_node, Node\Stmt\ClassMethod::class);
+    foreach ($method_nodes as $method_node) {
+        var_dump($method_node-&gt;name-&gt;toString());
+        $classes[$class_node-&gt;name-&gt;toString()][$method_node-&gt;name-&gt;toString()] = array();
+        $method_call_exprs = $nodeFinder-&gt;findInstanceOf($method_node, Node\Expr\MethodCall::class);
+        $assign_exprs = $nodeFinder-&gt;findInstanceOf($method_node, Node\Expr\Assign::class);
+
+        foreach ($method_call_exprs as $method_call_expr) {
+            $pass = false;
+            $arg = $method_call_expr-&gt;args[0]-&gt;value-&gt;name;
+            foreach ($assign_exprs as $assign_expr) {
+                if (WhetherAssignExprWillBeExecuted($method_node, $assign_expr)) {
+                    if ($assign_expr-&gt;expr instanceof Node\Expr\BinaryOp\Concat) {
+                        if ($assign_expr-&gt;expr-&gt;left instanceof Node\Expr\Variable &amp;&amp; $assign_expr-&gt;expr-&gt;left-&gt;name == $arg) {
+                            continue;
+                        }
+                        if ($assign_expr-&gt;expr-&gt;right instanceof Node\Expr\Variable &amp;&amp; $assign_expr-&gt;expr-&gt;right-&gt;name == $arg) {
+                            continue;
+                        }
+                    }
+                    if ($assign_expr-&gt;var-&gt;name == $arg) {
+                        $pass = true;
+                        echo $pass . &quot;=======================\n&quot;;
+                        break;
+                    }
+                }
+            }
+            if (!$pass) {
+                array_push($classes[$class_node-&gt;name-&gt;toString()][$method_node-&gt;name-&gt;toString()], $method_call_expr-&gt;name-&gt;toString());
+            }
+        }
+        $eval_exprs = $nodeFinder-&gt;findInstanceOf($method_node, Node\Expr\Eval_::class);
+        foreach ($eval_exprs as $eval_expr) {
+            $pass = false;
+            $arg = $eval_expr-&gt;expr-&gt;name;
+            foreach ($assign_exprs as $assign_expr) {
+//                var_dump($assign_expr);
+
+                // if assign under if stmt
+                if (WhetherAssignExprWillBeExecuted($method_node, $assign_expr)) {
+                    if ($assign_expr-&gt;expr instanceof Node\Expr\BinaryOp\Concat) {
+                        if ($assign_expr-&gt;expr-&gt;left instanceof Node\Expr\Variable &amp;&amp; $assign_expr-&gt;expr-&gt;left-&gt;name == $arg) {
+                            continue;
+                        }
+                        if ($assign_expr-&gt;expr-&gt;right instanceof Node\Expr\Variable &amp;&amp; $assign_expr-&gt;expr-&gt;right-&gt;name == $arg) {
+                            continue;
+                        }
+                    }
+                    if ($assign_expr-&gt;var-&gt;name == $arg) {
+                        $pass = true;
+                        echo $pass . &quot;\n&quot;;
+                        break;
+                    }
+                }
+            }
+            if (!$pass) {
+                array_push($classes[$class_node-&gt;name-&gt;toString()][$method_node-&gt;name-&gt;toString()], &quot;eval&quot;);
+            }
+        }
+    }
+
+}
+
+file_put_contents(&quot;class.json&quot;, json_encode($classes));
+</code></pre><p>然后就很简单了，直接从题目给的函数开始往下遍历，能遍历到eval即可</p>
+<pre><code class="language-go!" data-lang="go!">package main
+
+import (
+	&quot;encoding/json&quot;
+	&quot;fmt&quot;
+	&quot;io/ioutil&quot;
+	&quot;os&quot;
+)
+
+type Class struct {
+	Name    string
+	Methods map[string]Method
+}
+
+type Method struct {
+	Name        string
+	ClassName   string
+	MethodCalls map[string]MethodCall
+	Chain       string
+	Caller      string
+}
+
+type MethodCall struct {
+	Callee Method
+}
+
+var Methods = map[string]Method{}
+
+func init() {
+	content, err := ioutil.ReadFile(&quot;class.json&quot;)
+	if err != nil {
+		panic(err)
+	}
+	var classes map[string]map[string][]string
+	err = json.Unmarshal(content, &amp;classes)
+	if err != nil {
+		panic(err)
+	}
+	for className, methods := range classes {
+		for methodName := range methods {
+			method := Method{
+				Name:        methodName,
+				ClassName:   className,
+				MethodCalls: map[string]MethodCall{},
+			}
+			Methods[methodName] = method
+		}
+	}
+	for _, methods := range classes {
+		for methodName, methodCalls := range methods {
+			for _, methodCall := range methodCalls {
+				Methods[methodName].MethodCalls[methodCall] = MethodCall{
+					Callee: Methods[methodCall],
+				}
+			}
+		}
+	}
+}
+
+func Flag(name string) {
+	if name == &quot;eval&quot; {
+		fmt.Println(&quot;found&quot;)
+		fmt.Println(Methods[name].Chain)
+		os.Exit(0)
+	}
+}
+
+func Chain(method Method) {
+	//delete(Methods, method.Name)
+	for callee, methodCall := range method.MethodCalls {
+		m := Methods[callee]
+		m.Caller = method.Name
+		m.Chain += Methods[m.Caller].Chain + &quot; -&gt; &quot; + Methods[m.Caller].ClassName + &quot;=&gt;&quot; + m.Caller
+		Methods[callee] = m
+		Flag(callee)
+		Chain(methodCall.Callee)
+	}
+}
+
+func main() {
+	start := &quot;dgpXUD&quot;
+	method := Methods[start]
+	Chain(method)
+}
+
+</code></pre><p>这样就会得到pop链</p>
+<pre><code class="language-!" data-lang="!"> -&gt; GGgDzF=&gt;dgpXUD -&gt; Ktk7NO=&gt;HgTbg1 -&gt; WNsEfH=&gt;sr9VKc -&gt; pPoCFE=&gt;ZmukyY -&gt; QgGCgM=&gt;qz2cw6 -&gt; v1D3QB=&gt;IKZ8A4 -&gt; grLyED=&gt;aFXCdT -&gt; ikh4YZ=&gt;Xz2I7F -&gt; g11xLB=&gt;piGpnb -&gt; axWnf6=&gt;SY2eBG -&gt; ZsRdIq=&gt;Wzw3Ct -&gt; GG7T1m=&gt;TC0GhK -&gt; LP9qxv=&gt;gXEaaS -&gt; ZWGMCc=&gt;an24MD -&gt; zfAqBZ=&gt;eldnbI -&gt; IycrDF=&gt;ttBGU3 -&gt; vUKWk9=&gt;ltTd4e -&gt; R37l6m=&gt;mnC1nm -&gt; p8ZoaB=&gt;DHAP0W -&gt; A70zTA=&gt;nAzLcW -&gt; Hodtfi=&gt;g2lllE -&gt; IFbnbn=&gt;G5nRa1 -&gt; yMRBmn=&gt;xY2v72
+</code></pre><p><img src="http://116.63.141.85:9000/hackmd/uploads/upload_f8c942df895a8d203d87eac45217b749.png" alt=""></p>
+<p><code>flag{d9e09e76-3c89-4eae-a0d9-1d7cb851289b}</code></p>
+
+            </div>
+        </article>
+
+        <hr />
+
+        <div class="post-info">
+  			</div>
+
+        
+    </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>&copy; 2021</span>
+            
+            <span></span>
+            <span> <a href="/posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a></span>
+        </div>
+    </div>
+    <div class="footer__inner">
+        <div class="footer__content">
+
+        </div>
+    </div>
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>Powered by <a href="http://gohugo.io">Hugo</a></span>
+            <span>Made with &#10084; by <a href="https://github.com/st0n3">st0n3</a></span>
+            <span>Based on <a href="https://github.com/rhazdon">rhazdon</a></span>
+        </div>
+    </div>
+
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      extensions: ["tex2jax.js"],
+      
+      jax: ["input/TeX", "output/CommonHTML"],
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+        displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+        processEscapes: true
+      },
+      "HTML-CSS": { fonts: ["TeX"] },
+      displayAlign: "left"
+    });
+  </script>
+
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_CHTML"></script>
+
+
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+
+<script type="text/javascript" src="/bundle.min.4c3fb12a087ceed4a52cb5d57068a9795c7069617a01ca70f788052ad66e1791779e6c72686e1dc0ca13dc03b0203204b6566bb0dd1ee80de2b7ff4d8fe53db2.js" integrity="sha512-TD&#43;xKgh87tSlLLXVcGipeVxwaWF6Acpw94gFKtZuF5F3nmxyaG4dwMoT3AOwIDIEtlZrsN0e6A3it/9Nj&#43;U9sg=="></script>
+
+
+
+    </body>
+</html>

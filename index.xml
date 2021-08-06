@@ -6,7 +6,19 @@
     <description>Recent content on welcome to st0n3&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 30 Jul 2021 03:36:52 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 06 Aug 2021 06:35:40 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>强网杯-Qualifier-2021/web/pop_master writeup</title>
+      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/CTF/web/php/%E5%BC%BA%E7%BD%91%E6%9D%AF-Qualifier-2021webpop_master-writeup.html</link>
+      <pubDate>Fri, 06 Aug 2021 06:35:40 +0000</pubDate>
+      
+      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/CTF/web/php/%E5%BC%BA%E7%BD%91%E6%9D%AF-Qualifier-2021webpop_master-writeup.html</guid>
+      <description>强网杯-Qualifier-2021/web/pop_master writeup  题目内容：听说你是pop链构建大师？ http://eci-2ze1vm55dfrb5qc64x2n.cloudeci1.ichunqiu.com:80
+ 网站代码： 链接：https://pan.baidu.com/s/1fjfhdnmrO5xJ88SN5uNNMg 提取码：t97q
+ class.php challenge.php  // wanglei: 一种基于ast的解法,可惜php没有codeql，否则就不用造一些轮子了 写了一个简易parser，会输出函数的有效调用关系（参数不会被修改的函数）。
+&amp;lt;?php require &#39;vendor/autoload.php&#39;; use PhpParser\{Node, NodeFinder}; use PhpParser\Error; use PhpParser\ParserFactory; function WhetherAssignExprWillBeExecuted($method_node, $assign_expr) { $nodeFinder = new NodeFinder; $if_stmts = $nodeFinder-&amp;gt;findInstanceOf($method_node, Node\Stmt\If_::class); $contains = false; foreach ($if_stmts as $if_stmt) { $assign_exprs_in_if = $nodeFinder-&amp;gt;findInstanceOf($if_stmt, Node\Expr\Assign::class); foreach ($assign_exprs_in_if as $assign_expr_in_if) { if ($assign_expr_in_if == $assign_expr) { $contains = true; break; } } if ($contains == true) { if ($if_stmt-&amp;gt;cond instanceof Node\Expr\BinaryOp\Greater) { if ($if_stmt-&amp;gt;cond-&amp;gt;left-&amp;gt;value &amp;gt;= $if_stmt-&amp;gt;cond-&amp;gt;right-&amp;gt;value) { return true; // in if; execute } else { return false; // in if; not execute } } else { // TODO error_reporting(&amp;quot;cond is not greater&amp;quot;); exit(-1); } } } $for_stmts = $nodeFinder-&amp;gt;findInstanceOf($method_node, Node\Stmt\For_::class); $contains = false; foreach ($for_stmts as $for_stmt) { $assign_exprs_in_for = $nodeFinder-&amp;gt;findInstanceOf($for_stmt, Node\Expr\Assign::class); foreach ($assign_exprs_in_for as $assign_expr_in_for) { if ($assign_expr_in_for == $assign_expr) { $contains = true; break; } } if ($contains == true) { assert($for_stmt-&amp;gt;cond[0] instanceof Node\Expr\BinaryOp\Smaller); if ($for_stmt-&amp;gt;cond[0]-&amp;gt;right-&amp;gt;value &amp;gt; 0) { return true; } else { return false; } } } return true; } $classes = array(); $code = &amp;lt;&amp;lt;&amp;lt; &#39;code&#39; &amp;lt;?</description>
+    </item>
+    
     <item>
       <title>docker cli ConfigFile()源码分析</title>
       <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E8%BF%9B%E7%A8%8B%E5%AE%B9%E5%99%A8/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%B9%E5%99%A8/docker/docker%E6%BA%90%E7%A0%81%E5%AE%A1%E8%AE%A1/docker%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/docker-cli-ConfigFile%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90.html</link>
@@ -48,8 +60,8 @@ Sending build context to Docker daemon 2.048kB Step 1/6 : FROM alpine:3.14 AS A 
       <pubDate>Fri, 18 Jun 2021 10:06:08 +0000</pubDate>
       
       <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/%E6%B5%8B%E8%AF%95%E6%96%B9%E6%B3%95/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95/%E9%9D%99%E6%80%81%E4%BB%A3%E7%A0%81%E6%89%AB%E6%8F%8F/AST/codeql/codeql%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%E6%88%96%E5%88%86%E6%9E%90%E5%AE%9E%E8%B7%B5/%E6%88%91%E6%98%AF%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8codeql%E6%8C%96%E6%8E%98CVE-2021-31856Meshery-sqli%E7%9A%84.html</guid>
-      <description>tags: codeql,cve 我是如何使用codeql挖掘CVE-2021-31856 Meshery sql注入的    item details note     Project Url https://github.com/layer5io/meshery    CVE-ID CVE-2021-31856    LGTM Alert lgtm alert    Affect Version v0.5.2    Fix Version v0.5.3 fix commit   CVSS 7.5 CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N    Author https://github.com/ssst0n3     一、codeql简介 CodeQL是一个自动化静态代码分析工具。在CodeQL中，代码被当作数据处理。安全漏洞、缺陷和其他错误被模拟成可以针对从代码中提取的数据库执行的查询。你可以运行由GitHub研究人员和社区贡献者编写的标准CodeQL查询，或者编写你自己的查询，用于自定义分析。找到潜在漏洞的查询会直接在源文件中突出显示结果。
-二、meshery简介 Meshery是CNCF成员之一(https://landscape.cncf.io/?category=cncf-members&amp;amp;fullscreen=yes&amp;amp;grouping=category&amp;amp;selected=meshery)。作为服务网格管理平面，Meshery 支持任何服务网格及其工作负载的采用、操作和管理。
+      <description>tags: codeql,cve 我是如何使用codeql挖掘CVE-2021-31856 Meshery sql注入的    item details     Project Url https://github.com/layer5io/meshery   CVE-ID CVE-2021-31856   LGTM Alert lgtm alert   Affect Version v0.5.2   Fix Version v0.5.3	fix commit   CVSS 7.5 CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N   Author https://github.com/ssst0n3    一、codeql简介 CodeQL是一个自动化静态代码分析工具。在CodeQL中，代码被当作数据处理。安全漏洞、缺陷和其他错误被模拟成可以针对从代码中提取的数据库执行的查询。你可以运行由GitHub研究人员和社区贡献者编写的标准CodeQL查询，或者编写你自己的查询，用于自定义分析。找到潜在漏洞的查询会直接在源文件中突出显示结果。
+二、meshery简介 Meshery是CNCF成员之一,作为服务网格管理平面，Meshery 支持任何服务网格及其工作负载的采用、操作和管理。
 三、CVE-2021-31856介绍 简介如下：
 GetMesheryPatterns() 函数(位于meshery/models/meshery_pattern_persister.go)存在一个SQL注入漏洞，注入点是/api/experimental/patternfile?order=id%3Bselect(randomblob(1000000000))&amp;amp;page=0&amp;amp;page_size=0中的order参数。
 具体内容已在另外的文章中详细介绍，参见：
@@ -317,6 +329,7 @@ st0n3@yoga:~$ ./ctf.expect spawn ssh -o StrictHostKeyChecking=no ctf@1.2.3.4 ctf
       
       <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%BC%80%E6%BA%90%E8%BD%AF%E4%BB%B6%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6%E6%96%B9%E6%B3%95.html</guid>
       <description>tags: 方法论 开源软件安全研究方法 0. 背景 过去很长一段时间，我的主要精力都花在容器安全上。容器是一个很大的概念，涉及领域众多，如果缺少一套高屋建瓴的、可行的方法论，将会被困在局部的知识点上，而无法系统性得分析出关键的容器安全风险。下面是基于前期容器安全研究总结了一套通用方法论，其中每个叶子节点都可以写成一篇文章，用于承载相关知识点的具体内容，如果一个节点的所有子节点都形成了翔实的文档，则可以认为完成了这个节点的研究工作。
+注：本文仅列举了需要做哪些工作，并未指出具体应怎么做
 1. 软件基础 磨刀不误砍柴工，首先能熟练使用该软件的主要功能，才有可能在其中发现有建设性的安全风险。
 1.1 软件简介 1.2 安装 1.3 快速使用 1.4 软件主要功能介绍 1.5 其他关于该软件的重要介绍 2. 开源情况 2.1 开源基本情况  开发语言 LICENSE branch, tag 项目主要贡献者 项目上下游情况  2.2 issue,commit管理概况 issues和commits记录了开发的详细过程，这中间可能包括了一些隐蔽的问题，包括：未显性以漏洞形式发布但由团队自行发现修复、直接以版本特性更新解决了漏洞、甚至开发团队无感知地解决了问题。
 对于一些关键文件的commits记录，则需要重点关注。
@@ -409,8 +422,10 @@ $$ \begin{align} &amp;amp; p^{-1} \cdot p \equiv 1 \mod q \newline &amp;amp; q^{
       <pubDate>Mon, 20 Jul 2020 02:00:00 +0000</pubDate>
       
       <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90%E4%B8%8E%E5%A4%8D%E7%8E%B0%E6%A8%A1%E6%9D%BF.html</guid>
-      <description>tags: 漏洞分析 漏洞分析与复现模板 一、基本信息    Item Details Note     Project https://github.com/spring-cloud/spring-cloud-config    Publish Date 2019-04-16    Confirm Link     CVE-ID CVE-2019-3799 mitre link   EDB-ID EDB-46772 exploit db   Cvedetails cvedetails \   Exploits exp1
-exp2    Affect Version 2.1.0-2.1.1, 2.0.0-2.0.3, 1.4.0-1.4.5 及更旧版本 \   Fix Version 2.1.2, 2.0.4, 1.4.6 \   Fix Commit  \   CVSS 8.</description>
+      <description>tags: 漏洞分析 漏洞分析与复现模板 在开源软件安全研究方法一文中，我们提到, 漏洞复现工作需要有规范的、成体系的进行。
+  有规范的、成体系的分析、复现并存留实验环境，可以利用vagrant或docker记录、分享漏洞环境。 不只是复现漏洞，更重要的是复现漏洞挖掘的方法或过程（能应用于同类漏洞挖掘）   本文将具体提出一个漏洞分析与复现过程中，要做的事情的模板。与前文同样，本文仅列举需要做哪些工作，并未指出具体应怎么做。在我历史及未来关于历史漏洞分析与复现的文章中，可以看到关于本文实际应用的实例。
+一、基本信息    Item Details     Project https://github.com/spring-cloud/spring-cloud-config   Publish Date 2019-04-16   Confirm Link    CVE-ID CVE-2019-3799   EDB-ID EDB-46772   Cvedetails cvedetails   Exploits exp1
+exp2   Affect Version 2.1.0-2.1.1, 2.0.0-2.0.3, 1.4.0-1.4.5 及更旧版本   Fix Version 2.1.2, 2.0.4, 1.4.6   Fix Commit    CVSS 8.</description>
     </item>
     
     <item>
