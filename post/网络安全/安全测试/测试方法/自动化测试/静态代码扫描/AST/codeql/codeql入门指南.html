@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author"
+    content="">
+<meta name="description"
+    content="tags: codeql codeql入门指南 1. Intro 我是如何使用codeql挖掘CVE-2021-31856 Meshery sql注入的
+2. codeql入门指南 2.1 工具安装  codeql cli 安装 codeql for vscode安装  2.2 about codeql language  QL tutorials  Find the thief Catch the fire starter Crown the rightful heir Cross the river    2.3 Codeql 语言关键概念介绍  逻辑语言: QL tutorials已经介绍，可以类比形式化验证、z3约束求解中的类似概念  QL 的语义基于 Datalog，这是一种声明式逻辑编程语言，通常用作查询语言 《Logic Programming and Databases》 在Codeql的招聘广告中我们可以看到codeql对于逻辑语言的需求   抽象语法树(Abstract Syntax Tree)  WIKIPEDIA: Abstract syntax tree Viewing the abstract syntax tree of a source file 强网杯-Qualifier-2021/web/pop_master writeup antlr   污点分析  Normal data flow vs taint tracking 强网杯-Qualifier-2021/web/pop_master writeup CTF 竞赛入门指南(CTF All In One):污点分析    2." />
+<meta name="keywords" content="" />
+<meta name="robots" content="noodp" />
+<link rel="canonical" href="/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/%E6%B5%8B%E8%AF%95%E6%96%B9%E6%B3%95/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95/%E9%9D%99%E6%80%81%E4%BB%A3%E7%A0%81%E6%89%AB%E6%8F%8F/AST/codeql/codeql%E5%85%A5%E9%97%A8%E6%8C%87%E5%8D%97.html" />
+
+
+<title>
+    
+    codeql入门指南 :: welcome to st0n3&#39;s blog 
+    
+</title>
+
+
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.2.1/css/flag-icon.min.css" rel="stylesheet"
+    type="text/css">
+
+
+
+<link rel="stylesheet" href="/main.min.de959d61dd13c2cd41136acd491ffb0749779e1afe37b1fed6d5cba0b7e1938d.css">
+
+
+
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#252627">
+<link rel="shortcut icon" href="/favicon.ico">
+<meta name="theme-color" content="#252627"><meta itemprop="name" content="codeql入门指南">
+<meta itemprop="description" content="tags: codeql codeql入门指南 1. Intro 我是如何使用codeql挖掘CVE-2021-31856 Meshery sql注入的
+2. codeql入门指南 2.1 工具安装  codeql cli 安装 codeql for vscode安装  2.2 about codeql language  QL tutorials  Find the thief Catch the fire starter Crown the rightful heir Cross the river    2.3 Codeql 语言关键概念介绍  逻辑语言: QL tutorials已经介绍，可以类比形式化验证、z3约束求解中的类似概念  QL 的语义基于 Datalog，这是一种声明式逻辑编程语言，通常用作查询语言 《Logic Programming and Databases》 在Codeql的招聘广告中我们可以看到codeql对于逻辑语言的需求   抽象语法树(Abstract Syntax Tree)  WIKIPEDIA: Abstract syntax tree Viewing the abstract syntax tree of a source file 强网杯-Qualifier-2021/web/pop_master writeup antlr   污点分析  Normal data flow vs taint tracking 强网杯-Qualifier-2021/web/pop_master writeup CTF 竞赛入门指南(CTF All In One):污点分析    2.">
+<meta itemprop="datePublished" content="2021-08-12T11:10:09+00:00" />
+<meta itemprop="dateModified" content="2021-08-12T11:10:09+00:00" />
+<meta itemprop="wordCount" content="175">
+
+
+
+<meta itemprop="keywords" content="" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="codeql入门指南"/>
+<meta name="twitter:description" content="tags: codeql codeql入门指南 1. Intro 我是如何使用codeql挖掘CVE-2021-31856 Meshery sql注入的
+2. codeql入门指南 2.1 工具安装  codeql cli 安装 codeql for vscode安装  2.2 about codeql language  QL tutorials  Find the thief Catch the fire starter Crown the rightful heir Cross the river    2.3 Codeql 语言关键概念介绍  逻辑语言: QL tutorials已经介绍，可以类比形式化验证、z3约束求解中的类似概念  QL 的语义基于 Datalog，这是一种声明式逻辑编程语言，通常用作查询语言 《Logic Programming and Databases》 在Codeql的招聘广告中我们可以看到codeql对于逻辑语言的需求   抽象语法树(Abstract Syntax Tree)  WIKIPEDIA: Abstract syntax tree Viewing the abstract syntax tree of a source file 强网杯-Qualifier-2021/web/pop_master writeup antlr   污点分析  Normal data flow vs taint tracking 强网杯-Qualifier-2021/web/pop_master writeup CTF 竞赛入门指南(CTF All In One):污点分析    2."/>
+
+
+
+
+<meta property="article:published_time" content="2021-08-12 11:10:09 &#43;0000 UTC" />
+
+
+
+
+
+
+
+    </head>
+
+    <body class="dark-theme">
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text">$ cd /home/st0n3</span>
+            <span class="logo__cursor"></span>
+        
+    </div>
+</a>
+
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="/aboutme.html">About</a></li><li><a href="/post.html">Blog</a></li><li><a href="/hackerbot">Hackerbot</a></li><li><a href="/skill_tree/">SkillTree</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+
+            <span class="theme-toggle"><svg class="theme-toggler" width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M22 41C32.4934 41 41 32.4934 41 22C41 11.5066 32.4934 3 22
+  3C11.5066 3 3 11.5066 3 22C3 32.4934 11.5066 41 22 41ZM7 22C7
+  13.7157 13.7157 7 22 7V37C13.7157 37 7 30.2843 7 22Z"/>
+</svg>
+</span>
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
+                
+    <main class="post">
+
+        <div class="post-info">
+            
+            </p>
+        </div>
+
+        <article>
+            <h2 class="post-title"><a href="/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/%E6%B5%8B%E8%AF%95%E6%96%B9%E6%B3%95/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95/%E9%9D%99%E6%80%81%E4%BB%A3%E7%A0%81%E6%89%AB%E6%8F%8F/AST/codeql/codeql%E5%85%A5%E9%97%A8%E6%8C%87%E5%8D%97.html">codeql入门指南</a></h2>
+
+            
+
+            <div class="post-content">
+                <hr>
+<h2 id="tags-codeql">tags: codeql</h2>
+<h1 id="codeql入门指南">codeql入门指南</h1>
+<h2 id="1-intro">1. Intro</h2>
+<p><a href="https://ssst0n3.github.io/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/%E6%B5%8B%E8%AF%95%E6%96%B9%E6%B3%95/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95/%E9%9D%99%E6%80%81%E4%BB%A3%E7%A0%81%E6%89%AB%E6%8F%8F/AST/codeql/codeql%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%E6%88%96%E5%88%86%E6%9E%90%E5%AE%9E%E8%B7%B5/%E6%88%91%E6%98%AF%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8codeql%E6%8C%96%E6%8E%98CVE-2021-31856Meshery-sqli%E7%9A%84.html">我是如何使用codeql挖掘CVE-2021-31856 Meshery sql注入的</a></p>
+<h2 id="2-codeql入门指南">2. codeql入门指南</h2>
+<h3 id="21-工具安装">2.1 工具安装</h3>
+<ul>
+<li><a href="https://codeql.github.com/docs/codeql-cli/getting-started-with-the-codeql-cli/">codeql cli 安装</a></li>
+<li><a href="https://codeql.github.com/docs/codeql-for-visual-studio-code/setting-up-codeql-in-visual-studio-code/">codeql for vscode安装</a></li>
+</ul>
+<h3 id="22-about-codeql-language">2.2 about codeql language</h3>
+<ul>
+<li><a href="https://codeql.github.com/docs/writing-codeql-queries/ql-tutorials/">QL tutorials</a>
+<ul>
+<li>Find the thief</li>
+<li>Catch the fire starter</li>
+<li>Crown the rightful heir</li>
+<li>Cross the river</li>
+</ul>
+</li>
+</ul>
+<h3 id="23-codeql-语言关键概念介绍">2.3 Codeql 语言关键概念介绍</h3>
+<ul>
+<li>逻辑语言: QL tutorials已经介绍，可以类比形式化验证、z3约束求解中的类似概念
+<ul>
+<li><a href="https://codeql.github.com/docs/ql-language-reference/about-the-ql-language/#properties-of-ql">QL 的语义基于 Datalog，这是一种声明式逻辑编程语言，通常用作查询语言</a></li>
+<li><a href="https://link.springer.com/book/10.1007%2F978-3-642-83952-8">《Logic Programming and Databases》</a></li>
+<li>在Codeql的<a href="https://boards.greenhouse.io/github/jobs/3067287">招聘广告</a>中我们可以看到codeql对于逻辑语言的需求</li>
+</ul>
+</li>
+<li>抽象语法树(Abstract Syntax Tree)
+<ul>
+<li><a href="https://en.wikipedia.org/wiki/Abstract_syntax_tree">WIKIPEDIA: Abstract syntax tree</a></li>
+<li><a href="https://codeql.github.com/docs/codeql-for-visual-studio-code/exploring-the-structure-of-your-source-code/">Viewing the abstract syntax tree of a source file</a></li>
+<li><a href="https://ssst0n3.github.io/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/CTF/web/php/%E5%BC%BA%E7%BD%91%E6%9D%AF-Qualifier-2021webpop_master-writeup.html">强网杯-Qualifier-2021/web/pop_master writeup</a></li>
+<li><a href="https://github.com/antlr/antlr4">antlr</a></li>
+</ul>
+</li>
+<li>污点分析
+<ul>
+<li><a href="https://codeql.github.com/docs/writing-codeql-queries/about-data-flow-analysis/#normal-data-flow-vs-taint-tracking">Normal data flow vs taint tracking</a></li>
+<li><a href="https://ssst0n3.github.io/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/CTF/web/php/%E5%BC%BA%E7%BD%91%E6%9D%AF-Qualifier-2021webpop_master-writeup.html">强网杯-Qualifier-2021/web/pop_master writeup</a></li>
+<li><a href="https://www.bookstack.cn/read/CTF-All-In-One/doc-5.5_taint_analysis.md">CTF 竞赛入门指南(CTF All In One):污点分析</a></li>
+</ul>
+</li>
+</ul>
+<h3 id="24-reference遇到问题在哪里解决">2.4 reference(遇到问题在哪里解决)</h3>
+<ul>
+<li>在<a href="https://github.com/waterdropctf/waterdrop_gossip/discussions/categories/q-a">waterdrop gossip的discussion</a>提问</li>
+<li>某语言的codeql基础写法: <a href="https://codeql.github.com/docs/codeql-language-guides/">CodeQL language guides</a></li>
+<li>codeql数据库
+<ul>
+<li><a href="https://lgtm.com/help/lgtm/running-queries-ide">下载lgtm上编译好的版本</a></li>
+<li><a href="https://codeql.github.com/docs/codeql-cli/creating-codeql-databases/">使用codeql cli自行编译</a></li>
+</ul>
+</li>
+<li>不知道代码应该怎么表达成查询语句时
+<ul>
+<li>通过codeql for vscode的<a href="https://codeql.github.com/docs/codeql-for-visual-studio-code/exploring-the-structure-of-your-source-code/">AST VIEWER</a>功能查询</li>
+<li>通过文档查询
+<ul>
+<li>浏览所有的class,predicate,module: <a href="https://codeql.github.com/codeql-standard-libraries/">CodeQL standard libraries </a></li>
+<li>搜索class,predicate,module: <a href="https://codeql.github.com/codeql-standard-libraries/search.html">CodeQL library search</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>有哪些优秀的query可以学习?
+<ul>
+<li>codeql official:
+<ul>
+<li><a href="https://github.com/github/codeql-go/tree/main/ql/src/Security">https://github.com/github/codeql-go/tree/main/ql/src/Security</a></li>
+<li><a href="https://github.com/github/codeql-go/tree/main/ql/src/experimental">https://github.com/github/codeql-go/tree/main/ql/src/experimental</a></li>
+<li><a href="https://github.com/github/codeql/tree/main/java/ql/src">https://github.com/github/codeql/tree/main/java/ql/src</a></li>
+</ul>
+</li>
+<li>continous collect at <a href="https://github.com/waterdropctf/codeql-query-packs">https://github.com/waterdropctf/codeql-query-packs</a></li>
+</ul>
+</li>
+</ul>
+<h2 id="3-codeql-step-by-step">3. codeql step by step</h2>
+<p>以下练习，我已经做过了，为了方便交流，可以优先尝试这些</p>
+<ul>
+<li><a href="https://securitylab.github.com/ctf/segv/">CTF 1: SEGV Hunt</a></li>
+<li><a href="https://securitylab.github.com/ctf/uboot/">CTF 2: U-Boot Challenge</a></li>
+<li><a href="https://securitylab.github.com/ctf/jquery/">CTF 3: XSS-unsafe jQuery plugins</a></li>
+<li><a href="https://securitylab.github.com/ctf/codeql-and-chill/">CTF 4: CodeQL and chill</a></li>
+<li><a href="https://securitylab.github.com/ctf/go-and-dont-return/">CTF 5: Go and don&rsquo;t return</a></li>
+<li>Codeql: Find CVE-2018-11776
+<ul>
+<li>step by step
+<ul>
+<li><a href="https://github.com/iflody/codeql-workshop">中文</a> (感谢melody)</li>
+<li><a href="https://github.com/githubsatelliteworkshops/codeql/blob/master/java.md">English Version</a></li>
+</ul>
+</li>
+<li>reference: <a href="https://securitylab.github.com/research/apache-struts-CVE-2018-11776/">https://securitylab.github.com/research/apache-struts-CVE-2018-11776/</a></li>
+</ul>
+</li>
+</ul>
+<h2 id="4-总结">4. 总结</h2>
+<ul>
+<li>Q: 类似的技术不是有很多吗？为什么我们需要CodeQL?</li>
+<li>A: Codeql真正的价值不仅局限于技术本身，更体现在它让人们认同同一件事，这将成为一个事实上的标准化技术</li>
+</ul>
+<p>使用codeql复现<strong>发现</strong>漏洞、挖掘漏洞的流程</p>
+<ol>
+<li>分析历史漏洞</li>
+<li>编译codeql数据库</li>
+<li>编写query，并逐步优化，提升&quot;采准率&quot;</li>
+<li>准确命中历史漏洞</li>
+<li>扩展query，用于挖掘相关漏洞，或挖掘其他项目中的漏洞</li>
+</ol>
+
+            </div>
+        </article>
+
+        <hr />
+
+        <div class="post-info">
+  			</div>
+
+        
+    </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>&copy; 2021</span>
+            
+            <span></span>
+            <span> <a href="/posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a></span>
+        </div>
+    </div>
+    <div class="footer__inner">
+        <div class="footer__content">
+
+        </div>
+    </div>
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>Powered by <a href="http://gohugo.io">Hugo</a></span>
+            <span>Made with &#10084; by <a href="https://github.com/st0n3">st0n3</a></span>
+            <span>Based on <a href="https://github.com/rhazdon">rhazdon</a></span>
+        </div>
+    </div>
+
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      extensions: ["tex2jax.js"],
+      
+      jax: ["input/TeX", "output/CommonHTML"],
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+        displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+        processEscapes: true
+      },
+      "HTML-CSS": { fonts: ["TeX"] },
+      displayAlign: "left"
+    });
+  </script>
+
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_CHTML"></script>
+
+
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+
+<script type="text/javascript" src="/bundle.min.4c3fb12a087ceed4a52cb5d57068a9795c7069617a01ca70f788052ad66e1791779e6c72686e1dc0ca13dc03b0203204b6566bb0dd1ee80de2b7ff4d8fe53db2.js" integrity="sha512-TD&#43;xKgh87tSlLLXVcGipeVxwaWF6Acpw94gFKtZuF5F3nmxyaG4dwMoT3AOwIDIEtlZrsN0e6A3it/9Nj&#43;U9sg=="></script>
+
+
+
+    </body>
+</html>
