@@ -36,9 +36,9 @@
       
       <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E8%BF%9B%E7%A8%8B%E5%AE%B9%E5%99%A8/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%B9%E5%99%A8/docker/docker%E6%BA%90%E7%A0%81%E5%AE%A1%E8%AE%A1/docker%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/docker-cli-ConfigFile%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90.html</guid>
       <description>tags: container,源码分析 docker cli ConfigFile()源码分析 本文编写时，最新release为v20.10.7, 因此代码均为v20.10.7分支的代码
-在执行很多命令时，都需要读取docker cli的配置，即调用ConfigFile()，理解这个过程是有必要的。
+ 在执行很多命令时，都需要读取docker cli的配置，即调用ConfigFile()，理解这个过程是有必要的。
 https://github.com/docker/cli/blob/v20.10.7/cli/command/cli.go#L127
-func (cli *DockerCli) ConfigFile() *configfile.ConfigFile { if cli.configFile == nil { cli.loadConfigFile() } return cli.configFile } func (cli *DockerCli) loadConfigFile() { cli.configFile = cliconfig.LoadDefaultConfigFile(cli.err) } LoadDefaultConfigFile实现如下
+func (cli *DockerCli) ConfigFile() *configfile.ConfigFile { if cli.configFile == nil { cli.loadConfigFile() } return cli.configFile } func (cli *DockerCli) loadConfigFile() { cli.configFile = cliconfig.LoadDefaultConfigFile(cli.err) }  LoadDefaultConfigFile实现如下
 https://github.com/docker/cli/blob/v20.10.7/cli/config/config.go#L151
 func LoadDefaultConfigFile(stderr io.Writer) *configfile.ConfigFile { configFile, err := Load(Dir()) if err != nil { fmt.Fprintf(stderr, &amp;quot;WARNING: Error loading config file: %v\n&amp;quot;, err) } if printLegacyFileWarning { _, _ = fmt.Fprintln(stderr, &amp;quot;WARNING: Support for the legacy ~/.</description>
     </item>

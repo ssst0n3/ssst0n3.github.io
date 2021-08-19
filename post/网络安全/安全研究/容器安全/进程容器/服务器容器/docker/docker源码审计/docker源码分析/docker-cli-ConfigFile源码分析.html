@@ -8,9 +8,9 @@
     content="">
 <meta name="description"
     content="tags: container,源码分析 docker cli ConfigFile()源码分析 本文编写时，最新release为v20.10.7, 因此代码均为v20.10.7分支的代码
-在执行很多命令时，都需要读取docker cli的配置，即调用ConfigFile()，理解这个过程是有必要的。
+ 在执行很多命令时，都需要读取docker cli的配置，即调用ConfigFile()，理解这个过程是有必要的。
 https://github.com/docker/cli/blob/v20.10.7/cli/command/cli.go#L127
-func (cli *DockerCli) ConfigFile() *configfile.ConfigFile { if cli.configFile == nil { cli.loadConfigFile() } return cli.configFile } func (cli *DockerCli) loadConfigFile() { cli.configFile = cliconfig.LoadDefaultConfigFile(cli.err) } LoadDefaultConfigFile实现如下
+func (cli *DockerCli) ConfigFile() *configfile.ConfigFile { if cli.configFile == nil { cli.loadConfigFile() } return cli.configFile } func (cli *DockerCli) loadConfigFile() { cli.configFile = cliconfig.LoadDefaultConfigFile(cli.err) }  LoadDefaultConfigFile实现如下
 https://github.com/docker/cli/blob/v20.10.7/cli/config/config.go#L151
 func LoadDefaultConfigFile(stderr io.Writer) *configfile.ConfigFile { configFile, err := Load(Dir()) if err != nil { fmt.Fprintf(stderr, &amp;quot;WARNING: Error loading config file: %v\n&amp;quot;, err) } if printLegacyFileWarning { _, _ = fmt.Fprintln(stderr, &amp;quot;WARNING: Support for the legacy ~/." />
 <meta name="keywords" content="" />
@@ -43,9 +43,9 @@ func LoadDefaultConfigFile(stderr io.Writer) *configfile.ConfigFile { configFile
 <link rel="shortcut icon" href="/favicon.ico">
 <meta name="theme-color" content="#252627"><meta itemprop="name" content="docker cli ConfigFile()源码分析">
 <meta itemprop="description" content="tags: container,源码分析 docker cli ConfigFile()源码分析 本文编写时，最新release为v20.10.7, 因此代码均为v20.10.7分支的代码
-在执行很多命令时，都需要读取docker cli的配置，即调用ConfigFile()，理解这个过程是有必要的。
+ 在执行很多命令时，都需要读取docker cli的配置，即调用ConfigFile()，理解这个过程是有必要的。
 https://github.com/docker/cli/blob/v20.10.7/cli/command/cli.go#L127
-func (cli *DockerCli) ConfigFile() *configfile.ConfigFile { if cli.configFile == nil { cli.loadConfigFile() } return cli.configFile } func (cli *DockerCli) loadConfigFile() { cli.configFile = cliconfig.LoadDefaultConfigFile(cli.err) } LoadDefaultConfigFile实现如下
+func (cli *DockerCli) ConfigFile() *configfile.ConfigFile { if cli.configFile == nil { cli.loadConfigFile() } return cli.configFile } func (cli *DockerCli) loadConfigFile() { cli.configFile = cliconfig.LoadDefaultConfigFile(cli.err) }  LoadDefaultConfigFile实现如下
 https://github.com/docker/cli/blob/v20.10.7/cli/config/config.go#L151
 func LoadDefaultConfigFile(stderr io.Writer) *configfile.ConfigFile { configFile, err := Load(Dir()) if err != nil { fmt.Fprintf(stderr, &quot;WARNING: Error loading config file: %v\n&quot;, err) } if printLegacyFileWarning { _, _ = fmt.Fprintln(stderr, &quot;WARNING: Support for the legacy ~/.">
 <meta itemprop="datePublished" content="2021-07-30T03:36:52+00:00" />
@@ -58,9 +58,9 @@ func LoadDefaultConfigFile(stderr io.Writer) *configfile.ConfigFile { configFile
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="docker cli ConfigFile()源码分析"/>
 <meta name="twitter:description" content="tags: container,源码分析 docker cli ConfigFile()源码分析 本文编写时，最新release为v20.10.7, 因此代码均为v20.10.7分支的代码
-在执行很多命令时，都需要读取docker cli的配置，即调用ConfigFile()，理解这个过程是有必要的。
+ 在执行很多命令时，都需要读取docker cli的配置，即调用ConfigFile()，理解这个过程是有必要的。
 https://github.com/docker/cli/blob/v20.10.7/cli/command/cli.go#L127
-func (cli *DockerCli) ConfigFile() *configfile.ConfigFile { if cli.configFile == nil { cli.loadConfigFile() } return cli.configFile } func (cli *DockerCli) loadConfigFile() { cli.configFile = cliconfig.LoadDefaultConfigFile(cli.err) } LoadDefaultConfigFile实现如下
+func (cli *DockerCli) ConfigFile() *configfile.ConfigFile { if cli.configFile == nil { cli.loadConfigFile() } return cli.configFile } func (cli *DockerCli) loadConfigFile() { cli.configFile = cliconfig.LoadDefaultConfigFile(cli.err) }  LoadDefaultConfigFile实现如下
 https://github.com/docker/cli/blob/v20.10.7/cli/config/config.go#L151
 func LoadDefaultConfigFile(stderr io.Writer) *configfile.ConfigFile { configFile, err := Load(Dir()) if err != nil { fmt.Fprintf(stderr, &quot;WARNING: Error loading config file: %v\n&quot;, err) } if printLegacyFileWarning { _, _ = fmt.Fprintln(stderr, &quot;WARNING: Support for the legacy ~/."/>
 
@@ -137,6 +137,7 @@ func LoadDefaultConfigFile(stderr io.Writer) *configfile.ConfigFile { configFile
 <h2 id="tags-container源码分析">tags: container,源码分析</h2>
 <h1 id="docker-cli-configfile源码分析">docker cli <code>ConfigFile()</code>源码分析</h1>
 <p><small>本文编写时，最新release为v20.10.7, 因此代码均为v20.10.7分支的代码</small></p>
+<hr>
 <p>在执行很多命令时，都需要读取docker cli的配置，即调用<code>ConfigFile()</code>，理解这个过程是有必要的。</p>
 <p><a href="https://github.com/docker/cli/blob/v20.10.7/cli/command/cli.go#L127">https://github.com/docker/cli/blob/v20.10.7/cli/command/cli.go#L127</a></p>
 <pre><code class="language-go!" data-lang="go!">func (cli *DockerCli) ConfigFile() *configfile.ConfigFile {
@@ -149,7 +150,8 @@ func LoadDefaultConfigFile(stderr io.Writer) *configfile.ConfigFile { configFile
 func (cli *DockerCli) loadConfigFile() {
     cli.configFile = cliconfig.LoadDefaultConfigFile(cli.err)
 }
-</code></pre><p><code>LoadDefaultConfigFile</code>实现如下</p>
+</code></pre><hr>
+<p><code>LoadDefaultConfigFile</code>实现如下</p>
 <p><a href="https://github.com/docker/cli/blob/v20.10.7/cli/config/config.go#L151">https://github.com/docker/cli/blob/v20.10.7/cli/config/config.go#L151</a></p>
 <pre><code class="language-go!" data-lang="go!">func LoadDefaultConfigFile(stderr io.Writer) *configfile.ConfigFile {
     configFile, err := Load(Dir())
@@ -164,7 +166,8 @@ func (cli *DockerCli) loadConfigFile() {
     }
     return configFile
 }
-</code></pre><p>Config目录优先从环境变量<code>DOCKER_CONFIG</code>获取，如果未设置环境变量，则默认为<code>$HOME/.docker</code></p>
+</code></pre><hr>
+<p>Config目录优先从环境变量<code>DOCKER_CONFIG</code>获取，如果未设置环境变量，则默认为<code>$HOME/.docker</code></p>
 <p><a href="https://github.com/docker/cli/blob/v20.10.7/cli/config/config.go#L63">https://github.com/docker/cli/blob/v20.10.7/cli/config/config.go#L63</a></p>
 <pre><code class="language-go!" data-lang="go!">const (
     ...
@@ -192,7 +195,8 @@ func Dir() string {
     initConfigDir.Do(setConfigDir)
     return configDir
 }
-</code></pre><p>优先从<code>config.json</code>文件读取配置，如果不存在，则从<code>.dockercfg</code>文件读取</p>
+</code></pre><hr>
+<p>优先从<code>config.json</code>文件读取配置，如果不存在，则从<code>.dockercfg</code>文件读取</p>
 <p><a href="https://github.com/docker/cli/blob/v20.10.7/cli/config/config.go#L113">https://github.com/docker/cli/blob/v20.10.7/cli/config/config.go#L113</a></p>
 <pre><code class="language-go!" data-lang="go!">const (
     ConfigFileName = &quot;config.json&quot;
@@ -235,7 +239,8 @@ func Load(configDir string) (*configfile.ConfigFile, error) {
     }
     return configFile, nil
 }
-</code></pre><p><code>config.json</code>文件解析过程如下，先使用json反序列化到ConfigFile结构体，如果有Auth字段，则使用base64解码，解析得到username, password</p>
+</code></pre><hr>
+<p><code>config.json</code>文件解析过程如下，先使用json反序列化到ConfigFile结构体，如果有Auth字段，则使用base64解码，解析得到username, password</p>
 <p><a href="https://github.com/docker/cli/blob/v20.10.7/cli/config/configfile/file.go#L121">https://github.com/docker/cli/blob/v20.10.7/cli/config/configfile/file.go#L121</a></p>
 <pre><code class="language-go!" data-lang="go!">func (configFile *ConfigFile) LoadFromReader(configData io.Reader) error {
     if err := json.NewDecoder(configData).Decode(&amp;configFile); err != nil &amp;&amp; !errors.Is(err, io.EOF) {
@@ -280,7 +285,8 @@ func decodeAuth(authStr string) (string, string, error) {
     password := strings.Trim(arr[1], &quot;\x00&quot;)
     return arr[0], password, nil
 }
-</code></pre><p><code>.dockercfg</code>文件的解析过程类似， 略</p>
+</code></pre><hr>
+<p><code>.dockercfg</code>文件的解析过程类似， 略</p>
 <p>如果不存在认证相关的配置，则检测默认的<code>CredentialsStore</code></p>
 <pre><code class="language-go!" data-lang="go!">func LoadDefaultConfigFile(stderr io.Writer) *configfile.ConfigFile {
     ...
