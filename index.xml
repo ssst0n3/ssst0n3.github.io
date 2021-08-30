@@ -137,7 +137,8 @@ hack/make.sh binary install-binary 6.binary build好的二进制文件位于/go/
 root@7fd23c4e7515:/go/src/github.com/docker/docker/bundles/binary-daemon# ./dockerd --version Docker version dev, build d086c52c9a, modified by st0n3 2. More 2.1 GFW 配置systemd代理
 https://docs.docker.com/config/daemon/systemd/
 也可以使用socks协议
-[Service] Environment=&amp;quot;HTTP_PROXY=socks5://172.17.0.1:1082/&amp;quot; Environment=&amp;quot;HTTPS_PROXY=socks5://172.17.0.1:1082/&amp;quot; 2.2 build make shell 或</description>
+[Service] Environment=&amp;quot;HTTP_PROXY=socks5://172.17.0.1:1082/&amp;quot; Environment=&amp;quot;HTTPS_PROXY=socks5://172.17.0.1:1082/&amp;quot; 使用以下命令获取环境或编译二进制
+make shell 或</description>
     </item>
     
     <item>
