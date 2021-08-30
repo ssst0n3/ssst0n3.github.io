@@ -7,7 +7,7 @@
 <meta name="author"
     content="">
 <meta name="description"
-    content=" tags: container how to build docker 1. build 根据docker官方文档,一步步来即可。
+    content="tags: container how to build docker 1. build 根据docker官方文档,一步步来即可。
 1.清空容器、镜像等避免影响build过程
 docker system prune -a docker volume prune 2.下载代码
 git clone https://github.com/moby/moby.git 3.进入docker提供的编译环境
@@ -15,8 +15,10 @@ cd moby make BIND_DIR=. shell 等待约15分钟，会进入到一个容器
 root@7fd23c4e7515:/go/src/github.com/docker/docker# 4.修改代码 修改cmd/dockerd/docker.go中的代码
 sed -i &amp;quot;s@build %s@build %s, modified by st0n3@g&amp;quot; cmd/dockerd/docker.go 5.build
 hack/make.sh binary install-binary 6.binary build好的二进制文件位于/go/src/github.com/docker/docker/bundles/binary-daemon
-root@7fd23c4e7515:/go/src/github.com/docker/docker/bundles/binary-daemon# ./dockerd --version Docker version dev, build d086c52c9a, modified by st0n3 2. 遗留问题 2.1 GFW 没有发现现成的解决方案，暂时使用hk vps解决，留待以后探索
-参考  https://github.com/moby/moby/blob/master/docs/contributing/set-up-dev-env.md  " />
+root@7fd23c4e7515:/go/src/github.com/docker/docker/bundles/binary-daemon# ./dockerd --version Docker version dev, build d086c52c9a, modified by st0n3 2. More 2.1 GFW 配置systemd代理
+https://docs.docker.com/config/daemon/systemd/
+也可以使用socks协议
+[Service] Environment=&amp;quot;HTTP_PROXY=socks5://172.17.0.1:1082/&amp;quot; Environment=&amp;quot;HTTPS_PROXY=socks5://172.17.0.1:1082/&amp;quot; 2.2 build make shell 或" />
 <meta name="keywords" content="" />
 <meta name="robots" content="noodp" />
 <link rel="canonical" href="/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E8%BF%9B%E7%A8%8B%E5%AE%B9%E5%99%A8/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%B9%E5%99%A8/docker/docker%E6%BA%90%E7%A0%81%E5%AE%A1%E8%AE%A1/%E5%A6%82%E4%BD%95%E5%BC%80%E5%8F%91%E5%B9%B6%E7%BC%96%E8%AF%91%E4%BB%A3%E7%A0%81/how-to-build-docker.html" />
@@ -46,7 +48,7 @@ root@7fd23c4e7515:/go/src/github.com/docker/docker/bundles/binary-daemon# ./dock
 <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#252627">
 <link rel="shortcut icon" href="/favicon.ico">
 <meta name="theme-color" content="#252627"><meta itemprop="name" content="how to build docker">
-<meta itemprop="description" content=" tags: container how to build docker 1. build 根据docker官方文档,一步步来即可。
+<meta itemprop="description" content="tags: container how to build docker 1. build 根据docker官方文档,一步步来即可。
 1.清空容器、镜像等避免影响build过程
 docker system prune -a docker volume prune 2.下载代码
 git clone https://github.com/moby/moby.git 3.进入docker提供的编译环境
@@ -54,18 +56,20 @@ cd moby make BIND_DIR=. shell 等待约15分钟，会进入到一个容器
 root@7fd23c4e7515:/go/src/github.com/docker/docker# 4.修改代码 修改cmd/dockerd/docker.go中的代码
 sed -i &quot;s@build %s@build %s, modified by st0n3@g&quot; cmd/dockerd/docker.go 5.build
 hack/make.sh binary install-binary 6.binary build好的二进制文件位于/go/src/github.com/docker/docker/bundles/binary-daemon
-root@7fd23c4e7515:/go/src/github.com/docker/docker/bundles/binary-daemon# ./dockerd --version Docker version dev, build d086c52c9a, modified by st0n3 2. 遗留问题 2.1 GFW 没有发现现成的解决方案，暂时使用hk vps解决，留待以后探索
-参考  https://github.com/moby/moby/blob/master/docs/contributing/set-up-dev-env.md  ">
+root@7fd23c4e7515:/go/src/github.com/docker/docker/bundles/binary-daemon# ./dockerd --version Docker version dev, build d086c52c9a, modified by st0n3 2. More 2.1 GFW 配置systemd代理
+https://docs.docker.com/config/daemon/systemd/
+也可以使用socks协议
+[Service] Environment=&quot;HTTP_PROXY=socks5://172.17.0.1:1082/&quot; Environment=&quot;HTTPS_PROXY=socks5://172.17.0.1:1082/&quot; 2.2 build make shell 或">
 <meta itemprop="datePublished" content="2021-05-20T09:12:48+00:00" />
 <meta itemprop="dateModified" content="2021-05-20T09:12:48+00:00" />
-<meta itemprop="wordCount" content="65">
+<meta itemprop="wordCount" content="110">
 
 
 
 <meta itemprop="keywords" content="" />
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="how to build docker"/>
-<meta name="twitter:description" content=" tags: container how to build docker 1. build 根据docker官方文档,一步步来即可。
+<meta name="twitter:description" content="tags: container how to build docker 1. build 根据docker官方文档,一步步来即可。
 1.清空容器、镜像等避免影响build过程
 docker system prune -a docker volume prune 2.下载代码
 git clone https://github.com/moby/moby.git 3.进入docker提供的编译环境
@@ -73,8 +77,10 @@ cd moby make BIND_DIR=. shell 等待约15分钟，会进入到一个容器
 root@7fd23c4e7515:/go/src/github.com/docker/docker# 4.修改代码 修改cmd/dockerd/docker.go中的代码
 sed -i &quot;s@build %s@build %s, modified by st0n3@g&quot; cmd/dockerd/docker.go 5.build
 hack/make.sh binary install-binary 6.binary build好的二进制文件位于/go/src/github.com/docker/docker/bundles/binary-daemon
-root@7fd23c4e7515:/go/src/github.com/docker/docker/bundles/binary-daemon# ./dockerd --version Docker version dev, build d086c52c9a, modified by st0n3 2. 遗留问题 2.1 GFW 没有发现现成的解决方案，暂时使用hk vps解决，留待以后探索
-参考  https://github.com/moby/moby/blob/master/docs/contributing/set-up-dev-env.md  "/>
+root@7fd23c4e7515:/go/src/github.com/docker/docker/bundles/binary-daemon# ./dockerd --version Docker version dev, build d086c52c9a, modified by st0n3 2. More 2.1 GFW 配置systemd代理
+https://docs.docker.com/config/daemon/systemd/
+也可以使用socks协议
+[Service] Environment=&quot;HTTP_PROXY=socks5://172.17.0.1:1082/&quot; Environment=&quot;HTTPS_PROXY=socks5://172.17.0.1:1082/&quot; 2.2 build make shell 或"/>
 
 
 
@@ -169,10 +175,32 @@ make BIND_DIR=. shell
 build好的二进制文件位于<code>/go/src/github.com/docker/docker/bundles/binary-daemon</code></p>
 <pre><code class="language-!" data-lang="!">root@7fd23c4e7515:/go/src/github.com/docker/docker/bundles/binary-daemon# ./dockerd --version
 Docker version dev, build d086c52c9a, modified by st0n3
-</code></pre><h2 id="2-遗留问题">2. 遗留问题</h2>
+</code></pre><h2 id="2-more">2. More</h2>
 <h3 id="21-gfw">2.1 GFW</h3>
-<p>没有发现现成的解决方案，暂时使用hk vps解决，留待以后探索</p>
-<h2 id="参考">参考</h2>
+<p>配置systemd代理</p>
+<p><a href="https://docs.docker.com/config/daemon/systemd/">https://docs.docker.com/config/daemon/systemd/</a></p>
+<p>也可以使用socks协议</p>
+<pre><code>[Service]
+Environment=&quot;HTTP_PROXY=socks5://172.17.0.1:1082/&quot;
+Environment=&quot;HTTPS_PROXY=socks5://172.17.0.1:1082/&quot;
+</code></pre><h3 id="22-build">2.2 build</h3>
+<pre><code>make shell
+</code></pre><p>或</p>
+<pre><code>make DOCKER_CROSS=false shell
+</code></pre><p>遇到错误,就在对应的镜像下配置代理,例如</p>
+<pre><code>FROM base AS swagger
+ENV http_proxy=&quot;socks5://172.17.0.1:1082&quot;
+ENV https_proxy=&quot;socks5://172.17.0.1:1082&quot;
+</code></pre><p>如果遇到go语言相关错误, 配置goproxy, 例如</p>
+<pre><code>FROM base AS golangci_lint
+ENV http_proxy=&quot;socks5://172.17.0.1:1082&quot;
+ENV https_proxy=&quot;socks5://172.17.0.1:1082&quot;
+ENV GOPROXY=https://goproxy.cn,direct
+</code></pre><p>socks协议可能对部分镜像无效, 则可以使用http代理, 例如</p>
+<pre><code>FROM dev-base AS tini
+ENV http_proxy=&quot;http://172.17.0.1:8118&quot;
+ENV https_proxy=&quot;http://172.17.0.1:8118&quot;
+</code></pre><h2 id="参考">参考</h2>
 <ul>
 <li><a href="https://github.com/moby/moby/blob/master/docs/contributing/set-up-dev-env.md">https://github.com/moby/moby/blob/master/docs/contributing/set-up-dev-env.md</a></li>
 </ul>

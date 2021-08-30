@@ -126,7 +126,7 @@ mkdir -p $GOPATH/src/github.com/docker cp moby $GOPATH/src/github.com/docker/doc
       <pubDate>Thu, 20 May 2021 09:12:48 +0000</pubDate>
       
       <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E8%BF%9B%E7%A8%8B%E5%AE%B9%E5%99%A8/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%B9%E5%99%A8/docker/docker%E6%BA%90%E7%A0%81%E5%AE%A1%E8%AE%A1/%E5%A6%82%E4%BD%95%E5%BC%80%E5%8F%91%E5%B9%B6%E7%BC%96%E8%AF%91%E4%BB%A3%E7%A0%81/how-to-build-docker.html</guid>
-      <description> tags: container how to build docker 1. build 根据docker官方文档,一步步来即可。
+      <description>tags: container how to build docker 1. build 根据docker官方文档,一步步来即可。
 1.清空容器、镜像等避免影响build过程
 docker system prune -a docker volume prune 2.下载代码
 git clone https://github.com/moby/moby.git 3.进入docker提供的编译环境
@@ -134,8 +134,10 @@ cd moby make BIND_DIR=. shell 等待约15分钟，会进入到一个容器
 root@7fd23c4e7515:/go/src/github.com/docker/docker# 4.修改代码 修改cmd/dockerd/docker.go中的代码
 sed -i &amp;quot;s@build %s@build %s, modified by st0n3@g&amp;quot; cmd/dockerd/docker.go 5.build
 hack/make.sh binary install-binary 6.binary build好的二进制文件位于/go/src/github.com/docker/docker/bundles/binary-daemon
-root@7fd23c4e7515:/go/src/github.com/docker/docker/bundles/binary-daemon# ./dockerd --version Docker version dev, build d086c52c9a, modified by st0n3 2. 遗留问题 2.1 GFW 没有发现现成的解决方案，暂时使用hk vps解决，留待以后探索
-参考  https://github.com/moby/moby/blob/master/docs/contributing/set-up-dev-env.md  </description>
+root@7fd23c4e7515:/go/src/github.com/docker/docker/bundles/binary-daemon# ./dockerd --version Docker version dev, build d086c52c9a, modified by st0n3 2. More 2.1 GFW 配置systemd代理
+https://docs.docker.com/config/daemon/systemd/
+也可以使用socks协议
+[Service] Environment=&amp;quot;HTTP_PROXY=socks5://172.17.0.1:1082/&amp;quot; Environment=&amp;quot;HTTPS_PROXY=socks5://172.17.0.1:1082/&amp;quot; 2.2 build make shell 或</description>
     </item>
     
     <item>
@@ -340,7 +342,7 @@ st0n3@yoga:~$ ./ctf.expect spawn ssh -o StrictHostKeyChecking=no ctf@1.2.3.4 ctf
       <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%BC%80%E6%BA%90%E8%BD%AF%E4%BB%B6%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6%E6%96%B9%E6%B3%95.html</guid>
       <description>tags: 方法论 开源软件安全研究方法 0. 背景 过去很长一段时间，我的主要精力都花在容器安全上。容器是一个很大的概念，涉及领域众多，如果缺少一套高屋建瓴的、可行的方法论，将会被困在局部的知识点上，而无法系统性得分析出关键的容器安全风险。下面是基于前期容器安全研究总结了一套通用方法论，其中每个叶子节点都可以写成一篇文章，用于承载相关知识点的具体内容，如果一个节点的所有子节点都形成了翔实的文档，则可以认为完成了这个节点的研究工作。
 注：本文仅列举了需要做哪些工作，并未指出具体应怎么做
-1. 软件基础 磨刀不误砍柴工，首先能熟练使用该软件的主要功能，才有可能在其中发现有建设性的安全风险。
+1. 目标软件基础信息收集 磨刀不误砍柴工，首先能熟练使用该软件的主要功能，才有可能在其中发现有建设性的安全风险。
 1.1 软件简介 1.2 安装 1.3 快速使用 1.4 软件主要功能介绍 1.5 其他关于该软件的重要介绍 2. 开源情况 2.1 开源基本情况  开发语言 LICENSE branch, tag 项目主要贡献者 项目上下游情况  2.2 issue,commit管理概况 issues和commits记录了开发的详细过程，这中间可能包括了一些隐蔽的问题，包括：未显性以漏洞形式发布但由团队自行发现修复、直接以版本特性更新解决了漏洞、甚至开发团队无感知地解决了问题。
 对于一些关键文件的commits记录，则需要重点关注。
 2.3 roadmap分析 roadmap中包含了项目未来的变化，如果能提前获悉软件未来的发展方向，则能在代码开发之前就布局相关技术的研究。
