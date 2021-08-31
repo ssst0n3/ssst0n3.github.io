@@ -187,7 +187,7 @@ Docker version dev, build d086c52c9a, modified by st0n3
 Environment=&quot;HTTP_PROXY=socks5://172.17.0.1:1082/&quot;
 Environment=&quot;HTTPS_PROXY=socks5://172.17.0.1:1082/&quot;
 </code></pre><p>使用以下命令获取环境或编译二进制</p>
-<pre><code>make DOCKER_BUILD_APT_MIRROR=ftp.cn.debian.org BIND_DIRD=. shell
+<pre><code>make DOCKER_BUILD_APT_MIRROR=ftp.cn.debian.org BIND_DIR=. shell
 </code></pre><p>或</p>
 <pre><code>make DOCKER_CROSS=false build
 </code></pre><p>遇到错误,就在对应的镜像下配置代理,例如</p>
