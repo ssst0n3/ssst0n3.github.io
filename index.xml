@@ -138,7 +138,7 @@ root@7fd23c4e7515:/go/src/github.com/docker/docker/bundles/binary-daemon# ./dock
 https://docs.docker.com/config/daemon/systemd/
 也可以使用socks协议
 [Service] Environment=&amp;quot;HTTP_PROXY=socks5://172.17.0.1:1082/&amp;quot; Environment=&amp;quot;HTTPS_PROXY=socks5://172.17.0.1:1082/&amp;quot; 使用以下命令获取环境或编译二进制
-make BIND_DIR=.</description>
+make DOCKER_BUILD_APT_MIRROR=ftp.</description>
     </item>
     
     <item>
