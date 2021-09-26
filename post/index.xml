@@ -65,6 +65,18 @@ Sending build context to Docker daemon 2.048kB Step 1/6 : FROM alpine:3.14 AS A 
     </item>
     
     <item>
+      <title>如何为docker(moby)项目创建codeql数据库</title>
+      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E8%BF%9B%E7%A8%8B%E5%AE%B9%E5%99%A8/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%B9%E5%99%A8/docker/docker%E6%BA%90%E7%A0%81%E5%AE%A1%E8%AE%A1/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95/codeql/%E5%A6%82%E4%BD%95%E4%B8%BAdockermoby%E9%A1%B9%E7%9B%AE%E5%88%9B%E5%BB%BAcodeql%E6%95%B0%E6%8D%AE%E5%BA%93.html</link>
+      <pubDate>Wed, 30 Jun 2021 02:13:02 +0000</pubDate>
+      
+      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E8%BF%9B%E7%A8%8B%E5%AE%B9%E5%99%A8/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%B9%E5%99%A8/docker/docker%E6%BA%90%E7%A0%81%E5%AE%A1%E8%AE%A1/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95/codeql/%E5%A6%82%E4%BD%95%E4%B8%BAdockermoby%E9%A1%B9%E7%9B%AE%E5%88%9B%E5%BB%BAcodeql%E6%95%B0%E6%8D%AE%E5%BA%93.html</guid>
+      <description>tags: codeql,container 如何为docker(moby)项目创建codeql数据库 1. 背景 lgtm上的数据库只提供了最新版本供下载，而且对moby项目创建的数据库可能是错误的。
+https://lgtm.com/projects/g/moby/moby/logs/languages/lang:go
+在build日志我们可以看到，lgtm的build方式和docker的官方build方式并不一致。 另外，对不同的运行环境，docker有不同的编译方式，包括deb,static等，可能一份数据库并不够。那么，如何正确地为docker(moby)项目编译codeql数据库呢？
+[2021-06-29 07:19:26] [build-stderr] 2021/06/29 07:19:26 GOPATH set to /opt/src/root. [2021-06-29 07:19:26] [build-stderr] 2021/06/29 07:19:26 Makefile found. [2021-06-29 07:19:26] [build-stderr] 2021/06/29 07:19:26 Trying build command make [] [2021-06-29 07:19:26] [build-stdout] mkdir -p autogen [2021-06-29 07:19:26] [build-stderr] /bin/sh: 1: docker: not found [2021-06-29 07:19:26] [build-stderr] make: *** [Makefile:184: binary] Error 127 [2021-06-29 07:19:26] [build-stdout] docker build --build-arg=GO_VERSION -f &amp;quot;Dockerfile&amp;quot; --output=bundles/ --target=binary --build-arg VERSION --build-arg DOCKER_GITCOMMIT --build-arg PRODUCT --build-arg PLATFORM --build-arg DEFAULT_PRODUCT_LICENSE .</description>
+    </item>
+    
+    <item>
       <title>我是如何使用codeql挖掘CVE-2021-31856Meshery sqli的</title>
       <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/%E6%B5%8B%E8%AF%95%E6%96%B9%E6%B3%95/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95/%E9%9D%99%E6%80%81%E4%BB%A3%E7%A0%81%E6%89%AB%E6%8F%8F/AST/codeql/codeql%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%E6%88%96%E5%88%86%E6%9E%90%E5%AE%9E%E8%B7%B5/%E6%88%91%E6%98%AF%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8codeql%E6%8C%96%E6%8E%98CVE-2021-31856Meshery-sqli%E7%9A%84.html</link>
       <pubDate>Fri, 18 Jun 2021 10:06:08 +0000</pubDate>
