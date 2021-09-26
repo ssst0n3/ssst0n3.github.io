@@ -46,7 +46,7 @@ https://lgtm.com/projects/g/moby/moby/logs/languages/lang:go
 [2021-06-29 07:19:26] [build-stderr] 2021/06/29 07:19:26 GOPATH set to /opt/src/root. [2021-06-29 07:19:26] [build-stderr] 2021/06/29 07:19:26 Makefile found. [2021-06-29 07:19:26] [build-stderr] 2021/06/29 07:19:26 Trying build command make [] [2021-06-29 07:19:26] [build-stdout] mkdir -p autogen [2021-06-29 07:19:26] [build-stderr] /bin/sh: 1: docker: not found [2021-06-29 07:19:26] [build-stderr] make: *** [Makefile:184: binary] Error 127 [2021-06-29 07:19:26] [build-stdout] docker build --build-arg=GO_VERSION -f &quot;Dockerfile&quot; --output=bundles/ --target=binary --build-arg VERSION --build-arg DOCKER_GITCOMMIT --build-arg PRODUCT --build-arg PLATFORM --build-arg DEFAULT_PRODUCT_LICENSE .">
 <meta itemprop="datePublished" content="2021-06-30T02:13:02+00:00" />
 <meta itemprop="dateModified" content="2021-06-30T02:13:02+00:00" />
-<meta itemprop="wordCount" content="472">
+<meta itemprop="wordCount" content="360">
 
 
 
@@ -162,43 +162,38 @@ https://lgtm.com/projects/g/moby/moby/logs/languages/lang:go
 
 </code></pre><h2 id="2-how">2. How</h2>
 <p>要解答这个问题，首先要理解codeql创建数据库的过程。</p>
+<p>// TODO</p>
 <h2 id="3-codeql-go-vendor-extractor">3. codeql-go-vendor-extractor</h2>
 <p><a href="https://github.com/ssst0n3/codeql-go-vendor-extractor">https://github.com/ssst0n3/codeql-go-vendor-extractor</a></p>
 <h2 id="4-开始编译">4. 开始编译</h2>
-<h2 id="2-准备编译环境">2. 准备编译环境</h2>
-<p><a href="https://ssst0n3.github.io/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E8%BF%9B%E7%A8%8B%E5%AE%B9%E5%99%A8/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%B9%E5%99%A8/docker/docker%E6%BA%90%E7%A0%81%E5%AE%A1%E8%AE%A1/%E5%A6%82%E4%BD%95%E5%BC%80%E5%8F%91%E5%B9%B6%E7%BC%96%E8%AF%91%E4%BB%A3%E7%A0%81/how-to-build-docker.html">https://ssst0n3.github.io/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E8%BF%9B%E7%A8%8B%E5%AE%B9%E5%99%A8/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%B9%E5%99%A8/docker/docker%E6%BA%90%E7%A0%81%E5%AE%A1%E8%AE%A1/%E5%A6%82%E4%BD%95%E5%BC%80%E5%8F%91%E5%B9%B6%E7%BC%96%E8%AF%91%E4%BB%A3%E7%A0%81/how-to-build-docker.html</a></p>
-<h2 id="install-codeql">install codeql</h2>
-<p><a href="https://codeql.github.com/docs/codeql-cli/getting-started-with-the-codeql-cli/">https://codeql.github.com/docs/codeql-cli/getting-started-with-the-codeql-cli/</a></p>
-<h2 id="create-database">create database</h2>
-<pre><code>root@dc8bd9f2a9e5:/go/src/github.com/docker/docker# mv Makefile Makefile.bak
-root@dc8bd9f2a9e5:/go/src/github.com/docker/docker# echo &quot;#!/bin/bash&quot; &gt; build.sh
-root@dc8bd9f2a9e5:/go/src/github.com/docker/docker# echo &quot;hack/make.sh binary&quot; &gt;&gt; build.sh
-root@dc8bd9f2a9e5:/go/src/github.com/docker/docker# chmod +x build.sh
-root@0982b90ec67a:/go/src/github.com/docker/docker# codeql database create -v moby_yet --language=go   
-Writing logs to /go/src/github.com/docker/docker/moby_yet/log/database-create-20210630.062718.574.log.
-Initializing database at /go/src/github.com/docker/docker/moby_yet.
-Resolving extractor go.
-Successfully loaded extractor Go (go) from /home/codeql-home/codeql/go.
-Created CodeQL database at /go/src/github.com/docker/docker/moby_yet.
-Detected autobuild command for Go: /home/codeql-home/codeql/go/tools/autobuild.sh.
-Running build command: [/home/codeql-home/codeql/go/tools/autobuild.sh]
-Running command in /go/src/github.com/docker/docker: [/home/codeql-home/codeql/go/tools/autobuild.sh]
-[2021-06-30 06:27:19] [build-stderr] 2021/06/30 06:27:19 Autobuilder was built with go1.15.13, environment has go1.13.15
-[2021-06-30 06:27:19] [build-stderr] 2021/06/30 06:27:19 LGTM_SRC is /go/src/github.com/docker/docker
-[2021-06-30 06:27:19] [build-stderr] 2021/06/30 06:27:19 Unable to determine import path, as neither LGTM_INDEX_IMPORT_PATH nor GITHUB_REPOSITORY is set
-[2021-06-30 06:27:19] [build-stderr] 2021/06/30 06:27:19 Failed to determine import path, not setting up GOPATH
-[2021-06-30 06:27:19] [build-stderr] 2021/06/30 06:27:19 build.sh found.
-[2021-06-30 06:27:19] [build-stderr] 2021/06/30 06:27:19 Trying build command ./build.sh []
-[2021-06-30 06:27:19] [build-stdout] Removing bundles/
-[2021-06-30 06:27:19] [build-stdout] ---&gt; Making bundle: binary (in bundles/binary)
-[2021-06-30 06:27:19] [build-stdout] Building: bundles/binary-daemon/dockerd-dev
-[2021-06-30 06:27:19] [build-stdout] GOOS=&quot;&quot; GOARCH=&quot;&quot; GOARM=&quot;&quot;
-[2021-06-30 06:27:23] [build-stdout] Created binary: bundles/binary-daemon/dockerd-dev
-[2021-06-30 06:27:23] [build-stdout] Copying nested executables into bundles/binary-daemon
-[2021-06-30 06:27:26] [build-stderr] 2021/06/30 06:27:26 Dependencies are still not resolving after the build, continuing to install dependencies.
-</code></pre><p>这样只解决了build的问题，实际不是关键。</p>
-<p>extractor同样不支持vendor模式</p>
-
+<h3 id="41-准备编译环境">4.1 准备编译环境</h3>
+<p>see <a href="https://ssst0n3.github.io/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E8%BF%9B%E7%A8%8B%E5%AE%B9%E5%99%A8/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%B9%E5%99%A8/docker/docker%E6%BA%90%E7%A0%81%E5%AE%A1%E8%AE%A1/%E5%A6%82%E4%BD%95%E5%BC%80%E5%8F%91%E5%B9%B6%E7%BC%96%E8%AF%91%E4%BB%A3%E7%A0%81/how-to-build-docker.html">how to build docker</a></p>
+<pre><code>git clone https://github.com/moby/moby
+cd moby
+make BIND_DIR=. shell
+</code></pre><h3 id="42-install-codeql">4.2 install codeql</h3>
+<p>see <a href="https://codeql.github.com/docs/codeql-cli/getting-started-with-the-codeql-cli/">https://codeql.github.com/docs/codeql-cli/getting-started-with-the-codeql-cli/</a></p>
+<pre><code>mkdir -p /home/codeql-home
+cd /home/codeql-home
+wget &quot;https://github.com/github/codeql-cli-binaries/releases/download/v2.6.2/codeql-linux64.zip&quot;
+git clone https://github.com/github/codeql codeql-repo
+git clone https://github.com/github/codeql-go/
+apt-get install unar
+unar codeql-linux64.zip
+alias codeql=/home/codeql-home/codeql/codeql
+codeql resolve languages
+</code></pre><h3 id="43-install-codeql-go-vendor-extractor">4.3 install codeql-go-vendor-extractor</h3>
+<pre><code>GO111MODULE=on go get -u github.com/ssst0n3/codeql-go-vendor-extractor/cmd/vendor_extractor
+</code></pre><h3 id="43-create-database">4.3 create database</h3>
+<pre><code>root@cf47b8c234b1:/go/src/github.com/docker/docker# mv Makefile Makefile.bak
+root@cf47b8c234b1:/go/src/github.com/docker/docker# cat &gt;build.sh &lt;&lt; 'EOF'
+#!/bin/bash
+hack/make.sh binary
+EOF
+root@cf47b8c234b1:/go/src/github.com/docker/docker# chmod +x build.sh
+root@cf47b8c234b1:/go/src/github.com/docker/docker# GO111MODULE=off codeql database create -l go docker-with-vendor -c &quot;vendor_extractor --package github.com/docker/docker/cmd/dockerd&quot;
+...
+</code></pre>
             </div>
         </article>
 
