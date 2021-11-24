@@ -9,7 +9,7 @@
 <meta name="description"
     content="tags: 漏洞分析 漏洞分析与复现模板 在开源软件安全研究方法一文中，我们提到, 漏洞复现工作需要有规范的、成体系的进行。
   有规范的、成体系的分析、复现并存留实验环境，可以利用vagrant或docker记录、分享漏洞环境。 不只是复现漏洞，更重要的是复现漏洞挖掘的方法或过程（能应用于同类漏洞挖掘）   本文将具体提出一个漏洞分析与复现过程中，要做的事情的模板。与前文同样，本文仅列举需要做哪些工作，并未指出具体应怎么做。在我历史及未来关于历史漏洞分析与复现的文章中，可以看到关于本文实际应用的实例。
-一、基本信息    Item Details     Project https://github.com/spring-cloud/spring-cloud-config   Publish Date 2019-04-16   Confirm Link    CVE-ID CVE-2019-3799   EDB-ID EDB-46772   Cvedetails cvedetails   Exploits exp1
+一、基本信息    Item Details     Project https://github.com/spring-cloud/spring-cloud-config   Publish Date 2019-04-16   Confirm Link    CVE-ID CVE-2019-3799   Cvedetails cvedetails   EDB-ID EDB-46772   Exploits exp1
 exp2   Affect Version 2.1.0-2.1.1, 2.0.0-2.0.3, 1.4.0-1.4.5 及更旧版本   Fix Version 2.1.2, 2.0.4, 1.4.6   Fix Commit    CVSS 8." />
 <meta name="keywords" content="" />
 <meta name="robots" content="noodp" />
@@ -42,7 +42,7 @@ exp2   Affect Version 2.1.0-2.1.1, 2.0.0-2.0.3, 1.4.0-1.4.5 及更旧版本   Fi
 <meta name="theme-color" content="#252627"><meta itemprop="name" content="漏洞分析与复现模板">
 <meta itemprop="description" content="tags: 漏洞分析 漏洞分析与复现模板 在开源软件安全研究方法一文中，我们提到, 漏洞复现工作需要有规范的、成体系的进行。
   有规范的、成体系的分析、复现并存留实验环境，可以利用vagrant或docker记录、分享漏洞环境。 不只是复现漏洞，更重要的是复现漏洞挖掘的方法或过程（能应用于同类漏洞挖掘）   本文将具体提出一个漏洞分析与复现过程中，要做的事情的模板。与前文同样，本文仅列举需要做哪些工作，并未指出具体应怎么做。在我历史及未来关于历史漏洞分析与复现的文章中，可以看到关于本文实际应用的实例。
-一、基本信息    Item Details     Project https://github.com/spring-cloud/spring-cloud-config   Publish Date 2019-04-16   Confirm Link    CVE-ID CVE-2019-3799   EDB-ID EDB-46772   Cvedetails cvedetails   Exploits exp1
+一、基本信息    Item Details     Project https://github.com/spring-cloud/spring-cloud-config   Publish Date 2019-04-16   Confirm Link    CVE-ID CVE-2019-3799   Cvedetails cvedetails   EDB-ID EDB-46772   Exploits exp1
 exp2   Affect Version 2.1.0-2.1.1, 2.0.0-2.0.3, 1.4.0-1.4.5 及更旧版本   Fix Version 2.1.2, 2.0.4, 1.4.6   Fix Commit    CVSS 8.">
 <meta itemprop="datePublished" content="2020-07-20T02:00:00+00:00" />
 <meta itemprop="dateModified" content="2020-07-20T02:00:00+00:00" />
@@ -55,7 +55,7 @@ exp2   Affect Version 2.1.0-2.1.1, 2.0.0-2.0.3, 1.4.0-1.4.5 及更旧版本   Fi
 <meta name="twitter:title" content="漏洞分析与复现模板"/>
 <meta name="twitter:description" content="tags: 漏洞分析 漏洞分析与复现模板 在开源软件安全研究方法一文中，我们提到, 漏洞复现工作需要有规范的、成体系的进行。
   有规范的、成体系的分析、复现并存留实验环境，可以利用vagrant或docker记录、分享漏洞环境。 不只是复现漏洞，更重要的是复现漏洞挖掘的方法或过程（能应用于同类漏洞挖掘）   本文将具体提出一个漏洞分析与复现过程中，要做的事情的模板。与前文同样，本文仅列举需要做哪些工作，并未指出具体应怎么做。在我历史及未来关于历史漏洞分析与复现的文章中，可以看到关于本文实际应用的实例。
-一、基本信息    Item Details     Project https://github.com/spring-cloud/spring-cloud-config   Publish Date 2019-04-16   Confirm Link    CVE-ID CVE-2019-3799   EDB-ID EDB-46772   Cvedetails cvedetails   Exploits exp1
+一、基本信息    Item Details     Project https://github.com/spring-cloud/spring-cloud-config   Publish Date 2019-04-16   Confirm Link    CVE-ID CVE-2019-3799   Cvedetails cvedetails   EDB-ID EDB-46772   Exploits exp1
 exp2   Affect Version 2.1.0-2.1.1, 2.0.0-2.0.3, 1.4.0-1.4.5 及更旧版本   Fix Version 2.1.2, 2.0.4, 1.4.6   Fix Commit    CVSS 8."/>
 
 
@@ -164,12 +164,12 @@ exp2   Affect Version 2.1.0-2.1.1, 2.0.0-2.0.3, 1.4.0-1.4.5 及更旧版本   Fi
 <td><a href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2019-3799">CVE-2019-3799</a></td>
 </tr>
 <tr>
-<td>EDB-ID</td>
-<td><a href="https://www.exploit-db.com/exploits/46772">EDB-46772</a></td>
-</tr>
-<tr>
 <td>Cvedetails</td>
 <td><a href="https://www.cvedetails.com/cve/CVE-2019-3799/">cvedetails</a></td>
+</tr>
+<tr>
+<td>EDB-ID</td>
+<td><a href="https://www.exploit-db.com/exploits/46772">EDB-46772</a></td>
 </tr>
 <tr>
 <td>Exploits</td>
