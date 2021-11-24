@@ -9,11 +9,14 @@
 <meta name="description"
     content="tags: container How to Build K8S 1. build 根据官方文档，一步一步来即可
 1.下载代码
-git clone https://github.com/kubernetes/kubernetes.git 2.修改代码
+git clone https://github.com/kubernetes/kubernetes.git git checkout v1.22.4 2.修改代码
 sed -i &amp;quot;s/%s %s/%s %s modified by st0n3/g&amp;quot; staging/src/k8s.io/component-base/version/verflag/verflag.go 3.build: 默认会为所有模块编译出所有架构的代码，我们也可以指定编译的模块、架构。
 ./build/run.sh make kubelet KUBE_BUILD_PLATFORMS=linux/amd64 4.binary: 编译好的二进制文件位于./_output/dockerized/bin目录
-# ./_output/dockerized/bin/linux/amd64/kubelet --version Kubernetes v1.23.0-beta.0.82&#43;f572e4d5b4a149-dirty modified by st0n3 2. extend 2.1 修改编译命令 我们在hack/lib/golang.sh中加上 set -ex, 再重新执行上述命令，可以发现具体的编译命令为
-&#43; go install -gcflags &#39; -trimpath=/go/src/k8s.io/kubernetes&#39; -asmflags -trimpath=/go/src/k8s.io/kubernetes -ldflags &#39;-s -w -X &#39;\&#39;&#39;k8s.io/kubernetes/vendor/k8s.io/client-go/pkg/version.buildDate=2021-11-24T02:38:56Z&#39;\&#39;&#39; -X &#39;\&#39;&#39;k8s.io/kubernetes/vendor/k8s.io/component-base/version.buildDate=2021-11-24T02:38:56Z&#39;\&#39;&#39; -X &#39;\&#39;&#39;k8s.io/client-go/pkg/version.buildDate=2021-11-24T02:38:56Z&#39;\&#39;&#39; -X &#39;\&#39;&#39;k8s.io/component-base/version.buildDate=2021-11-24T02:38:56Z&#39;\&#39;&#39; -X &#39;\&#39;&#39;k8s.io/kubernetes/vendor/k8s.io/client-go/pkg/version.gitCommit=f572e4d5b4a1496356eccf29c34adac02280beeb&#39;\&#39;&#39; -X &#39;\&#39;&#39;k8s." />
+# ./_output/dockerized/bin/linux/amd64/kubelet --version Kubernetes v1.22.4 modified by st0n3 2. advance 2.1 编译过程分析 上面我们执行的 run.sh 主要执行了3个步骤(编译构建环境、执行编译命令、复制编译好的文件)，这些步骤都是定义在common.sh中的函数。其中kube::build::run_build_command函数，直接接受外部输入，所以当我们执行run.sh make时，等同于执行kube::build::run_build_command make
+https://github.com/kubernetes/kubernetes/blob/v1.22.4/build/run.sh#L39
+source &amp;quot;$KUBE_ROOT/build/common.sh&amp;quot; ... kube::build::build_image ... kube::build::run_build_command &amp;quot;$@&amp;quot; ... kube::build::copy_output  分析kube::build::run_build_command()函数，发现传入的cmd参数，由docker run命令传入上面构建好的容器中，例如我们执行run.sh make命令，将在容器中执行make命令。因此，如果我们可以进入这个容器中，则可以自定义构建环境。
+https://github.com/kubernetes/kubernetes/blob/v1.22.4/build/common.sh#L470-L558
+function kube::build::run_build_command() { kube::log::status &amp;quot;Running build command." />
 <meta name="keywords" content="" />
 <meta name="robots" content="noodp" />
 <link rel="canonical" href="/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E5%AE%B9%E5%99%A8%E9%9B%86%E7%BE%A4%E5%AE%89%E5%85%A8/k8s/%E6%BA%90%E7%A0%81%E5%AE%A1%E8%AE%A1/%E5%A6%82%E4%BD%95%E5%BC%80%E5%8F%91%E5%B9%B6%E7%BC%96%E8%AF%91%E4%BB%A3%E7%A0%81/How-to-Build-K8S.html" />
@@ -45,14 +48,17 @@ sed -i &amp;quot;s/%s %s/%s %s modified by st0n3/g&amp;quot; staging/src/k8s.io/
 <meta name="theme-color" content="#252627"><meta itemprop="name" content="How to Build K8S">
 <meta itemprop="description" content="tags: container How to Build K8S 1. build 根据官方文档，一步一步来即可
 1.下载代码
-git clone https://github.com/kubernetes/kubernetes.git 2.修改代码
+git clone https://github.com/kubernetes/kubernetes.git git checkout v1.22.4 2.修改代码
 sed -i &quot;s/%s %s/%s %s modified by st0n3/g&quot; staging/src/k8s.io/component-base/version/verflag/verflag.go 3.build: 默认会为所有模块编译出所有架构的代码，我们也可以指定编译的模块、架构。
 ./build/run.sh make kubelet KUBE_BUILD_PLATFORMS=linux/amd64 4.binary: 编译好的二进制文件位于./_output/dockerized/bin目录
-# ./_output/dockerized/bin/linux/amd64/kubelet --version Kubernetes v1.23.0-beta.0.82&#43;f572e4d5b4a149-dirty modified by st0n3 2. extend 2.1 修改编译命令 我们在hack/lib/golang.sh中加上 set -ex, 再重新执行上述命令，可以发现具体的编译命令为
-&#43; go install -gcflags &#39; -trimpath=/go/src/k8s.io/kubernetes&#39; -asmflags -trimpath=/go/src/k8s.io/kubernetes -ldflags &#39;-s -w -X &#39;\&#39;&#39;k8s.io/kubernetes/vendor/k8s.io/client-go/pkg/version.buildDate=2021-11-24T02:38:56Z&#39;\&#39;&#39; -X &#39;\&#39;&#39;k8s.io/kubernetes/vendor/k8s.io/component-base/version.buildDate=2021-11-24T02:38:56Z&#39;\&#39;&#39; -X &#39;\&#39;&#39;k8s.io/client-go/pkg/version.buildDate=2021-11-24T02:38:56Z&#39;\&#39;&#39; -X &#39;\&#39;&#39;k8s.io/component-base/version.buildDate=2021-11-24T02:38:56Z&#39;\&#39;&#39; -X &#39;\&#39;&#39;k8s.io/kubernetes/vendor/k8s.io/client-go/pkg/version.gitCommit=f572e4d5b4a1496356eccf29c34adac02280beeb&#39;\&#39;&#39; -X &#39;\&#39;&#39;k8s.">
+# ./_output/dockerized/bin/linux/amd64/kubelet --version Kubernetes v1.22.4 modified by st0n3 2. advance 2.1 编译过程分析 上面我们执行的 run.sh 主要执行了3个步骤(编译构建环境、执行编译命令、复制编译好的文件)，这些步骤都是定义在common.sh中的函数。其中kube::build::run_build_command函数，直接接受外部输入，所以当我们执行run.sh make时，等同于执行kube::build::run_build_command make
+https://github.com/kubernetes/kubernetes/blob/v1.22.4/build/run.sh#L39
+source &quot;$KUBE_ROOT/build/common.sh&quot; ... kube::build::build_image ... kube::build::run_build_command &quot;$@&quot; ... kube::build::copy_output  分析kube::build::run_build_command()函数，发现传入的cmd参数，由docker run命令传入上面构建好的容器中，例如我们执行run.sh make命令，将在容器中执行make命令。因此，如果我们可以进入这个容器中，则可以自定义构建环境。
+https://github.com/kubernetes/kubernetes/blob/v1.22.4/build/common.sh#L470-L558
+function kube::build::run_build_command() { kube::log::status &quot;Running build command.">
 <meta itemprop="datePublished" content="2021-11-24T03:17:08+00:00" />
 <meta itemprop="dateModified" content="2021-11-24T03:17:08+00:00" />
-<meta itemprop="wordCount" content="121">
+<meta itemprop="wordCount" content="318">
 
 
 
@@ -61,11 +67,14 @@ sed -i &quot;s/%s %s/%s %s modified by st0n3/g&quot; staging/src/k8s.io/componen
 <meta name="twitter:title" content="How to Build K8S"/>
 <meta name="twitter:description" content="tags: container How to Build K8S 1. build 根据官方文档，一步一步来即可
 1.下载代码
-git clone https://github.com/kubernetes/kubernetes.git 2.修改代码
+git clone https://github.com/kubernetes/kubernetes.git git checkout v1.22.4 2.修改代码
 sed -i &quot;s/%s %s/%s %s modified by st0n3/g&quot; staging/src/k8s.io/component-base/version/verflag/verflag.go 3.build: 默认会为所有模块编译出所有架构的代码，我们也可以指定编译的模块、架构。
 ./build/run.sh make kubelet KUBE_BUILD_PLATFORMS=linux/amd64 4.binary: 编译好的二进制文件位于./_output/dockerized/bin目录
-# ./_output/dockerized/bin/linux/amd64/kubelet --version Kubernetes v1.23.0-beta.0.82&#43;f572e4d5b4a149-dirty modified by st0n3 2. extend 2.1 修改编译命令 我们在hack/lib/golang.sh中加上 set -ex, 再重新执行上述命令，可以发现具体的编译命令为
-&#43; go install -gcflags &#39; -trimpath=/go/src/k8s.io/kubernetes&#39; -asmflags -trimpath=/go/src/k8s.io/kubernetes -ldflags &#39;-s -w -X &#39;\&#39;&#39;k8s.io/kubernetes/vendor/k8s.io/client-go/pkg/version.buildDate=2021-11-24T02:38:56Z&#39;\&#39;&#39; -X &#39;\&#39;&#39;k8s.io/kubernetes/vendor/k8s.io/component-base/version.buildDate=2021-11-24T02:38:56Z&#39;\&#39;&#39; -X &#39;\&#39;&#39;k8s.io/client-go/pkg/version.buildDate=2021-11-24T02:38:56Z&#39;\&#39;&#39; -X &#39;\&#39;&#39;k8s.io/component-base/version.buildDate=2021-11-24T02:38:56Z&#39;\&#39;&#39; -X &#39;\&#39;&#39;k8s.io/kubernetes/vendor/k8s.io/client-go/pkg/version.gitCommit=f572e4d5b4a1496356eccf29c34adac02280beeb&#39;\&#39;&#39; -X &#39;\&#39;&#39;k8s."/>
+# ./_output/dockerized/bin/linux/amd64/kubelet --version Kubernetes v1.22.4 modified by st0n3 2. advance 2.1 编译过程分析 上面我们执行的 run.sh 主要执行了3个步骤(编译构建环境、执行编译命令、复制编译好的文件)，这些步骤都是定义在common.sh中的函数。其中kube::build::run_build_command函数，直接接受外部输入，所以当我们执行run.sh make时，等同于执行kube::build::run_build_command make
+https://github.com/kubernetes/kubernetes/blob/v1.22.4/build/run.sh#L39
+source &quot;$KUBE_ROOT/build/common.sh&quot; ... kube::build::build_image ... kube::build::run_build_command &quot;$@&quot; ... kube::build::copy_output  分析kube::build::run_build_command()函数，发现传入的cmd参数，由docker run命令传入上面构建好的容器中，例如我们执行run.sh make命令，将在容器中执行make命令。因此，如果我们可以进入这个容器中，则可以自定义构建环境。
+https://github.com/kubernetes/kubernetes/blob/v1.22.4/build/common.sh#L470-L558
+function kube::build::run_build_command() { kube::log::status &quot;Running build command."/>
 
 
 
@@ -143,15 +152,80 @@ sed -i &quot;s/%s %s/%s %s modified by st0n3/g&quot; staging/src/k8s.io/componen
 <p>根据<a href="https://github.com/kubernetes/kubernetes/tree/master/build">官方文档</a>，一步一步来即可</p>
 <p>1.下载代码</p>
 <pre><code>git clone https://github.com/kubernetes/kubernetes.git
+git checkout v1.22.4
 </code></pre><p>2.修改代码</p>
 <pre><code>sed -i &quot;s/%s %s/%s %s modified by st0n3/g&quot;  staging/src/k8s.io/component-base/version/verflag/verflag.go
 </code></pre><p>3.build: 默认会为所有模块编译出所有架构的代码，我们也可以指定编译的模块、架构。</p>
 <pre><code>./build/run.sh make kubelet KUBE_BUILD_PLATFORMS=linux/amd64
 </code></pre><p>4.binary: 编译好的二进制文件位于<code>./_output/dockerized/bin</code>目录</p>
 <pre><code># ./_output/dockerized/bin/linux/amd64/kubelet  --version
-Kubernetes v1.23.0-beta.0.82+f572e4d5b4a149-dirty modified by st0n3
-</code></pre><h2 id="2-extend">2. extend</h2>
-<h3 id="21-修改编译命令">2.1 修改编译命令</h3>
+Kubernetes v1.22.4 modified by st0n3
+</code></pre><h2 id="2-advance">2. advance</h2>
+<h3 id="21-编译过程分析">2.1 编译过程分析</h3>
+<p>上面我们执行的 <code>run.sh</code> 主要执行了3个步骤(编译构建环境、执行编译命令、复制编译好的文件)，这些步骤都是定义在common.sh中的函数。其中<code>kube::build::run_build_command</code>函数，直接接受外部输入，所以当我们执行<code>run.sh make</code>时，等同于执行<code>kube::build::run_build_command make</code></p>
+<p><a href="https://github.com/kubernetes/kubernetes/blob/v1.22.4/build/run.sh#L39">https://github.com/kubernetes/kubernetes/blob/v1.22.4/build/run.sh#L39</a></p>
+<pre><code class="language-shell!" data-lang="shell!">source &quot;$KUBE_ROOT/build/common.sh&quot;
+...
+kube::build::build_image
+...
+kube::build::run_build_command &quot;$@&quot;
+...
+kube::build::copy_output
+</code></pre><hr>
+<p>分析<code>kube::build::run_build_command()</code>函数，发现传入的cmd参数，由docker run命令传入上面构建好的容器中，例如我们执行<code>run.sh make</code>命令，将在容器中执行make命令。因此，如果我们可以进入这个容器中，则可以自定义构建环境。</p>
+<p><a href="https://github.com/kubernetes/kubernetes/blob/v1.22.4/build/common.sh#L470-L558">https://github.com/kubernetes/kubernetes/blob/v1.22.4/build/common.sh#L470-L558</a></p>
+<pre><code class="language-shell!" data-lang="shell!">function kube::build::run_build_command() {
+  kube::log::status &quot;Running build command...&quot;
+  kube::build::run_build_command_ex &quot;${KUBE_BUILD_CONTAINER_NAME}&quot; -- &quot;$@&quot;
+}
+
+function kube::build::run_build_command_ex() {
+  ...
+  local -a cmd=()
+  until [ -z &quot;${1-}&quot; ] ; do
+    cmd+=(&quot;$1&quot;)
+    shift
+  done
+
+  docker_run_opts+=(
+    --env &quot;KUBE_FASTBUILD=${KUBE_FASTBUILD:-false}&quot;
+    --env &quot;KUBE_BUILDER_OS=${OSTYPE:-notdetected}&quot;
+    --env &quot;KUBE_VERBOSE=${KUBE_VERBOSE}&quot;
+    --env &quot;KUBE_BUILD_WITH_COVERAGE=${KUBE_BUILD_WITH_COVERAGE:-}&quot;
+    --env &quot;KUBE_BUILD_PLATFORMS=${KUBE_BUILD_PLATFORMS:-}&quot;
+    --env &quot;GOFLAGS=${GOFLAGS:-}&quot;
+    --env &quot;GOGCFLAGS=${GOGCFLAGS:-}&quot;
+    --env &quot;SOURCE_DATE_EPOCH=${SOURCE_DATE_EPOCH:-}&quot;
+  )
+  ...
+  local -ra docker_cmd=(
+    &quot;${DOCKER[@]}&quot; run &quot;${docker_run_opts[@]}&quot; &quot;${KUBE_BUILD_IMAGE}&quot;)
+  ...
+  # Clean up container from any previous run
+  kube::build::destroy_container &quot;${container_name}&quot;
+  &quot;${docker_cmd[@]}&quot; &quot;${cmd[@]}&quot;
+  if [[ &quot;${detach}&quot; == false ]]; then
+    kube::build::destroy_container &quot;${container_name}&quot;
+  fi
+}
+</code></pre><hr>
+<p>文档中已经说明，执行<code>./build/shell.sh</code>可以进入到容器内。</p>
+<h3 id="22-进入编译环境手动编译">2.2 进入编译环境，手动编译</h3>
+<pre><code class="language-shell!" data-lang="shell!">root@host:~/kubernetes# ./build/shell.sh 
++++ [1124 15:35:18] Verifying Prerequisites....
++++ [1124 15:35:19] Building Docker image kube-build:build-5fe81ecaa8-5-v1.22.0-go1.16.10-buster.0
++++ [1124 15:35:21] Creating data container kube-build-data-5fe81ecaa8-5-v1.22.0-go1.16.10-buster.0
++++ [1124 15:35:37] Syncing sources to container
++++ [1124 15:35:42] Output from this container will NOT be rsynced out upon completion. Set KUBE_RUN_COPY_OUTPUT=y to enable.
++++ [1124 15:35:42] Running build command...
+root@host:~# sed -i &quot;s/%s %s/%s %s modified by st0n3/g&quot;  staging/src/k8s.io/component-base/version/verflag/verflag.go
+root@host:~# make kubelet KUBE_BUILD_PLATFORMS=linux/amd64
+Go version: go version go1.16.10 linux/amd64
++++ [1124 15:36:20] Building go targets for linux/amd64:
+...too many logs...
+root@host:~# ./_output/bin/kubelet --version
+Kubernetes v1.22.4 modified by st0n3
+</code></pre><h3 id="23-修改编译命令">2.3 修改编译命令</h3>
 <p>我们在hack/lib/golang.sh中加上 <code>set -ex</code>, 再重新执行上述命令，可以发现具体的编译命令为</p>
 <pre><code class="language-!" data-lang="!">+ go install -gcflags ' -trimpath=/go/src/k8s.io/kubernetes' -asmflags -trimpath=/go/src/k8s.io/kubernetes -ldflags '-s -w -X '\''k8s.io/kubernetes/vendor/k8s.io/client-go/pkg/version.buildDate=2021-11-24T02:38:56Z'\'' -X '\''k8s.io/kubernetes/vendor/k8s.io/component-base/version.buildDate=2021-11-24T02:38:56Z'\'' -X '\''k8s.io/client-go/pkg/version.buildDate=2021-11-24T02:38:56Z'\'' -X '\''k8s.io/component-base/version.buildDate=2021-11-24T02:38:56Z'\'' -X '\''k8s.io/kubernetes/vendor/k8s.io/client-go/pkg/version.gitCommit=f572e4d5b4a1496356eccf29c34adac02280beeb'\'' -X '\''k8s.io/kubernetes/vendor/k8s.io/component-base/version.gitCommit=f572e4d5b4a1496356eccf29c34adac02280beeb'\'' -X '\''k8s.io/client-go/pkg/version.gitCommit=f572e4d5b4a1496356eccf29c34adac02280beeb'\'' -X '\''k8s.io/component-base/version.gitCommit=f572e4d5b4a1496356eccf29c34adac02280beeb'\'' -X '\''k8s.io/kubernetes/vendor/k8s.io/client-go/pkg/version.gitTreeState=dirty'\'' -X '\''k8s.io/kubernetes/vendor/k8s.io/component-base/version.gitTreeState=dirty'\'' -X '\''k8s.io/client-go/pkg/version.gitTreeState=dirty'\'' -X '\''k8s.io/component-base/version.gitTreeState=dirty'\'' -X '\''k8s.io/kubernetes/vendor/k8s.io/client-go/pkg/version.gitVersion=v1.23.0-beta.0.82+f572e4d5b4a149-dirty'\'' -X '\''k8s.io/kubernetes/vendor/k8s.io/component-base/version.gitVersion=v1.23.0-beta.0.82+f572e4d5b4a149-dirty'\'' -X '\''k8s.io/client-go/pkg/version.gitVersion=v1.23.0-beta.0.82+f572e4d5b4a149-dirty'\'' -X '\''k8s.io/component-base/version.gitVersion=v1.23.0-beta.0.82+f572e4d5b4a149-dirty'\'' -X '\''k8s.io/kubernetes/vendor/k8s.io/client-go/pkg/version.gitMajor=1'\'' -X '\''k8s.io/kubernetes/vendor/k8s.io/component-base/version.gitMajor=1'\'' -X '\''k8s.io/client-go/pkg/version.gitMajor=1'\'' -X '\''k8s.io/component-base/version.gitMajor=1'\'' -X '\''k8s.io/kubernetes/vendor/k8s.io/client-go/pkg/version.gitMinor=23+'\'' -X '\''k8s.io/kubernetes/vendor/k8s.io/component-base/version.gitMinor=23+'\'' -X '\''k8s.io/client-go/pkg/version.gitMinor=23+'\'' -X '\''k8s.io/component-base/version.gitMinor=23+'\''' -tags selinux,notest, k8s.io/kubernetes/cmd/kubelet
 </code></pre><p>因此可以通过修改hack/lib/golang.sh中go install相关的参数来修改编译命令</p>
