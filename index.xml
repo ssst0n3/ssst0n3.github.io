@@ -6,7 +6,23 @@
     <description>Recent content on welcome to st0n3&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 24 Nov 2021 03:17:08 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 26 Nov 2021 08:34:46 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>k8s makefile 源码分析</title>
+      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E5%AE%B9%E5%99%A8%E9%9B%86%E7%BE%A4%E5%AE%89%E5%85%A8/k8s/%E6%BA%90%E7%A0%81%E5%AE%A1%E8%AE%A1/%E5%A6%82%E4%BD%95%E5%BC%80%E5%8F%91%E5%B9%B6%E7%BC%96%E8%AF%91%E4%BB%A3%E7%A0%81/k8s-makefile-%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90.html</link>
+      <pubDate>Fri, 26 Nov 2021 08:34:46 +0000</pubDate>
+      
+      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E5%AE%B9%E5%99%A8%E9%9B%86%E7%BE%A4%E5%AE%89%E5%85%A8/k8s/%E6%BA%90%E7%A0%81%E5%AE%A1%E8%AE%A1/%E5%A6%82%E4%BD%95%E5%BC%80%E5%8F%91%E5%B9%B6%E7%BC%96%E8%AF%91%E4%BB%A3%E7%A0%81/k8s-makefile-%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90.html</guid>
+      <description>tags: 源码分析,container k8s makefile 源码分析  本文编写时，最新release为v1.22.4, 因此下文分析的代码均为v1.22.4分支的代码。 阅读此文前，读者应对makefile语法有基础的理解。 
+0. 背景 根据build文档，我们只需要执行build/run.sh make即可完成k8s的编译。build/run.sh的功能是启动一个基于docker的编译环境，make即是执行具体编译的动作。我们希望知道，make命令在编译时，究竟执行了什么，因此需要对Makefile的源码进行分析。
+项目根目录的Makefile文件是指向build/root/Makefile的软链接。
+# ls -lah Makefile lrwxrwxrwx 1 root root 19 Nov 23 11:41 Makefile -&amp;gt; build/root/Makefile  故Makefile的位置为: https://github.com/kubernetes/kubernetes/blob/v1.22.4/build/root/Makefile
+1. k8s makefile 目标分析 在Makefile文件中，我们看到有一个help子命令：
+https://github.com/kubernetes/kubernetes/blob/v1.22.4/build/root/Makefile#L567
+.PHONY: help ifeq ($(PRINT_HELP),y) help: @echo &amp;quot;$$HELP_INFO&amp;quot; else help: hack/make-rules/make-help.sh endif  执行make help将会打印出所有子命令及帮助信息, 因为篇幅问题我们不列出全部。这帮助我们了解到all是第一个目标，执行make或make all可以实现对k8s源码的编译：
+# make help -------------------------------------------------------------------------------- all # Build code. # # Args: # WHAT: Directory names to build.</description>
+    </item>
+    
     <item>
       <title>How to Build K8S</title>
       <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E5%AE%B9%E5%99%A8%E9%9B%86%E7%BE%A4%E5%AE%89%E5%85%A8/k8s/%E6%BA%90%E7%A0%81%E5%AE%A1%E8%AE%A1/%E5%A6%82%E4%BD%95%E5%BC%80%E5%8F%91%E5%B9%B6%E7%BC%96%E8%AF%91%E4%BB%A3%E7%A0%81/How-to-Build-K8S.html</link>

@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author"
+    content="">
+<meta name="description"
+    content="tags: 源码分析,container k8s makefile 源码分析  本文编写时，最新release为v1.22.4, 因此下文分析的代码均为v1.22.4分支的代码。 阅读此文前，读者应对makefile语法有基础的理解。 
+0. 背景 根据build文档，我们只需要执行build/run.sh make即可完成k8s的编译。build/run.sh的功能是启动一个基于docker的编译环境，make即是执行具体编译的动作。我们希望知道，make命令在编译时，究竟执行了什么，因此需要对Makefile的源码进行分析。
+项目根目录的Makefile文件是指向build/root/Makefile的软链接。
+# ls -lah Makefile lrwxrwxrwx 1 root root 19 Nov 23 11:41 Makefile -&amp;gt; build/root/Makefile  故Makefile的位置为: https://github.com/kubernetes/kubernetes/blob/v1.22.4/build/root/Makefile
+1. k8s makefile 目标分析 在Makefile文件中，我们看到有一个help子命令：
+https://github.com/kubernetes/kubernetes/blob/v1.22.4/build/root/Makefile#L567
+.PHONY: help ifeq ($(PRINT_HELP),y) help: @echo &amp;quot;$$HELP_INFO&amp;quot; else help: hack/make-rules/make-help.sh endif  执行make help将会打印出所有子命令及帮助信息, 因为篇幅问题我们不列出全部。这帮助我们了解到all是第一个目标，执行make或make all可以实现对k8s源码的编译：
+# make help -------------------------------------------------------------------------------- all # Build code. # # Args: # WHAT: Directory names to build." />
+<meta name="keywords" content="" />
+<meta name="robots" content="noodp" />
+<link rel="canonical" href="/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E5%AE%B9%E5%99%A8%E9%9B%86%E7%BE%A4%E5%AE%89%E5%85%A8/k8s/%E6%BA%90%E7%A0%81%E5%AE%A1%E8%AE%A1/%E5%A6%82%E4%BD%95%E5%BC%80%E5%8F%91%E5%B9%B6%E7%BC%96%E8%AF%91%E4%BB%A3%E7%A0%81/k8s-makefile-%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90.html" />
+
+
+<title>
+    
+    k8s makefile 源码分析 :: welcome to st0n3&#39;s blog 
+    
+</title>
+
+
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.2.1/css/flag-icon.min.css" rel="stylesheet"
+    type="text/css">
+
+
+
+<link rel="stylesheet" href="/main.min.de959d61dd13c2cd41136acd491ffb0749779e1afe37b1fed6d5cba0b7e1938d.css">
+
+
+
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#252627">
+<link rel="shortcut icon" href="/favicon.ico">
+<meta name="theme-color" content="#252627"><meta itemprop="name" content="k8s makefile 源码分析">
+<meta itemprop="description" content="tags: 源码分析,container k8s makefile 源码分析  本文编写时，最新release为v1.22.4, 因此下文分析的代码均为v1.22.4分支的代码。 阅读此文前，读者应对makefile语法有基础的理解。 
+0. 背景 根据build文档，我们只需要执行build/run.sh make即可完成k8s的编译。build/run.sh的功能是启动一个基于docker的编译环境，make即是执行具体编译的动作。我们希望知道，make命令在编译时，究竟执行了什么，因此需要对Makefile的源码进行分析。
+项目根目录的Makefile文件是指向build/root/Makefile的软链接。
+# ls -lah Makefile lrwxrwxrwx 1 root root 19 Nov 23 11:41 Makefile -&gt; build/root/Makefile  故Makefile的位置为: https://github.com/kubernetes/kubernetes/blob/v1.22.4/build/root/Makefile
+1. k8s makefile 目标分析 在Makefile文件中，我们看到有一个help子命令：
+https://github.com/kubernetes/kubernetes/blob/v1.22.4/build/root/Makefile#L567
+.PHONY: help ifeq ($(PRINT_HELP),y) help: @echo &quot;$$HELP_INFO&quot; else help: hack/make-rules/make-help.sh endif  执行make help将会打印出所有子命令及帮助信息, 因为篇幅问题我们不列出全部。这帮助我们了解到all是第一个目标，执行make或make all可以实现对k8s源码的编译：
+# make help -------------------------------------------------------------------------------- all # Build code. # # Args: # WHAT: Directory names to build.">
+<meta itemprop="datePublished" content="2021-11-26T08:34:46+00:00" />
+<meta itemprop="dateModified" content="2021-11-26T08:34:46+00:00" />
+<meta itemprop="wordCount" content="410">
+
+
+
+<meta itemprop="keywords" content="" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="k8s makefile 源码分析"/>
+<meta name="twitter:description" content="tags: 源码分析,container k8s makefile 源码分析  本文编写时，最新release为v1.22.4, 因此下文分析的代码均为v1.22.4分支的代码。 阅读此文前，读者应对makefile语法有基础的理解。 
+0. 背景 根据build文档，我们只需要执行build/run.sh make即可完成k8s的编译。build/run.sh的功能是启动一个基于docker的编译环境，make即是执行具体编译的动作。我们希望知道，make命令在编译时，究竟执行了什么，因此需要对Makefile的源码进行分析。
+项目根目录的Makefile文件是指向build/root/Makefile的软链接。
+# ls -lah Makefile lrwxrwxrwx 1 root root 19 Nov 23 11:41 Makefile -&gt; build/root/Makefile  故Makefile的位置为: https://github.com/kubernetes/kubernetes/blob/v1.22.4/build/root/Makefile
+1. k8s makefile 目标分析 在Makefile文件中，我们看到有一个help子命令：
+https://github.com/kubernetes/kubernetes/blob/v1.22.4/build/root/Makefile#L567
+.PHONY: help ifeq ($(PRINT_HELP),y) help: @echo &quot;$$HELP_INFO&quot; else help: hack/make-rules/make-help.sh endif  执行make help将会打印出所有子命令及帮助信息, 因为篇幅问题我们不列出全部。这帮助我们了解到all是第一个目标，执行make或make all可以实现对k8s源码的编译：
+# make help -------------------------------------------------------------------------------- all # Build code. # # Args: # WHAT: Directory names to build."/>
+
+
+
+
+<meta property="article:published_time" content="2021-11-26 08:34:46 &#43;0000 UTC" />
+
+
+
+
+
+
+
+    </head>
+
+    <body class="dark-theme">
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text">$ cd /home/st0n3</span>
+            <span class="logo__cursor"></span>
+        
+    </div>
+</a>
+
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="/aboutme.html">About</a></li><li><a href="/post.html">Blog</a></li><li><a href="/hackerbot">Hackerbot</a></li><li><a href="/skill_tree/">SkillTree</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+
+            <span class="theme-toggle"><svg class="theme-toggler" width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M22 41C32.4934 41 41 32.4934 41 22C41 11.5066 32.4934 3 22
+  3C11.5066 3 3 11.5066 3 22C3 32.4934 11.5066 41 22 41ZM7 22C7
+  13.7157 13.7157 7 22 7V37C13.7157 37 7 30.2843 7 22Z"/>
+</svg>
+</span>
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
+                
+    <main class="post">
+
+        <div class="post-info">
+            
+            </p>
+        </div>
+
+        <article>
+            <h2 class="post-title"><a href="/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E5%AE%B9%E5%99%A8%E9%9B%86%E7%BE%A4%E5%AE%89%E5%85%A8/k8s/%E6%BA%90%E7%A0%81%E5%AE%A1%E8%AE%A1/%E5%A6%82%E4%BD%95%E5%BC%80%E5%8F%91%E5%B9%B6%E7%BC%96%E8%AF%91%E4%BB%A3%E7%A0%81/k8s-makefile-%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90.html">k8s makefile 源码分析</a></h2>
+
+            
+
+            <div class="post-content">
+                <hr>
+<h2 id="tags-源码分析container">tags: 源码分析,container</h2>
+<h1 id="k8s-makefile-源码分析">k8s makefile 源码分析</h1>
+<small>
+本文编写时，最新release为v1.22.4, 因此下文分析的代码均为v1.22.4分支的代码。
+<p>阅读此文前，读者应对makefile语法有基础的理解。
+</small></p>
+<h2 id="0-背景">0. 背景</h2>
+<p>根据<a href="https://github.com/kubernetes/kubernetes/tree/v1.22.4/build#key-scripts">build文档</a>，我们只需要执行<code>build/run.sh make</code>即可完成k8s的编译。<code>build/run.sh</code>的功能是启动一个基于docker的编译环境，make即是执行具体编译的动作。我们希望知道，make命令在编译时，究竟执行了什么，因此需要对Makefile的源码进行分析。</p>
+<p>项目根目录的Makefile文件是指向<code>build/root/Makefile</code>的软链接。</p>
+<pre><code># ls -lah Makefile
+lrwxrwxrwx 1 root root 19 Nov 23 11:41 Makefile -&gt; build/root/Makefile
+</code></pre><hr>
+<p>故Makefile的位置为:
+<a href="https://github.com/kubernetes/kubernetes/blob/v1.22.4/build/root/Makefile">https://github.com/kubernetes/kubernetes/blob/v1.22.4/build/root/Makefile</a></p>
+<h2 id="1-k8s-makefile-目标分析">1. k8s makefile 目标分析</h2>
+<p>在Makefile文件中，我们看到有一个help子命令：</p>
+<p><a href="https://github.com/kubernetes/kubernetes/blob/v1.22.4/build/root/Makefile#L567">https://github.com/kubernetes/kubernetes/blob/v1.22.4/build/root/Makefile#L567</a></p>
+<pre><code class="language-makefile!" data-lang="makefile!">.PHONY: help
+ifeq ($(PRINT_HELP),y)
+help:
+	@echo &quot;$$HELP_INFO&quot;
+else
+help:
+	hack/make-rules/make-help.sh
+endif
+</code></pre><hr>
+<p>执行<code>make help</code>将会打印出所有子命令及帮助信息, 因为篇幅问题我们不列出全部。这帮助我们了解到<code>all</code>是第一个目标，执行<code>make</code>或<code>make all</code>可以实现对k8s源码的编译：</p>
+<pre><code class="language-!" data-lang="!"># make help
+--------------------------------------------------------------------------------
+all
+# Build code.
+#
+# Args:
+#   WHAT: Directory names to build.  If any of these directories has a 'main'
+#     package, the build will produce executable files under _output/bin.
+#     If not specified, &quot;everything&quot; will be built.
+#   GOFLAGS: Extra flags to pass to 'go' when building.
+#   GOLDFLAGS: Extra linking flags passed to 'go' when building.
+#   GOGCFLAGS: Additional go compile flags passed to 'go' when building.
+#
+# Example:
+#   make
+#   make all
+#   make all WHAT=cmd/kubelet GOFLAGS=-v
+#   make all GOLDFLAGS=&quot;&quot;
+#     Note: Specify GOLDFLAGS as an empty string for building unstripped binaries, which allows
+#           you to use code debugging tools like delve. When GOLDFLAGS is unspecified, it defaults
+#           to &quot;-s -w&quot; which strips debug information. Other flags that can be used for GOLDFLAGS 
+#           are documented at https://golang.org/cmd/link/
+---------------------------------------------------------------------------------
+check
+# Build and run tests.
+#
+# Args:
+#   WHAT: Directory names to test.  All *_test.go files under these
+#     directories will be run.  If not specified, &quot;everything&quot; will be tested.
+#   TESTS: Same as WHAT.
+#   KUBE_COVER: Whether to run tests with code coverage. Set to 'y' to enable coverage collection.
+#   GOFLAGS: Extra flags to pass to 'go' when building.
+#   GOLDFLAGS: Extra linking flags to pass to 'go' when building.
+#   GOGCFLAGS: Additional go compile flags passed to 'go' when building.
+#
+# Example:
+#   make check
+#   make test
+#   make check WHAT=./pkg/kubelet GOFLAGS=-v
+---------------------------------------------------------------------------------
+clean
+# Remove all build artifacts.
+#
+# Example:
+#   make clean
+#
+# TODO(thockin): call clean_generated when we stop committing generated code.
+---------------------------------------------------------------------------------
+...
+</code></pre><hr>
+<p>目标<code>all</code>中定义了要执行的命令是<code>hack/make-rules/build.sh</code>：</p>
+<p><a href="https://github.com/kubernetes/kubernetes/blob/v1.22.4/build/root/Makefile#L92">https://github.com/kubernetes/kubernetes/blob/v1.22.4/build/root/Makefile#L92</a></p>
+<pre><code class="language-makefile!" data-lang="makefile!">.PHONY: all
+ifeq ($(PRINT_HELP),y)
+all:
+	@echo &quot;$$ALL_HELP_INFO&quot;
+else
+all: generated_files
+	hack/make-rules/build.sh $(WHAT)
+endif
+</code></pre><hr>
+<p>另外也留意到，有一些目标是用于编译特定文件的：</p>
+<pre><code class="language-shell!" data-lang="shell!"># make help
+...
+kubemark
+kube-scheduler
+cloud-controller-manager
+kubelet
+kubectl
+kubeadm
+kube-proxy
+importverifier
+gendocs
+kube-apiserver
+genman
+genkubedocs
+genyaml
+genswaggertypedocs
+genutils
+kubectl-convert
+preferredimports
+kube-controller-manager
+clicheck
+linkcheck
+dependencycheck
+# Add rules for all directories in cmd/
+#
+# Example:
+#   make kubectl kube-proxy
+...
+</code></pre><hr>
+<p>这些</p>
+<h2 id="2-编译命令分析">2. 编译命令分析</h2>
+<p><code>hack/make-rules/build.sh</code>文件内容很简短，主要是调用了<code>kube::golang::build_binaries</code>函数。<code>kube::golang::build_binaries</code>函数定义在<code>hack/lib/golang.sh</code>文件中，由<code>source &quot;${KUBE_ROOT}/hack/lib/init.sh&quot;</code>引入进来。</p>
+<p><a href="https://github.com/kubernetes/kubernetes/blob/v1.22.4/hack/make-rules/build.sh">https://github.com/kubernetes/kubernetes/blob/v1.22.4/hack/make-rules/build.sh</a></p>
+<pre><code class="language-shell!" data-lang="shell!">KUBE_ROOT=$(dirname &quot;${BASH_SOURCE[0]}&quot;)/../..
+KUBE_VERBOSE=&quot;${KUBE_VERBOSE:-1}&quot;
+source &quot;${KUBE_ROOT}/hack/lib/init.sh&quot;
+
+kube::golang::build_binaries &quot;$@&quot;
+kube::golang::place_bins
+</code></pre><hr>
+<p><code>kube::golang::build_binaries</code>函数并不简短，处理了很多参数，最终调用了<code>kube::golang::build_binaries_for_platform</code>函数。</p>
+<p><a href="https://github.com/kubernetes/kubernetes/blob/v1.22.4/hack/lib/golang.sh#L782">https://github.com/kubernetes/kubernetes/blob/v1.22.4/hack/lib/golang.sh#L782</a></p>
+<pre><code class="language-shell!" data-lang="shell!">kube::golang::build_binaries() {
+  (
+    ...
+    kube::golang::build_binaries_for_platform &quot;${platform}&quot;
+    ...
+</code></pre><hr>
+<p><code>build_binaries_for_platform</code>根据给定的参数执行静态或非静态编译</p>
+<p><a href="https://github.com/kubernetes/kubernetes/blob/v1.22.4/hack/lib/golang.sh#L683">https://github.com/kubernetes/kubernetes/blob/v1.22.4/hack/lib/golang.sh#L683</a></p>
+<pre><code class="language-shell!" data-lang="shell!">kube::golang::build_binaries_for_platform() {
+    ...
+    CGO_ENABLED=0 kube::golang::build_some_binaries &quot;${statics[@]}&quot;
+    ...
+    kube::golang::build_some_binaries &quot;${nonstatics[@]}&quot;
+    ...
+</code></pre><hr>
+
+            </div>
+        </article>
+
+        <hr />
+
+        <div class="post-info">
+  			</div>
+
+        
+    </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>&copy; 2021</span>
+            
+            <span></span>
+            <span> <a href="/posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a></span>
+        </div>
+    </div>
+    <div class="footer__inner">
+        <div class="footer__content">
+
+        </div>
+    </div>
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>Powered by <a href="http://gohugo.io">Hugo</a></span>
+            <span>Made with &#10084; by <a href="https://github.com/st0n3">st0n3</a></span>
+            <span>Based on <a href="https://github.com/rhazdon">rhazdon</a></span>
+        </div>
+    </div>
+
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      extensions: ["tex2jax.js"],
+      
+      jax: ["input/TeX", "output/CommonHTML"],
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+        displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+        processEscapes: true
+      },
+      "HTML-CSS": { fonts: ["TeX"] },
+      displayAlign: "left"
+    });
+  </script>
+
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_CHTML"></script>
+
+
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+
+<script type="text/javascript" src="/bundle.min.4c3fb12a087ceed4a52cb5d57068a9795c7069617a01ca70f788052ad66e1791779e6c72686e1dc0ca13dc03b0203204b6566bb0dd1ee80de2b7ff4d8fe53db2.js" integrity="sha512-TD&#43;xKgh87tSlLLXVcGipeVxwaWF6Acpw94gFKtZuF5F3nmxyaG4dwMoT3AOwIDIEtlZrsN0e6A3it/9Nj&#43;U9sg=="></script>
+
+
+
+    </body>
+</html>
