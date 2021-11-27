@@ -54,7 +54,7 @@ https://github.com/kubernetes/kubernetes/blob/v1.22.4/build/root/Makefile#L567
 # make help -------------------------------------------------------------------------------- all # Build code. # # Args: # WHAT: Directory names to build.">
 <meta itemprop="datePublished" content="2021-11-26T08:34:46+00:00" />
 <meta itemprop="dateModified" content="2021-11-26T08:34:46+00:00" />
-<meta itemprop="wordCount" content="410">
+<meta itemprop="wordCount" content="446">
 
 
 
@@ -229,6 +229,7 @@ all: generated_files
 endif
 </code></pre><hr>
 <p>另外也留意到，有一些目标是用于编译特定文件的：</p>
+<p><a href="https://github.com/kubernetes/kubernetes/blob/v1.22.4/build/root/Makefile#L529-L538">https://github.com/kubernetes/kubernetes/blob/v1.22.4/build/root/Makefile#L529-L538</a></p>
 <pre><code class="language-shell!" data-lang="shell!"># make help
 ...
 kubemark
@@ -258,7 +259,18 @@ dependencycheck
 #   make kubectl kube-proxy
 ...
 </code></pre><hr>
-<p>这些</p>
+<p>这些目标，针对的makefile规则如下，也传递到了<code>hack/make-rules/build.sh</code>, 参数为要编译的package:</p>
+<pre><code class="language-makefile!" data-lang="makefile!">EXCLUDE_TARGET=BUILD OWNERS
+CMD_TARGET = $(filter-out %$(EXCLUDE_TARGET),$(notdir $(abspath $(wildcard cmd/*/))))
+.PHONY: $(CMD_TARGET)
+ifeq ($(PRINT_HELP),y)
+$(CMD_TARGET):
+	@echo &quot;$$CMD_HELP_INFO&quot;
+else
+$(CMD_TARGET): generated_files
+	hack/make-rules/build.sh cmd/$@
+endif
+</code></pre><hr>
 <h2 id="2-编译命令分析">2. 编译命令分析</h2>
 <p><code>hack/make-rules/build.sh</code>文件内容很简短，主要是调用了<code>kube::golang::build_binaries</code>函数。<code>kube::golang::build_binaries</code>函数定义在<code>hack/lib/golang.sh</code>文件中，由<code>source &quot;${KUBE_ROOT}/hack/lib/init.sh&quot;</code>引入进来。</p>
 <p><a href="https://github.com/kubernetes/kubernetes/blob/v1.22.4/hack/make-rules/build.sh">https://github.com/kubernetes/kubernetes/blob/v1.22.4/hack/make-rules/build.sh</a></p>
@@ -286,7 +298,14 @@ kube::golang::place_bins
     kube::golang::build_some_binaries &quot;${nonstatics[@]}&quot;
     ...
 </code></pre><hr>
-
+<p>最后,终于来到了最终的编译命令, 因此如果需要自定义编译参数或命令，在此处修改是最方便的。</p>
+<p><a href="https://github.com/kubernetes/kubernetes/blob/v1.22.4/hack/lib/golang.sh#L679">https://github.com/kubernetes/kubernetes/blob/v1.22.4/hack/lib/golang.sh#L679</a></p>
+<pre><code class="language-shell!" data-lang="shell!">kube::golang::build_some_binaries() {
+  ...
+    go install &quot;${build_args[@]}&quot; &quot;$@&quot;
+  ...
+}
+</code></pre>
             </div>
         </article>
 
