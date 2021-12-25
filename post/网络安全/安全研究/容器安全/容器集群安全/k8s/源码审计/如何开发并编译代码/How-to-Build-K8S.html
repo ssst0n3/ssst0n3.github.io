@@ -7,16 +7,14 @@
 <meta name="author"
     content="">
 <meta name="description"
-    content="tags: container How to Build K8S 1. build 根据官方文档，一步一步来即可
+    content="tags: container How to Build K8S  本文编写时，最新release为v1.22.4, 因此下文分析的代码均为v1.22.4分支的代码。  1. build 根据官方文档，一步一步来即可
 1.下载代码
 git clone https://github.com/kubernetes/kubernetes.git git checkout v1.22.4 2.修改代码
 sed -i &amp;quot;s/%s %s/%s %s modified by st0n3/g&amp;quot; staging/src/k8s.io/component-base/version/verflag/verflag.go 3.build: 默认会为所有模块编译出所有架构的代码，我们也可以指定编译的模块、架构。
 ./build/run.sh make kubelet KUBE_BUILD_PLATFORMS=linux/amd64 4.binary: 编译好的二进制文件位于./_output/dockerized/bin目录
 # ./_output/dockerized/bin/linux/amd64/kubelet --version Kubernetes v1.22.4 modified by st0n3 2. advance 2.1 编译过程分析 上面我们执行的 run.sh 主要执行了3个步骤(编译构建环境、执行编译命令、复制编译好的文件)，这些步骤都是定义在common.sh中的函数。其中kube::build::run_build_command函数，直接接受外部输入，所以当我们执行run.sh make时，等同于执行kube::build::run_build_command make
 https://github.com/kubernetes/kubernetes/blob/v1.22.4/build/run.sh#L39
-source &amp;quot;$KUBE_ROOT/build/common.sh&amp;quot; ... kube::build::build_image ... kube::build::run_build_command &amp;quot;$@&amp;quot; ... kube::build::copy_output  分析kube::build::run_build_command()函数，发现传入的cmd参数，由docker run命令传入上面构建好的容器中，例如我们执行run.sh make命令，将在容器中执行make命令。因此，如果我们可以进入这个容器中，则可以自定义构建环境。
-https://github.com/kubernetes/kubernetes/blob/v1.22.4/build/common.sh#L470-L558
-function kube::build::run_build_command() { kube::log::status &amp;quot;Running build command." />
+source &amp;quot;$KUBE_ROOT/build/common.sh&amp;quot; ... kube::build::build_image ... kube::build::run_build_command &amp;quot;$@&amp;quot; ... kube::build::copy_output  分析kube::build::run_build_command()函数，发现传入的cmd参数，由docker run命令传入上面构建好的容器中，例如我们执行run.sh make命令，将在容器中执行make命令。因此，如果我们可以进入这个容器中，则可以自定义构建环境。" />
 <meta name="keywords" content="" />
 <meta name="robots" content="noodp" />
 <link rel="canonical" href="/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E5%AE%B9%E5%99%A8%E9%9B%86%E7%BE%A4%E5%AE%89%E5%85%A8/k8s/%E6%BA%90%E7%A0%81%E5%AE%A1%E8%AE%A1/%E5%A6%82%E4%BD%95%E5%BC%80%E5%8F%91%E5%B9%B6%E7%BC%96%E8%AF%91%E4%BB%A3%E7%A0%81/How-to-Build-K8S.html" />
@@ -46,35 +44,31 @@ function kube::build::run_build_command() { kube::log::status &amp;quot;Running 
 <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#252627">
 <link rel="shortcut icon" href="/favicon.ico">
 <meta name="theme-color" content="#252627"><meta itemprop="name" content="How to Build K8S">
-<meta itemprop="description" content="tags: container How to Build K8S 1. build 根据官方文档，一步一步来即可
+<meta itemprop="description" content="tags: container How to Build K8S  本文编写时，最新release为v1.22.4, 因此下文分析的代码均为v1.22.4分支的代码。  1. build 根据官方文档，一步一步来即可
 1.下载代码
 git clone https://github.com/kubernetes/kubernetes.git git checkout v1.22.4 2.修改代码
 sed -i &quot;s/%s %s/%s %s modified by st0n3/g&quot; staging/src/k8s.io/component-base/version/verflag/verflag.go 3.build: 默认会为所有模块编译出所有架构的代码，我们也可以指定编译的模块、架构。
 ./build/run.sh make kubelet KUBE_BUILD_PLATFORMS=linux/amd64 4.binary: 编译好的二进制文件位于./_output/dockerized/bin目录
 # ./_output/dockerized/bin/linux/amd64/kubelet --version Kubernetes v1.22.4 modified by st0n3 2. advance 2.1 编译过程分析 上面我们执行的 run.sh 主要执行了3个步骤(编译构建环境、执行编译命令、复制编译好的文件)，这些步骤都是定义在common.sh中的函数。其中kube::build::run_build_command函数，直接接受外部输入，所以当我们执行run.sh make时，等同于执行kube::build::run_build_command make
 https://github.com/kubernetes/kubernetes/blob/v1.22.4/build/run.sh#L39
-source &quot;$KUBE_ROOT/build/common.sh&quot; ... kube::build::build_image ... kube::build::run_build_command &quot;$@&quot; ... kube::build::copy_output  分析kube::build::run_build_command()函数，发现传入的cmd参数，由docker run命令传入上面构建好的容器中，例如我们执行run.sh make命令，将在容器中执行make命令。因此，如果我们可以进入这个容器中，则可以自定义构建环境。
-https://github.com/kubernetes/kubernetes/blob/v1.22.4/build/common.sh#L470-L558
-function kube::build::run_build_command() { kube::log::status &quot;Running build command.">
+source &quot;$KUBE_ROOT/build/common.sh&quot; ... kube::build::build_image ... kube::build::run_build_command &quot;$@&quot; ... kube::build::copy_output  分析kube::build::run_build_command()函数，发现传入的cmd参数，由docker run命令传入上面构建好的容器中，例如我们执行run.sh make命令，将在容器中执行make命令。因此，如果我们可以进入这个容器中，则可以自定义构建环境。">
 <meta itemprop="datePublished" content="2021-11-24T03:17:08+00:00" />
 <meta itemprop="dateModified" content="2021-11-24T03:17:08+00:00" />
-<meta itemprop="wordCount" content="323">
+<meta itemprop="wordCount" content="325">
 
 
 
 <meta itemprop="keywords" content="" />
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="How to Build K8S"/>
-<meta name="twitter:description" content="tags: container How to Build K8S 1. build 根据官方文档，一步一步来即可
+<meta name="twitter:description" content="tags: container How to Build K8S  本文编写时，最新release为v1.22.4, 因此下文分析的代码均为v1.22.4分支的代码。  1. build 根据官方文档，一步一步来即可
 1.下载代码
 git clone https://github.com/kubernetes/kubernetes.git git checkout v1.22.4 2.修改代码
 sed -i &quot;s/%s %s/%s %s modified by st0n3/g&quot; staging/src/k8s.io/component-base/version/verflag/verflag.go 3.build: 默认会为所有模块编译出所有架构的代码，我们也可以指定编译的模块、架构。
 ./build/run.sh make kubelet KUBE_BUILD_PLATFORMS=linux/amd64 4.binary: 编译好的二进制文件位于./_output/dockerized/bin目录
 # ./_output/dockerized/bin/linux/amd64/kubelet --version Kubernetes v1.22.4 modified by st0n3 2. advance 2.1 编译过程分析 上面我们执行的 run.sh 主要执行了3个步骤(编译构建环境、执行编译命令、复制编译好的文件)，这些步骤都是定义在common.sh中的函数。其中kube::build::run_build_command函数，直接接受外部输入，所以当我们执行run.sh make时，等同于执行kube::build::run_build_command make
 https://github.com/kubernetes/kubernetes/blob/v1.22.4/build/run.sh#L39
-source &quot;$KUBE_ROOT/build/common.sh&quot; ... kube::build::build_image ... kube::build::run_build_command &quot;$@&quot; ... kube::build::copy_output  分析kube::build::run_build_command()函数，发现传入的cmd参数，由docker run命令传入上面构建好的容器中，例如我们执行run.sh make命令，将在容器中执行make命令。因此，如果我们可以进入这个容器中，则可以自定义构建环境。
-https://github.com/kubernetes/kubernetes/blob/v1.22.4/build/common.sh#L470-L558
-function kube::build::run_build_command() { kube::log::status &quot;Running build command."/>
+source &quot;$KUBE_ROOT/build/common.sh&quot; ... kube::build::build_image ... kube::build::run_build_command &quot;$@&quot; ... kube::build::copy_output  分析kube::build::run_build_command()函数，发现传入的cmd参数，由docker run命令传入上面构建好的容器中，例如我们执行run.sh make命令，将在容器中执行make命令。因此，如果我们可以进入这个容器中，则可以自定义构建环境。"/>
 
 
 
@@ -148,6 +142,9 @@ function kube::build::run_build_command() { kube::log::status &quot;Running buil
                 <hr>
 <h2 id="tags-container">tags: container</h2>
 <h1 id="how-to-build-k8s">How to Build K8S</h1>
+<small>
+本文编写时，最新release为v1.22.4, 因此下文分析的代码均为v1.22.4分支的代码。
+</small>
 <h2 id="1-build">1. build</h2>
 <p>根据<a href="https://github.com/kubernetes/kubernetes/tree/master/build">官方文档</a>，一步一步来即可</p>
 <p>1.下载代码</p>
@@ -234,7 +231,7 @@ Kubernetes v1.22.4 modified by st0n3
 </code></pre><h2 id="3-troubleshooting">3. troubleshooting</h2>
 <h3 id="31-gfw">3.1 GFW</h3>
 <p>TODO</p>
-<h3 id="32-update-vendorsh-失败">3.2 update-vendor.sh 失败</h3>
+<h3 id="32-update-vendorsh-失败">3.2 <code>update-vendor.sh</code> 失败</h3>
 <p><a href="https://github.com/kubernetes/kubernetes/issues/106699">https://github.com/kubernetes/kubernetes/issues/106699</a></p>
 
             </div>
