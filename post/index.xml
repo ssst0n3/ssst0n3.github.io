@@ -6,7 +6,16 @@
     <description>Recent content in Post on welcome to st0n3&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 25 Dec 2021 02:32:21 +0000</lastBuildDate><atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 18 Feb 2022 02:44:57 +0000</lastBuildDate><atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>pkexec CVE-2021-4034 分析与复现</title>
+      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E6%9C%AC%E5%9C%B0%E6%8F%90%E6%9D%83/suid/PolKit-pkexec/CVE-2021-4034/%E5%88%86%E6%9E%90/pkexec-CVE-2021-4034-%E5%88%86%E6%9E%90%E4%B8%8E%E5%A4%8D%E7%8E%B0.html</link>
+      <pubDate>Fri, 18 Feb 2022 02:44:57 +0000</pubDate>
+      
+      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E6%9C%AC%E5%9C%B0%E6%8F%90%E6%9D%83/suid/PolKit-pkexec/CVE-2021-4034/%E5%88%86%E6%9E%90/pkexec-CVE-2021-4034-%E5%88%86%E6%9E%90%E4%B8%8E%E5%A4%8D%E7%8E%B0.html</guid>
+      <description>tags: cve,漏洞分析 pkexec CVE-2021-4034 分析与复现 一、基本信息    Item Details Note     Project gitlab.freedesktop.org/polkit/polkit    Publish Date 2022-01-25    CVE-ID CVE-2021-4034 mitre, nvd, cvedetails   EDB-ID     Exploits     Affect Version     Fix Version     Fix Commit a2bf5c9c    CVSS     Vuln&amp;rsquo;s Author      二、组件简介 pkexec应用程序是一个setuid工具，允许非特权用户根据预定义的策略作为特权用户运行命令。</description>
+    </item>
+    
     <item>
       <title>kubelet 进程启动流程源码分析</title>
       <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E5%AE%B9%E5%99%A8%E9%9B%86%E7%BE%A4%E5%AE%89%E5%85%A8/k8s/%E6%BA%90%E7%A0%81%E5%AE%A1%E8%AE%A1/k8s%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/kubelet/kubelet-%E8%BF%9B%E7%A8%8B%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90.html</link>
@@ -401,10 +410,9 @@ st0n3@yoga:~$ ./ctf.expect spawn ssh -o StrictHostKeyChecking=no ctf@1.2.3.4 ctf
 对于一些关键文件的commits记录，则需要重点关注。
 2.3 roadmap分析 roadmap中包含了项目未来的变化，如果能提前获悉软件未来的发展方向，则能在代码开发之前就布局相关技术的研究。
 2.4 已知漏洞数量与分布情况 分析已知漏洞数量与分布情况有助于快速识别，历史上安全研究人员的关注点，进而有助于自己分析未来的研究方向。
-2.5 如何报告该项目的漏洞 3. 如何第一时间知悉该软件安全情报 google announce, 例如：
- https://groups.google.com/forum/feed/kubernetes-announce/msgs/rss_v2_0.xml?num=50 https://groups.google.com/forum/feed/golang-announce/msgs/rss_v2_0.xml?num=50  4. 历史漏洞分析与复现  有规范的、成体系的分析、复现并存留实验环境，可以利用vagrant或docker记录、分享漏洞环境。 不只是复现漏洞，更重要的是复现漏洞挖掘的方法或过程（能应用于同类漏洞挖掘）  5. 安全关键技术 软件安全性所依赖的关键技术
-6. 软件使用(配置)安全 7. 安全风险分析 软件自身安全
-8. 设计分析 文档走读、设计模式分析、威胁建模、理想模型与设计模型对比</description>
+2.5 如何报告该项目的漏洞 3. 研究方法 3.1 研究目标/范围 3.2 研究方法 4. 如何第一时间知悉该软件安全情报 google announce, 例如：
+ https://groups.google.com/forum/feed/kubernetes-announce/msgs/rss_v2_0.xml?num=50 https://groups.google.com/forum/feed/golang-announce/msgs/rss_v2_0.xml?num=50  5. 历史漏洞分析与复现  有规范的、成体系的分析、复现并存留实验环境，可以利用vagrant或docker记录、分享漏洞环境。 不只是复现漏洞，更重要的是复现漏洞挖掘的方法或过程（能应用于同类漏洞挖掘）  6. 安全关键技术 软件安全性所依赖的关键技术
+7. 软件使用(配置)安全 8.</description>
     </item>
     
     <item>
