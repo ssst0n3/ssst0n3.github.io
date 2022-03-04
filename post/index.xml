@@ -480,8 +480,8 @@ $$ \begin{align} &amp;amp; p^{-1} \cdot p \equiv 1 \mod q \newline &amp;amp; q^{
       <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90%E4%B8%8E%E5%A4%8D%E7%8E%B0%E6%A8%A1%E6%9D%BF.html</guid>
       <description>tags: 漏洞分析 漏洞分析与复现模板 在开源软件安全研究方法一文中，我们提到, 漏洞复现工作需要有规范的、成体系的进行。
   有规范的、成体系的分析、复现并存留实验环境，可以利用vagrant或docker记录、分享漏洞环境。 不只是复现漏洞，更重要的是复现漏洞挖掘的方法或过程（能应用于同类漏洞挖掘）   本文将具体提出一个漏洞分析与复现过程中，要做的事情的模板。与前文同样，本文仅列举需要做哪些工作，并未指出具体应怎么做。在我历史及未来关于历史漏洞分析与复现的文章中，可以看到关于本文实际应用的实例。
-一、基本信息    Item Details     Project https://github.com/spring-cloud/spring-cloud-config   Publish Date 2019-04-16   Confirm Link    CVE-ID CVE-2019-3799   Cvedetails cvedetails   EDB-ID EDB-46772   Exploits exp1
-exp2   Affect Version 2.1.0-2.1.1, 2.0.0-2.0.3, 1.4.0-1.4.5 及更旧版本   Fix Version 2.1.2, 2.0.4, 1.4.6   Fix Commit    CVSS 8.</description>
+一、基本信息    Item Details Note     Project spring-cloud/spring-cloud-config    Publish Date 2019-04-16    Confirm Link     CVE-ID CVE-2019-3799 mitre, cvedetails   EDB-ID EDB-46772    Exploits exp1
+exp2    Affect Version 2.1.0-2.1.1, 2.0.0-2.0.3, 1.4.0-1.4.5 及更旧版本    Fix Version 2.1.2, 2.</description>
     </item>
     
     <item>
