@@ -7,12 +7,11 @@
 <meta name="author"
     content="">
 <meta name="description"
-    content="tags: 源码分析,container ctr container create 流程 ctr https://github.com/containerd/containerd/blob/v1.6.0/cmd/ctr/commands/run/run_unix.go#L347
+    content="tags: 源码分析,container ctr container create 流程 1. ctr 从cmd/ctr/commands/containers目录找到createCommand, 一直跟踪下去，都是在处理参数和调用新的Create函数。
+https://github.com/containerd/containerd/blob/v1.6.0/cmd/ctr/commands/containers/containers.go#L85
+var createCommand = cli.Command{ ... Action: func(context *cli.Context) error { ... _, err = run.NewContainer(ctx, client, context) ... }, } https://github.com/containerd/containerd/blob/v1.6.0/cmd/ctr/commands/run/run_unix.go#L347
 func NewContainer(ctx gocontext.Context, client *containerd.Client, context *cli.Context) (containerd.Container, error) { ... return client.NewContainer(ctx, id, cOpts...) } https://github.com/containerd/containerd/blob/v1.6.0/client.go#L289
-func (c *Client) NewContainer(ctx context.Context, id string, opts ...NewContainerOpts) (Container, error) { ... r, err := c.ContainerService().Create(ctx, container) ... } https://github.com/containerd/containerd/blob/v1.6.0/containerstore.go#L110
-func (r *remoteContainers) Create(ctx context.Context, container containers.Container) (containers.Container, error) { created, err := r.client.Create(ctx, &amp;amp;containersapi.CreateContainerRequest{ Container: containerToProto(&amp;amp;container), }) ... } 直到调用GRPC，由服务端执行containerd.services.containers.v1.Containers服务的Create方法。
-https://github.com/containerd/containerd/blob/v1.6.0/api/services/containers/v1/containers.pb.go#L729
-func (c *containersClient) Create(ctx context." />
+func (c *Client) NewContainer(ctx context.Context, id string, opts ...NewContainerOpts) (Container, error) { ... r, err := c.ContainerService().Create(ctx, container) ... } https://github." />
 <meta name="keywords" content="" />
 <meta name="robots" content="noodp" />
 <link rel="canonical" href="/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E8%BF%9B%E7%A8%8B%E5%AE%B9%E5%99%A8/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%B9%E5%99%A8/containerd/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/ctr-container-create-%E6%B5%81%E7%A8%8B.html" />
@@ -42,27 +41,25 @@ func (c *containersClient) Create(ctx context." />
 <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#252627">
 <link rel="shortcut icon" href="/favicon.ico">
 <meta name="theme-color" content="#252627"><meta itemprop="name" content="ctr container create 流程">
-<meta itemprop="description" content="tags: 源码分析,container ctr container create 流程 ctr https://github.com/containerd/containerd/blob/v1.6.0/cmd/ctr/commands/run/run_unix.go#L347
+<meta itemprop="description" content="tags: 源码分析,container ctr container create 流程 1. ctr 从cmd/ctr/commands/containers目录找到createCommand, 一直跟踪下去，都是在处理参数和调用新的Create函数。
+https://github.com/containerd/containerd/blob/v1.6.0/cmd/ctr/commands/containers/containers.go#L85
+var createCommand = cli.Command{ ... Action: func(context *cli.Context) error { ... _, err = run.NewContainer(ctx, client, context) ... }, } https://github.com/containerd/containerd/blob/v1.6.0/cmd/ctr/commands/run/run_unix.go#L347
 func NewContainer(ctx gocontext.Context, client *containerd.Client, context *cli.Context) (containerd.Container, error) { ... return client.NewContainer(ctx, id, cOpts...) } https://github.com/containerd/containerd/blob/v1.6.0/client.go#L289
-func (c *Client) NewContainer(ctx context.Context, id string, opts ...NewContainerOpts) (Container, error) { ... r, err := c.ContainerService().Create(ctx, container) ... } https://github.com/containerd/containerd/blob/v1.6.0/containerstore.go#L110
-func (r *remoteContainers) Create(ctx context.Context, container containers.Container) (containers.Container, error) { created, err := r.client.Create(ctx, &amp;containersapi.CreateContainerRequest{ Container: containerToProto(&amp;container), }) ... } 直到调用GRPC，由服务端执行containerd.services.containers.v1.Containers服务的Create方法。
-https://github.com/containerd/containerd/blob/v1.6.0/api/services/containers/v1/containers.pb.go#L729
-func (c *containersClient) Create(ctx context.">
+func (c *Client) NewContainer(ctx context.Context, id string, opts ...NewContainerOpts) (Container, error) { ... r, err := c.ContainerService().Create(ctx, container) ... } https://github.">
 <meta itemprop="datePublished" content="2022-03-20T08:06:57+00:00" />
 <meta itemprop="dateModified" content="2022-03-20T08:06:57+00:00" />
-<meta itemprop="wordCount" content="367">
+<meta itemprop="wordCount" content="392">
 
 
 
 <meta itemprop="keywords" content="" />
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="ctr container create 流程"/>
-<meta name="twitter:description" content="tags: 源码分析,container ctr container create 流程 ctr https://github.com/containerd/containerd/blob/v1.6.0/cmd/ctr/commands/run/run_unix.go#L347
+<meta name="twitter:description" content="tags: 源码分析,container ctr container create 流程 1. ctr 从cmd/ctr/commands/containers目录找到createCommand, 一直跟踪下去，都是在处理参数和调用新的Create函数。
+https://github.com/containerd/containerd/blob/v1.6.0/cmd/ctr/commands/containers/containers.go#L85
+var createCommand = cli.Command{ ... Action: func(context *cli.Context) error { ... _, err = run.NewContainer(ctx, client, context) ... }, } https://github.com/containerd/containerd/blob/v1.6.0/cmd/ctr/commands/run/run_unix.go#L347
 func NewContainer(ctx gocontext.Context, client *containerd.Client, context *cli.Context) (containerd.Container, error) { ... return client.NewContainer(ctx, id, cOpts...) } https://github.com/containerd/containerd/blob/v1.6.0/client.go#L289
-func (c *Client) NewContainer(ctx context.Context, id string, opts ...NewContainerOpts) (Container, error) { ... r, err := c.ContainerService().Create(ctx, container) ... } https://github.com/containerd/containerd/blob/v1.6.0/containerstore.go#L110
-func (r *remoteContainers) Create(ctx context.Context, container containers.Container) (containers.Container, error) { created, err := r.client.Create(ctx, &amp;containersapi.CreateContainerRequest{ Container: containerToProto(&amp;container), }) ... } 直到调用GRPC，由服务端执行containerd.services.containers.v1.Containers服务的Create方法。
-https://github.com/containerd/containerd/blob/v1.6.0/api/services/containers/v1/containers.pb.go#L729
-func (c *containersClient) Create(ctx context."/>
+func (c *Client) NewContainer(ctx context.Context, id string, opts ...NewContainerOpts) (Container, error) { ... r, err := c.ContainerService().Create(ctx, container) ... } https://github."/>
 
 
 
@@ -136,13 +133,22 @@ func (c *containersClient) Create(ctx context."/>
                 <hr>
 <h2 id="tags-源码分析container">tags: 源码分析,container</h2>
 <h1 id="ctr-container-create-流程">ctr container create 流程</h1>
-<h2 id="ctr">ctr</h2>
-<p><a href="https://github.com/containerd/containerd/blob/v1.6.0/cmd/ctr/commands/run/run_unix.go#L347">https://github.com/containerd/containerd/blob/v1.6.0/cmd/ctr/commands/run/run_unix.go#L347</a></p>
+<h2 id="1-ctr">1. ctr</h2>
+<p>从<code>cmd/ctr/commands/containers</code>目录找到<code>createCommand</code>, 一直跟踪下去，都是在处理参数和调用新的Create函数。</p>
+<p><a href="https://github.com/containerd/containerd/blob/v1.6.0/cmd/ctr/commands/containers/containers.go#L85">https://github.com/containerd/containerd/blob/v1.6.0/cmd/ctr/commands/containers/containers.go#L85</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">createCommand</span> = <span style="color:#a6e22e">cli</span>.<span style="color:#a6e22e">Command</span>{
+    <span style="color:#f92672">...</span>
+    <span style="color:#a6e22e">Action</span>: <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">context</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">cli</span>.<span style="color:#a6e22e">Context</span>) <span style="color:#66d9ef">error</span> {
+        <span style="color:#f92672">...</span>
+        <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">err</span> = <span style="color:#a6e22e">run</span>.<span style="color:#a6e22e">NewContainer</span>(<span style="color:#a6e22e">ctx</span>, <span style="color:#a6e22e">client</span>, <span style="color:#a6e22e">context</span>)
+        <span style="color:#f92672">...</span>
+    },
+}
+</code></pre></div><p><a href="https://github.com/containerd/containerd/blob/v1.6.0/cmd/ctr/commands/run/run_unix.go#L347">https://github.com/containerd/containerd/blob/v1.6.0/cmd/ctr/commands/run/run_unix.go#L347</a></p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">NewContainer</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">gocontext</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">client</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">containerd</span>.<span style="color:#a6e22e">Client</span>, <span style="color:#a6e22e">context</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">cli</span>.<span style="color:#a6e22e">Context</span>) (<span style="color:#a6e22e">containerd</span>.<span style="color:#a6e22e">Container</span>, <span style="color:#66d9ef">error</span>) {
     <span style="color:#f92672">...</span>
     <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">client</span>.<span style="color:#a6e22e">NewContainer</span>(<span style="color:#a6e22e">ctx</span>, <span style="color:#a6e22e">id</span>, <span style="color:#a6e22e">cOpts</span><span style="color:#f92672">...</span>)
 }
-
 </code></pre></div><p><a href="https://github.com/containerd/containerd/blob/v1.6.0/client.go#L289">https://github.com/containerd/containerd/blob/v1.6.0/client.go#L289</a></p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">c</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Client</span>) <span style="color:#a6e22e">NewContainer</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">id</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">opts</span> <span style="color:#f92672">...</span><span style="color:#a6e22e">NewContainerOpts</span>) (<span style="color:#a6e22e">Container</span>, <span style="color:#66d9ef">error</span>) {
     <span style="color:#f92672">...</span>
@@ -166,7 +172,7 @@ func (c *containersClient) Create(ctx context."/>
     }
     <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">out</span>, <span style="color:#66d9ef">nil</span>
 }
-</code></pre></div><h2 id="containerd">containerd</h2>
+</code></pre></div><h2 id="2-containerd">2. containerd</h2>
 <p>搜索<code>containerd.services.containers.v1.Containers</code>关键字，可以找到该服务定义于<code>_Containers_serviceDesc</code>。调用其<code>Create</code>方法时会调用<code>_Containers_Create_Handler</code>。</p>
 <p><a href="https://github.com/containerd/containerd/blob/v1.6.0/api/services/containers/v1/containers.pb.go#L904">https://github.com/containerd/containerd/blob/v1.6.0/api/services/containers/v1/containers.pb.go#L904</a></p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">_Containers_serviceDesc</span> = <span style="color:#a6e22e">grpc</span>.<span style="color:#a6e22e">ServiceDesc</span>{
@@ -213,8 +219,7 @@ func (c *containersClient) Create(ctx context."/>
     }
     <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">interceptor</span>(<span style="color:#a6e22e">ctx</span>, <span style="color:#a6e22e">in</span>, <span style="color:#a6e22e">info</span>, <span style="color:#a6e22e">handler</span>)
 }
-</code></pre></div><hr>
-<p><a href="https://github.com/containerd/containerd/blob/v1.6.0/services/containers/service.go#L99">https://github.com/containerd/containerd/blob/v1.6.0/services/containers/service.go#L99</a></p>
+</code></pre></div><p><a href="https://github.com/containerd/containerd/blob/v1.6.0/services/containers/service.go#L99">https://github.com/containerd/containerd/blob/v1.6.0/services/containers/service.go#L99</a></p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">s</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">service</span>) <span style="color:#a6e22e">Create</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">req</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">api</span>.<span style="color:#a6e22e">CreateContainerRequest</span>) (<span style="color:#f92672">*</span><span style="color:#a6e22e">api</span>.<span style="color:#a6e22e">CreateContainerResponse</span>, <span style="color:#66d9ef">error</span>) {
     <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">s</span>.<span style="color:#a6e22e">local</span>.<span style="color:#a6e22e">Create</span>(<span style="color:#a6e22e">ctx</span>, <span style="color:#a6e22e">req</span>)
 }

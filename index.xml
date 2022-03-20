@@ -13,12 +13,11 @@
       <pubDate>Sun, 20 Mar 2022 08:06:57 +0000</pubDate>
       
       <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E8%BF%9B%E7%A8%8B%E5%AE%B9%E5%99%A8/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%B9%E5%99%A8/containerd/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/ctr-container-create-%E6%B5%81%E7%A8%8B.html</guid>
-      <description>tags: 源码分析,container ctr container create 流程 ctr https://github.com/containerd/containerd/blob/v1.6.0/cmd/ctr/commands/run/run_unix.go#L347
+      <description>tags: 源码分析,container ctr container create 流程 1. ctr 从cmd/ctr/commands/containers目录找到createCommand, 一直跟踪下去，都是在处理参数和调用新的Create函数。
+https://github.com/containerd/containerd/blob/v1.6.0/cmd/ctr/commands/containers/containers.go#L85
+var createCommand = cli.Command{ ... Action: func(context *cli.Context) error { ... _, err = run.NewContainer(ctx, client, context) ... }, } https://github.com/containerd/containerd/blob/v1.6.0/cmd/ctr/commands/run/run_unix.go#L347
 func NewContainer(ctx gocontext.Context, client *containerd.Client, context *cli.Context) (containerd.Container, error) { ... return client.NewContainer(ctx, id, cOpts...) } https://github.com/containerd/containerd/blob/v1.6.0/client.go#L289
-func (c *Client) NewContainer(ctx context.Context, id string, opts ...NewContainerOpts) (Container, error) { ... r, err := c.ContainerService().Create(ctx, container) ... } https://github.com/containerd/containerd/blob/v1.6.0/containerstore.go#L110
-func (r *remoteContainers) Create(ctx context.Context, container containers.Container) (containers.Container, error) { created, err := r.client.Create(ctx, &amp;amp;containersapi.CreateContainerRequest{ Container: containerToProto(&amp;amp;container), }) ... } 直到调用GRPC，由服务端执行containerd.services.containers.v1.Containers服务的Create方法。
-https://github.com/containerd/containerd/blob/v1.6.0/api/services/containers/v1/containers.pb.go#L729
-func (c *containersClient) Create(ctx context.</description>
+func (c *Client) NewContainer(ctx context.Context, id string, opts ...NewContainerOpts) (Container, error) { ... r, err := c.ContainerService().Create(ctx, container) ... } https://github.</description>
     </item>
     
     <item>
