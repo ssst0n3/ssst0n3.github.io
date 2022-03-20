@@ -50,7 +50,7 @@ https://github.com/containerd/containerd/blob/v1.6.0/api/services/containers/v1/
 func (c *containersClient) Create(ctx context.">
 <meta itemprop="datePublished" content="2022-03-20T08:06:57+00:00" />
 <meta itemprop="dateModified" content="2022-03-20T08:06:57+00:00" />
-<meta itemprop="wordCount" content="318">
+<meta itemprop="wordCount" content="367">
 
 
 
@@ -236,18 +236,31 @@ func (c *containersClient) Create(ctx context."/>
     }); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
         <span style="color:#66d9ef">return</span> <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">resp</span>, <span style="color:#a6e22e">errdefs</span>.<span style="color:#a6e22e">ToGRPC</span>(<span style="color:#a6e22e">err</span>)
     }
-    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">l</span>.<span style="color:#a6e22e">publisher</span>.<span style="color:#a6e22e">Publish</span>(<span style="color:#a6e22e">ctx</span>, <span style="color:#e6db74">&#34;/containers/create&#34;</span>, <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">eventstypes</span>.<span style="color:#a6e22e">ContainerCreate</span>{
-        <span style="color:#a6e22e">ID</span>:    <span style="color:#a6e22e">resp</span>.<span style="color:#a6e22e">Container</span>.<span style="color:#a6e22e">ID</span>,
-        <span style="color:#a6e22e">Image</span>: <span style="color:#a6e22e">resp</span>.<span style="color:#a6e22e">Container</span>.<span style="color:#a6e22e">Image</span>,
-        <span style="color:#a6e22e">Runtime</span>: <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">eventstypes</span>.<span style="color:#a6e22e">ContainerCreate_Runtime</span>{
-            <span style="color:#a6e22e">Name</span>:    <span style="color:#a6e22e">resp</span>.<span style="color:#a6e22e">Container</span>.<span style="color:#a6e22e">Runtime</span>.<span style="color:#a6e22e">Name</span>,
-            <span style="color:#a6e22e">Options</span>: <span style="color:#a6e22e">resp</span>.<span style="color:#a6e22e">Container</span>.<span style="color:#a6e22e">Runtime</span>.<span style="color:#a6e22e">Options</span>,
-        },
+    <span style="color:#f92672">...</span>
+    <span style="color:#66d9ef">return</span> <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">resp</span>, <span style="color:#66d9ef">nil</span>
+}
+</code></pre></div><p>containerStore.Create将container数据写入到etcd中。</p>
+<p><a href="https://github.com/containerd/containerd/blob/v1.6.0/metadata/containers.go#L117">https://github.com/containerd/containerd/blob/v1.6.0/metadata/containers.go#L117</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">s</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">containerStore</span>) <span style="color:#a6e22e">Create</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">container</span> <span style="color:#a6e22e">containers</span>.<span style="color:#a6e22e">Container</span>) (<span style="color:#a6e22e">containers</span>.<span style="color:#a6e22e">Container</span>, <span style="color:#66d9ef">error</span>) {
+    <span style="color:#f92672">...</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">update</span>(<span style="color:#a6e22e">ctx</span>, <span style="color:#a6e22e">s</span>.<span style="color:#a6e22e">db</span>, <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">tx</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">bolt</span>.<span style="color:#a6e22e">Tx</span>) <span style="color:#66d9ef">error</span> {
+        <span style="color:#a6e22e">bkt</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">createContainersBucket</span>(<span style="color:#a6e22e">tx</span>, <span style="color:#a6e22e">namespace</span>)
+        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+            <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">err</span>
+        }
+
+        <span style="color:#a6e22e">cbkt</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">bkt</span>.<span style="color:#a6e22e">CreateBucket</span>([]byte(<span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">ID</span>))
+        <span style="color:#f92672">...</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">writeContainer</span>(<span style="color:#a6e22e">cbkt</span>, <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">container</span>); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+            <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Errorf</span>(<span style="color:#e6db74">&#34;failed to write container %q: %w&#34;</span>, <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">ID</span>, <span style="color:#a6e22e">err</span>)
+        }
+
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>
     }); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
-        <span style="color:#66d9ef">return</span> <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">resp</span>, <span style="color:#a6e22e">err</span>
+        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">containers</span>.<span style="color:#a6e22e">Container</span>{}, <span style="color:#a6e22e">err</span>
     }
 
-    <span style="color:#66d9ef">return</span> <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">resp</span>, <span style="color:#66d9ef">nil</span>
+    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">container</span>, <span style="color:#66d9ef">nil</span>
 }
 </code></pre></div>
             </div>
