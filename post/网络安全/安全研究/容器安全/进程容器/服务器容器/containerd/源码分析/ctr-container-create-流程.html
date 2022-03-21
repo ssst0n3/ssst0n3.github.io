@@ -244,7 +244,7 @@ func (c *Client) NewContainer(ctx context.Context, id string, opts ...NewContain
     <span style="color:#f92672">...</span>
     <span style="color:#66d9ef">return</span> <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">resp</span>, <span style="color:#66d9ef">nil</span>
 }
-</code></pre></div><p>containerStore.Create将container数据写入到etcd中。</p>
+</code></pre></div><p>containerStore.Create将container数据写入到数据库中。</p>
 <p><a href="https://github.com/containerd/containerd/blob/v1.6.0/metadata/containers.go#L117">https://github.com/containerd/containerd/blob/v1.6.0/metadata/containers.go#L117</a></p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">s</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">containerStore</span>) <span style="color:#a6e22e">Create</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">container</span> <span style="color:#a6e22e">containers</span>.<span style="color:#a6e22e">Container</span>) (<span style="color:#a6e22e">containers</span>.<span style="color:#a6e22e">Container</span>, <span style="color:#66d9ef">error</span>) {
     <span style="color:#f92672">...</span>
