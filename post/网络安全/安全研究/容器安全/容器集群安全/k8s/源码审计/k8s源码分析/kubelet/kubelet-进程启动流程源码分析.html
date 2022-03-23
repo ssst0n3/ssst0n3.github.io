@@ -7,7 +7,13 @@
 <meta name="author"
     content="">
 <meta name="description"
-    content="tags: container,k8s,源码分析 kubelet 进程启动流程源码分析 // TODO" />
+    content="tags: container,k8s,源码分析 kubelet 进程启动流程源码分析 // TODO
+初始化 显而易见，入口就在cmd/kubelet/kubelet.go。
+k8s使用cobra库实现命令行cli, 执行命令时，执行过程定义在每个cobra.Command对象的Run函数。
+https://github.com/kubernetes/kubernetes/blob/v1.23.4/cmd/kubelet/kubelet.go#L40
+ 点击查看代码 package main import ( ... &amp;#34;github.com/spf13/cobra&amp;#34; &amp;#34;k8s.io/kubernetes/cmd/kubelet/app&amp;#34; ... ) func main() { command := app.NewKubeletCommand() ... code := run(command) ... } func run(command *cobra.Command) int { ... if err := command.Execute(); err != nil { ... }   cobra.Command的实例化中，大部分都在解析参数，不是本文要关注的，要分析启动流程，需要跟入Run()函数。
+https://github.com/kubernetes/kubernetes/blob/v1.23.4/cmd/kubelet/app/server.go#L301
+ 点击查看代码 func NewKubeletCommand() *cobra.Command { ... cmd := &amp;amp;cobra.Command{ Use: componentKubelet, ... Run: func(cmd *cobra." />
 <meta name="keywords" content="" />
 <meta name="robots" content="noodp" />
 <link rel="canonical" href="/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E5%AE%B9%E5%99%A8%E9%9B%86%E7%BE%A4%E5%AE%89%E5%85%A8/k8s/%E6%BA%90%E7%A0%81%E5%AE%A1%E8%AE%A1/k8s%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/kubelet/kubelet-%E8%BF%9B%E7%A8%8B%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90.html" />
@@ -37,17 +43,29 @@
 <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#252627">
 <link rel="shortcut icon" href="/favicon.ico">
 <meta name="theme-color" content="#252627"><meta itemprop="name" content="kubelet 进程启动流程源码分析">
-<meta itemprop="description" content="tags: container,k8s,源码分析 kubelet 进程启动流程源码分析 // TODO">
+<meta itemprop="description" content="tags: container,k8s,源码分析 kubelet 进程启动流程源码分析 // TODO
+初始化 显而易见，入口就在cmd/kubelet/kubelet.go。
+k8s使用cobra库实现命令行cli, 执行命令时，执行过程定义在每个cobra.Command对象的Run函数。
+https://github.com/kubernetes/kubernetes/blob/v1.23.4/cmd/kubelet/kubelet.go#L40
+ 点击查看代码 package main import ( ... &#34;github.com/spf13/cobra&#34; &#34;k8s.io/kubernetes/cmd/kubelet/app&#34; ... ) func main() { command := app.NewKubeletCommand() ... code := run(command) ... } func run(command *cobra.Command) int { ... if err := command.Execute(); err != nil { ... }   cobra.Command的实例化中，大部分都在解析参数，不是本文要关注的，要分析启动流程，需要跟入Run()函数。
+https://github.com/kubernetes/kubernetes/blob/v1.23.4/cmd/kubelet/app/server.go#L301
+ 点击查看代码 func NewKubeletCommand() *cobra.Command { ... cmd := &amp;cobra.Command{ Use: componentKubelet, ... Run: func(cmd *cobra.">
 <meta itemprop="datePublished" content="2021-12-25T02:32:21+00:00" />
 <meta itemprop="dateModified" content="2021-12-25T02:32:21+00:00" />
-<meta itemprop="wordCount" content="6">
+<meta itemprop="wordCount" content="846">
 
 
 
 <meta itemprop="keywords" content="" />
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="kubelet 进程启动流程源码分析"/>
-<meta name="twitter:description" content="tags: container,k8s,源码分析 kubelet 进程启动流程源码分析 // TODO"/>
+<meta name="twitter:description" content="tags: container,k8s,源码分析 kubelet 进程启动流程源码分析 // TODO
+初始化 显而易见，入口就在cmd/kubelet/kubelet.go。
+k8s使用cobra库实现命令行cli, 执行命令时，执行过程定义在每个cobra.Command对象的Run函数。
+https://github.com/kubernetes/kubernetes/blob/v1.23.4/cmd/kubelet/kubelet.go#L40
+ 点击查看代码 package main import ( ... &#34;github.com/spf13/cobra&#34; &#34;k8s.io/kubernetes/cmd/kubelet/app&#34; ... ) func main() { command := app.NewKubeletCommand() ... code := run(command) ... } func run(command *cobra.Command) int { ... if err := command.Execute(); err != nil { ... }   cobra.Command的实例化中，大部分都在解析参数，不是本文要关注的，要分析启动流程，需要跟入Run()函数。
+https://github.com/kubernetes/kubernetes/blob/v1.23.4/cmd/kubelet/app/server.go#L301
+ 点击查看代码 func NewKubeletCommand() *cobra.Command { ... cmd := &amp;cobra.Command{ Use: componentKubelet, ... Run: func(cmd *cobra."/>
 
 
 
@@ -122,6 +140,304 @@
 <h2 id="tags-containerk8s源码分析">tags: container,k8s,源码分析</h2>
 <h1 id="kubelet-进程启动流程源码分析">kubelet 进程启动流程源码分析</h1>
 <p><span style="color:red">// TODO</span></p>
+<h2 id="初始化">初始化</h2>
+<p>显而易见，入口就在cmd/kubelet/kubelet.go。</p>
+<p>k8s使用cobra库实现命令行cli, 执行命令时，执行过程定义在每个cobra.Command对象的Run函数。</p>
+<p><a href="https://github.com/kubernetes/kubernetes/blob/v1.23.4/cmd/kubelet/kubelet.go#L40">https://github.com/kubernetes/kubernetes/blob/v1.23.4/cmd/kubelet/kubelet.go#L40</a></p>
+<details>
+<summary>点击查看代码</summary>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#f92672">package</span> <span style="color:#a6e22e">main</span>
+
+<span style="color:#f92672">import</span> (
+    <span style="color:#f92672">...</span>
+    <span style="color:#e6db74">&#34;github.com/spf13/cobra&#34;</span>
+    <span style="color:#e6db74">&#34;k8s.io/kubernetes/cmd/kubelet/app&#34;</span>
+    <span style="color:#f92672">...</span>
+)
+
+<span style="color:#66d9ef">func</span> <span style="color:#a6e22e">main</span>() {
+    <span style="color:#a6e22e">command</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">app</span>.<span style="color:#a6e22e">NewKubeletCommand</span>()
+    <span style="color:#f92672">...</span>
+    <span style="color:#a6e22e">code</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">run</span>(<span style="color:#a6e22e">command</span>)
+    <span style="color:#f92672">...</span>
+}
+
+<span style="color:#66d9ef">func</span> <span style="color:#a6e22e">run</span>(<span style="color:#a6e22e">command</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">cobra</span>.<span style="color:#a6e22e">Command</span>) <span style="color:#66d9ef">int</span> {
+    <span style="color:#f92672">...</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">command</span>.<span style="color:#a6e22e">Execute</span>(); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+    <span style="color:#f92672">...</span>
+}
+</code></pre></div></details>
+<hr>
+<p>cobra.Command的实例化中，大部分都在解析参数，不是本文要关注的，要分析启动流程，需要跟入<code>Run()</code>函数。</p>
+<p><a href="https://github.com/kubernetes/kubernetes/blob/v1.23.4/cmd/kubelet/app/server.go#L301">https://github.com/kubernetes/kubernetes/blob/v1.23.4/cmd/kubelet/app/server.go#L301</a></p>
+<details>
+<summary>点击查看代码</summary>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">NewKubeletCommand</span>() <span style="color:#f92672">*</span><span style="color:#a6e22e">cobra</span>.<span style="color:#a6e22e">Command</span> {
+    <span style="color:#f92672">...</span>
+    <span style="color:#a6e22e">cmd</span> <span style="color:#f92672">:=</span> <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">cobra</span>.<span style="color:#a6e22e">Command</span>{
+        <span style="color:#a6e22e">Use</span>: <span style="color:#a6e22e">componentKubelet</span>,
+        <span style="color:#f92672">...</span>
+        <span style="color:#a6e22e">Run</span>: <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">cmd</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">cobra</span>.<span style="color:#a6e22e">Command</span>, <span style="color:#a6e22e">args</span> []<span style="color:#66d9ef">string</span>) {
+            <span style="color:#f92672">...</span>
+            <span style="color:#75715e">// run the kubelet
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">Run</span>(<span style="color:#a6e22e">ctx</span>, <span style="color:#a6e22e">kubeletServer</span>, <span style="color:#a6e22e">kubeletDeps</span>, <span style="color:#a6e22e">utilfeature</span>.<span style="color:#a6e22e">DefaultFeatureGate</span>); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+            <span style="color:#f92672">...</span>
+        },
+    }
+    <span style="color:#f92672">...</span>
+    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">cmd</span>
+}
+</code></pre></div></details>
+<hr>
+<p>又跟进了很久，跟到<code>createAndInitKubelet</code>函数，创建并初始化了kubelet对象。</p>
+<p><a href="https://github.com/kubernetes/kubernetes/blob/v1.23.4/cmd/kubelet/app/server.go#L301">https://github.com/kubernetes/kubernetes/blob/v1.23.4/cmd/kubelet/app/server.go#L301</a></p>
+<details>
+<summary>点击查看代码</summary>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">Run</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">s</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">options</span>.<span style="color:#a6e22e">KubeletServer</span>, <span style="color:#a6e22e">kubeDeps</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">kubelet</span>.<span style="color:#a6e22e">Dependencies</span>, <span style="color:#a6e22e">featureGate</span> <span style="color:#a6e22e">featuregate</span>.<span style="color:#a6e22e">FeatureGate</span>) <span style="color:#66d9ef">error</span> {
+    <span style="color:#f92672">...</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">run</span>(<span style="color:#a6e22e">ctx</span>, <span style="color:#a6e22e">s</span>, <span style="color:#a6e22e">kubeDeps</span>, <span style="color:#a6e22e">featureGate</span>); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+    <span style="color:#f92672">...</span>
+}
+
+<span style="color:#66d9ef">func</span> <span style="color:#a6e22e">run</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">s</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">options</span>.<span style="color:#a6e22e">KubeletServer</span>, <span style="color:#a6e22e">kubeDeps</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">kubelet</span>.<span style="color:#a6e22e">Dependencies</span>, <span style="color:#a6e22e">featureGate</span> <span style="color:#a6e22e">featuregate</span>.<span style="color:#a6e22e">FeatureGate</span>) (<span style="color:#a6e22e">err</span> <span style="color:#66d9ef">error</span>) {
+    <span style="color:#f92672">...</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">RunKubelet</span>(<span style="color:#a6e22e">s</span>, <span style="color:#a6e22e">kubeDeps</span>, <span style="color:#a6e22e">s</span>.<span style="color:#a6e22e">RunOnce</span>); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+    <span style="color:#f92672">...</span>
+}
+
+    
+<span style="color:#66d9ef">func</span> <span style="color:#a6e22e">RunKubelet</span>(<span style="color:#a6e22e">kubeServer</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">options</span>.<span style="color:#a6e22e">KubeletServer</span>, <span style="color:#a6e22e">kubeDeps</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">kubelet</span>.<span style="color:#a6e22e">Dependencies</span>, <span style="color:#a6e22e">runOnce</span> <span style="color:#66d9ef">bool</span>) <span style="color:#66d9ef">error</span> {
+    <span style="color:#f92672">...</span>
+    <span style="color:#a6e22e">k</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">createAndInitKubelet</span>(<span style="color:#f92672">&amp;</span><span style="color:#a6e22e">kubeServer</span>.<span style="color:#a6e22e">KubeletConfiguration</span>,
+        <span style="color:#a6e22e">kubeDeps</span>,
+        <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">kubeServer</span>.<span style="color:#a6e22e">ContainerRuntimeOptions</span>,
+        <span style="color:#a6e22e">kubeServer</span>.<span style="color:#a6e22e">ContainerRuntime</span>,
+        <span style="color:#f92672">...</span>
+    )
+    <span style="color:#f92672">...</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">runOnce</span> {
+        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">k</span>.<span style="color:#a6e22e">RunOnce</span>(<span style="color:#a6e22e">podCfg</span>.<span style="color:#a6e22e">Updates</span>()); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+            <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Errorf</span>(<span style="color:#e6db74">&#34;runonce failed: %w&#34;</span>, <span style="color:#a6e22e">err</span>)
+        }
+        <span style="color:#a6e22e">klog</span>.<span style="color:#a6e22e">InfoS</span>(<span style="color:#e6db74">&#34;Started kubelet as runonce&#34;</span>)
+    } <span style="color:#66d9ef">else</span> {
+        <span style="color:#a6e22e">startKubelet</span>(<span style="color:#a6e22e">k</span>, <span style="color:#a6e22e">podCfg</span>, <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">kubeServer</span>.<span style="color:#a6e22e">KubeletConfiguration</span>, <span style="color:#a6e22e">kubeDeps</span>, <span style="color:#a6e22e">kubeServer</span>.<span style="color:#a6e22e">EnableServer</span>)
+        <span style="color:#a6e22e">klog</span>.<span style="color:#a6e22e">InfoS</span>(<span style="color:#e6db74">&#34;Started kubelet&#34;</span>)
+    }
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>
+}
+</code></pre></div></details>
+<hr>
+<p>在创建和初始化kubelet时，对各成员进行了初始化。包括containerRuntime, imageManager, volumeManager等。</p>
+<p><a href="https://github.com/kubernetes/kubernetes/blob/v1.23.4/cmd/kubelet/app/server.go#L1286">https://github.com/kubernetes/kubernetes/blob/v1.23.4/cmd/kubelet/app/server.go#L1286</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">createAndInitKubelet</span>(<span style="color:#a6e22e">kubeCfg</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">kubeletconfiginternal</span>.<span style="color:#a6e22e">KubeletConfiguration</span>,
+    <span style="color:#a6e22e">kubeDeps</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">kubelet</span>.<span style="color:#a6e22e">Dependencies</span>,
+    <span style="color:#f92672">...</span>
+) (<span style="color:#a6e22e">k</span> <span style="color:#a6e22e">kubelet</span>.<span style="color:#a6e22e">Bootstrap</span>, <span style="color:#a6e22e">err</span> <span style="color:#66d9ef">error</span>) {
+    <span style="color:#a6e22e">k</span>, <span style="color:#a6e22e">err</span> = <span style="color:#a6e22e">kubelet</span>.<span style="color:#a6e22e">NewMainKubelet</span>(<span style="color:#a6e22e">kubeCfg</span>,
+        <span style="color:#a6e22e">kubeDeps</span>,
+        <span style="color:#a6e22e">crOptions</span>,
+        <span style="color:#a6e22e">containerRuntime</span>,
+        <span style="color:#f92672">...</span>
+    )
+    <span style="color:#f92672">...</span>
+    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">k</span>, <span style="color:#66d9ef">nil</span>
+}
+</code></pre></div><p><a href="https://github.com/kubernetes/kubernetes/blob/v1.23.4/pkg/kubelet/kubelet.go#L347">https://github.com/kubernetes/kubernetes/blob/v1.23.4/pkg/kubelet/kubelet.go#L347</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">NewMainKubelet</span>(<span style="color:#f92672">...</span>) (<span style="color:#f92672">*</span><span style="color:#a6e22e">Kubelet</span>, <span style="color:#66d9ef">error</span>) {
+    <span style="color:#f92672">...</span>
+    <span style="color:#a6e22e">klet</span>.<span style="color:#a6e22e">podWorkers</span> = <span style="color:#a6e22e">newPodWorkers</span>(<span style="color:#f92672">...</span>)
+    <span style="color:#a6e22e">runtime</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">kuberuntime</span>.<span style="color:#a6e22e">NewKubeGenericRuntimeManager</span>(<span style="color:#f92672">...</span>)
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>, <span style="color:#a6e22e">err</span>
+    }
+    <span style="color:#a6e22e">klet</span>.<span style="color:#a6e22e">containerRuntime</span> = <span style="color:#a6e22e">runtime</span>
+    <span style="color:#a6e22e">klet</span>.<span style="color:#a6e22e">streamingRuntime</span> = <span style="color:#a6e22e">runtime</span>
+    <span style="color:#a6e22e">klet</span>.<span style="color:#a6e22e">runner</span> = <span style="color:#a6e22e">runtime</span>
+    <span style="color:#f92672">...</span>
+    <span style="color:#a6e22e">klet</span>.<span style="color:#a6e22e">pleg</span> = <span style="color:#a6e22e">pleg</span>.<span style="color:#a6e22e">NewGenericPLEG</span>(<span style="color:#a6e22e">klet</span>.<span style="color:#a6e22e">containerRuntime</span>, <span style="color:#a6e22e">plegChannelCapacity</span>, <span style="color:#a6e22e">plegRelistPeriod</span>, <span style="color:#a6e22e">klet</span>.<span style="color:#a6e22e">podCache</span>, <span style="color:#a6e22e">clock</span>.<span style="color:#a6e22e">RealClock</span>{})
+    <span style="color:#f92672">...</span>
+    <span style="color:#a6e22e">klet</span>.<span style="color:#a6e22e">containerDeletor</span> = <span style="color:#a6e22e">newPodContainerDeletor</span>(<span style="color:#a6e22e">klet</span>.<span style="color:#a6e22e">containerRuntime</span>, <span style="color:#a6e22e">integer</span>.<span style="color:#a6e22e">IntMax</span>(<span style="color:#a6e22e">containerGCPolicy</span>.<span style="color:#a6e22e">MaxPerPodContainer</span>, <span style="color:#a6e22e">minDeadContainerInPod</span>))
+
+    <span style="color:#75715e">// setup imageManager
+</span><span style="color:#75715e"></span>    <span style="color:#a6e22e">imageManager</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">images</span>.<span style="color:#a6e22e">NewImageGCManager</span>(<span style="color:#a6e22e">klet</span>.<span style="color:#a6e22e">containerRuntime</span>, <span style="color:#a6e22e">klet</span>.<span style="color:#a6e22e">StatsProvider</span>, <span style="color:#a6e22e">kubeDeps</span>.<span style="color:#a6e22e">Recorder</span>, <span style="color:#a6e22e">nodeRef</span>, <span style="color:#a6e22e">imageGCPolicy</span>, <span style="color:#a6e22e">crOptions</span>.<span style="color:#a6e22e">PodSandboxImage</span>)
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>, <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Errorf</span>(<span style="color:#e6db74">&#34;failed to initialize image manager: %v&#34;</span>, <span style="color:#a6e22e">err</span>)
+    }
+    <span style="color:#a6e22e">klet</span>.<span style="color:#a6e22e">imageManager</span> = <span style="color:#a6e22e">imageManager</span>
+    <span style="color:#f92672">...</span>
+    <span style="color:#a6e22e">klet</span>.<span style="color:#a6e22e">probeManager</span> = <span style="color:#a6e22e">prober</span>.<span style="color:#a6e22e">NewManager</span>(<span style="color:#f92672">...</span>)
+    <span style="color:#a6e22e">tokenManager</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">token</span>.<span style="color:#a6e22e">NewManager</span>(<span style="color:#a6e22e">kubeDeps</span>.<span style="color:#a6e22e">KubeClient</span>)
+    <span style="color:#f92672">...</span>
+    <span style="color:#a6e22e">klet</span>.<span style="color:#a6e22e">volumePluginMgr</span>, <span style="color:#a6e22e">err</span> =
+        <span style="color:#a6e22e">NewInitializedVolumePluginMgr</span>(<span style="color:#a6e22e">klet</span>, <span style="color:#a6e22e">secretManager</span>, <span style="color:#a6e22e">configMapManager</span>, <span style="color:#a6e22e">tokenManager</span>, <span style="color:#a6e22e">kubeDeps</span>.<span style="color:#a6e22e">VolumePlugins</span>, <span style="color:#a6e22e">kubeDeps</span>.<span style="color:#a6e22e">DynamicPluginProber</span>)
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>, <span style="color:#a6e22e">err</span>
+    }
+    <span style="color:#a6e22e">klet</span>.<span style="color:#a6e22e">pluginManager</span> = <span style="color:#a6e22e">pluginmanager</span>.<span style="color:#a6e22e">NewPluginManager</span>(
+        <span style="color:#a6e22e">klet</span>.<span style="color:#a6e22e">getPluginsRegistrationDir</span>(), <span style="color:#75715e">/* sockDir */</span>
+        <span style="color:#a6e22e">kubeDeps</span>.<span style="color:#a6e22e">Recorder</span>,
+    )
+    <span style="color:#f92672">...</span>
+    <span style="color:#a6e22e">klet</span>.<span style="color:#a6e22e">volumeManager</span> = <span style="color:#a6e22e">volumemanager</span>.<span style="color:#a6e22e">NewVolumeManager</span>(<span style="color:#f92672">...</span>)
+    <span style="color:#f92672">...</span>
+    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">klet</span>, <span style="color:#66d9ef">nil</span>
+}
+</code></pre></div><hr>
+<p>kubelet对象初始化完成后，调用<code>startKubelet</code>启动kubelet服务。</p>
+<p><a href="https://github.com/kubernetes/kubernetes/blob/v1.23.4/cmd/kubelet/app/server.go#L1230">https://github.com/kubernetes/kubernetes/blob/v1.23.4/cmd/kubelet/app/server.go#L1230</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">RunKubelet</span>(<span style="color:#a6e22e">kubeServer</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">options</span>.<span style="color:#a6e22e">KubeletServer</span>, <span style="color:#a6e22e">kubeDeps</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">kubelet</span>.<span style="color:#a6e22e">Dependencies</span>, <span style="color:#a6e22e">runOnce</span> <span style="color:#66d9ef">bool</span>) <span style="color:#66d9ef">error</span> {
+    <span style="color:#f92672">...</span>
+    <span style="color:#a6e22e">k</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">createAndInitKubelet</span>(<span style="color:#f92672">&amp;</span><span style="color:#a6e22e">kubeServer</span>.<span style="color:#a6e22e">KubeletConfiguration</span>,
+    <span style="color:#f92672">...</span>
+    <span style="color:#75715e">// process pods and exit.
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">runOnce</span> {
+        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">k</span>.<span style="color:#a6e22e">RunOnce</span>(<span style="color:#a6e22e">podCfg</span>.<span style="color:#a6e22e">Updates</span>()); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+            <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Errorf</span>(<span style="color:#e6db74">&#34;runonce failed: %w&#34;</span>, <span style="color:#a6e22e">err</span>)
+        }
+        <span style="color:#a6e22e">klog</span>.<span style="color:#a6e22e">InfoS</span>(<span style="color:#e6db74">&#34;Started kubelet as runonce&#34;</span>)
+    } <span style="color:#66d9ef">else</span> {
+        <span style="color:#a6e22e">startKubelet</span>(<span style="color:#a6e22e">k</span>, <span style="color:#a6e22e">podCfg</span>, <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">kubeServer</span>.<span style="color:#a6e22e">KubeletConfiguration</span>, <span style="color:#a6e22e">kubeDeps</span>, <span style="color:#a6e22e">kubeServer</span>.<span style="color:#a6e22e">EnableServer</span>)
+        <span style="color:#a6e22e">klog</span>.<span style="color:#a6e22e">InfoS</span>(<span style="color:#e6db74">&#34;Started kubelet&#34;</span>)
+    }
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>
+}
+</code></pre></div><details><summary>点击展开代码</summary>
+<p><a href="https://github.com/kubernetes/kubernetes/blob/v1.23.4/pkg/kubelet/kubelet.go#L1456">https://github.com/kubernetes/kubernetes/blob/v1.23.4/pkg/kubelet/kubelet.go#L1456</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">startKubelet</span>(<span style="color:#a6e22e">k</span> <span style="color:#a6e22e">kubelet</span>.<span style="color:#a6e22e">Bootstrap</span>, <span style="color:#a6e22e">podCfg</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">config</span>.<span style="color:#a6e22e">PodConfig</span>, <span style="color:#a6e22e">kubeCfg</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">kubeletconfiginternal</span>.<span style="color:#a6e22e">KubeletConfiguration</span>, <span style="color:#a6e22e">kubeDeps</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">kubelet</span>.<span style="color:#a6e22e">Dependencies</span>, <span style="color:#a6e22e">enableServer</span> <span style="color:#66d9ef">bool</span>) {
+	<span style="color:#75715e">// start the kubelet
+</span><span style="color:#75715e"></span>	<span style="color:#66d9ef">go</span> <span style="color:#a6e22e">k</span>.<span style="color:#a6e22e">Run</span>(<span style="color:#a6e22e">podCfg</span>.<span style="color:#a6e22e">Updates</span>())
+
+	<span style="color:#75715e">// start the kubelet server
+</span><span style="color:#75715e"></span>	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">enableServer</span> {
+		<span style="color:#66d9ef">go</span> <span style="color:#a6e22e">k</span>.<span style="color:#a6e22e">ListenAndServe</span>(<span style="color:#a6e22e">kubeCfg</span>, <span style="color:#a6e22e">kubeDeps</span>.<span style="color:#a6e22e">TLSOptions</span>, <span style="color:#a6e22e">kubeDeps</span>.<span style="color:#a6e22e">Auth</span>)
+	}
+	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">kubeCfg</span>.<span style="color:#a6e22e">ReadOnlyPort</span> &gt; <span style="color:#ae81ff">0</span> {
+		<span style="color:#66d9ef">go</span> <span style="color:#a6e22e">k</span>.<span style="color:#a6e22e">ListenAndServeReadOnly</span>(<span style="color:#a6e22e">netutils</span>.<span style="color:#a6e22e">ParseIPSloppy</span>(<span style="color:#a6e22e">kubeCfg</span>.<span style="color:#a6e22e">Address</span>), uint(<span style="color:#a6e22e">kubeCfg</span>.<span style="color:#a6e22e">ReadOnlyPort</span>))
+	}
+	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">utilfeature</span>.<span style="color:#a6e22e">DefaultFeatureGate</span>.<span style="color:#a6e22e">Enabled</span>(<span style="color:#a6e22e">features</span>.<span style="color:#a6e22e">KubeletPodResources</span>) {
+		<span style="color:#66d9ef">go</span> <span style="color:#a6e22e">k</span>.<span style="color:#a6e22e">ListenAndServePodResources</span>()
+	}
+}
+</code></pre></div></details>
+<hr>
+<p>在启动kubelet服务过程中，具体启动了volumeManager,runtimeClassManager等服务，然后开启了<code>syncLoop</code>流程。</p>
+<p><a href="https://github.com/kubernetes/kubernetes/blob/v1.23.4/pkg/kubelet/kubelet.go#L1456">https://github.com/kubernetes/kubernetes/blob/v1.23.4/pkg/kubelet/kubelet.go#L1456</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">kl</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Kubelet</span>) <span style="color:#a6e22e">Run</span>(<span style="color:#a6e22e">updates</span> <span style="color:#f92672">&lt;-</span><span style="color:#66d9ef">chan</span> <span style="color:#a6e22e">kubetypes</span>.<span style="color:#a6e22e">PodUpdate</span>) {
+    <span style="color:#f92672">...</span>
+    <span style="color:#75715e">// Start the cloud provider sync manager
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">kl</span>.<span style="color:#a6e22e">cloudResourceSyncManager</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+        <span style="color:#66d9ef">go</span> <span style="color:#a6e22e">kl</span>.<span style="color:#a6e22e">cloudResourceSyncManager</span>.<span style="color:#a6e22e">Run</span>(<span style="color:#a6e22e">wait</span>.<span style="color:#a6e22e">NeverStop</span>)
+    }
+    <span style="color:#f92672">...</span>
+    <span style="color:#75715e">// Start volume manager
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">go</span> <span style="color:#a6e22e">kl</span>.<span style="color:#a6e22e">volumeManager</span>.<span style="color:#a6e22e">Run</span>(<span style="color:#a6e22e">kl</span>.<span style="color:#a6e22e">sourcesReady</span>, <span style="color:#a6e22e">wait</span>.<span style="color:#a6e22e">NeverStop</span>)
+    <span style="color:#f92672">...</span>
+    <span style="color:#75715e">// Start component sync loops.
+</span><span style="color:#75715e"></span>    <span style="color:#a6e22e">kl</span>.<span style="color:#a6e22e">statusManager</span>.<span style="color:#a6e22e">Start</span>()
+
+    <span style="color:#75715e">// Start syncing RuntimeClasses if enabled.
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">kl</span>.<span style="color:#a6e22e">runtimeClassManager</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+        <span style="color:#a6e22e">kl</span>.<span style="color:#a6e22e">runtimeClassManager</span>.<span style="color:#a6e22e">Start</span>(<span style="color:#a6e22e">wait</span>.<span style="color:#a6e22e">NeverStop</span>)
+    }
+
+    <span style="color:#75715e">// Start the pod lifecycle event generator.
+</span><span style="color:#75715e"></span>    <span style="color:#a6e22e">kl</span>.<span style="color:#a6e22e">pleg</span>.<span style="color:#a6e22e">Start</span>()
+    <span style="color:#a6e22e">kl</span>.<span style="color:#a6e22e">syncLoop</span>(<span style="color:#a6e22e">updates</span>, <span style="color:#a6e22e">kl</span>)
+}
+</code></pre></div><hr>
+<h2 id="syncloop">syncLoop</h2>
+<p>reconciler是k8s最重要的设计模式之一，pod的生命周期中的所有操作都是由状态驱动的，reconciler会获取理想状态和现实状态，比较两者间的区别，当有新的状态时，reconciler会对pod执行修改或删除等操作，而syncLoop就是reconciler的一种体现。</p>
+<p>syncLoop是处理变化的主循环。它观察来自三个通道（文件、apiserver和http）的变化，对于看到的任何新的变化，将在期望状态和运行状态之间进行同步。如果没有看到配置的变化，将每隔同步频率秒同步最后已知的期望状态。</p>
+<p><a href="https://github.com/kubernetes/kubernetes/blob/v1.23.4/pkg/kubelet/kubelet.go#L2011">https://github.com/kubernetes/kubernetes/blob/v1.23.4/pkg/kubelet/kubelet.go#L2011</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">kl</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Kubelet</span>) <span style="color:#a6e22e">syncLoop</span>(<span style="color:#a6e22e">updates</span> <span style="color:#f92672">&lt;-</span><span style="color:#66d9ef">chan</span> <span style="color:#a6e22e">kubetypes</span>.<span style="color:#a6e22e">PodUpdate</span>, <span style="color:#a6e22e">handler</span> <span style="color:#a6e22e">SyncHandler</span>) {
+    <span style="color:#f92672">...</span>
+    <span style="color:#66d9ef">for</span> {
+        <span style="color:#f92672">...</span>
+        <span style="color:#66d9ef">if</span> !<span style="color:#a6e22e">kl</span>.<span style="color:#a6e22e">syncLoopIteration</span>(<span style="color:#a6e22e">updates</span>, <span style="color:#a6e22e">handler</span>, <span style="color:#a6e22e">syncTicker</span>.<span style="color:#a6e22e">C</span>, <span style="color:#a6e22e">housekeepingTicker</span>.<span style="color:#a6e22e">C</span>, <span style="color:#a6e22e">plegCh</span>) {
+            <span style="color:#66d9ef">break</span>
+        }
+        <span style="color:#f92672">...</span>
+    }
+}
+</code></pre></div><hr>
+<p>当观察到任何变化时，将调用handler对应的方法，一些是同步状态变化，一些是真正处理状态变化。这里的handler即上文中初始化的kubelet对象。</p>
+<p><a href="https://github.com/kubernetes/kubernetes/blob/v1.23.4/pkg/kubelet/kubelet.go#L2050">https://github.com/kubernetes/kubernetes/blob/v1.23.4/pkg/kubelet/kubelet.go#L2050</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">kl</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Kubelet</span>) <span style="color:#a6e22e">syncLoopIteration</span>(<span style="color:#a6e22e">configCh</span> <span style="color:#f92672">&lt;-</span><span style="color:#66d9ef">chan</span> <span style="color:#a6e22e">kubetypes</span>.<span style="color:#a6e22e">PodUpdate</span>, <span style="color:#a6e22e">handler</span> <span style="color:#a6e22e">SyncHandler</span>,
+    <span style="color:#a6e22e">syncCh</span> <span style="color:#f92672">&lt;-</span><span style="color:#66d9ef">chan</span> <span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Time</span>, <span style="color:#a6e22e">housekeepingCh</span> <span style="color:#f92672">&lt;-</span><span style="color:#66d9ef">chan</span> <span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Time</span>, <span style="color:#a6e22e">plegCh</span> <span style="color:#f92672">&lt;-</span><span style="color:#66d9ef">chan</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">pleg</span>.<span style="color:#a6e22e">PodLifecycleEvent</span>) <span style="color:#66d9ef">bool</span> {
+    <span style="color:#66d9ef">select</span> {
+    <span style="color:#66d9ef">case</span> <span style="color:#a6e22e">u</span>, <span style="color:#a6e22e">open</span> <span style="color:#f92672">:=</span> <span style="color:#f92672">&lt;-</span><span style="color:#a6e22e">configCh</span>:
+        <span style="color:#75715e">// Update from a config source; dispatch it to the right handler
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">// callback.
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> !<span style="color:#a6e22e">open</span> {
+            <span style="color:#a6e22e">klog</span>.<span style="color:#a6e22e">ErrorS</span>(<span style="color:#66d9ef">nil</span>, <span style="color:#e6db74">&#34;Update channel is closed, exiting the sync loop&#34;</span>)
+            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span>
+        }
+
+        <span style="color:#66d9ef">switch</span> <span style="color:#a6e22e">u</span>.<span style="color:#a6e22e">Op</span> {
+        <span style="color:#66d9ef">case</span> <span style="color:#a6e22e">kubetypes</span>.<span style="color:#a6e22e">ADD</span>:
+            <span style="color:#a6e22e">klog</span>.<span style="color:#a6e22e">V</span>(<span style="color:#ae81ff">2</span>).<span style="color:#a6e22e">InfoS</span>(<span style="color:#e6db74">&#34;SyncLoop ADD&#34;</span>, <span style="color:#e6db74">&#34;source&#34;</span>, <span style="color:#a6e22e">u</span>.<span style="color:#a6e22e">Source</span>, <span style="color:#e6db74">&#34;pods&#34;</span>, <span style="color:#a6e22e">klog</span>.<span style="color:#a6e22e">KObjs</span>(<span style="color:#a6e22e">u</span>.<span style="color:#a6e22e">Pods</span>))
+            <span style="color:#75715e">// After restarting, kubelet will get all existing pods through
+</span><span style="color:#75715e"></span>            <span style="color:#75715e">// ADD as if they are new pods. These pods will then go through the
+</span><span style="color:#75715e"></span>            <span style="color:#75715e">// admission process and *may* be rejected. This can be resolved
+</span><span style="color:#75715e"></span>            <span style="color:#75715e">// once we have checkpointing.
+</span><span style="color:#75715e"></span>            <span style="color:#a6e22e">handler</span>.<span style="color:#a6e22e">HandlePodAdditions</span>(<span style="color:#a6e22e">u</span>.<span style="color:#a6e22e">Pods</span>)
+        <span style="color:#66d9ef">case</span> <span style="color:#a6e22e">kubetypes</span>.<span style="color:#a6e22e">UPDATE</span>:
+            <span style="color:#a6e22e">klog</span>.<span style="color:#a6e22e">V</span>(<span style="color:#ae81ff">2</span>).<span style="color:#a6e22e">InfoS</span>(<span style="color:#e6db74">&#34;SyncLoop UPDATE&#34;</span>, <span style="color:#e6db74">&#34;source&#34;</span>, <span style="color:#a6e22e">u</span>.<span style="color:#a6e22e">Source</span>, <span style="color:#e6db74">&#34;pods&#34;</span>, <span style="color:#a6e22e">klog</span>.<span style="color:#a6e22e">KObjs</span>(<span style="color:#a6e22e">u</span>.<span style="color:#a6e22e">Pods</span>))
+            <span style="color:#a6e22e">handler</span>.<span style="color:#a6e22e">HandlePodUpdates</span>(<span style="color:#a6e22e">u</span>.<span style="color:#a6e22e">Pods</span>)
+        <span style="color:#66d9ef">case</span> <span style="color:#a6e22e">kubetypes</span>.<span style="color:#a6e22e">REMOVE</span>:
+            <span style="color:#a6e22e">klog</span>.<span style="color:#a6e22e">V</span>(<span style="color:#ae81ff">2</span>).<span style="color:#a6e22e">InfoS</span>(<span style="color:#e6db74">&#34;SyncLoop REMOVE&#34;</span>, <span style="color:#e6db74">&#34;source&#34;</span>, <span style="color:#a6e22e">u</span>.<span style="color:#a6e22e">Source</span>, <span style="color:#e6db74">&#34;pods&#34;</span>, <span style="color:#a6e22e">klog</span>.<span style="color:#a6e22e">KObjs</span>(<span style="color:#a6e22e">u</span>.<span style="color:#a6e22e">Pods</span>))
+            <span style="color:#a6e22e">handler</span>.<span style="color:#a6e22e">HandlePodRemoves</span>(<span style="color:#a6e22e">u</span>.<span style="color:#a6e22e">Pods</span>)
+        <span style="color:#66d9ef">case</span> <span style="color:#a6e22e">kubetypes</span>.<span style="color:#a6e22e">RECONCILE</span>:
+            <span style="color:#a6e22e">klog</span>.<span style="color:#a6e22e">V</span>(<span style="color:#ae81ff">4</span>).<span style="color:#a6e22e">InfoS</span>(<span style="color:#e6db74">&#34;SyncLoop RECONCILE&#34;</span>, <span style="color:#e6db74">&#34;source&#34;</span>, <span style="color:#a6e22e">u</span>.<span style="color:#a6e22e">Source</span>, <span style="color:#e6db74">&#34;pods&#34;</span>, <span style="color:#a6e22e">klog</span>.<span style="color:#a6e22e">KObjs</span>(<span style="color:#a6e22e">u</span>.<span style="color:#a6e22e">Pods</span>))
+            <span style="color:#a6e22e">handler</span>.<span style="color:#a6e22e">HandlePodReconcile</span>(<span style="color:#a6e22e">u</span>.<span style="color:#a6e22e">Pods</span>)
+        <span style="color:#66d9ef">case</span> <span style="color:#a6e22e">kubetypes</span>.<span style="color:#a6e22e">DELETE</span>:
+            <span style="color:#a6e22e">klog</span>.<span style="color:#a6e22e">V</span>(<span style="color:#ae81ff">2</span>).<span style="color:#a6e22e">InfoS</span>(<span style="color:#e6db74">&#34;SyncLoop DELETE&#34;</span>, <span style="color:#e6db74">&#34;source&#34;</span>, <span style="color:#a6e22e">u</span>.<span style="color:#a6e22e">Source</span>, <span style="color:#e6db74">&#34;pods&#34;</span>, <span style="color:#a6e22e">klog</span>.<span style="color:#a6e22e">KObjs</span>(<span style="color:#a6e22e">u</span>.<span style="color:#a6e22e">Pods</span>))
+            <span style="color:#75715e">// DELETE is treated as a UPDATE because of graceful deletion.
+</span><span style="color:#75715e"></span>            <span style="color:#a6e22e">handler</span>.<span style="color:#a6e22e">HandlePodUpdates</span>(<span style="color:#a6e22e">u</span>.<span style="color:#a6e22e">Pods</span>)
+        <span style="color:#66d9ef">case</span> <span style="color:#a6e22e">kubetypes</span>.<span style="color:#a6e22e">SET</span>:
+            <span style="color:#75715e">// TODO: Do we want to support this?
+</span><span style="color:#75715e"></span>            <span style="color:#a6e22e">klog</span>.<span style="color:#a6e22e">ErrorS</span>(<span style="color:#66d9ef">nil</span>, <span style="color:#e6db74">&#34;Kubelet does not support snapshot update&#34;</span>)
+        <span style="color:#66d9ef">default</span>:
+            <span style="color:#a6e22e">klog</span>.<span style="color:#a6e22e">ErrorS</span>(<span style="color:#66d9ef">nil</span>, <span style="color:#e6db74">&#34;Invalid operation type received&#34;</span>, <span style="color:#e6db74">&#34;operation&#34;</span>, <span style="color:#a6e22e">u</span>.<span style="color:#a6e22e">Op</span>)
+        }
+        <span style="color:#f92672">...</span>
+
+    <span style="color:#66d9ef">case</span> <span style="color:#a6e22e">e</span> <span style="color:#f92672">:=</span> <span style="color:#f92672">&lt;-</span><span style="color:#a6e22e">plegCh</span>:
+        <span style="color:#f92672">...</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">isSyncPodWorthy</span>(<span style="color:#a6e22e">e</span>) {
+            <span style="color:#75715e">// PLEG event for a pod; sync it.
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">pod</span>, <span style="color:#a6e22e">ok</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">kl</span>.<span style="color:#a6e22e">podManager</span>.<span style="color:#a6e22e">GetPodByUID</span>(<span style="color:#a6e22e">e</span>.<span style="color:#a6e22e">ID</span>); <span style="color:#a6e22e">ok</span> {
+                <span style="color:#a6e22e">klog</span>.<span style="color:#a6e22e">V</span>(<span style="color:#ae81ff">2</span>).<span style="color:#a6e22e">InfoS</span>(<span style="color:#e6db74">&#34;SyncLoop (PLEG): event for pod&#34;</span>, <span style="color:#e6db74">&#34;pod&#34;</span>, <span style="color:#a6e22e">klog</span>.<span style="color:#a6e22e">KObj</span>(<span style="color:#a6e22e">pod</span>), <span style="color:#e6db74">&#34;event&#34;</span>, <span style="color:#a6e22e">e</span>)
+                <span style="color:#a6e22e">handler</span>.<span style="color:#a6e22e">HandlePodSyncs</span>([]<span style="color:#f92672">*</span><span style="color:#a6e22e">v1</span>.<span style="color:#a6e22e">Pod</span>{<span style="color:#a6e22e">pod</span>})
+            } <span style="color:#66d9ef">else</span> {
+                <span style="color:#75715e">// If the pod no longer exists, ignore the event.
+</span><span style="color:#75715e"></span>                <span style="color:#a6e22e">klog</span>.<span style="color:#a6e22e">V</span>(<span style="color:#ae81ff">4</span>).<span style="color:#a6e22e">InfoS</span>(<span style="color:#e6db74">&#34;SyncLoop (PLEG): pod does not exist, ignore irrelevant event&#34;</span>, <span style="color:#e6db74">&#34;event&#34;</span>, <span style="color:#a6e22e">e</span>)
+            }
+        }
+        <span style="color:#f92672">...</span>
+    <span style="color:#66d9ef">case</span> <span style="color:#f92672">&lt;-</span><span style="color:#a6e22e">syncCh</span>:
+        <span style="color:#f92672">...</span>
+        <span style="color:#a6e22e">handler</span>.<span style="color:#a6e22e">HandlePodSyncs</span>(<span style="color:#a6e22e">podsToSync</span>)
+    <span style="color:#66d9ef">case</span> <span style="color:#a6e22e">update</span> <span style="color:#f92672">:=</span> <span style="color:#f92672">&lt;-</span><span style="color:#a6e22e">kl</span>.<span style="color:#a6e22e">livenessManager</span>.<span style="color:#a6e22e">Updates</span>():
+        <span style="color:#f92672">...</span>
+        <span style="color:#a6e22e">handleProbeSync</span>(<span style="color:#a6e22e">kl</span>, <span style="color:#a6e22e">update</span>, <span style="color:#a6e22e">handler</span>, <span style="color:#e6db74">&#34;liveness&#34;</span>, <span style="color:#e6db74">&#34;unhealthy&#34;</span>)
+        <span style="color:#f92672">...</span>
+    <span style="color:#66d9ef">case</span> <span style="color:#a6e22e">update</span> <span style="color:#f92672">:=</span> <span style="color:#f92672">&lt;-</span><span style="color:#a6e22e">kl</span>.<span style="color:#a6e22e">readinessManager</span>.<span style="color:#a6e22e">Updates</span>():
+        <span style="color:#f92672">...</span>
+        <span style="color:#a6e22e">handleProbeSync</span>(<span style="color:#a6e22e">kl</span>, <span style="color:#a6e22e">update</span>, <span style="color:#a6e22e">handler</span>, <span style="color:#e6db74">&#34;readiness&#34;</span>, <span style="color:#a6e22e">status</span>)
+    <span style="color:#66d9ef">case</span> <span style="color:#a6e22e">update</span> <span style="color:#f92672">:=</span> <span style="color:#f92672">&lt;-</span><span style="color:#a6e22e">kl</span>.<span style="color:#a6e22e">startupManager</span>.<span style="color:#a6e22e">Updates</span>():
+        <span style="color:#f92672">...</span>
+        <span style="color:#a6e22e">handleProbeSync</span>(<span style="color:#a6e22e">kl</span>, <span style="color:#a6e22e">update</span>, <span style="color:#a6e22e">handler</span>, <span style="color:#e6db74">&#34;startup&#34;</span>, <span style="color:#a6e22e">status</span>)
+    <span style="color:#66d9ef">case</span> <span style="color:#f92672">&lt;-</span><span style="color:#a6e22e">housekeepingCh</span>:
+        <span style="color:#f92672">...</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">handler</span>.<span style="color:#a6e22e">HandlePodCleanups</span>(); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+        <span style="color:#f92672">...</span>
+    }
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span>
+}
+</code></pre></div><hr>
 
             </div>
         </article>

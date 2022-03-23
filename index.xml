@@ -6,7 +6,16 @@
     <description>Recent content on welcome to st0n3&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 20 Mar 2022 08:06:57 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 23 Mar 2022 06:18:50 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>docker container create 流程 源码分析</title>
+      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E8%BF%9B%E7%A8%8B%E5%AE%B9%E5%99%A8/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%B9%E5%99%A8/docker/docker%E6%BA%90%E7%A0%81%E5%AE%A1%E8%AE%A1/docker%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/docker-container/docker-container-create-%E6%B5%81%E7%A8%8B-%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90.html</link>
+      <pubDate>Wed, 23 Mar 2022 06:18:50 +0000</pubDate>
+      
+      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E8%BF%9B%E7%A8%8B%E5%AE%B9%E5%99%A8/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%B9%E5%99%A8/docker/docker%E6%BA%90%E7%A0%81%E5%AE%A1%E8%AE%A1/docker%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/docker-container/docker-container-create-%E6%B5%81%E7%A8%8B-%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90.html</guid>
+      <description> tags: container,源码分析 docker container create 流程 源码分析 1. docker container create 简介 2. 源码入口位置 3. cli 4. api </description>
+    </item>
+    
     <item>
       <title>ctr container create 流程</title>
       <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E8%BF%9B%E7%A8%8B%E5%AE%B9%E5%99%A8/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%B9%E5%99%A8/containerd/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/ctr-container-create-%E6%B5%81%E7%A8%8B.html</link>
@@ -26,7 +35,13 @@ func (c *Client) NewContainer(ctx context.Context, id string, opts ...NewContain
       <pubDate>Sat, 25 Dec 2021 02:32:21 +0000</pubDate>
       
       <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E5%AE%B9%E5%99%A8%E9%9B%86%E7%BE%A4%E5%AE%89%E5%85%A8/k8s/%E6%BA%90%E7%A0%81%E5%AE%A1%E8%AE%A1/k8s%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/kubelet/kubelet-%E8%BF%9B%E7%A8%8B%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90.html</guid>
-      <description>tags: container,k8s,源码分析 kubelet 进程启动流程源码分析 // TODO</description>
+      <description>tags: container,k8s,源码分析 kubelet 进程启动流程源码分析 // TODO
+初始化 显而易见，入口就在cmd/kubelet/kubelet.go。
+k8s使用cobra库实现命令行cli, 执行命令时，执行过程定义在每个cobra.Command对象的Run函数。
+https://github.com/kubernetes/kubernetes/blob/v1.23.4/cmd/kubelet/kubelet.go#L40
+ 点击查看代码 package main import ( ... &amp;#34;github.com/spf13/cobra&amp;#34; &amp;#34;k8s.io/kubernetes/cmd/kubelet/app&amp;#34; ... ) func main() { command := app.NewKubeletCommand() ... code := run(command) ... } func run(command *cobra.Command) int { ... if err := command.Execute(); err != nil { ... }   cobra.Command的实例化中，大部分都在解析参数，不是本文要关注的，要分析启动流程，需要跟入Run()函数。
+https://github.com/kubernetes/kubernetes/blob/v1.23.4/cmd/kubelet/app/server.go#L301
+ 点击查看代码 func NewKubeletCommand() *cobra.Command { ... cmd := &amp;amp;cobra.Command{ Use: componentKubelet, ... Run: func(cmd *cobra.</description>
     </item>
     
     <item>
