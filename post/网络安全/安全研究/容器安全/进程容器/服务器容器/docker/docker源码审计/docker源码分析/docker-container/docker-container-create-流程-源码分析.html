@@ -7,7 +7,16 @@
 <meta name="author"
     content="">
 <meta name="description"
-    content=" tags: container,源码分析 docker container create 流程 源码分析 1. docker container create 简介 2. 源码入口位置 3. cli 4. api " />
+    content="tags: container,源码分析 docker container create 流程 源码分析 1. docker container create 简介 创建容器，通过docker container create命令调用，该流程在运行容器时也会执行。
+https://docs.docker.com/engine/reference/commandline/container_create/
+2. 源码入口位置 由cli接收docker container create命令参数,发送至docker engine api
+cli与engine api的代码入口分别位于:
+cli https://github.com/docker/cli/blob/v20.10.13/cli/command/container/create.go#L43
+engine https://github.com/moby/moby/blob/v20.10.13/api/server/router/container/container.go#L49
+3. cli docker使用 github.com/spf13/cobra 实现cli功能，NewCreateCommand函数中就定义了cobra.Command。该函数中用户输入的参数经解析后，会被传给runCreate函数。
+https://github.com/docker/cli/blob/v20.10.13/cli/command/container/create.go#L56
+func NewCreateCommand(dockerCli command.Cli) *cobra.Command { ... cmd := &amp;amp;cobra.Command{ ... RunE: func(cmd *cobra.Command, args []string) error { ... return runCreate(dockerCli, cmd.Flags(), &amp;amp;opts, copts) }, } ... return cmd } https://github.com/docker/cli/blob/v20.10.13/cli/command/container/create.go#L97
+func runCreate(dockerCli command.Cli, flags *pflag." />
 <meta name="keywords" content="" />
 <meta name="robots" content="noodp" />
 <link rel="canonical" href="/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E8%BF%9B%E7%A8%8B%E5%AE%B9%E5%99%A8/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%B9%E5%99%A8/docker/docker%E6%BA%90%E7%A0%81%E5%AE%A1%E8%AE%A1/docker%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/docker-container/docker-container-create-%E6%B5%81%E7%A8%8B-%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90.html" />
@@ -37,17 +46,35 @@
 <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#252627">
 <link rel="shortcut icon" href="/favicon.ico">
 <meta name="theme-color" content="#252627"><meta itemprop="name" content="docker container create 流程 源码分析">
-<meta itemprop="description" content=" tags: container,源码分析 docker container create 流程 源码分析 1. docker container create 简介 2. 源码入口位置 3. cli 4. api ">
+<meta itemprop="description" content="tags: container,源码分析 docker container create 流程 源码分析 1. docker container create 简介 创建容器，通过docker container create命令调用，该流程在运行容器时也会执行。
+https://docs.docker.com/engine/reference/commandline/container_create/
+2. 源码入口位置 由cli接收docker container create命令参数,发送至docker engine api
+cli与engine api的代码入口分别位于:
+cli https://github.com/docker/cli/blob/v20.10.13/cli/command/container/create.go#L43
+engine https://github.com/moby/moby/blob/v20.10.13/api/server/router/container/container.go#L49
+3. cli docker使用 github.com/spf13/cobra 实现cli功能，NewCreateCommand函数中就定义了cobra.Command。该函数中用户输入的参数经解析后，会被传给runCreate函数。
+https://github.com/docker/cli/blob/v20.10.13/cli/command/container/create.go#L56
+func NewCreateCommand(dockerCli command.Cli) *cobra.Command { ... cmd := &amp;cobra.Command{ ... RunE: func(cmd *cobra.Command, args []string) error { ... return runCreate(dockerCli, cmd.Flags(), &amp;opts, copts) }, } ... return cmd } https://github.com/docker/cli/blob/v20.10.13/cli/command/container/create.go#L97
+func runCreate(dockerCli command.Cli, flags *pflag.">
 <meta itemprop="datePublished" content="2022-03-23T06:18:50+00:00" />
 <meta itemprop="dateModified" content="2022-03-23T06:18:50+00:00" />
-<meta itemprop="wordCount" content="18">
+<meta itemprop="wordCount" content="720">
 
 
 
 <meta itemprop="keywords" content="" />
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="docker container create 流程 源码分析"/>
-<meta name="twitter:description" content=" tags: container,源码分析 docker container create 流程 源码分析 1. docker container create 简介 2. 源码入口位置 3. cli 4. api "/>
+<meta name="twitter:description" content="tags: container,源码分析 docker container create 流程 源码分析 1. docker container create 简介 创建容器，通过docker container create命令调用，该流程在运行容器时也会执行。
+https://docs.docker.com/engine/reference/commandline/container_create/
+2. 源码入口位置 由cli接收docker container create命令参数,发送至docker engine api
+cli与engine api的代码入口分别位于:
+cli https://github.com/docker/cli/blob/v20.10.13/cli/command/container/create.go#L43
+engine https://github.com/moby/moby/blob/v20.10.13/api/server/router/container/container.go#L49
+3. cli docker使用 github.com/spf13/cobra 实现cli功能，NewCreateCommand函数中就定义了cobra.Command。该函数中用户输入的参数经解析后，会被传给runCreate函数。
+https://github.com/docker/cli/blob/v20.10.13/cli/command/container/create.go#L56
+func NewCreateCommand(dockerCli command.Cli) *cobra.Command { ... cmd := &amp;cobra.Command{ ... RunE: func(cmd *cobra.Command, args []string) error { ... return runCreate(dockerCli, cmd.Flags(), &amp;opts, copts) }, } ... return cmd } https://github.com/docker/cli/blob/v20.10.13/cli/command/container/create.go#L97
+func runCreate(dockerCli command.Cli, flags *pflag."/>
 
 
 
@@ -122,9 +149,234 @@
 <h2 id="tags-container源码分析">tags: container,源码分析</h2>
 <h1 id="docker-container-create-流程-源码分析">docker container create 流程 源码分析</h1>
 <h2 id="1-docker-container-create-简介">1. docker container create 简介</h2>
+<p>创建容器，通过<code>docker container create</code>命令调用，该流程在运行容器时也会执行。</p>
+<p><a href="https://docs.docker.com/engine/reference/commandline/container_create/">https://docs.docker.com/engine/reference/commandline/container_create/</a></p>
 <h2 id="2-源码入口位置">2. 源码入口位置</h2>
+<p>由cli接收<code>docker container create</code>命令参数,发送至docker engine api</p>
+<p>cli与engine api的代码入口分别位于:</p>
+<p>cli
+<a href="https://github.com/docker/cli/blob/v20.10.13/cli/command/container/create.go#L43">https://github.com/docker/cli/blob/v20.10.13/cli/command/container/create.go#L43</a></p>
+<p>engine
+<a href="https://github.com/moby/moby/blob/v20.10.13/api/server/router/container/container.go#L49">https://github.com/moby/moby/blob/v20.10.13/api/server/router/container/container.go#L49</a></p>
 <h2 id="3-cli">3. cli</h2>
-<h2 id="4-api">4. api</h2>
+<p>docker使用 <code>github.com/spf13/cobra</code> 实现cli功能，NewCreateCommand函数中就定义了cobra.Command。该函数中用户输入的参数经解析后，会被传给<code>runCreate</code>函数。</p>
+<p><a href="https://github.com/docker/cli/blob/v20.10.13/cli/command/container/create.go#L56">https://github.com/docker/cli/blob/v20.10.13/cli/command/container/create.go#L56</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">NewCreateCommand</span>(<span style="color:#a6e22e">dockerCli</span> <span style="color:#a6e22e">command</span>.<span style="color:#a6e22e">Cli</span>) <span style="color:#f92672">*</span><span style="color:#a6e22e">cobra</span>.<span style="color:#a6e22e">Command</span> {
+    <span style="color:#f92672">...</span>
+    <span style="color:#a6e22e">cmd</span> <span style="color:#f92672">:=</span> <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">cobra</span>.<span style="color:#a6e22e">Command</span>{
+        <span style="color:#f92672">...</span>
+        <span style="color:#a6e22e">RunE</span>: <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">cmd</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">cobra</span>.<span style="color:#a6e22e">Command</span>, <span style="color:#a6e22e">args</span> []<span style="color:#66d9ef">string</span>) <span style="color:#66d9ef">error</span> {
+            <span style="color:#f92672">...</span>
+            <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">runCreate</span>(<span style="color:#a6e22e">dockerCli</span>, <span style="color:#a6e22e">cmd</span>.<span style="color:#a6e22e">Flags</span>(), <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">opts</span>, <span style="color:#a6e22e">copts</span>)
+        },
+    }
+    <span style="color:#f92672">...</span>
+    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">cmd</span>
+}
+</code></pre></div><p><a href="https://github.com/docker/cli/blob/v20.10.13/cli/command/container/create.go#L97">https://github.com/docker/cli/blob/v20.10.13/cli/command/container/create.go#L97</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">runCreate</span>(<span style="color:#a6e22e">dockerCli</span> <span style="color:#a6e22e">command</span>.<span style="color:#a6e22e">Cli</span>, <span style="color:#a6e22e">flags</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">pflag</span>.<span style="color:#a6e22e">FlagSet</span>, <span style="color:#a6e22e">options</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">createOptions</span>, <span style="color:#a6e22e">copts</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">containerOptions</span>) <span style="color:#66d9ef">error</span> {
+    <span style="color:#f92672">...</span>
+    <span style="color:#a6e22e">response</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">createContainer</span>(<span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Background</span>(), <span style="color:#a6e22e">dockerCli</span>, <span style="color:#a6e22e">containerConfig</span>, <span style="color:#a6e22e">options</span>)
+    <span style="color:#f92672">...</span>
+}
+</code></pre></div><hr>
+<p>跟踪调用链，来到<code>createContainer</code>函数，如果配置了pull镜像选项，或是第一次创建容器返回镜像不存在，则会先拉取镜像，再调用<code>dockerCli.Client().ContainerCreate</code>方法创建容器。</p>
+<p><a href="https://github.com/docker/cli/blob/v20.10.13/cli/command/container/create.go#L192">https://github.com/docker/cli/blob/v20.10.13/cli/command/container/create.go#L192</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">createContainer</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">dockerCli</span> <span style="color:#a6e22e">command</span>.<span style="color:#a6e22e">Cli</span>, <span style="color:#a6e22e">containerConfig</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">containerConfig</span>, <span style="color:#a6e22e">opts</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">createOptions</span>) (<span style="color:#f92672">*</span><span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">ContainerCreateCreatedBody</span>, <span style="color:#66d9ef">error</span>) {
+    <span style="color:#f92672">...</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">opts</span>.<span style="color:#a6e22e">pull</span> <span style="color:#f92672">==</span> <span style="color:#a6e22e">PullImageAlways</span> {
+        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">pullAndTagImage</span>(); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>, <span style="color:#a6e22e">err</span>
+        }
+    }
+
+    <span style="color:#a6e22e">response</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">dockerCli</span>.<span style="color:#a6e22e">Client</span>().<span style="color:#a6e22e">ContainerCreate</span>(<span style="color:#a6e22e">ctx</span>, <span style="color:#a6e22e">config</span>, <span style="color:#a6e22e">hostConfig</span>, <span style="color:#a6e22e">networkingConfig</span>, <span style="color:#a6e22e">platform</span>, <span style="color:#a6e22e">opts</span>.<span style="color:#a6e22e">name</span>)
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+        <span style="color:#75715e">// Pull image if it does not exist locally and we have the PullImageMissing option. Default behavior.
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">apiclient</span>.<span style="color:#a6e22e">IsErrNotFound</span>(<span style="color:#a6e22e">err</span>) <span style="color:#f92672">&amp;&amp;</span> <span style="color:#a6e22e">namedRef</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#a6e22e">opts</span>.<span style="color:#a6e22e">pull</span> <span style="color:#f92672">==</span> <span style="color:#a6e22e">PullImageMissing</span> {
+            <span style="color:#75715e">// we don&#39;t want to write to stdout anything apart from container.ID
+</span><span style="color:#75715e"></span>            <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Fprintf</span>(<span style="color:#a6e22e">stderr</span>, <span style="color:#e6db74">&#34;Unable to find image &#39;%s&#39; locally\n&#34;</span>, <span style="color:#a6e22e">reference</span>.<span style="color:#a6e22e">FamiliarString</span>(<span style="color:#a6e22e">namedRef</span>))
+            <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">pullAndTagImage</span>(); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+                <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>, <span style="color:#a6e22e">err</span>
+            }
+
+            <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">retryErr</span> <span style="color:#66d9ef">error</span>
+            <span style="color:#a6e22e">response</span>, <span style="color:#a6e22e">retryErr</span> = <span style="color:#a6e22e">dockerCli</span>.<span style="color:#a6e22e">Client</span>().<span style="color:#a6e22e">ContainerCreate</span>(<span style="color:#a6e22e">ctx</span>, <span style="color:#a6e22e">config</span>, <span style="color:#a6e22e">hostConfig</span>, <span style="color:#a6e22e">networkingConfig</span>, <span style="color:#a6e22e">platform</span>, <span style="color:#a6e22e">opts</span>.<span style="color:#a6e22e">name</span>)
+    <span style="color:#f92672">...</span>
+}
+</code></pre></div><hr>
+<p>接下来，在校验了一些版本信息后，调用api <code>/containers/create</code>，有docker engine具体实现容器创建。</p>
+<p><a href="https://github.com/docker/cli/blob/master/vendor/github.com/docker/docker/client/container_create.go#L54">https://github.com/docker/cli/blob/master/vendor/github.com/docker/docker/client/container_create.go#L54</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">cli</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Client</span>) <span style="color:#a6e22e">ContainerCreate</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">config</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">Config</span>, <span style="color:#a6e22e">hostConfig</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">HostConfig</span>, <span style="color:#a6e22e">networkingConfig</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">network</span>.<span style="color:#a6e22e">NetworkingConfig</span>, <span style="color:#a6e22e">platform</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">specs</span>.<span style="color:#a6e22e">Platform</span>, <span style="color:#a6e22e">containerName</span> <span style="color:#66d9ef">string</span>) (<span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">ContainerCreateCreatedBody</span>, <span style="color:#66d9ef">error</span>) {
+	<span style="color:#f92672">...</span>
+	<span style="color:#a6e22e">query</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">url</span>.<span style="color:#a6e22e">Values</span>{}
+	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">platform</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+		<span style="color:#a6e22e">query</span>.<span style="color:#a6e22e">Set</span>(<span style="color:#e6db74">&#34;platform&#34;</span>, <span style="color:#a6e22e">platforms</span>.<span style="color:#a6e22e">Format</span>(<span style="color:#f92672">*</span><span style="color:#a6e22e">platform</span>))
+	}
+
+	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">containerName</span> <span style="color:#f92672">!=</span> <span style="color:#e6db74">&#34;&#34;</span> {
+		<span style="color:#a6e22e">query</span>.<span style="color:#a6e22e">Set</span>(<span style="color:#e6db74">&#34;name&#34;</span>, <span style="color:#a6e22e">containerName</span>)
+	}
+
+	<span style="color:#a6e22e">body</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">configWrapper</span>{
+		<span style="color:#a6e22e">Config</span>:           <span style="color:#a6e22e">config</span>,
+		<span style="color:#a6e22e">HostConfig</span>:       <span style="color:#a6e22e">hostConfig</span>,
+		<span style="color:#a6e22e">NetworkingConfig</span>: <span style="color:#a6e22e">networkingConfig</span>,
+	}
+
+	<span style="color:#a6e22e">serverResp</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">cli</span>.<span style="color:#a6e22e">post</span>(<span style="color:#a6e22e">ctx</span>, <span style="color:#e6db74">&#34;/containers/create&#34;</span>, <span style="color:#a6e22e">query</span>, <span style="color:#a6e22e">body</span>, <span style="color:#66d9ef">nil</span>)
+	<span style="color:#66d9ef">defer</span> <span style="color:#a6e22e">ensureReaderClosed</span>(<span style="color:#a6e22e">serverResp</span>)
+	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+		<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">response</span>, <span style="color:#a6e22e">err</span>
+	}
+
+	<span style="color:#a6e22e">err</span> = <span style="color:#a6e22e">json</span>.<span style="color:#a6e22e">NewDecoder</span>(<span style="color:#a6e22e">serverResp</span>.<span style="color:#a6e22e">body</span>).<span style="color:#a6e22e">Decode</span>(<span style="color:#f92672">&amp;</span><span style="color:#a6e22e">response</span>)
+	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">response</span>, <span style="color:#a6e22e">err</span>
+}
+</code></pre></div><h2 id="4-api">4. api</h2>
+<p>api <code>/containers/create</code> 对应 <code>r.postContainersCreate</code>方法。</p>
+<p><a href="https://github.com/moby/moby/blob/v20.10.13/api/server/router/container/container.go#L49">https://github.com/moby/moby/blob/v20.10.13/api/server/router/container/container.go#L49</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">r</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">containerRouter</span>) <span style="color:#a6e22e">initRoutes</span>() {
+    <span style="color:#a6e22e">r</span>.<span style="color:#a6e22e">routes</span> = []<span style="color:#a6e22e">router</span>.<span style="color:#a6e22e">Route</span>{
+        <span style="color:#f92672">...</span>
+        <span style="color:#a6e22e">router</span>.<span style="color:#a6e22e">NewPostRoute</span>(<span style="color:#e6db74">&#34;/containers/create&#34;</span>, <span style="color:#a6e22e">r</span>.<span style="color:#a6e22e">postContainersCreate</span>),
+        <span style="color:#f92672">...</span>
+    }
+}
+</code></pre></div><p><a href="https://github.com/moby/moby/blob/v20.10.13/api/server/router/container/container_routes.go#L460">https://github.com/moby/moby/blob/v20.10.13/api/server/router/container/container_routes.go#L460</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">s</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">containerRouter</span>) <span style="color:#a6e22e">postContainersCreate</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">w</span> <span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">ResponseWriter</span>, <span style="color:#a6e22e">r</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">Request</span>, <span style="color:#a6e22e">vars</span> <span style="color:#66d9ef">map</span>[<span style="color:#66d9ef">string</span>]<span style="color:#66d9ef">string</span>) <span style="color:#66d9ef">error</span> {
+    <span style="color:#f92672">...</span>
+    <span style="color:#a6e22e">ccr</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">s</span>.<span style="color:#a6e22e">backend</span>.<span style="color:#a6e22e">ContainerCreate</span>(<span style="color:#a6e22e">types</span>.<span style="color:#a6e22e">ContainerCreateConfig</span>{
+        <span style="color:#a6e22e">Name</span>:             <span style="color:#a6e22e">name</span>,
+        <span style="color:#a6e22e">Config</span>:           <span style="color:#a6e22e">config</span>,
+        <span style="color:#a6e22e">HostConfig</span>:       <span style="color:#a6e22e">hostConfig</span>,
+        <span style="color:#a6e22e">NetworkingConfig</span>: <span style="color:#a6e22e">networkingConfig</span>,
+        <span style="color:#a6e22e">AdjustCPUShares</span>:  <span style="color:#a6e22e">adjustCPUShares</span>,
+        <span style="color:#a6e22e">Platform</span>:         <span style="color:#a6e22e">platform</span>,
+    })
+    <span style="color:#f92672">...</span>
+}
+</code></pre></div><hr>
+<p><code>s.backend</code> 初始化为 <code>Daemon</code> 对象，所以跟进<code>Daemon.ContainerCreate</code>。</p>
+<p><a href="https://github.com/moby/moby/blob/v20.10.13/daemon/create.go#L42">https://github.com/moby/moby/blob/v20.10.13/daemon/create.go#L42</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">daemon</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Daemon</span>) <span style="color:#a6e22e">ContainerCreate</span>(<span style="color:#a6e22e">params</span> <span style="color:#a6e22e">types</span>.<span style="color:#a6e22e">ContainerCreateConfig</span>) (<span style="color:#a6e22e">containertypes</span>.<span style="color:#a6e22e">ContainerCreateCreatedBody</span>, <span style="color:#66d9ef">error</span>) {
+    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">daemon</span>.<span style="color:#a6e22e">containerCreate</span>(<span style="color:#a6e22e">createOpts</span>{
+        <span style="color:#a6e22e">params</span>:                  <span style="color:#a6e22e">params</span>,
+        <span style="color:#a6e22e">managed</span>:                 <span style="color:#66d9ef">false</span>,
+        <span style="color:#a6e22e">ignoreImagesArgsEscaped</span>: <span style="color:#66d9ef">false</span>})
+}
+
+<span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">daemon</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Daemon</span>) <span style="color:#a6e22e">containerCreate</span>(<span style="color:#a6e22e">opts</span> <span style="color:#a6e22e">createOpts</span>) (<span style="color:#a6e22e">containertypes</span>.<span style="color:#a6e22e">ContainerCreateCreatedBody</span>, <span style="color:#66d9ef">error</span>) {
+    <span style="color:#f92672">...</span>
+    <span style="color:#a6e22e">ctr</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">daemon</span>.<span style="color:#a6e22e">create</span>(<span style="color:#a6e22e">opts</span>)
+    <span style="color:#f92672">...</span>
+}
+</code></pre></div><hr>
+<p>跳过一些配置封装和校验，来到<code>daemon.create</code>方法。该方法创建了容器，并为容器准备好了文件系统、创建了卷、把容器中已存在的文件复制到卷中等，这些操作将在下文中逐一分析。</p>
+<hr>
+<p>创建容器，如果遇到错误在函数结束前清理容器；这里创建的容器实际只是创建了一个<code>github.com/docker/docker/container.Container</code>类型的实例。</p>
+<p><a href="https://github.com/moby/moby/blob/v20.10.13/daemon/create.go#L174-L183">https://github.com/moby/moby/blob/v20.10.13/daemon/create.go#L174-L183</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">daemon</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Daemon</span>) <span style="color:#a6e22e">create</span>(<span style="color:#a6e22e">opts</span> <span style="color:#a6e22e">createOpts</span>) (<span style="color:#a6e22e">retC</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">Container</span>, <span style="color:#a6e22e">retErr</span> <span style="color:#66d9ef">error</span>) {
+    <span style="color:#f92672">...</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">ctr</span>, <span style="color:#a6e22e">err</span> = <span style="color:#a6e22e">daemon</span>.<span style="color:#a6e22e">newContainer</span>(<span style="color:#a6e22e">opts</span>.<span style="color:#a6e22e">params</span>.<span style="color:#a6e22e">Name</span>, <span style="color:#a6e22e">os</span>, <span style="color:#a6e22e">opts</span>.<span style="color:#a6e22e">params</span>.<span style="color:#a6e22e">Config</span>, <span style="color:#a6e22e">opts</span>.<span style="color:#a6e22e">params</span>.<span style="color:#a6e22e">HostConfig</span>, <span style="color:#a6e22e">imgID</span>, <span style="color:#a6e22e">opts</span>.<span style="color:#a6e22e">managed</span>); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>, <span style="color:#a6e22e">err</span>
+    }
+    <span style="color:#66d9ef">defer</span> <span style="color:#66d9ef">func</span>() {
+        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">retErr</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+            <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">daemon</span>.<span style="color:#a6e22e">cleanupContainer</span>(<span style="color:#a6e22e">ctr</span>, <span style="color:#66d9ef">true</span>, <span style="color:#66d9ef">true</span>); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+                <span style="color:#a6e22e">logrus</span>.<span style="color:#a6e22e">Errorf</span>(<span style="color:#e6db74">&#34;failed to cleanup container on create error: %v&#34;</span>, <span style="color:#a6e22e">err</span>)
+            }
+        }
+    }()
+    <span style="color:#f92672">...</span>
+}
+</code></pre></div><p><a href="https://github.com/moby/moby/blob/v20.10.13/daemon/container.go#L128">https://github.com/moby/moby/blob/v20.10.13/daemon/container.go#L128</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">daemon</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Daemon</span>) <span style="color:#a6e22e">newContainer</span>(<span style="color:#a6e22e">name</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">operatingSystem</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">config</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">containertypes</span>.<span style="color:#a6e22e">Config</span>, <span style="color:#a6e22e">hostConfig</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">containertypes</span>.<span style="color:#a6e22e">HostConfig</span>, <span style="color:#a6e22e">imgID</span> <span style="color:#a6e22e">image</span>.<span style="color:#a6e22e">ID</span>, <span style="color:#a6e22e">managed</span> <span style="color:#66d9ef">bool</span>) (<span style="color:#f92672">*</span><span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">Container</span>, <span style="color:#66d9ef">error</span>) {
+    <span style="color:#f92672">...</span>
+    <span style="color:#a6e22e">base</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">daemon</span>.<span style="color:#a6e22e">newBaseContainer</span>(<span style="color:#a6e22e">id</span>)
+    <span style="color:#a6e22e">base</span>.<span style="color:#a6e22e">Created</span> = <span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Now</span>().<span style="color:#a6e22e">UTC</span>()
+    <span style="color:#a6e22e">base</span>.<span style="color:#a6e22e">Managed</span> = <span style="color:#a6e22e">managed</span>
+    <span style="color:#a6e22e">base</span>.<span style="color:#a6e22e">Path</span> = <span style="color:#a6e22e">entrypoint</span>
+    <span style="color:#f92672">...</span>
+    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">base</span>, <span style="color:#a6e22e">err</span>
+}
+</code></pre></div><hr>
+<p>创建容器文件系统，以容器镜像rootfs的只读层作为上层文件系统，创建一个读写层。</p>
+<p><a href="https://github.com/moby/moby/blob/v20.10.13/daemon/create.go#L209-L221">https://github.com/moby/moby/blob/v20.10.13/daemon/create.go#L209-L221</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">daemon</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Daemon</span>) <span style="color:#a6e22e">create</span>(<span style="color:#a6e22e">opts</span> <span style="color:#a6e22e">createOpts</span>) (<span style="color:#a6e22e">retC</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">Container</span>, <span style="color:#a6e22e">retErr</span> <span style="color:#66d9ef">error</span>) {
+    <span style="color:#f92672">...</span>
+    <span style="color:#a6e22e">rwLayer</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">daemon</span>.<span style="color:#a6e22e">imageService</span>.<span style="color:#a6e22e">CreateLayer</span>(<span style="color:#a6e22e">ctr</span>, <span style="color:#a6e22e">setupInitLayer</span>(<span style="color:#a6e22e">daemon</span>.<span style="color:#a6e22e">idMapping</span>))
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>, <span style="color:#a6e22e">errdefs</span>.<span style="color:#a6e22e">System</span>(<span style="color:#a6e22e">err</span>)
+    }
+    <span style="color:#a6e22e">ctr</span>.<span style="color:#a6e22e">RWLayer</span> = <span style="color:#a6e22e">rwLayer</span>
+
+    <span style="color:#a6e22e">current</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">idtools</span>.<span style="color:#a6e22e">CurrentIdentity</span>()
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">idtools</span>.<span style="color:#a6e22e">MkdirAndChown</span>(<span style="color:#a6e22e">ctr</span>.<span style="color:#a6e22e">Root</span>, <span style="color:#ae81ff">0710</span>, <span style="color:#a6e22e">idtools</span>.<span style="color:#a6e22e">Identity</span>{<span style="color:#a6e22e">UID</span>: <span style="color:#a6e22e">current</span>.<span style="color:#a6e22e">UID</span>, <span style="color:#a6e22e">GID</span>: <span style="color:#a6e22e">daemon</span>.<span style="color:#a6e22e">IdentityMapping</span>().<span style="color:#a6e22e">RootPair</span>().<span style="color:#a6e22e">GID</span>}); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>, <span style="color:#a6e22e">err</span>
+    }
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">idtools</span>.<span style="color:#a6e22e">MkdirAndChown</span>(<span style="color:#a6e22e">ctr</span>.<span style="color:#a6e22e">CheckpointDir</span>(), <span style="color:#ae81ff">0700</span>, <span style="color:#a6e22e">current</span>); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>, <span style="color:#a6e22e">err</span>
+    }
+    <span style="color:#f92672">...</span>
+}
+</code></pre></div><p><a href="https://github.com/moby/moby/blob/v20.10.13/daemon/images/service.go#L128">https://github.com/moby/moby/blob/v20.10.13/daemon/images/service.go#L128</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">i</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">ImageService</span>) <span style="color:#a6e22e">CreateLayer</span>(<span style="color:#a6e22e">container</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">Container</span>, <span style="color:#a6e22e">initFunc</span> <span style="color:#a6e22e">layer</span>.<span style="color:#a6e22e">MountInit</span>) (<span style="color:#a6e22e">layer</span>.<span style="color:#a6e22e">RWLayer</span>, <span style="color:#66d9ef">error</span>) {
+    <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">layerID</span> <span style="color:#a6e22e">layer</span>.<span style="color:#a6e22e">ChainID</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">ImageID</span> <span style="color:#f92672">!=</span> <span style="color:#e6db74">&#34;&#34;</span> {
+        <span style="color:#a6e22e">img</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">i</span>.<span style="color:#a6e22e">imageStore</span>.<span style="color:#a6e22e">Get</span>(<span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">ImageID</span>)
+        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>, <span style="color:#a6e22e">err</span>
+        }
+        <span style="color:#a6e22e">layerID</span> = <span style="color:#a6e22e">img</span>.<span style="color:#a6e22e">RootFS</span>.<span style="color:#a6e22e">ChainID</span>()
+    }
+    <span style="color:#f92672">...</span>
+    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">i</span>.<span style="color:#a6e22e">layerStores</span>[<span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">OS</span>].<span style="color:#a6e22e">CreateRWLayer</span>(<span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">ID</span>, <span style="color:#a6e22e">layerID</span>, <span style="color:#a6e22e">rwLayerOpts</span>)
+}
+</code></pre></div><hr>
+<p><code>setHostConfig</code>, <code>createContainerOSSpecificSettings</code>都主要是创建卷。</p>
+<p><a href="https://github.com/moby/moby/blob/v20.10.13/daemon/create.go#L223-L229">https://github.com/moby/moby/blob/v20.10.13/daemon/create.go#L223-L229</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">daemon</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Daemon</span>) <span style="color:#a6e22e">create</span>(<span style="color:#a6e22e">opts</span> <span style="color:#a6e22e">createOpts</span>) (<span style="color:#a6e22e">retC</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">Container</span>, <span style="color:#a6e22e">retErr</span> <span style="color:#66d9ef">error</span>) {
+    <span style="color:#f92672">...</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">daemon</span>.<span style="color:#a6e22e">setHostConfig</span>(<span style="color:#a6e22e">ctr</span>, <span style="color:#a6e22e">opts</span>.<span style="color:#a6e22e">params</span>.<span style="color:#a6e22e">HostConfig</span>); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>, <span style="color:#a6e22e">err</span>
+    }
+
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">daemon</span>.<span style="color:#a6e22e">createContainerOSSpecificSettings</span>(<span style="color:#a6e22e">ctr</span>, <span style="color:#a6e22e">opts</span>.<span style="color:#a6e22e">params</span>.<span style="color:#a6e22e">Config</span>, <span style="color:#a6e22e">opts</span>.<span style="color:#a6e22e">params</span>.<span style="color:#a6e22e">HostConfig</span>); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>, <span style="color:#a6e22e">err</span>
+    }
+    <span style="color:#f92672">...</span>
+}
+</code></pre></div><p><a href="https://github.com/moby/moby/blob/v20.10.13/daemon/create_unix.go#L22">https://github.com/moby/moby/blob/v20.10.13/daemon/create_unix.go#L22</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">daemon</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Daemon</span>) <span style="color:#a6e22e">createContainerOSSpecificSettings</span>(<span style="color:#a6e22e">container</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">Container</span>, <span style="color:#a6e22e">config</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">containertypes</span>.<span style="color:#a6e22e">Config</span>, <span style="color:#a6e22e">hostConfig</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">containertypes</span>.<span style="color:#a6e22e">HostConfig</span>) <span style="color:#66d9ef">error</span> {
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">daemon</span>.<span style="color:#a6e22e">Mount</span>(<span style="color:#a6e22e">container</span>); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">err</span>
+    }
+    <span style="color:#66d9ef">defer</span> <span style="color:#a6e22e">daemon</span>.<span style="color:#a6e22e">Unmount</span>(<span style="color:#a6e22e">container</span>)
+    <span style="color:#f92672">...</span>
+    <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">spec</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">config</span>.<span style="color:#a6e22e">Volumes</span> {
+        <span style="color:#a6e22e">name</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">stringid</span>.<span style="color:#a6e22e">GenerateRandomID</span>()
+        <span style="color:#a6e22e">destination</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">filepath</span>.<span style="color:#a6e22e">Clean</span>(<span style="color:#a6e22e">spec</span>)
+        <span style="color:#f92672">...</span>
+        <span style="color:#a6e22e">v</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">daemon</span>.<span style="color:#a6e22e">volumes</span>.<span style="color:#a6e22e">Create</span>(<span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">TODO</span>(), <span style="color:#a6e22e">name</span>, <span style="color:#a6e22e">hostConfig</span>.<span style="color:#a6e22e">VolumeDriver</span>, <span style="color:#a6e22e">volumeopts</span>.<span style="color:#a6e22e">WithCreateReference</span>(<span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">ID</span>))
+        <span style="color:#f92672">...</span>
+        <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">AddMountPointWithVolume</span>(<span style="color:#a6e22e">destination</span>, <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">volumeWrapper</span>{<span style="color:#a6e22e">v</span>: <span style="color:#a6e22e">v</span>, <span style="color:#a6e22e">s</span>: <span style="color:#a6e22e">daemon</span>.<span style="color:#a6e22e">volumes</span>}, <span style="color:#66d9ef">true</span>)
+    }
+    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">daemon</span>.<span style="color:#a6e22e">populateVolumes</span>(<span style="color:#a6e22e">container</span>)
+}
+</code></pre></div><p>创建完卷后，对于每个挂载点，如果rootfs中挂载点已存在，则将从该路径复制文件到卷中。</p>
+<p><a href="https://github.com/moby/moby/blob/v20.10.13/daemon/create_unix.go#L80">https://github.com/moby/moby/blob/v20.10.13/daemon/create_unix.go#L80</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">daemon</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Daemon</span>) <span style="color:#a6e22e">populateVolumes</span>(<span style="color:#a6e22e">c</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">Container</span>) <span style="color:#66d9ef">error</span> {
+    <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">mnt</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">MountPoints</span> {
+        <span style="color:#f92672">...</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">CopyImagePathContent</span>(<span style="color:#a6e22e">mnt</span>.<span style="color:#a6e22e">Volume</span>, <span style="color:#a6e22e">mnt</span>.<span style="color:#a6e22e">Destination</span>); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+            <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">err</span>
+        }
+    }
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>
+}
+</code></pre></div><hr>
+<p>至此，创建容器的流程基本结束。</p>
 
             </div>
         </article>
