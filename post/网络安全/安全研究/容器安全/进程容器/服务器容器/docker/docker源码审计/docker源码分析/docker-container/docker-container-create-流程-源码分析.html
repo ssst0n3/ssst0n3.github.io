@@ -58,7 +58,7 @@ func NewCreateCommand(dockerCli command.Cli) *cobra.Command { ... cmd := &amp;co
 func runCreate(dockerCli command.Cli, flags *pflag.">
 <meta itemprop="datePublished" content="2022-03-23T06:18:50+00:00" />
 <meta itemprop="dateModified" content="2022-03-23T06:18:50+00:00" />
-<meta itemprop="wordCount" content="720">
+<meta itemprop="wordCount" content="784">
 
 
 
@@ -374,6 +374,27 @@ func runCreate(dockerCli command.Cli, flags *pflag."/>
         }
     }
     <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>
+}
+</code></pre></div><p><a href="https://github.com/moby/moby/blob/master/container/container_unix.go#L129">https://github.com/moby/moby/blob/master/container/container_unix.go#L129</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">container</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Container</span>) <span style="color:#a6e22e">CopyImagePathContent</span>(<span style="color:#a6e22e">v</span> <span style="color:#a6e22e">volume</span>.<span style="color:#a6e22e">Volume</span>, <span style="color:#a6e22e">destination</span> <span style="color:#66d9ef">string</span>) <span style="color:#66d9ef">error</span> {
+    <span style="color:#a6e22e">rootfs</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">GetResourcePath</span>(<span style="color:#a6e22e">destination</span>)
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">err</span>
+    }
+    <span style="color:#f92672">...</span>
+    <span style="color:#a6e22e">id</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">stringid</span>.<span style="color:#a6e22e">GenerateRandomID</span>()
+    <span style="color:#a6e22e">path</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">v</span>.<span style="color:#a6e22e">Mount</span>(<span style="color:#a6e22e">id</span>)
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">err</span>
+    }
+
+    <span style="color:#66d9ef">defer</span> <span style="color:#66d9ef">func</span>() {
+        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">v</span>.<span style="color:#a6e22e">Unmount</span>(<span style="color:#a6e22e">id</span>); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+            <span style="color:#a6e22e">logrus</span>.<span style="color:#a6e22e">Warnf</span>(<span style="color:#e6db74">&#34;error while unmounting volume %s: %v&#34;</span>, <span style="color:#a6e22e">v</span>.<span style="color:#a6e22e">Name</span>(), <span style="color:#a6e22e">err</span>)
+        }
+    }()
+    <span style="color:#f92672">...</span>
+    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">copyExistingContents</span>(<span style="color:#a6e22e">rootfs</span>, <span style="color:#a6e22e">path</span>)
 }
 </code></pre></div><hr>
 <p>至此，创建容器的流程基本结束。</p>
