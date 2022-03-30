@@ -42,7 +42,7 @@
 # Note: This dropin only works with kubeadm and kubelet v1.11&#43; [Service] Environment=&quot;KUBELET_KUBECONFIG_ARGS=--bootstrap-kubeconfig=/etc/kubernetes/bootstrap-kubelet.conf --kubeconfig=/etc/kubernetes/kubelet.conf&quot; Environment=&quot;KUBELET_CONFIG_ARGS=--config=/var/lib/kubelet/config.yaml&quot; # This is a file that &quot;kubeadm init&quot; and &quot;kubeadm join&quot; generates at runtime, populating the KUBELET_KUBEADM_ARGS variable dynamically EnvironmentFile=-/var/lib/kubelet/kubeadm-flags.env # This is a file that the user can use for overrides of the kubelet args as a last resort. Preferably, the user should use # the .">
 <meta itemprop="datePublished" content="2022-03-30T07:40:20+00:00" />
 <meta itemprop="dateModified" content="2022-03-30T07:40:20+00:00" />
-<meta itemprop="wordCount" content="302">
+<meta itemprop="wordCount" content="301">
 
 
 
@@ -166,8 +166,7 @@ make generated_files
 make -o generated_files kubelet KUBE_BUILD_PLATFORMS=linux/amd64 GOLDFLAGS=&quot;&quot; GOGCFLAGS=&quot;all=-N -l&quot;
 </code></pre><p>编译完成后，kubelet二进制文件位于<code>_output/bin/kubelet</code></p>
 <h2 id="3-delve介绍">3. delve介绍</h2>
-<p><a href="https://github.com/go-delve/delve">delve</a>是一个用于Go编程语言的调试器。<a href="https://go.dev/doc/gdb">尽管我们也可以使用gdb调试go语言程序</a>, 但在调试用标准工具链构建的Go程序时，Delve是GDB更好的替代品。它比GDB更能理解Go的运行时间、数据结构和表达式。Delve目前支持Linux、OSX和Windows的amd64。对于最新的支持平台列表，请参见Delve文档。</p>
-<p>GDB并不能很好地理解Go程序。堆栈管理、线程和运行时间所包含的方面与GDB所期望的执行模型有足够的差异，即使程序是用gccgo编译的，它们也会混淆调试器并导致错误的结果。因此，尽管GDB在某些情况下是有用的（例如调试Cgo代码，或调试运行时本身），但对于Go程序来说，它并不是一个可靠的调试器，尤其是严重并发的程序。此外，解决这些问题并不是Go项目的首要任务，这些问题是很困难的。</p>
+<p><a href="https://github.com/go-delve/delve">delve</a>是一个用于Go编程语言的调试器。<a href="https://go.dev/doc/gdb">尽管我们也可以使用gdb调试go语言程序</a>, 但在调试用标准工具链构建的Go程序时，Delve是GDB更好的替代品。它比GDB更能理解Go的运行时、数据结构和表达式。</p>
 <p>可以使用如下命令安装dlv:</p>
 <p><code>go install github.com/go-delve/delve/cmd/dlv@latest</code></p>
 <p>使用如下命令使用dlv进行调试:</p>
