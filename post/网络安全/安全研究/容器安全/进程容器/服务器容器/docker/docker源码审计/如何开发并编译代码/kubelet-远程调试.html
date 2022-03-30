@@ -7,7 +7,7 @@
 <meta name="author"
     content="">
 <meta name="description"
-    content="tags: container kubelet 远程调试 1. kubelet启动命令分析 kubelet是一个systemd服务，以使用Kubeadm工具安装的v1.23.4 k8s集群为例，该服务的配置文件路径为/etc/systemd/system/kubelet.service.d/10-kubeadm.conf, 内容如下:
+    content="tags: golang,container kubelet 远程调试 1. kubelet启动命令分析 kubelet是一个systemd服务，以使用Kubeadm工具安装的v1.23.4 k8s集群为例，该服务的配置文件路径为/etc/systemd/system/kubelet.service.d/10-kubeadm.conf, 内容如下:
 # Note: This dropin only works with kubeadm and kubelet v1.11&#43; [Service] Environment=&amp;quot;KUBELET_KUBECONFIG_ARGS=--bootstrap-kubeconfig=/etc/kubernetes/bootstrap-kubelet.conf --kubeconfig=/etc/kubernetes/kubelet.conf&amp;quot; Environment=&amp;quot;KUBELET_CONFIG_ARGS=--config=/var/lib/kubelet/config.yaml&amp;quot; # This is a file that &amp;quot;kubeadm init&amp;quot; and &amp;quot;kubeadm join&amp;quot; generates at runtime, populating the KUBELET_KUBEADM_ARGS variable dynamically EnvironmentFile=-/var/lib/kubelet/kubeadm-flags.env # This is a file that the user can use for overrides of the kubelet args as a last resort. Preferably, the user should use # the ." />
 <meta name="keywords" content="" />
 <meta name="robots" content="noodp" />
@@ -38,7 +38,7 @@
 <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#252627">
 <link rel="shortcut icon" href="/favicon.ico">
 <meta name="theme-color" content="#252627"><meta itemprop="name" content="kubelet 远程调试">
-<meta itemprop="description" content="tags: container kubelet 远程调试 1. kubelet启动命令分析 kubelet是一个systemd服务，以使用Kubeadm工具安装的v1.23.4 k8s集群为例，该服务的配置文件路径为/etc/systemd/system/kubelet.service.d/10-kubeadm.conf, 内容如下:
+<meta itemprop="description" content="tags: golang,container kubelet 远程调试 1. kubelet启动命令分析 kubelet是一个systemd服务，以使用Kubeadm工具安装的v1.23.4 k8s集群为例，该服务的配置文件路径为/etc/systemd/system/kubelet.service.d/10-kubeadm.conf, 内容如下:
 # Note: This dropin only works with kubeadm and kubelet v1.11&#43; [Service] Environment=&quot;KUBELET_KUBECONFIG_ARGS=--bootstrap-kubeconfig=/etc/kubernetes/bootstrap-kubelet.conf --kubeconfig=/etc/kubernetes/kubelet.conf&quot; Environment=&quot;KUBELET_CONFIG_ARGS=--config=/var/lib/kubelet/config.yaml&quot; # This is a file that &quot;kubeadm init&quot; and &quot;kubeadm join&quot; generates at runtime, populating the KUBELET_KUBEADM_ARGS variable dynamically EnvironmentFile=-/var/lib/kubelet/kubeadm-flags.env # This is a file that the user can use for overrides of the kubelet args as a last resort. Preferably, the user should use # the .">
 <meta itemprop="datePublished" content="2022-03-30T07:40:20+00:00" />
 <meta itemprop="dateModified" content="2022-03-30T07:40:20+00:00" />
@@ -49,7 +49,7 @@
 <meta itemprop="keywords" content="" />
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="kubelet 远程调试"/>
-<meta name="twitter:description" content="tags: container kubelet 远程调试 1. kubelet启动命令分析 kubelet是一个systemd服务，以使用Kubeadm工具安装的v1.23.4 k8s集群为例，该服务的配置文件路径为/etc/systemd/system/kubelet.service.d/10-kubeadm.conf, 内容如下:
+<meta name="twitter:description" content="tags: golang,container kubelet 远程调试 1. kubelet启动命令分析 kubelet是一个systemd服务，以使用Kubeadm工具安装的v1.23.4 k8s集群为例，该服务的配置文件路径为/etc/systemd/system/kubelet.service.d/10-kubeadm.conf, 内容如下:
 # Note: This dropin only works with kubeadm and kubelet v1.11&#43; [Service] Environment=&quot;KUBELET_KUBECONFIG_ARGS=--bootstrap-kubeconfig=/etc/kubernetes/bootstrap-kubelet.conf --kubeconfig=/etc/kubernetes/kubelet.conf&quot; Environment=&quot;KUBELET_CONFIG_ARGS=--config=/var/lib/kubelet/config.yaml&quot; # This is a file that &quot;kubeadm init&quot; and &quot;kubeadm join&quot; generates at runtime, populating the KUBELET_KUBEADM_ARGS variable dynamically EnvironmentFile=-/var/lib/kubelet/kubeadm-flags.env # This is a file that the user can use for overrides of the kubelet args as a last resort. Preferably, the user should use # the ."/>
 
 
@@ -122,7 +122,7 @@
 
             <div class="post-content">
                 <hr>
-<h2 id="tags-container">tags: container</h2>
+<h2 id="tags-golangcontainer">tags: golang,container</h2>
 <h1 id="kubelet-远程调试">kubelet 远程调试</h1>
 <h2 id="1-kubelet启动命令分析">1. kubelet启动命令分析</h2>
 <p>kubelet是一个systemd服务，以使用Kubeadm工具安装的v1.23.4 k8s集群为例，该服务的配置文件路径为<code>/etc/systemd/system/kubelet.service.d/10-kubeadm.conf</code>, 内容如下:</p>
