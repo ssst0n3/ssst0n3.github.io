@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author"
+    content="">
+<meta name="description"
+    content="tags: container kubelet 远程调试 1. kubelet启动命令分析 kubelet是一个systemd服务，以使用Kubeadm工具安装的v1.23.4 k8s集群为例，该服务的配置文件路径为/etc/systemd/system/kubelet.service.d/10-kubeadm.conf, 内容如下:
+# Note: This dropin only works with kubeadm and kubelet v1.11&#43; [Service] Environment=&amp;quot;KUBELET_KUBECONFIG_ARGS=--bootstrap-kubeconfig=/etc/kubernetes/bootstrap-kubelet.conf --kubeconfig=/etc/kubernetes/kubelet.conf&amp;quot; Environment=&amp;quot;KUBELET_CONFIG_ARGS=--config=/var/lib/kubelet/config.yaml&amp;quot; # This is a file that &amp;quot;kubeadm init&amp;quot; and &amp;quot;kubeadm join&amp;quot; generates at runtime, populating the KUBELET_KUBEADM_ARGS variable dynamically EnvironmentFile=-/var/lib/kubelet/kubeadm-flags.env # This is a file that the user can use for overrides of the kubelet args as a last resort. Preferably, the user should use # the ." />
+<meta name="keywords" content="" />
+<meta name="robots" content="noodp" />
+<link rel="canonical" href="/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E8%BF%9B%E7%A8%8B%E5%AE%B9%E5%99%A8/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%B9%E5%99%A8/docker/docker%E6%BA%90%E7%A0%81%E5%AE%A1%E8%AE%A1/%E5%A6%82%E4%BD%95%E5%BC%80%E5%8F%91%E5%B9%B6%E7%BC%96%E8%AF%91%E4%BB%A3%E7%A0%81/kubelet-%E8%BF%9C%E7%A8%8B%E8%B0%83%E8%AF%95.html" />
+
+
+<title>
+    
+    kubelet 远程调试 :: welcome to st0n3&#39;s blog 
+    
+</title>
+
+
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.2.1/css/flag-icon.min.css" rel="stylesheet"
+    type="text/css">
+
+
+
+<link rel="stylesheet" href="/main.min.de959d61dd13c2cd41136acd491ffb0749779e1afe37b1fed6d5cba0b7e1938d.css">
+
+
+
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#252627">
+<link rel="shortcut icon" href="/favicon.ico">
+<meta name="theme-color" content="#252627"><meta itemprop="name" content="kubelet 远程调试">
+<meta itemprop="description" content="tags: container kubelet 远程调试 1. kubelet启动命令分析 kubelet是一个systemd服务，以使用Kubeadm工具安装的v1.23.4 k8s集群为例，该服务的配置文件路径为/etc/systemd/system/kubelet.service.d/10-kubeadm.conf, 内容如下:
+# Note: This dropin only works with kubeadm and kubelet v1.11&#43; [Service] Environment=&quot;KUBELET_KUBECONFIG_ARGS=--bootstrap-kubeconfig=/etc/kubernetes/bootstrap-kubelet.conf --kubeconfig=/etc/kubernetes/kubelet.conf&quot; Environment=&quot;KUBELET_CONFIG_ARGS=--config=/var/lib/kubelet/config.yaml&quot; # This is a file that &quot;kubeadm init&quot; and &quot;kubeadm join&quot; generates at runtime, populating the KUBELET_KUBEADM_ARGS variable dynamically EnvironmentFile=-/var/lib/kubelet/kubeadm-flags.env # This is a file that the user can use for overrides of the kubelet args as a last resort. Preferably, the user should use # the .">
+<meta itemprop="datePublished" content="2022-03-30T07:40:20+00:00" />
+<meta itemprop="dateModified" content="2022-03-30T07:40:20+00:00" />
+<meta itemprop="wordCount" content="302">
+
+
+
+<meta itemprop="keywords" content="" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="kubelet 远程调试"/>
+<meta name="twitter:description" content="tags: container kubelet 远程调试 1. kubelet启动命令分析 kubelet是一个systemd服务，以使用Kubeadm工具安装的v1.23.4 k8s集群为例，该服务的配置文件路径为/etc/systemd/system/kubelet.service.d/10-kubeadm.conf, 内容如下:
+# Note: This dropin only works with kubeadm and kubelet v1.11&#43; [Service] Environment=&quot;KUBELET_KUBECONFIG_ARGS=--bootstrap-kubeconfig=/etc/kubernetes/bootstrap-kubelet.conf --kubeconfig=/etc/kubernetes/kubelet.conf&quot; Environment=&quot;KUBELET_CONFIG_ARGS=--config=/var/lib/kubelet/config.yaml&quot; # This is a file that &quot;kubeadm init&quot; and &quot;kubeadm join&quot; generates at runtime, populating the KUBELET_KUBEADM_ARGS variable dynamically EnvironmentFile=-/var/lib/kubelet/kubeadm-flags.env # This is a file that the user can use for overrides of the kubelet args as a last resort. Preferably, the user should use # the ."/>
+
+
+
+
+<meta property="article:published_time" content="2022-03-30 07:40:20 &#43;0000 UTC" />
+
+
+
+
+
+
+
+    </head>
+
+    <body class="dark-theme">
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text">$ cd /home/st0n3</span>
+            <span class="logo__cursor"></span>
+        
+    </div>
+</a>
+
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="/aboutme.html">About</a></li><li><a href="/post.html">Blog</a></li><li><a href="/hackerbot">Hackerbot</a></li><li><a href="/skill_tree/">SkillTree</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+
+            <span class="theme-toggle"><svg class="theme-toggler" width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M22 41C32.4934 41 41 32.4934 41 22C41 11.5066 32.4934 3 22
+  3C11.5066 3 3 11.5066 3 22C3 32.4934 11.5066 41 22 41ZM7 22C7
+  13.7157 13.7157 7 22 7V37C13.7157 37 7 30.2843 7 22Z"/>
+</svg>
+</span>
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
+                
+    <main class="post">
+
+        <div class="post-info">
+            
+            </p>
+        </div>
+
+        <article>
+            <h2 class="post-title"><a href="/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E8%BF%9B%E7%A8%8B%E5%AE%B9%E5%99%A8/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%B9%E5%99%A8/docker/docker%E6%BA%90%E7%A0%81%E5%AE%A1%E8%AE%A1/%E5%A6%82%E4%BD%95%E5%BC%80%E5%8F%91%E5%B9%B6%E7%BC%96%E8%AF%91%E4%BB%A3%E7%A0%81/kubelet-%E8%BF%9C%E7%A8%8B%E8%B0%83%E8%AF%95.html">kubelet 远程调试</a></h2>
+
+            
+
+            <div class="post-content">
+                <hr>
+<h2 id="tags-container">tags: container</h2>
+<h1 id="kubelet-远程调试">kubelet 远程调试</h1>
+<h2 id="1-kubelet启动命令分析">1. kubelet启动命令分析</h2>
+<p>kubelet是一个systemd服务，以使用Kubeadm工具安装的v1.23.4 k8s集群为例，该服务的配置文件路径为<code>/etc/systemd/system/kubelet.service.d/10-kubeadm.conf</code>, 内容如下:</p>
+<pre><code># Note: This dropin only works with kubeadm and kubelet v1.11+
+[Service]
+Environment=&quot;KUBELET_KUBECONFIG_ARGS=--bootstrap-kubeconfig=/etc/kubernetes/bootstrap-kubelet.conf --kubeconfig=/etc/kubernetes/kubelet.conf&quot;
+Environment=&quot;KUBELET_CONFIG_ARGS=--config=/var/lib/kubelet/config.yaml&quot;
+# This is a file that &quot;kubeadm init&quot; and &quot;kubeadm join&quot; generates at runtime, populating the KUBELET_KUBEADM_ARGS variable dynamically
+EnvironmentFile=-/var/lib/kubelet/kubeadm-flags.env
+# This is a file that the user can use for overrides of the kubelet args as a last resort. Preferably, the user should use
+# the .NodeRegistration.KubeletExtraArgs object in the configuration files instead. KUBELET_EXTRA_ARGS should be sourced from this file.
+EnvironmentFile=-/etc/default/kubelet
+ExecStart=
+ExecStart=/usr/bin/kubelet $KUBELET_KUBECONFIG_ARGS $KUBELET_CONFIG_ARGS $KUBELET_KUBEADM_ARGS $KUBELET_EXTRA_ARGS
+</code></pre><p>以我的测试环境为例，执行<code>ps -ef |grep /usr/bin/kubelet</code>, 可见kubelet启动的完整命令如下：</p>
+<p><code>/usr/bin/kubelet --bootstrap-kubeconfig=/etc/kubernetes/bootstrap-kubelet.conf --kubeconfig=/etc/kubernetes/kubelet.conf --config=/var/lib/kubelet/config.yaml --container-runtime=remote --container-runtime-endpoint=/run/containerd/containerd.sock --pod-infra-container-image=k8s.gcr.io/pause:3.6</code></p>
+<p>如果需要修改kubelet命令，可以关闭服务后使用相同参数启动。或修改systemd配置文件后重启kubelet服务。</p>
+<h2 id="2-编译kubelet">2. 编译kubelet</h2>
+<p>根据<a href="https://ssst0n3.github.io/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E5%AE%B9%E5%99%A8%E9%9B%86%E7%BE%A4%E5%AE%89%E5%85%A8/k8s/%E6%BA%90%E7%A0%81%E5%AE%A1%E8%AE%A1/%E5%A6%82%E4%BD%95%E5%BC%80%E5%8F%91%E5%B9%B6%E7%BC%96%E8%AF%91%E4%BB%A3%E7%A0%81/k8s-makefile-%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90.html">k8s makefile 源码分析</a>，kubelet编译命令如下：</p>
+<p><a href="https://github.com/kubernetes/kubernetes/blob/v1.22.4/hack/lib/golang.sh#L679">https://github.com/kubernetes/kubernetes/blob/v1.22.4/hack/lib/golang.sh#L679</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-makefile" data-lang="makefile"><span style="color:#a6e22e">kube</span><span style="color:#f92672">::</span>golang::build_some_binaries() {
+    ...
+    go install <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>build_args[@]<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span> <span style="color:#e6db74">&#34;</span>$@<span style="color:#e6db74">&#34;</span>
+    ...
+<span style="color:#960050;background-color:#1e0010">}</span>
+</code></pre></div><p>其中GOLDFLAGS, GOGCFLAGS配置如下：</p>
+<p><a href="https://github.com/kubernetes/kubernetes/blob/v1.22.4/hack/lib/golang.sh#L797-L799">https://github.com/kubernetes/kubernetes/blob/v1.22.4/hack/lib/golang.sh#L797-L799</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-makefile" data-lang="makefile"><span style="color:#a6e22e">kube</span><span style="color:#f92672">::</span>golang::build_binaries() {
+    ...
+    goldflags<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>GOLDFLAGS=-s -w<span style="color:#e6db74">}</span><span style="color:#e6db74"> </span><span style="color:#66d9ef">$(</span>kube::version::ldflags<span style="color:#66d9ef">)</span><span style="color:#e6db74">&#34;</span>
+    goasmflags<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;-trimpath=</span><span style="color:#e6db74">${</span>KUBE_ROOT<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>
+    gogcflags<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>GOGCFLAGS<span style="color:#66d9ef">:-</span><span style="color:#e6db74">}</span><span style="color:#e6db74"> -trimpath=</span><span style="color:#e6db74">${</span>KUBE_ROOT<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>
+    ...
+<span style="color:#960050;background-color:#1e0010">}</span>
+</code></pre></div><p>为了保留尽可能多的调试信息，我们需要重新设置这两个编译参数，所以编译kubelet的命令应为</p>
+<pre><code>git clone https://github.com/kubernetes/kubernetes.git
+cd kubernetes
+git checkout v1.22.4
+./build/shell.sh
+make generated_files
+make -o generated_files kubelet KUBE_BUILD_PLATFORMS=linux/amd64 GOLDFLAGS=&quot;&quot; GOGCFLAGS=&quot;all=-N -l&quot;
+</code></pre><p>编译完成后，kubelet二进制文件位于<code>_output/bin/kubelet</code></p>
+<h2 id="3-delve介绍">3. delve介绍</h2>
+<p><a href="https://github.com/go-delve/delve">delve</a>是一个用于Go编程语言的调试器。<a href="https://go.dev/doc/gdb">尽管我们也可以使用gdb调试go语言程序</a>, 但在调试用标准工具链构建的Go程序时，Delve是GDB更好的替代品。它比GDB更能理解Go的运行时间、数据结构和表达式。Delve目前支持Linux、OSX和Windows的amd64。对于最新的支持平台列表，请参见Delve文档。</p>
+<p>GDB并不能很好地理解Go程序。堆栈管理、线程和运行时间所包含的方面与GDB所期望的执行模型有足够的差异，即使程序是用gccgo编译的，它们也会混淆调试器并导致错误的结果。因此，尽管GDB在某些情况下是有用的（例如调试Cgo代码，或调试运行时本身），但对于Go程序来说，它并不是一个可靠的调试器，尤其是严重并发的程序。此外，解决这些问题并不是Go项目的首要任务，这些问题是很困难的。</p>
+<p>可以使用如下命令安装dlv:</p>
+<p><code>go install github.com/go-delve/delve/cmd/dlv@latest</code></p>
+<p>使用如下命令使用dlv进行调试:</p>
+<p><code>dlv exec ./hello -- server --config conf/config.toml</code></p>
+<p>以kubelet为例，使用dlv命令行调试的过程如下：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">root@st0n3-host:~# dlv exec /usr/bin/kubelet -- --bootstrap-kubeconfig<span style="color:#f92672">=</span>/etc/kubernetes/bootstrap-kubelet.conf --kubeconfig<span style="color:#f92672">=</span>/etc/kubernetes/kubelet.conf --config<span style="color:#f92672">=</span>/var/lib/kubelet/config.yaml --container-runtime<span style="color:#f92672">=</span>remote --container-runtime-endpoint<span style="color:#f92672">=</span>/run/containerd/containerd.sock --pod-infra-container-image<span style="color:#f92672">=</span>k8s.gcr.io/pause:3.6
+Type <span style="color:#e6db74">&#39;help&#39;</span> <span style="color:#66d9ef">for</span> list of commands.
+<span style="color:#f92672">(</span>dlv<span style="color:#f92672">)</span> b main.main
+Breakpoint <span style="color:#ae81ff">1</span> set at 0x502e086 <span style="color:#66d9ef">for</span> main.main<span style="color:#f92672">()</span> _output/dockerized./cmd/kubelet/kubelet.go:39
+<span style="color:#f92672">(</span>dlv<span style="color:#f92672">)</span> c
+&gt; main.main<span style="color:#f92672">()</span> _output/dockerized./cmd/kubelet/kubelet.go:39 <span style="color:#f92672">(</span>hits goroutine<span style="color:#f92672">(</span>1<span style="color:#f92672">)</span>:1 total:1<span style="color:#f92672">)</span> <span style="color:#f92672">(</span>PC: 0x502e086<span style="color:#f92672">)</span>
+    34:		_ <span style="color:#e6db74">&#34;k8s.io/component-base/metrics/prometheus/restclient&#34;</span>
+    35:		_ <span style="color:#e6db74">&#34;k8s.io/component-base/metrics/prometheus/version&#34;</span> // <span style="color:#66d9ef">for</span> version metric registration
+    36:		<span style="color:#e6db74">&#34;k8s.io/kubernetes/cmd/kubelet/app&#34;</span>
+    37:	<span style="color:#f92672">)</span>
+    38:	
+<span style="color:#f92672">=</span>&gt;  39:	func main<span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+    40:		command :<span style="color:#f92672">=</span> app.NewKubeletCommand<span style="color:#f92672">()</span>
+    41:	
+    42:		// kubelet uses a config file and does its own special
+    43:		// parsing of flags and that config file. It initializes
+    44:		// logging after it is <span style="color:#66d9ef">done</span> with that. Therefore it does
+<span style="color:#f92672">(</span>dlv<span style="color:#f92672">)</span> 
+</code></pre></div><h2 id="4-goland远程调试kubelet">4. GoLand远程调试kubelet</h2>
+<p>我们当然可以使用上文描述的命令行形式进行调试，但kubernetes代码量巨大，使用IDE会更方便。</p>
+<p>点击调试按钮左侧的Edit Configurations按钮，配置dlv的地址和端口：</p>
+<p><img src="https://st0n3-img.obs.cn-south-1.myhuaweicloud.com/golang/goland-delve-remote.png" alt=""></p>
+<p>使用IDE提示的命令启动kubelet，或将其配置到systemd服务中后重启服务：</p>
+<pre><code>root@st0n3-host:~# cat /etc/systemd/system/kubelet.service.d/10-kubeadm.conf 
+...
+ExecStart=/usr/bin/dlv --listen=:10086 --headless=true --api-version=2 --accept-multiclient exec /usr/bin/kubelet -- $KUBELET_KUBECONFIG_ARGS $KUBELET_CONFIG_ARGS $KUBELET_KUBEADM_ARGS $KUBELET_EXTRA_ARGS
+root@st0n3-host:~# systemctl daemon-reload
+root@st0n3-host:~# systemctl restart kubelet.service
+</code></pre><p>此时kubelet命令实际还未真正启动，在GoLand中运行刚刚添加的配置，连接上dlv后，kubelet才会运行。</p>
+<p>下好断点，点击debug按钮，我们就可以在IDE中对kubelet进行调试了。</p>
+<p><img src="https://st0n3-img.obs.cn-south-1.myhuaweicloud.com/golang/goland-delve-remote-kubelet.png" alt=""></p>
+
+            </div>
+        </article>
+
+        <hr />
+
+        <div class="post-info">
+  			</div>
+
+        
+    </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>&copy; 2022</span>
+            
+            <span></span>
+            <span> <a href="/posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a></span>
+        </div>
+    </div>
+    <div class="footer__inner">
+        <div class="footer__content">
+
+        </div>
+    </div>
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>Powered by <a href="http://gohugo.io">Hugo</a></span>
+            <span>Made with &#10084; by <a href="https://github.com/st0n3">st0n3</a></span>
+            <span>Based on <a href="https://github.com/rhazdon">rhazdon</a></span>
+        </div>
+    </div>
+
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      extensions: ["tex2jax.js"],
+      
+      jax: ["input/TeX", "output/CommonHTML"],
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+        displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+        processEscapes: true
+      },
+      "HTML-CSS": { fonts: ["TeX"] },
+      displayAlign: "left"
+    });
+  </script>
+
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_CHTML"></script>
+
+
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+
+<script type="text/javascript" src="/bundle.min.4c3fb12a087ceed4a52cb5d57068a9795c7069617a01ca70f788052ad66e1791779e6c72686e1dc0ca13dc03b0203204b6566bb0dd1ee80de2b7ff4d8fe53db2.js" integrity="sha512-TD&#43;xKgh87tSlLLXVcGipeVxwaWF6Acpw94gFKtZuF5F3nmxyaG4dwMoT3AOwIDIEtlZrsN0e6A3it/9Nj&#43;U9sg=="></script>
+
+
+
+    </body>
+</html>
