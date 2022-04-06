@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author"
+    content="">
+<meta name="description"
+    content="tags: container,k8s,源码分析 Kubelet VolumeManager源码分析: 卷的卸载 本文是Kubelet VolumeManager源码分析中的一部分，为避免因篇幅过长导致结构混乱，将本文独立编写。
+1. 入口 reconciler是kubernetes的一个重要设计模式，定期将现实状态同步为期望状态，常见于controller中。
+在VolumeManager中，reconciler定期处理卷的卸载和挂载，本文分析卸载部分。
+https://github.com/kubernetes/kubernetes/blob/v1.23.1/pkg/kubelet/volumemanager/reconciler/reconciler.go#L163-L178
+func (rc *reconciler) reconcile() { rc.unmountVolumes() rc.mountAttachVolumes() rc.unmountDetachDevices() } 遍历实际状态中已挂载卷的pod，对于不在期望状态中，卸载该pod上的卷。
+https://github.com/kubernetes/kubernetes/blob/v1.23.1/pkg/kubelet/volumemanager/reconciler/reconciler.go#L180
+func (rc *reconciler) unmountVolumes() { for _, mountedVolume := range rc.actualStateOfWorld.GetAllMountedVolumes() { if !rc.desiredStateOfWorld.PodExistsInVolume(mountedVolume.PodName, mountedVolume.VolumeName) { ... err := rc.operationExecutor.UnmountVolume( mountedVolume.MountedVolume, rc.actualStateOfWorld, rc.kubeletPodsDir) ... } } } }  2. rc.operationExecutor.UnmountVolume 对于Filesystem和Block两种不同的卷类型，有对应的卸载卷的方法。分别调用operationGenerator.GenerateUnmountVolumeFunc()和operationGenerator.GenerateUnmapVolumeFunc()方法生成卸载函数，传入nestedPendingOperations.Run()执行。
+https://github.com/kubernetes/kubernetes/blob/v1.23.1/pkg/volume/util/operationexecutor/operation_executor.go#L858
+func (oe *operationExecutor) UnmountVolume( volumeToUnmount MountedVolume, actualStateOfWorld ActualStateOfWorldMounterUpdater, podsDir string) error { fsVolume, err := util." />
+<meta name="keywords" content="" />
+<meta name="robots" content="noodp" />
+<link rel="canonical" href="/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E5%AE%B9%E5%99%A8%E9%9B%86%E7%BE%A4%E5%AE%89%E5%85%A8/k8s/%E6%BA%90%E7%A0%81%E5%AE%A1%E8%AE%A1/k8s%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/kubelet/VolumeManager/Kubelet-VolumeManager%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90-%E5%8D%B7%E7%9A%84%E5%8D%B8%E8%BD%BD.html" />
+
+
+<title>
+    
+    Kubelet VolumeManager源码分析: 卷的卸载 :: welcome to st0n3&#39;s blog 
+    
+</title>
+
+
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.2.1/css/flag-icon.min.css" rel="stylesheet"
+    type="text/css">
+
+
+
+<link rel="stylesheet" href="/main.min.de959d61dd13c2cd41136acd491ffb0749779e1afe37b1fed6d5cba0b7e1938d.css">
+
+
+
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#252627">
+<link rel="shortcut icon" href="/favicon.ico">
+<meta name="theme-color" content="#252627"><meta itemprop="name" content="Kubelet VolumeManager源码分析: 卷的卸载">
+<meta itemprop="description" content="tags: container,k8s,源码分析 Kubelet VolumeManager源码分析: 卷的卸载 本文是Kubelet VolumeManager源码分析中的一部分，为避免因篇幅过长导致结构混乱，将本文独立编写。
+1. 入口 reconciler是kubernetes的一个重要设计模式，定期将现实状态同步为期望状态，常见于controller中。
+在VolumeManager中，reconciler定期处理卷的卸载和挂载，本文分析卸载部分。
+https://github.com/kubernetes/kubernetes/blob/v1.23.1/pkg/kubelet/volumemanager/reconciler/reconciler.go#L163-L178
+func (rc *reconciler) reconcile() { rc.unmountVolumes() rc.mountAttachVolumes() rc.unmountDetachDevices() } 遍历实际状态中已挂载卷的pod，对于不在期望状态中，卸载该pod上的卷。
+https://github.com/kubernetes/kubernetes/blob/v1.23.1/pkg/kubelet/volumemanager/reconciler/reconciler.go#L180
+func (rc *reconciler) unmountVolumes() { for _, mountedVolume := range rc.actualStateOfWorld.GetAllMountedVolumes() { if !rc.desiredStateOfWorld.PodExistsInVolume(mountedVolume.PodName, mountedVolume.VolumeName) { ... err := rc.operationExecutor.UnmountVolume( mountedVolume.MountedVolume, rc.actualStateOfWorld, rc.kubeletPodsDir) ... } } } }  2. rc.operationExecutor.UnmountVolume 对于Filesystem和Block两种不同的卷类型，有对应的卸载卷的方法。分别调用operationGenerator.GenerateUnmountVolumeFunc()和operationGenerator.GenerateUnmapVolumeFunc()方法生成卸载函数，传入nestedPendingOperations.Run()执行。
+https://github.com/kubernetes/kubernetes/blob/v1.23.1/pkg/volume/util/operationexecutor/operation_executor.go#L858
+func (oe *operationExecutor) UnmountVolume( volumeToUnmount MountedVolume, actualStateOfWorld ActualStateOfWorldMounterUpdater, podsDir string) error { fsVolume, err := util.">
+<meta itemprop="datePublished" content="2022-04-06T03:21:52+00:00" />
+<meta itemprop="dateModified" content="2022-04-06T03:21:52+00:00" />
+<meta itemprop="wordCount" content="1579">
+
+
+
+<meta itemprop="keywords" content="" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Kubelet VolumeManager源码分析: 卷的卸载"/>
+<meta name="twitter:description" content="tags: container,k8s,源码分析 Kubelet VolumeManager源码分析: 卷的卸载 本文是Kubelet VolumeManager源码分析中的一部分，为避免因篇幅过长导致结构混乱，将本文独立编写。
+1. 入口 reconciler是kubernetes的一个重要设计模式，定期将现实状态同步为期望状态，常见于controller中。
+在VolumeManager中，reconciler定期处理卷的卸载和挂载，本文分析卸载部分。
+https://github.com/kubernetes/kubernetes/blob/v1.23.1/pkg/kubelet/volumemanager/reconciler/reconciler.go#L163-L178
+func (rc *reconciler) reconcile() { rc.unmountVolumes() rc.mountAttachVolumes() rc.unmountDetachDevices() } 遍历实际状态中已挂载卷的pod，对于不在期望状态中，卸载该pod上的卷。
+https://github.com/kubernetes/kubernetes/blob/v1.23.1/pkg/kubelet/volumemanager/reconciler/reconciler.go#L180
+func (rc *reconciler) unmountVolumes() { for _, mountedVolume := range rc.actualStateOfWorld.GetAllMountedVolumes() { if !rc.desiredStateOfWorld.PodExistsInVolume(mountedVolume.PodName, mountedVolume.VolumeName) { ... err := rc.operationExecutor.UnmountVolume( mountedVolume.MountedVolume, rc.actualStateOfWorld, rc.kubeletPodsDir) ... } } } }  2. rc.operationExecutor.UnmountVolume 对于Filesystem和Block两种不同的卷类型，有对应的卸载卷的方法。分别调用operationGenerator.GenerateUnmountVolumeFunc()和operationGenerator.GenerateUnmapVolumeFunc()方法生成卸载函数，传入nestedPendingOperations.Run()执行。
+https://github.com/kubernetes/kubernetes/blob/v1.23.1/pkg/volume/util/operationexecutor/operation_executor.go#L858
+func (oe *operationExecutor) UnmountVolume( volumeToUnmount MountedVolume, actualStateOfWorld ActualStateOfWorldMounterUpdater, podsDir string) error { fsVolume, err := util."/>
+
+
+
+
+<meta property="article:published_time" content="2022-04-06 03:21:52 &#43;0000 UTC" />
+
+
+
+
+
+
+
+    </head>
+
+    <body class="dark-theme">
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text">$ cd /home/st0n3</span>
+            <span class="logo__cursor"></span>
+        
+    </div>
+</a>
+
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="/aboutme.html">About</a></li><li><a href="/post.html">Blog</a></li><li><a href="/hackerbot">Hackerbot</a></li><li><a href="/skill_tree/">SkillTree</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+
+            <span class="theme-toggle"><svg class="theme-toggler" width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M22 41C32.4934 41 41 32.4934 41 22C41 11.5066 32.4934 3 22
+  3C11.5066 3 3 11.5066 3 22C3 32.4934 11.5066 41 22 41ZM7 22C7
+  13.7157 13.7157 7 22 7V37C13.7157 37 7 30.2843 7 22Z"/>
+</svg>
+</span>
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
+                
+    <main class="post">
+
+        <div class="post-info">
+            
+            </p>
+        </div>
+
+        <article>
+            <h2 class="post-title"><a href="/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E5%AE%B9%E5%99%A8%E9%9B%86%E7%BE%A4%E5%AE%89%E5%85%A8/k8s/%E6%BA%90%E7%A0%81%E5%AE%A1%E8%AE%A1/k8s%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/kubelet/VolumeManager/Kubelet-VolumeManager%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90-%E5%8D%B7%E7%9A%84%E5%8D%B8%E8%BD%BD.html">Kubelet VolumeManager源码分析: 卷的卸载</a></h2>
+
+            
+
+            <div class="post-content">
+                <hr>
+<h2 id="tags-containerk8s源码分析">tags: container,k8s,源码分析</h2>
+<h1 id="kubelet-volumemanager源码分析-卷的卸载">Kubelet VolumeManager源码分析: 卷的卸载</h1>
+<p><small>本文是Kubelet VolumeManager源码分析中的一部分，为避免因篇幅过长导致结构混乱，将本文独立编写。</small></p>
+<h2 id="1-入口">1. 入口</h2>
+<p>reconciler是kubernetes的一个重要设计模式，定期将现实状态同步为期望状态，常见于controller中。</p>
+<p>在VolumeManager中，reconciler定期处理卷的卸载和挂载，本文分析卸载部分。</p>
+<p><a href="https://github.com/kubernetes/kubernetes/blob/v1.23.1/pkg/kubelet/volumemanager/reconciler/reconciler.go#L163-L178">https://github.com/kubernetes/kubernetes/blob/v1.23.1/pkg/kubelet/volumemanager/reconciler/reconciler.go#L163-L178</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">rc</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">reconciler</span>) <span style="color:#a6e22e">reconcile</span>() {
+    <span style="color:#a6e22e">rc</span>.<span style="color:#a6e22e">unmountVolumes</span>()
+    <span style="color:#a6e22e">rc</span>.<span style="color:#a6e22e">mountAttachVolumes</span>()
+    <span style="color:#a6e22e">rc</span>.<span style="color:#a6e22e">unmountDetachDevices</span>()
+}
+</code></pre></div><p>遍历实际状态中已挂载卷的pod，对于不在期望状态中，卸载该pod上的卷。</p>
+<p><a href="https://github.com/kubernetes/kubernetes/blob/v1.23.1/pkg/kubelet/volumemanager/reconciler/reconciler.go#L180">https://github.com/kubernetes/kubernetes/blob/v1.23.1/pkg/kubelet/volumemanager/reconciler/reconciler.go#L180</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">rc</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">reconciler</span>) <span style="color:#a6e22e">unmountVolumes</span>() {
+    <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">mountedVolume</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">rc</span>.<span style="color:#a6e22e">actualStateOfWorld</span>.<span style="color:#a6e22e">GetAllMountedVolumes</span>() {
+        <span style="color:#66d9ef">if</span> !<span style="color:#a6e22e">rc</span>.<span style="color:#a6e22e">desiredStateOfWorld</span>.<span style="color:#a6e22e">PodExistsInVolume</span>(<span style="color:#a6e22e">mountedVolume</span>.<span style="color:#a6e22e">PodName</span>, <span style="color:#a6e22e">mountedVolume</span>.<span style="color:#a6e22e">VolumeName</span>) {
+            <span style="color:#f92672">...</span>
+            <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">rc</span>.<span style="color:#a6e22e">operationExecutor</span>.<span style="color:#a6e22e">UnmountVolume</span>(
+                <span style="color:#a6e22e">mountedVolume</span>.<span style="color:#a6e22e">MountedVolume</span>, <span style="color:#a6e22e">rc</span>.<span style="color:#a6e22e">actualStateOfWorld</span>, <span style="color:#a6e22e">rc</span>.<span style="color:#a6e22e">kubeletPodsDir</span>)
+            <span style="color:#f92672">...</span>
+            }
+        }
+    }
+}
+</code></pre></div><hr>
+<h2 id="2-rcoperationexecutorunmountvolume">2. rc.operationExecutor.UnmountVolume</h2>
+<p>对于Filesystem和Block两种不同的卷类型，有对应的卸载卷的方法。分别调用<code>operationGenerator.GenerateUnmountVolumeFunc()</code>和<code>operationGenerator.GenerateUnmapVolumeFunc()</code>方法生成卸载函数，传入<code>nestedPendingOperations.Run()</code>执行。</p>
+<p><a href="https://github.com/kubernetes/kubernetes/blob/v1.23.1/pkg/volume/util/operationexecutor/operation_executor.go#L858">https://github.com/kubernetes/kubernetes/blob/v1.23.1/pkg/volume/util/operationexecutor/operation_executor.go#L858</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">oe</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">operationExecutor</span>) <span style="color:#a6e22e">UnmountVolume</span>(
+    <span style="color:#a6e22e">volumeToUnmount</span> <span style="color:#a6e22e">MountedVolume</span>,
+    <span style="color:#a6e22e">actualStateOfWorld</span> <span style="color:#a6e22e">ActualStateOfWorldMounterUpdater</span>,
+    <span style="color:#a6e22e">podsDir</span> <span style="color:#66d9ef">string</span>) <span style="color:#66d9ef">error</span> {
+    <span style="color:#a6e22e">fsVolume</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">util</span>.<span style="color:#a6e22e">CheckVolumeModeFilesystem</span>(<span style="color:#a6e22e">volumeToUnmount</span>.<span style="color:#a6e22e">VolumeSpec</span>)
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">err</span>
+    }
+    <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">generatedOperations</span> <span style="color:#a6e22e">volumetypes</span>.<span style="color:#a6e22e">GeneratedOperations</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">fsVolume</span> {
+        <span style="color:#75715e">// Filesystem volume case
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">// Unmount a volume if a volume is mounted
+</span><span style="color:#75715e"></span>        <span style="color:#a6e22e">generatedOperations</span>, <span style="color:#a6e22e">err</span> = <span style="color:#a6e22e">oe</span>.<span style="color:#a6e22e">operationGenerator</span>.<span style="color:#a6e22e">GenerateUnmountVolumeFunc</span>(
+            <span style="color:#a6e22e">volumeToUnmount</span>, <span style="color:#a6e22e">actualStateOfWorld</span>, <span style="color:#a6e22e">podsDir</span>)
+    } <span style="color:#66d9ef">else</span> {
+        <span style="color:#75715e">// Block volume case
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">// Unmap a volume if a volume is mapped
+</span><span style="color:#75715e"></span>        <span style="color:#a6e22e">generatedOperations</span>, <span style="color:#a6e22e">err</span> = <span style="color:#a6e22e">oe</span>.<span style="color:#a6e22e">operationGenerator</span>.<span style="color:#a6e22e">GenerateUnmapVolumeFunc</span>(
+            <span style="color:#a6e22e">volumeToUnmount</span>, <span style="color:#a6e22e">actualStateOfWorld</span>)
+    }
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">err</span>
+    }
+    <span style="color:#75715e">// All volume plugins can execute unmount/unmap for multiple pods referencing the
+</span><span style="color:#75715e"></span>    <span style="color:#75715e">// same volume in parallel
+</span><span style="color:#75715e"></span>    <span style="color:#a6e22e">podName</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">volumetypes</span>.<span style="color:#a6e22e">UniquePodName</span>(<span style="color:#a6e22e">volumeToUnmount</span>.<span style="color:#a6e22e">PodUID</span>)
+
+    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">oe</span>.<span style="color:#a6e22e">pendingOperations</span>.<span style="color:#a6e22e">Run</span>(
+        <span style="color:#a6e22e">volumeToUnmount</span>.<span style="color:#a6e22e">VolumeName</span>, <span style="color:#a6e22e">podName</span>, <span style="color:#e6db74">&#34;&#34;</span> <span style="color:#75715e">/* nodeName */</span>, <span style="color:#a6e22e">generatedOperations</span>)
+}
+</code></pre></div><hr>
+<p>之所以要生成卸载函数，再传入<code>nestedPendingOperations.Run()</code>方法执行，是为了避免同时对一个卷做多个操作。</p>
+<p>该函数中维护了一个map，用于记录是否有对相同的卷的操作正在执行。</p>
+<p><a href="https://github.com/kubernetes/kubernetes/blob/v1.23.1/pkg/volume/util/nestedpendingoperations/nestedpendingoperations.go#L142">https://github.com/kubernetes/kubernetes/blob/v1.23.1/pkg/volume/util/nestedpendingoperations/nestedpendingoperations.go#L142</a></p>
+<details>
+<summary>点击查看代码</summary>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">grm</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">nestedPendingOperations</span>) <span style="color:#a6e22e">Run</span>(
+    <span style="color:#a6e22e">volumeName</span> <span style="color:#a6e22e">v1</span>.<span style="color:#a6e22e">UniqueVolumeName</span>,
+    <span style="color:#a6e22e">podName</span> <span style="color:#a6e22e">volumetypes</span>.<span style="color:#a6e22e">UniquePodName</span>,
+    <span style="color:#a6e22e">nodeName</span> <span style="color:#a6e22e">types</span>.<span style="color:#a6e22e">NodeName</span>,
+    <span style="color:#a6e22e">generatedOperations</span> <span style="color:#a6e22e">volumetypes</span>.<span style="color:#a6e22e">GeneratedOperations</span>) <span style="color:#66d9ef">error</span> {
+    <span style="color:#a6e22e">grm</span>.<span style="color:#a6e22e">lock</span>.<span style="color:#a6e22e">Lock</span>()
+    <span style="color:#66d9ef">defer</span> <span style="color:#a6e22e">grm</span>.<span style="color:#a6e22e">lock</span>.<span style="color:#a6e22e">Unlock</span>()
+
+    <span style="color:#a6e22e">opKey</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">operationKey</span>{<span style="color:#a6e22e">volumeName</span>, <span style="color:#a6e22e">podName</span>, <span style="color:#a6e22e">nodeName</span>}
+
+    <span style="color:#a6e22e">opExists</span>, <span style="color:#a6e22e">previousOpIndex</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">grm</span>.<span style="color:#a6e22e">isOperationExists</span>(<span style="color:#a6e22e">opKey</span>)
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">opExists</span> {
+        <span style="color:#a6e22e">previousOp</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">grm</span>.<span style="color:#a6e22e">operations</span>[<span style="color:#a6e22e">previousOpIndex</span>]
+        <span style="color:#75715e">// Operation already exists
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">previousOp</span>.<span style="color:#a6e22e">operationPending</span> {
+            <span style="color:#75715e">// Operation is pending
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">NewAlreadyExistsError</span>(<span style="color:#a6e22e">opKey</span>)
+        }
+
+        <span style="color:#a6e22e">backOffErr</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">previousOp</span>.<span style="color:#a6e22e">expBackoff</span>.<span style="color:#a6e22e">SafeToRetry</span>(<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Sprintf</span>(<span style="color:#e6db74">&#34;%+v&#34;</span>, <span style="color:#a6e22e">opKey</span>))
+        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">backOffErr</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+            <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">previousOp</span>.<span style="color:#a6e22e">operationName</span> <span style="color:#f92672">==</span> <span style="color:#a6e22e">generatedOperations</span>.<span style="color:#a6e22e">OperationName</span> {
+                <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">backOffErr</span>
+            }
+            <span style="color:#75715e">// previous operation and new operation are different. reset op. name and exp. backoff
+</span><span style="color:#75715e"></span>            <span style="color:#a6e22e">grm</span>.<span style="color:#a6e22e">operations</span>[<span style="color:#a6e22e">previousOpIndex</span>].<span style="color:#a6e22e">operationName</span> = <span style="color:#a6e22e">generatedOperations</span>.<span style="color:#a6e22e">OperationName</span>
+            <span style="color:#a6e22e">grm</span>.<span style="color:#a6e22e">operations</span>[<span style="color:#a6e22e">previousOpIndex</span>].<span style="color:#a6e22e">expBackoff</span> = <span style="color:#a6e22e">exponentialbackoff</span>.<span style="color:#a6e22e">ExponentialBackoff</span>{}
+        }
+
+        <span style="color:#75715e">// Update existing operation to mark as pending.
+</span><span style="color:#75715e"></span>        <span style="color:#a6e22e">grm</span>.<span style="color:#a6e22e">operations</span>[<span style="color:#a6e22e">previousOpIndex</span>].<span style="color:#a6e22e">operationPending</span> = <span style="color:#66d9ef">true</span>
+        <span style="color:#a6e22e">grm</span>.<span style="color:#a6e22e">operations</span>[<span style="color:#a6e22e">previousOpIndex</span>].<span style="color:#a6e22e">key</span> = <span style="color:#a6e22e">opKey</span>
+    } <span style="color:#66d9ef">else</span> {
+        <span style="color:#75715e">// Create a new operation
+</span><span style="color:#75715e"></span>        <span style="color:#a6e22e">grm</span>.<span style="color:#a6e22e">operations</span> = append(<span style="color:#a6e22e">grm</span>.<span style="color:#a6e22e">operations</span>,
+            <span style="color:#a6e22e">operation</span>{
+                <span style="color:#a6e22e">key</span>:              <span style="color:#a6e22e">opKey</span>,
+                <span style="color:#a6e22e">operationPending</span>: <span style="color:#66d9ef">true</span>,
+                <span style="color:#a6e22e">operationName</span>:    <span style="color:#a6e22e">generatedOperations</span>.<span style="color:#a6e22e">OperationName</span>,
+                <span style="color:#a6e22e">expBackoff</span>:       <span style="color:#a6e22e">exponentialbackoff</span>.<span style="color:#a6e22e">ExponentialBackoff</span>{},
+            })
+    }
+
+    <span style="color:#66d9ef">go</span> <span style="color:#66d9ef">func</span>() (<span style="color:#a6e22e">eventErr</span>, <span style="color:#a6e22e">detailedErr</span> <span style="color:#66d9ef">error</span>) {
+        <span style="color:#75715e">// Handle unhandled panics (very unlikely)
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">defer</span> <span style="color:#a6e22e">k8sRuntime</span>.<span style="color:#a6e22e">HandleCrash</span>()
+        <span style="color:#75715e">// Handle completion of and error, if any, from operationFunc()
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">defer</span> <span style="color:#a6e22e">grm</span>.<span style="color:#a6e22e">operationComplete</span>(<span style="color:#a6e22e">opKey</span>, <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">detailedErr</span>)
+        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">generatedOperations</span>.<span style="color:#a6e22e">Run</span>()
+    }()
+
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>
+}
+</code></pre></div></details>
+<hr>
+<p>对于具体操作的实现，仍然是定义在<code>volumetypes.GeneratedOperations</code>中的, 即<code>GeneratedOperations.OperationFunc()</code>方法。下文我们将详细看<code>operationGenerator.GenerateUnmountVolumeFunc()</code>和<code>operationGenerator.GenerateUnmapVolumeFunc()</code>中生成的这个方法。</p>
+<p><a href="https://github.com/kubernetes/kubernetes/blob/v1.23.1/pkg/volume/util/types/types.go#L64">https://github.com/kubernetes/kubernetes/blob/v1.23.1/pkg/volume/util/types/types.go#L64</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">o</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">GeneratedOperations</span>) <span style="color:#a6e22e">Run</span>() (<span style="color:#a6e22e">eventErr</span>, <span style="color:#a6e22e">detailedErr</span> <span style="color:#66d9ef">error</span>) {
+    <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">context</span> <span style="color:#a6e22e">OperationContext</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">o</span>.<span style="color:#a6e22e">CompleteFunc</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+        <span style="color:#a6e22e">c</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">CompleteFuncParam</span>{
+            <span style="color:#a6e22e">Err</span>:      <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">DetailedErr</span>,
+            <span style="color:#a6e22e">Migrated</span>: <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Migrated</span>,
+        }
+        <span style="color:#66d9ef">defer</span> <span style="color:#a6e22e">o</span>.<span style="color:#a6e22e">CompleteFunc</span>(<span style="color:#a6e22e">c</span>)
+    }
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">o</span>.<span style="color:#a6e22e">EventRecorderFunc</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+        <span style="color:#66d9ef">defer</span> <span style="color:#a6e22e">o</span>.<span style="color:#a6e22e">EventRecorderFunc</span>(<span style="color:#f92672">&amp;</span><span style="color:#a6e22e">eventErr</span>)
+    }
+    <span style="color:#75715e">// Handle panic, if any, from operationFunc()
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">defer</span> <span style="color:#a6e22e">runtime</span>.<span style="color:#a6e22e">RecoverFromPanic</span>(<span style="color:#f92672">&amp;</span><span style="color:#a6e22e">detailedErr</span>)
+
+    <span style="color:#a6e22e">context</span> = <span style="color:#a6e22e">o</span>.<span style="color:#a6e22e">OperationFunc</span>()
+    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">EventErr</span>, <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">DetailedErr</span>
+}
+</code></pre></div><hr>
+<h2 id="3-filesystem模式卷的卸载">3. FileSystem模式卷的卸载</h2>
+<p><code>operationGenerator.GenerateUnmountVolumeFunc</code>中定义的<code>OperationFunc</code>主要执行了<code>subpather.CleanSubPaths()</code>和<code>volumeUnmounter.TearDown()</code>。</p>
+<p><a href="https://github.com/kubernetes/kubernetes/blob/v1.23.1/pkg/volume/util/operationexecutor/operation_generator.go#L858">https://github.com/kubernetes/kubernetes/blob/v1.23.1/pkg/volume/util/operationexecutor/operation_generator.go#L858</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">og</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">operationGenerator</span>) <span style="color:#a6e22e">GenerateUnmountVolumeFunc</span>(
+    <span style="color:#a6e22e">volumeToUnmount</span> <span style="color:#a6e22e">MountedVolume</span>,
+    <span style="color:#a6e22e">actualStateOfWorld</span> <span style="color:#a6e22e">ActualStateOfWorldMounterUpdater</span>,
+    <span style="color:#a6e22e">podsDir</span> <span style="color:#66d9ef">string</span>) (<span style="color:#a6e22e">volumetypes</span>.<span style="color:#a6e22e">GeneratedOperations</span>, <span style="color:#66d9ef">error</span>) {
+    <span style="color:#f92672">...</span>
+    <span style="color:#a6e22e">unmountVolumeFunc</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">func</span>() <span style="color:#a6e22e">volumetypes</span>.<span style="color:#a6e22e">OperationContext</span> {
+        <span style="color:#a6e22e">subpather</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">og</span>.<span style="color:#a6e22e">volumePluginMgr</span>.<span style="color:#a6e22e">Host</span>.<span style="color:#a6e22e">GetSubpather</span>()
+
+        <span style="color:#a6e22e">migrated</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">getMigratedStatusBySpec</span>(<span style="color:#a6e22e">volumeToUnmount</span>.<span style="color:#a6e22e">VolumeSpec</span>)
+
+        <span style="color:#75715e">// Remove all bind-mounts for subPaths
+</span><span style="color:#75715e"></span>        <span style="color:#a6e22e">podDir</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">filepath</span>.<span style="color:#a6e22e">Join</span>(<span style="color:#a6e22e">podsDir</span>, string(<span style="color:#a6e22e">volumeToUnmount</span>.<span style="color:#a6e22e">PodUID</span>))
+        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">subpather</span>.<span style="color:#a6e22e">CleanSubPaths</span>(<span style="color:#a6e22e">podDir</span>, <span style="color:#a6e22e">volumeToUnmount</span>.<span style="color:#a6e22e">InnerVolumeSpecName</span>); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+            <span style="color:#a6e22e">eventErr</span>, <span style="color:#a6e22e">detailedErr</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">volumeToUnmount</span>.<span style="color:#a6e22e">GenerateError</span>(<span style="color:#e6db74">&#34;error cleaning subPath mounts&#34;</span>, <span style="color:#a6e22e">err</span>)
+            <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">volumetypes</span>.<span style="color:#a6e22e">NewOperationContext</span>(<span style="color:#a6e22e">eventErr</span>, <span style="color:#a6e22e">detailedErr</span>, <span style="color:#a6e22e">migrated</span>)
+        }
+
+        <span style="color:#75715e">// Execute unmount
+</span><span style="color:#75715e"></span>        <span style="color:#a6e22e">unmountErr</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">volumeUnmounter</span>.<span style="color:#a6e22e">TearDown</span>()
+        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">unmountErr</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+            <span style="color:#f92672">...</span>
+            <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">volumetypes</span>.<span style="color:#a6e22e">NewOperationContext</span>(<span style="color:#a6e22e">eventErr</span>, <span style="color:#a6e22e">detailedErr</span>, <span style="color:#a6e22e">migrated</span>)
+        }
+        <span style="color:#f92672">...</span>
+        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">volumetypes</span>.<span style="color:#a6e22e">NewOperationContext</span>(<span style="color:#66d9ef">nil</span>, <span style="color:#66d9ef">nil</span>, <span style="color:#a6e22e">migrated</span>)
+    }
+
+    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">volumetypes</span>.<span style="color:#a6e22e">GeneratedOperations</span>{
+        <span style="color:#a6e22e">OperationName</span>:     <span style="color:#e6db74">&#34;volume_unmount&#34;</span>,
+        <span style="color:#a6e22e">OperationFunc</span>:     <span style="color:#a6e22e">unmountVolumeFunc</span>,
+        <span style="color:#a6e22e">CompleteFunc</span>:      <span style="color:#a6e22e">util</span>.<span style="color:#a6e22e">OperationCompleteHook</span>(<span style="color:#a6e22e">util</span>.<span style="color:#a6e22e">GetFullQualifiedPluginNameForVolume</span>(<span style="color:#a6e22e">volumePlugin</span>.<span style="color:#a6e22e">GetPluginName</span>(), <span style="color:#a6e22e">volumeToUnmount</span>.<span style="color:#a6e22e">VolumeSpec</span>), <span style="color:#e6db74">&#34;volume_unmount&#34;</span>),
+        <span style="color:#a6e22e">EventRecorderFunc</span>: <span style="color:#66d9ef">nil</span>, <span style="color:#75715e">// nil because we do not want to generate event on error
+</span><span style="color:#75715e"></span>    }, <span style="color:#66d9ef">nil</span>
+}
+</code></pre></div><hr>
+<h3 id="31-subpathcleansubpaths">3.1 subpath.CleanSubPaths()</h3>
+<p><code>subpath.CleanSubPaths()</code>遍历<code>/var/lib/kubelet/pods/&lt;uid&gt;/volume-subpaths/&lt;volume&gt;/</code>下每一个目录，这些目录分别表示不同的容器目录。</p>
+<p>对这些目录执行walk操作得到该目录下的第一层子路径，表示某个容器挂载的subpath目录，对这些子路径执行<code>doCleanSubPath</code>函数(和doCleanSubPaths是两个函数)。</p>
+<p>在完成对每个子路径的清理后，整个<code>/var/lib/kubelet/pods/&lt;uid&gt;/volume-subpaths/</code>目录将被删除。</p>
+<p><a href="https://github.com/kubernetes/kubernetes/blob/v1.23.1/pkg/volume/util/subpath/subpath_linux.go#L57">https://github.com/kubernetes/kubernetes/blob/v1.23.1/pkg/volume/util/subpath/subpath_linux.go#L57</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">sp</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">subpath</span>) <span style="color:#a6e22e">CleanSubPaths</span>(<span style="color:#a6e22e">podDir</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">volumeName</span> <span style="color:#66d9ef">string</span>) <span style="color:#66d9ef">error</span> {
+    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">doCleanSubPaths</span>(<span style="color:#a6e22e">sp</span>.<span style="color:#a6e22e">mounter</span>, <span style="color:#a6e22e">podDir</span>, <span style="color:#a6e22e">volumeName</span>)
+}
+</code></pre></div><p><a href="https://github.com/kubernetes/kubernetes/blob/v1.23.1/pkg/volume/util/subpath/subpath_linux.go#L241">https://github.com/kubernetes/kubernetes/blob/v1.23.1/pkg/volume/util/subpath/subpath_linux.go#L241</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">doCleanSubPaths</span>(<span style="color:#a6e22e">mounter</span> <span style="color:#a6e22e">mount</span>.<span style="color:#a6e22e">Interface</span>, <span style="color:#a6e22e">podDir</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">volumeName</span> <span style="color:#66d9ef">string</span>) <span style="color:#66d9ef">error</span> {
+    <span style="color:#75715e">// scan /var/lib/kubelet/pods/&lt;uid&gt;/volume-subpaths/&lt;volume&gt;/*
+</span><span style="color:#75715e"></span>    <span style="color:#a6e22e">subPathDir</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">filepath</span>.<span style="color:#a6e22e">Join</span>(<span style="color:#a6e22e">podDir</span>, <span style="color:#a6e22e">containerSubPathDirectoryName</span>, <span style="color:#a6e22e">volumeName</span>)
+    <span style="color:#f92672">...</span>
+    <span style="color:#a6e22e">containerDirs</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">ioutil</span>.<span style="color:#a6e22e">ReadDir</span>(<span style="color:#a6e22e">subPathDir</span>)
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">os</span>.<span style="color:#a6e22e">IsNotExist</span>(<span style="color:#a6e22e">err</span>) {
+            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>
+        }
+        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Errorf</span>(<span style="color:#e6db74">&#34;error reading %s: %s&#34;</span>, <span style="color:#a6e22e">subPathDir</span>, <span style="color:#a6e22e">err</span>)
+    }
+
+    <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">containerDir</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">containerDirs</span> {
+        <span style="color:#66d9ef">if</span> !<span style="color:#a6e22e">containerDir</span>.<span style="color:#a6e22e">IsDir</span>() {
+            <span style="color:#f92672">...</span>
+            <span style="color:#66d9ef">continue</span>
+        }
+        <span style="color:#f92672">...</span>
+        <span style="color:#75715e">// scan /var/lib/kubelet/pods/&lt;uid&gt;/volume-subpaths/&lt;volume&gt;/&lt;container name&gt;/*
+</span><span style="color:#75715e"></span>        <span style="color:#a6e22e">fullContainerDirPath</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">filepath</span>.<span style="color:#a6e22e">Join</span>(<span style="color:#a6e22e">subPathDir</span>, <span style="color:#a6e22e">containerDir</span>.<span style="color:#a6e22e">Name</span>())
+        <span style="color:#a6e22e">err</span> = <span style="color:#a6e22e">filepath</span>.<span style="color:#a6e22e">Walk</span>(<span style="color:#a6e22e">fullContainerDirPath</span>, <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">path</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">info</span> <span style="color:#a6e22e">os</span>.<span style="color:#a6e22e">FileInfo</span>, <span style="color:#a6e22e">_</span> <span style="color:#66d9ef">error</span>) <span style="color:#66d9ef">error</span> {
+            <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">path</span> <span style="color:#f92672">==</span> <span style="color:#a6e22e">fullContainerDirPath</span> {
+                <span style="color:#75715e">// Skip top level directory
+</span><span style="color:#75715e"></span>                <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>
+            }
+
+            <span style="color:#75715e">// pass through errors and let doCleanSubPath handle them
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> = <span style="color:#a6e22e">doCleanSubPath</span>(<span style="color:#a6e22e">mounter</span>, <span style="color:#a6e22e">fullContainerDirPath</span>, <span style="color:#a6e22e">filepath</span>.<span style="color:#a6e22e">Base</span>(<span style="color:#a6e22e">path</span>)); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+                <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">err</span>
+            }
+
+            <span style="color:#75715e">// We need to check that info is not nil. This may happen when the incoming err is not nil due to stale mounts or permission errors.
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">info</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#a6e22e">info</span>.<span style="color:#a6e22e">IsDir</span>() {
+                <span style="color:#75715e">// skip subdirs of the volume: it only matters the first level to unmount, otherwise it would try to unmount subdir of the volume
+</span><span style="color:#75715e"></span>                <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">filepath</span>.<span style="color:#a6e22e">SkipDir</span>
+            }
+
+            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>
+        })
+        <span style="color:#f92672">...</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">os</span>.<span style="color:#a6e22e">Remove</span>(<span style="color:#a6e22e">fullContainerDirPath</span>); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+            <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Errorf</span>(<span style="color:#e6db74">&#34;error deleting %s: %s&#34;</span>, <span style="color:#a6e22e">fullContainerDirPath</span>, <span style="color:#a6e22e">err</span>)
+        }
+        <span style="color:#f92672">...</span>
+    }
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">os</span>.<span style="color:#a6e22e">Remove</span>(<span style="color:#a6e22e">subPathDir</span>); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Errorf</span>(<span style="color:#e6db74">&#34;error deleting %s: %s&#34;</span>, <span style="color:#a6e22e">subPathDir</span>, <span style="color:#a6e22e">err</span>)
+    }
+    <span style="color:#f92672">...</span>
+    <span style="color:#a6e22e">podSubPathDir</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">filepath</span>.<span style="color:#a6e22e">Join</span>(<span style="color:#a6e22e">podDir</span>, <span style="color:#a6e22e">containerSubPathDirectoryName</span>)
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">os</span>.<span style="color:#a6e22e">Remove</span>(<span style="color:#a6e22e">podSubPathDir</span>); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> <span style="color:#f92672">&amp;&amp;</span> !<span style="color:#a6e22e">os</span>.<span style="color:#a6e22e">IsExist</span>(<span style="color:#a6e22e">err</span>) {
+        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Errorf</span>(<span style="color:#e6db74">&#34;error deleting %s: %s&#34;</span>, <span style="color:#a6e22e">podSubPathDir</span>, <span style="color:#a6e22e">err</span>)
+    }
+    <span style="color:#f92672">...</span>
+}
+</code></pre></div><p><code>doCleanSubPath</code>函数中：</p>
+<ol>
+<li>先判断路径是否是挂载点，如果不是，则直接删除(这里默认路径是一个空文件夹)</li>
+<li>执行unmount，Linux上实际为调用操作系统的umount命令</li>
+<li>重复一次步骤1</li>
+</ol>
+<p><a href="https://github.com/kubernetes/kubernetes/blob/v1.23.1/pkg/volume/util/subpath/subpath_linux.go#L308">https://github.com/kubernetes/kubernetes/blob/v1.23.1/pkg/volume/util/subpath/subpath_linux.go#L308</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">doCleanSubPath</span>(<span style="color:#a6e22e">mounter</span> <span style="color:#a6e22e">mount</span>.<span style="color:#a6e22e">Interface</span>, <span style="color:#a6e22e">fullContainerDirPath</span>, <span style="color:#a6e22e">subPathIndex</span> <span style="color:#66d9ef">string</span>) <span style="color:#66d9ef">error</span> {
+    <span style="color:#75715e">// process /var/lib/kubelet/pods/&lt;uid&gt;/volume-subpaths/&lt;volume&gt;/&lt;container name&gt;/&lt;subPathName&gt;
+</span><span style="color:#75715e"></span>    <span style="color:#f92672">...</span>
+    <span style="color:#a6e22e">fullSubPath</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">filepath</span>.<span style="color:#a6e22e">Join</span>(<span style="color:#a6e22e">fullContainerDirPath</span>, <span style="color:#a6e22e">subPathIndex</span>)
+
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">mount</span>.<span style="color:#a6e22e">CleanupMountPoint</span>(<span style="color:#a6e22e">fullSubPath</span>, <span style="color:#a6e22e">mounter</span>, <span style="color:#66d9ef">true</span>); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Errorf</span>(<span style="color:#e6db74">&#34;error cleaning subpath mount %s: %s&#34;</span>, <span style="color:#a6e22e">fullSubPath</span>, <span style="color:#a6e22e">err</span>)
+    }
+    <span style="color:#f92672">...</span>
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>
+}
+</code></pre></div><p><a href="https://github.com/kubernetes/kubernetes/blob/v1.23.1/staging/src/k8s.io/mount-utils/mount_helper_common.go#L31">https://github.com/kubernetes/kubernetes/blob/v1.23.1/staging/src/k8s.io/mount-utils/mount_helper_common.go#L31</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">CleanupMountPoint</span>(<span style="color:#a6e22e">mountPath</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">mounter</span> <span style="color:#a6e22e">Interface</span>, <span style="color:#a6e22e">extensiveMountPointCheck</span> <span style="color:#66d9ef">bool</span>) <span style="color:#66d9ef">error</span> {
+    <span style="color:#f92672">...</span>
+    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">doCleanupMountPoint</span>(<span style="color:#a6e22e">mountPath</span>, <span style="color:#a6e22e">mounter</span>, <span style="color:#a6e22e">extensiveMountPointCheck</span>, <span style="color:#a6e22e">corruptedMnt</span>)
+}
+</code></pre></div><p><a href="https://github.com/kubernetes/kubernetes/blob/v1.23.1/staging/src/k8s.io/mount-utils/mount_helper_common.go#L86">https://github.com/kubernetes/kubernetes/blob/v1.23.1/staging/src/k8s.io/mount-utils/mount_helper_common.go#L86</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">doCleanupMountPoint</span>(<span style="color:#a6e22e">mountPath</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">mounter</span> <span style="color:#a6e22e">Interface</span>, <span style="color:#a6e22e">extensiveMountPointCheck</span> <span style="color:#66d9ef">bool</span>, <span style="color:#a6e22e">corruptedMnt</span> <span style="color:#66d9ef">bool</span>) <span style="color:#66d9ef">error</span> {
+    <span style="color:#66d9ef">if</span> !<span style="color:#a6e22e">corruptedMnt</span> {
+        <span style="color:#a6e22e">notMnt</span>, <span style="color:#a6e22e">err</span> = <span style="color:#a6e22e">removePathIfNotMountPoint</span>(<span style="color:#a6e22e">mountPath</span>, <span style="color:#a6e22e">mounter</span>, <span style="color:#a6e22e">extensiveMountPointCheck</span>)
+        <span style="color:#f92672">...</span>
+    }
+    <span style="color:#f92672">...</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">mounter</span>.<span style="color:#a6e22e">Unmount</span>(<span style="color:#a6e22e">mountPath</span>); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">err</span>
+    }
+    <span style="color:#a6e22e">notMnt</span>, <span style="color:#a6e22e">err</span> = <span style="color:#a6e22e">removePathIfNotMountPoint</span>(<span style="color:#a6e22e">mountPath</span>, <span style="color:#a6e22e">mounter</span>, <span style="color:#a6e22e">extensiveMountPointCheck</span>)
+    <span style="color:#f92672">...</span>
+}
+</code></pre></div><hr>
+<p><a href="https://github.com/kubernetes/kubernetes/blob/v1.23.1/staging/src/k8s.io/mount-utils/mount_linux.go#L293">https://github.com/kubernetes/kubernetes/blob/v1.23.1/staging/src/k8s.io/mount-utils/mount_linux.go#L293</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">mounter</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Mounter</span>) <span style="color:#a6e22e">Unmount</span>(<span style="color:#a6e22e">target</span> <span style="color:#66d9ef">string</span>) <span style="color:#66d9ef">error</span> {
+    <span style="color:#a6e22e">command</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">exec</span>.<span style="color:#a6e22e">Command</span>(<span style="color:#e6db74">&#34;umount&#34;</span>, <span style="color:#a6e22e">target</span>)
+    <span style="color:#a6e22e">output</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">command</span>.<span style="color:#a6e22e">CombinedOutput</span>()
+    <span style="color:#f92672">...</span>
+}
+</code></pre></div><h3 id="32-volumeunmounterteardown">3.2 volumeUnmounter.TearDown()</h3>
+<p><code>subpather.CleanSubPaths()</code>方法分析结束，完成了对subpath的清理。下面还需要分析<code>volumeUnmounter.TearDown()</code>方法，执行对卷本身的卸载操作。但各类型卷对TearDown方法的实现不一，我们留待分析各类型卷实现时再详细分析。</p>
+<p><a href="https://github.com/kubernetes/kubernetes/blob/v1.23.1/pkg/volume/volume.go#L178">https://github.com/kubernetes/kubernetes/blob/v1.23.1/pkg/volume/volume.go#L178</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#75715e">// Unmounter interface provides methods to cleanup/unmount the volumes.
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Unmounter</span> <span style="color:#66d9ef">interface</span> {
+	<span style="color:#a6e22e">Volume</span>
+	<span style="color:#75715e">// TearDown unmounts the volume from a self-determined directory and
+</span><span style="color:#75715e"></span>	<span style="color:#75715e">// removes traces of the SetUp procedure.
+</span><span style="color:#75715e"></span>	<span style="color:#a6e22e">TearDown</span>() <span style="color:#66d9ef">error</span>
+	<span style="color:#75715e">// TearDown unmounts the volume from the specified directory and
+</span><span style="color:#75715e"></span>	<span style="color:#75715e">// removes traces of the SetUp procedure.
+</span><span style="color:#75715e"></span>	<span style="color:#a6e22e">TearDownAt</span>(<span style="color:#a6e22e">dir</span> <span style="color:#66d9ef">string</span>) <span style="color:#66d9ef">error</span>
+}
+</code></pre></div><hr>
+<p>至此，<code>operationGenerator.GenerateUnmountVolumeFunc()</code>分析完毕。下面分析<code>operationGenerator.GenerateUnmapVolumeFunc()</code>中生成的卸载函数。</p>
+<h2 id="4-block模式卷的卸载">4. Block模式卷的卸载</h2>
+<h3 id="41-什么是block模式卷">4.1 什么是Block模式卷</h3>
+<p>上文我们说到针对FileSystem和Block模式的卷，卸载方法不同，这里处理的就是Block模式的卷。所谓Block模式，实际就是直接将块设备暴露出来，有多种类型的卷支持Block模式。以local类型卷为例，可以使用如下配置生成一个pv:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">v1</span>
+<span style="color:#f92672">kind</span>: <span style="color:#ae81ff">PersistentVolume</span>
+<span style="color:#f92672">metadata</span>:
+  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">example-local</span>
+<span style="color:#f92672">spec</span>:
+  <span style="color:#f92672">capacity</span>:
+    <span style="color:#f92672">storage</span>: <span style="color:#ae81ff">1Gi</span>
+  <span style="color:#f92672">volumeMode</span>: <span style="color:#ae81ff">Block</span>
+  <span style="color:#f92672">accessModes</span>:
+  - <span style="color:#ae81ff">ReadWriteOnce</span>
+  <span style="color:#f92672">persistentVolumeReclaimPolicy</span>: <span style="color:#ae81ff">Delete</span>
+  <span style="color:#f92672">storageClassName</span>: <span style="color:#ae81ff">local-storage</span>
+  <span style="color:#f92672">local</span>:
+    <span style="color:#f92672">path</span>: <span style="color:#ae81ff">/dev/vdb</span>
+  <span style="color:#f92672">nodeAffinity</span>:
+    <span style="color:#f92672">required</span>:
+      <span style="color:#f92672">nodeSelectorTerms</span>:
+      - <span style="color:#f92672">matchExpressions</span>:
+        - <span style="color:#f92672">key</span>: <span style="color:#ae81ff">kubernetes.io/hostname</span>
+          <span style="color:#f92672">operator</span>: <span style="color:#ae81ff">In</span>
+          <span style="color:#f92672">values</span>:
+          - <span style="color:#ae81ff">wanglei-k8s-containerd</span>
+
+---
+<span style="color:#f92672">kind</span>: <span style="color:#ae81ff">StorageClass</span>
+<span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">storage.k8s.io/v1</span>
+<span style="color:#f92672">metadata</span>:
+  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">local-storage</span>
+<span style="color:#f92672">provisioner</span>: <span style="color:#ae81ff">kubernetes.io/no-provisioner</span>
+<span style="color:#f92672">volumeBindingMode</span>: <span style="color:#ae81ff">WaitForFirstConsumer</span>
+
+---
+<span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">v1</span>
+<span style="color:#f92672">kind</span>: <span style="color:#ae81ff">PersistentVolumeClaim</span>
+<span style="color:#f92672">metadata</span>:
+  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">example-local-claim</span>
+<span style="color:#f92672">spec</span>:
+  <span style="color:#f92672">volumeMode</span>: <span style="color:#ae81ff">Block</span>
+  <span style="color:#f92672">storageClassName</span>: <span style="color:#ae81ff">local-storage</span>
+  <span style="color:#f92672">accessModes</span>:
+    - <span style="color:#ae81ff">ReadWriteOnce</span>
+  <span style="color:#f92672">resources</span>:
+    <span style="color:#f92672">requests</span>:
+      <span style="color:#f92672">storage</span>: <span style="color:#ae81ff">1Gi</span>
+</code></pre></div><p>k8s把Block的卸载过程叫做Unmap，取自devicemap的反义。</p>
+<h3 id="42-operationgeneratorgenerateunmapvolumefunc">4.2 operationGenerator.GenerateUnmapVolumeFunc</h3>
+<p>在卸载Block模式的卷时：</p>
+<ol>
+<li>先执行了通用的卸载方法<code>util.UnmapBlockVolume</code></li>
+<li>然后对实现了卸载方法的特定卷<code>customBlockVolumeUnmapper.UnmapPodDevice()</code>，卷类型包括csi, fc, iscsi, rdb，但其实除了csi，其他三种类型的卷都未做任何处理。</li>
+</ol>
+<p><a href="https://github.com/kubernetes/kubernetes/blob/v1.23.1/pkg/volume/util/operationexecutor/operation_generator.go#L1309">https://github.com/kubernetes/kubernetes/blob/v1.23.1/pkg/volume/util/operationexecutor/operation_generator.go#L1309</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">og</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">operationGenerator</span>) <span style="color:#a6e22e">GenerateUnmapVolumeFunc</span>(
+    <span style="color:#f92672">...</span>
+    <span style="color:#a6e22e">unmapVolumeFunc</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">func</span>() <span style="color:#a6e22e">volumetypes</span>.<span style="color:#a6e22e">OperationContext</span> {
+        <span style="color:#f92672">...</span>
+        <span style="color:#75715e">// Execute common unmap
+</span><span style="color:#75715e"></span>        <span style="color:#a6e22e">unmapErr</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">util</span>.<span style="color:#a6e22e">UnmapBlockVolume</span>(<span style="color:#a6e22e">og</span>.<span style="color:#a6e22e">blkUtil</span>, <span style="color:#a6e22e">globalUnmapPath</span>, <span style="color:#a6e22e">podDeviceUnmapPath</span>, <span style="color:#a6e22e">volName</span>, <span style="color:#a6e22e">volumeToUnmount</span>.<span style="color:#a6e22e">PodUID</span>)
+        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">unmapErr</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+            <span style="color:#75715e">// On failure, return error. Caller will log and retry.
+</span><span style="color:#75715e"></span>            <span style="color:#a6e22e">eventErr</span>, <span style="color:#a6e22e">detailedErr</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">volumeToUnmount</span>.<span style="color:#a6e22e">GenerateError</span>(<span style="color:#e6db74">&#34;UnmapVolume.UnmapBlockVolume failed&#34;</span>, <span style="color:#a6e22e">unmapErr</span>)
+            <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">volumetypes</span>.<span style="color:#a6e22e">NewOperationContext</span>(<span style="color:#a6e22e">eventErr</span>, <span style="color:#a6e22e">detailedErr</span>, <span style="color:#a6e22e">migrated</span>)
+        }
+
+        <span style="color:#75715e">// Call UnmapPodDevice if blockVolumeUnmapper implements CustomBlockVolumeUnmapper
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">customBlockVolumeUnmapper</span>, <span style="color:#a6e22e">ok</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">blockVolumeUnmapper</span>.(<span style="color:#a6e22e">volume</span>.<span style="color:#a6e22e">CustomBlockVolumeUnmapper</span>); <span style="color:#a6e22e">ok</span> {
+            <span style="color:#75715e">// Execute plugin specific unmap
+</span><span style="color:#75715e"></span>            <span style="color:#a6e22e">unmapErr</span> = <span style="color:#a6e22e">customBlockVolumeUnmapper</span>.<span style="color:#a6e22e">UnmapPodDevice</span>()
+            <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">unmapErr</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+                <span style="color:#75715e">// On failure, return error. Caller will log and retry.
+</span><span style="color:#75715e"></span>                <span style="color:#a6e22e">eventErr</span>, <span style="color:#a6e22e">detailedErr</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">volumeToUnmount</span>.<span style="color:#a6e22e">GenerateError</span>(<span style="color:#e6db74">&#34;UnmapVolume.UnmapPodDevice failed&#34;</span>, <span style="color:#a6e22e">unmapErr</span>)
+                <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">volumetypes</span>.<span style="color:#a6e22e">NewOperationContext</span>(<span style="color:#a6e22e">eventErr</span>, <span style="color:#a6e22e">detailedErr</span>, <span style="color:#a6e22e">migrated</span>)
+            }
+        }
+        <span style="color:#f92672">...</span>
+        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">volumetypes</span>.<span style="color:#a6e22e">NewOperationContext</span>(<span style="color:#66d9ef">nil</span>, <span style="color:#66d9ef">nil</span>, <span style="color:#a6e22e">migrated</span>)
+    }
+
+    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">volumetypes</span>.<span style="color:#a6e22e">GeneratedOperations</span>{
+        <span style="color:#f92672">...</span>
+        <span style="color:#a6e22e">OperationFunc</span>:     <span style="color:#a6e22e">unmapVolumeFunc</span>,
+        <span style="color:#f92672">...</span>
+    }, <span style="color:#66d9ef">nil</span>
+}
+</code></pre></div><hr>
+<p>我们主要关注通用卸载方法<code>util.UnmapBlockVolume</code>。该函数中执行了三个动作：</p>
+<ol>
+<li>释放块设备loop文件</li>
+<li>在pod路径下卸载卷</li>
+<li>在node路径下卸载卷</li>
+</ol>
+<p><a href="https://github.com/kubernetes/kubernetes/blob/v1.23.1/pkg/volume/util/util.go#L552">https://github.com/kubernetes/kubernetes/blob/v1.23.1/pkg/volume/util/util.go#L552</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">UnmapBlockVolume</span>(<span style="color:#f92672">...</span>) <span style="color:#66d9ef">error</span> {
+    <span style="color:#75715e">// Release file descriptor lock.
+</span><span style="color:#75715e"></span>    <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">blkUtil</span>.<span style="color:#a6e22e">DetachFileDevice</span>(<span style="color:#a6e22e">filepath</span>.<span style="color:#a6e22e">Join</span>(<span style="color:#a6e22e">globalUnmapPath</span>, string(<span style="color:#a6e22e">podUID</span>)))
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Errorf</span>(<span style="color:#e6db74">&#34;blkUtil.DetachFileDevice failed. globalUnmapPath:%s, podUID: %s: %v&#34;</span>,
+            <span style="color:#a6e22e">globalUnmapPath</span>, string(<span style="color:#a6e22e">podUID</span>), <span style="color:#a6e22e">err</span>)
+    }
+
+    <span style="color:#75715e">// unmap devicePath from pod volume path
+</span><span style="color:#75715e"></span>    <span style="color:#a6e22e">unmapDeviceErr</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">blkUtil</span>.<span style="color:#a6e22e">UnmapDevice</span>(<span style="color:#a6e22e">podDeviceUnmapPath</span>, <span style="color:#a6e22e">volumeMapName</span>, <span style="color:#66d9ef">false</span> <span style="color:#75715e">/* bindMount */</span>)
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">unmapDeviceErr</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Errorf</span>(<span style="color:#e6db74">&#34;blkUtil.DetachFileDevice failed. podDeviceUnmapPath:%s, volumeMapName: %s, bindMount: %v: %v&#34;</span>,
+            <span style="color:#a6e22e">podDeviceUnmapPath</span>, <span style="color:#a6e22e">volumeMapName</span>, <span style="color:#66d9ef">false</span>, <span style="color:#a6e22e">unmapDeviceErr</span>)
+    }
+
+    <span style="color:#75715e">// unmap devicePath from global node path
+</span><span style="color:#75715e"></span>    <span style="color:#a6e22e">unmapDeviceErr</span> = <span style="color:#a6e22e">blkUtil</span>.<span style="color:#a6e22e">UnmapDevice</span>(<span style="color:#a6e22e">globalUnmapPath</span>, string(<span style="color:#a6e22e">podUID</span>), <span style="color:#66d9ef">true</span> <span style="color:#75715e">/* bindMount */</span>)
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">unmapDeviceErr</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Errorf</span>(<span style="color:#e6db74">&#34;blkUtil.DetachFileDevice failed. globalUnmapPath:%s, podUID: %s, bindMount: %v: %v&#34;</span>,
+            <span style="color:#a6e22e">globalUnmapPath</span>, string(<span style="color:#a6e22e">podUID</span>), <span style="color:#66d9ef">true</span>, <span style="color:#a6e22e">unmapDeviceErr</span>)
+    }
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>
+}
+</code></pre></div><hr>
+<h4 id="421-释放块设备loop文件">4.2.1 释放块设备loop文件</h4>
+<p>释放块设备对应的loop文件时，先找到与块设备对应的loop文件路径，然后删除loop文件。</p>
+<p><a href="https://github.com/kubernetes/kubernetes/blob/v1.23.1/pkg/volume/util/volumepathhandler/volume_path_handler_linux.go#L58">https://github.com/kubernetes/kubernetes/blob/v1.23.1/pkg/volume/util/volumepathhandler/volume_path_handler_linux.go#L58</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">v</span> <span style="color:#a6e22e">VolumePathHandler</span>) <span style="color:#a6e22e">DetachFileDevice</span>(<span style="color:#a6e22e">path</span> <span style="color:#66d9ef">string</span>) <span style="color:#66d9ef">error</span> {
+    <span style="color:#a6e22e">loopPath</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">v</span>.<span style="color:#a6e22e">GetLoopDevice</span>(<span style="color:#a6e22e">path</span>)
+    <span style="color:#f92672">...</span>
+    <span style="color:#a6e22e">err</span> = <span style="color:#a6e22e">removeLoopDevice</span>(<span style="color:#a6e22e">loopPath</span>)
+    <span style="color:#f92672">...</span>
+}
+</code></pre></div><p>通过遍历每个<code>/sys/block/loop*/loop/backing_file</code>文件内容，与node上块设备的路径对比，相同即找到了loop文件的名称，loop文件的路径即为<code>/dev/loop*</code>。其中，node上块设备路径为<code>/var/lib/kubelet/plugins/{VOLUME_TYPE}/volumeDevices/{VOLUME_NAME}/{POD_UID}</code>。</p>
+<p><a href="https://github.com/kubernetes/kubernetes/blob/v1.23.1/pkg/volume/util/volumepathhandler/volume_path_handler_linux.go#L78">https://github.com/kubernetes/kubernetes/blob/v1.23.1/pkg/volume/util/volumepathhandler/volume_path_handler_linux.go#L78</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">v</span> <span style="color:#a6e22e">VolumePathHandler</span>) <span style="color:#a6e22e">GetLoopDevice</span>(<span style="color:#a6e22e">path</span> <span style="color:#66d9ef">string</span>) (<span style="color:#66d9ef">string</span>, <span style="color:#66d9ef">error</span>) {
+    <span style="color:#f92672">...</span>
+    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">getLoopDeviceFromSysfs</span>(<span style="color:#a6e22e">path</span>)
+}
+
+<span style="color:#66d9ef">func</span> <span style="color:#a6e22e">getLoopDeviceFromSysfs</span>(<span style="color:#a6e22e">path</span> <span style="color:#66d9ef">string</span>) (<span style="color:#66d9ef">string</span>, <span style="color:#66d9ef">error</span>) {
+    <span style="color:#75715e">// If the file is a symlink.
+</span><span style="color:#75715e"></span>    <span style="color:#a6e22e">realPath</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">filepath</span>.<span style="color:#a6e22e">EvalSymlinks</span>(<span style="color:#a6e22e">path</span>)
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+        <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;&#34;</span>, <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Errorf</span>(<span style="color:#e6db74">&#34;failed to evaluate path %s: %s&#34;</span>, <span style="color:#a6e22e">path</span>, <span style="color:#a6e22e">err</span>)
+    }
+
+    <span style="color:#a6e22e">devices</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">filepath</span>.<span style="color:#a6e22e">Glob</span>(<span style="color:#e6db74">&#34;/sys/block/loop*&#34;</span>)
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+        <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;&#34;</span>, <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Errorf</span>(<span style="color:#e6db74">&#34;failed to list loop devices in sysfs: %s&#34;</span>, <span style="color:#a6e22e">err</span>)
+    }
+
+    <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">device</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">devices</span> {
+        <span style="color:#a6e22e">backingFile</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Sprintf</span>(<span style="color:#e6db74">&#34;%s/loop/backing_file&#34;</span>, <span style="color:#a6e22e">device</span>)
+
+        <span style="color:#75715e">// The contents of this file is the absolute path of &#34;path&#34;.
+</span><span style="color:#75715e"></span>        <span style="color:#a6e22e">data</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">ioutil</span>.<span style="color:#a6e22e">ReadFile</span>(<span style="color:#a6e22e">backingFile</span>)
+        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+            <span style="color:#66d9ef">continue</span>
+        }
+
+        <span style="color:#75715e">// Return the first match.
+</span><span style="color:#75715e"></span>        <span style="color:#a6e22e">backingFilePath</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">strings</span>.<span style="color:#a6e22e">TrimSpace</span>(string(<span style="color:#a6e22e">data</span>))
+        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">backingFilePath</span> <span style="color:#f92672">==</span> <span style="color:#a6e22e">path</span> <span style="color:#f92672">||</span> <span style="color:#a6e22e">backingFilePath</span> <span style="color:#f92672">==</span> <span style="color:#a6e22e">realPath</span> {
+            <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Sprintf</span>(<span style="color:#e6db74">&#34;/dev/%s&#34;</span>, <span style="color:#a6e22e">filepath</span>.<span style="color:#a6e22e">Base</span>(<span style="color:#a6e22e">device</span>)), <span style="color:#66d9ef">nil</span>
+        }
+    }
+
+    <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;&#34;</span>, <span style="color:#a6e22e">errors</span>.<span style="color:#a6e22e">New</span>(<span style="color:#a6e22e">ErrDeviceNotFound</span>)
+}
+</code></pre></div><hr>
+<p>调用<code>losetup -d {/dev/loop?}</code>命令删除上文获取到的loop设备路径。</p>
+<p><a href="https://github.com/kubernetes/kubernetes/blob/v1.23.1/pkg/volume/util/volumepathhandler/volume_path_handler_linux.go#L104">https://github.com/kubernetes/kubernetes/blob/v1.23.1/pkg/volume/util/volumepathhandler/volume_path_handler_linux.go#L104</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">removeLoopDevice</span>(<span style="color:#a6e22e">device</span> <span style="color:#66d9ef">string</span>) <span style="color:#66d9ef">error</span> {
+    <span style="color:#a6e22e">args</span> <span style="color:#f92672">:=</span> []<span style="color:#66d9ef">string</span>{<span style="color:#e6db74">&#34;-d&#34;</span>, <span style="color:#a6e22e">device</span>}
+    <span style="color:#a6e22e">cmd</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">exec</span>.<span style="color:#a6e22e">Command</span>(<span style="color:#a6e22e">losetupPath</span>, <span style="color:#a6e22e">args</span><span style="color:#f92672">...</span>)
+    <span style="color:#a6e22e">out</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">cmd</span>.<span style="color:#a6e22e">CombinedOutput</span>()
+    <span style="color:#f92672">...</span>
+}
+</code></pre></div><hr>
+<h4 id="422-在pod路径下卸载卷">4.2.2 在pod路径下卸载卷</h4>
+<p>pod路径<code>/var/lib/kubelet/pods/{POD_UID}/volumeDevices/{VOLUME_TYPE}</code>下存在一个名为卷名称指向块设备的软链接，卸载时删除了它。</p>
+<p><a href="https://github.com/kubernetes/kubernetes/blob/v1.23.1/pkg/volume/util/volumepathhandler/volume_path_handler.go#L171">https://github.com/kubernetes/kubernetes/blob/v1.23.1/pkg/volume/util/volumepathhandler/volume_path_handler.go#L171</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">UnmapBlockVolume</span>(<span style="color:#f92672">...</span>) <span style="color:#66d9ef">error</span> {
+    <span style="color:#f92672">...</span>
+    <span style="color:#a6e22e">unmapDeviceErr</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">blkUtil</span>.<span style="color:#a6e22e">UnmapDevice</span>(<span style="color:#a6e22e">podDeviceUnmapPath</span>, <span style="color:#a6e22e">volumeMapName</span>, <span style="color:#66d9ef">false</span> <span style="color:#75715e">/* bindMount */</span>)
+    <span style="color:#f92672">...</span>
+}
+
+<span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">v</span> <span style="color:#a6e22e">VolumePathHandler</span>) <span style="color:#a6e22e">UnmapDevice</span>(<span style="color:#a6e22e">mapPath</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">linkName</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">bindMount</span> <span style="color:#66d9ef">bool</span>) <span style="color:#66d9ef">error</span> {
+    <span style="color:#f92672">...</span>
+    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">unmapSymlinkDevice</span>(<span style="color:#a6e22e">v</span>, <span style="color:#a6e22e">mapPath</span>, <span style="color:#a6e22e">linkName</span>)
+}
+
+<span style="color:#66d9ef">func</span> <span style="color:#a6e22e">unmapSymlinkDevice</span>(<span style="color:#a6e22e">v</span> <span style="color:#a6e22e">VolumePathHandler</span>, <span style="color:#a6e22e">mapPath</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">linkName</span> <span style="color:#66d9ef">string</span>) <span style="color:#66d9ef">error</span> {
+	<span style="color:#75715e">// Check symbolic link exists
+</span><span style="color:#75715e"></span>	<span style="color:#a6e22e">linkPath</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">filepath</span>.<span style="color:#a6e22e">Join</span>(<span style="color:#a6e22e">mapPath</span>, string(<span style="color:#a6e22e">linkName</span>))
+	<span style="color:#f92672">...</span>
+	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">os</span>.<span style="color:#a6e22e">Remove</span>(<span style="color:#a6e22e">linkPath</span>)
+}
+</code></pre></div><hr>
+<h4 id="423-在node路径下卸载卷">4.2.3 在node路径下卸载卷</h4>
+<p>在node的卷路径下<code>/var/lib/kubelet/plugins/{VOLUME_TYPE}/volumeDevices/{VOLUME_NAME}/</code>，有一个由块设备bind mount而来的名为{POD_UID}的块文件，卸载时将其卸载(unmount), 然后删除。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">UnmapBlockVolume</span>(<span style="color:#f92672">...</span>) <span style="color:#66d9ef">error</span> {
+    <span style="color:#f92672">...</span>
+    <span style="color:#a6e22e">unmapDeviceErr</span> = <span style="color:#a6e22e">blkUtil</span>.<span style="color:#a6e22e">UnmapDevice</span>(<span style="color:#a6e22e">globalUnmapPath</span>, string(<span style="color:#a6e22e">podUID</span>), <span style="color:#66d9ef">true</span> <span style="color:#75715e">/* bindMount */</span>)
+    <span style="color:#f92672">...</span>
+}
+
+<span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">v</span> <span style="color:#a6e22e">VolumePathHandler</span>) <span style="color:#a6e22e">UnmapDevice</span>(<span style="color:#a6e22e">mapPath</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">linkName</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">bindMount</span> <span style="color:#66d9ef">bool</span>) <span style="color:#66d9ef">error</span> {
+    <span style="color:#f92672">...</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">bindMount</span> {
+        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">unmapBindMountDevice</span>(<span style="color:#a6e22e">v</span>, <span style="color:#a6e22e">mapPath</span>, <span style="color:#a6e22e">linkName</span>)
+    }
+    <span style="color:#f92672">...</span>
+}
+
+<span style="color:#66d9ef">func</span> <span style="color:#a6e22e">unmapBindMountDevice</span>(<span style="color:#a6e22e">v</span> <span style="color:#a6e22e">VolumePathHandler</span>, <span style="color:#a6e22e">mapPath</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">linkName</span> <span style="color:#66d9ef">string</span>) <span style="color:#66d9ef">error</span> {
+    <span style="color:#f92672">...</span>
+    <span style="color:#a6e22e">mounter</span> <span style="color:#f92672">:=</span> <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">mount</span>.<span style="color:#a6e22e">SafeFormatAndMount</span>{<span style="color:#a6e22e">Interface</span>: <span style="color:#a6e22e">mount</span>.<span style="color:#a6e22e">New</span>(<span style="color:#e6db74">&#34;&#34;</span>), <span style="color:#a6e22e">Exec</span>: <span style="color:#a6e22e">utilexec</span>.<span style="color:#a6e22e">New</span>()}
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">mounter</span>.<span style="color:#a6e22e">Unmount</span>(<span style="color:#a6e22e">linkPath</span>); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Errorf</span>(<span style="color:#e6db74">&#34;failed to unmount linkPath %s: %v&#34;</span>, <span style="color:#a6e22e">linkPath</span>, <span style="color:#a6e22e">err</span>)
+    }
+
+    <span style="color:#75715e">// Remove file
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">os</span>.<span style="color:#a6e22e">Remove</span>(<span style="color:#a6e22e">linkPath</span>); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> <span style="color:#f92672">&amp;&amp;</span> !<span style="color:#a6e22e">os</span>.<span style="color:#a6e22e">IsNotExist</span>(<span style="color:#a6e22e">err</span>) {
+        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Errorf</span>(<span style="color:#e6db74">&#34;failed to remove file %s: %v&#34;</span>, <span style="color:#a6e22e">linkPath</span>, <span style="color:#a6e22e">err</span>)
+    }
+
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>
+}
+
+</code></pre></div><hr>
+<p>unmount直接调用<code>umount /var/lib/kubelet/plugins/{VOLUME_TYPE}/volumeDevices/{VOLUME_NAME}/{POD_UID}</code>命令卸载块设备。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">mounter</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Mounter</span>) <span style="color:#a6e22e">Unmount</span>(<span style="color:#a6e22e">target</span> <span style="color:#66d9ef">string</span>) <span style="color:#66d9ef">error</span> {
+    <span style="color:#f92672">...</span>
+    <span style="color:#a6e22e">command</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">exec</span>.<span style="color:#a6e22e">Command</span>(<span style="color:#e6db74">&#34;umount&#34;</span>, <span style="color:#a6e22e">target</span>)
+    <span style="color:#a6e22e">output</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">command</span>.<span style="color:#a6e22e">CombinedOutput</span>()
+    <span style="color:#f92672">...</span>
+}
+</code></pre></div><p>至此，operationGenerator.GenerateUnmapVolumeFunc()中生成的卸载函数分析完毕。</p>
+<hr>
+
+            </div>
+        </article>
+
+        <hr />
+
+        <div class="post-info">
+  			</div>
+
+        
+    </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>&copy; 2022</span>
+            
+            <span></span>
+            <span> <a href="/posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a></span>
+        </div>
+    </div>
+    <div class="footer__inner">
+        <div class="footer__content">
+
+        </div>
+    </div>
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>Powered by <a href="http://gohugo.io">Hugo</a></span>
+            <span>Made with &#10084; by <a href="https://github.com/st0n3">st0n3</a></span>
+            <span>Based on <a href="https://github.com/rhazdon">rhazdon</a></span>
+        </div>
+    </div>
+
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      extensions: ["tex2jax.js"],
+      
+      jax: ["input/TeX", "output/CommonHTML"],
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+        displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+        processEscapes: true
+      },
+      "HTML-CSS": { fonts: ["TeX"] },
+      displayAlign: "left"
+    });
+  </script>
+
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_CHTML"></script>
+
+
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+
+<script type="text/javascript" src="/bundle.min.4c3fb12a087ceed4a52cb5d57068a9795c7069617a01ca70f788052ad66e1791779e6c72686e1dc0ca13dc03b0203204b6566bb0dd1ee80de2b7ff4d8fe53db2.js" integrity="sha512-TD&#43;xKgh87tSlLLXVcGipeVxwaWF6Acpw94gFKtZuF5F3nmxyaG4dwMoT3AOwIDIEtlZrsN0e6A3it/9Nj&#43;U9sg=="></script>
+
+
+
+    </body>
+</html>
