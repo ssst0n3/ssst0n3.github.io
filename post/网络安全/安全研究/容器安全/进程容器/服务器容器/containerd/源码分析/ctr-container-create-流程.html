@@ -7,7 +7,7 @@
 <meta name="author"
     content="">
 <meta name="description"
-    content="tags: 源码分析,container ctr container create 流程 1. ctr 从cmd/ctr/commands/containers目录找到createCommand, 一直跟踪下去，都是在处理参数和调用新的Create函数。
+    content="tags: 源码分析,container ctr container create 流程源码分析 1. ctr 从cmd/ctr/commands/containers目录找到createCommand, 一直跟踪下去，都是在处理参数和调用新的Create函数。
 https://github.com/containerd/containerd/blob/v1.6.0/cmd/ctr/commands/containers/containers.go#L85
 var createCommand = cli.Command{ ... Action: func(context *cli.Context) error { ... _, err = run.NewContainer(ctx, client, context) ... }, } https://github.com/containerd/containerd/blob/v1.6.0/cmd/ctr/commands/run/run_unix.go#L347
 func NewContainer(ctx gocontext.Context, client *containerd.Client, context *cli.Context) (containerd.Container, error) { ... return client.NewContainer(ctx, id, cOpts...) } https://github.com/containerd/containerd/blob/v1.6.0/client.go#L289
@@ -41,7 +41,7 @@ func (c *Client) NewContainer(ctx context.Context, id string, opts ...NewContain
 <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#252627">
 <link rel="shortcut icon" href="/favicon.ico">
 <meta name="theme-color" content="#252627"><meta itemprop="name" content="ctr container create 流程">
-<meta itemprop="description" content="tags: 源码分析,container ctr container create 流程 1. ctr 从cmd/ctr/commands/containers目录找到createCommand, 一直跟踪下去，都是在处理参数和调用新的Create函数。
+<meta itemprop="description" content="tags: 源码分析,container ctr container create 流程源码分析 1. ctr 从cmd/ctr/commands/containers目录找到createCommand, 一直跟踪下去，都是在处理参数和调用新的Create函数。
 https://github.com/containerd/containerd/blob/v1.6.0/cmd/ctr/commands/containers/containers.go#L85
 var createCommand = cli.Command{ ... Action: func(context *cli.Context) error { ... _, err = run.NewContainer(ctx, client, context) ... }, } https://github.com/containerd/containerd/blob/v1.6.0/cmd/ctr/commands/run/run_unix.go#L347
 func NewContainer(ctx gocontext.Context, client *containerd.Client, context *cli.Context) (containerd.Container, error) { ... return client.NewContainer(ctx, id, cOpts...) } https://github.com/containerd/containerd/blob/v1.6.0/client.go#L289
@@ -55,7 +55,7 @@ func (c *Client) NewContainer(ctx context.Context, id string, opts ...NewContain
 <meta itemprop="keywords" content="" />
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="ctr container create 流程"/>
-<meta name="twitter:description" content="tags: 源码分析,container ctr container create 流程 1. ctr 从cmd/ctr/commands/containers目录找到createCommand, 一直跟踪下去，都是在处理参数和调用新的Create函数。
+<meta name="twitter:description" content="tags: 源码分析,container ctr container create 流程源码分析 1. ctr 从cmd/ctr/commands/containers目录找到createCommand, 一直跟踪下去，都是在处理参数和调用新的Create函数。
 https://github.com/containerd/containerd/blob/v1.6.0/cmd/ctr/commands/containers/containers.go#L85
 var createCommand = cli.Command{ ... Action: func(context *cli.Context) error { ... _, err = run.NewContainer(ctx, client, context) ... }, } https://github.com/containerd/containerd/blob/v1.6.0/cmd/ctr/commands/run/run_unix.go#L347
 func NewContainer(ctx gocontext.Context, client *containerd.Client, context *cli.Context) (containerd.Container, error) { ... return client.NewContainer(ctx, id, cOpts...) } https://github.com/containerd/containerd/blob/v1.6.0/client.go#L289
@@ -132,7 +132,7 @@ func (c *Client) NewContainer(ctx context.Context, id string, opts ...NewContain
             <div class="post-content">
                 <hr>
 <h2 id="tags-源码分析container">tags: 源码分析,container</h2>
-<h1 id="ctr-container-create-流程">ctr container create 流程</h1>
+<h1 id="ctr-container-create-流程源码分析">ctr container create 流程源码分析</h1>
 <h2 id="1-ctr">1. ctr</h2>
 <p>从<code>cmd/ctr/commands/containers</code>目录找到<code>createCommand</code>, 一直跟踪下去，都是在处理参数和调用新的Create函数。</p>
 <p><a href="https://github.com/containerd/containerd/blob/v1.6.0/cmd/ctr/commands/containers/containers.go#L85">https://github.com/containerd/containerd/blob/v1.6.0/cmd/ctr/commands/containers/containers.go#L85</a></p>

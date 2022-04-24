@@ -6,7 +6,18 @@
     <description>Recent content on welcome to st0n3&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 11 Apr 2022 03:30:24 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 24 Apr 2022 03:09:33 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>k8s volume plugin 源码分析: Local卷 MountDevice</title>
+      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E5%AE%B9%E5%99%A8%E9%9B%86%E7%BE%A4%E5%AE%89%E5%85%A8/k8s/%E6%BA%90%E7%A0%81%E5%AE%A1%E8%AE%A1/k8s%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/kubelet/volume-plugin/k8s-volume-plugin-%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90-Local%E5%8D%B7-MountDevice.html</link>
+      <pubDate>Sun, 24 Apr 2022 03:09:33 +0000</pubDate>
+      
+      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E5%AE%B9%E5%99%A8%E9%9B%86%E7%BE%A4%E5%AE%89%E5%85%A8/k8s/%E6%BA%90%E7%A0%81%E5%AE%A1%E8%AE%A1/k8s%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/kubelet/volume-plugin/k8s-volume-plugin-%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90-Local%E5%8D%B7-MountDevice.html</guid>
+      <description>tags: kubernetes,container,源码分析 k8s volume plugin 源码分析: Local卷 MountDevice 1. 调用点 2. Local卷 MountDevice 如果文件的实际类型是Block设备，则执行dm.mountLocalBlockDevice
+https://github.com/kubernetes/kubernetes/blob/v1.23.1/pkg/volume/local/local.go#L371
+func (dm *deviceMounter) MountDevice(spec *volume.Spec, devicePath string, deviceMountPath string, _ volume.DeviceMounterArgs) error { ... fileType, err := dm.hostUtil.GetFileType(spec.PersistentVolume.Spec.Local.Path) if err != nil { return err } switch fileType { case hostutil.FileTypeBlockDev: // local volume plugin does not implement AttachableVolumePlugin interface, so set devicePath to Path in PV spec directly 	return dm.mountLocalBlockDevice(spec, spec.PersistentVolume.Spec.Local.Path, deviceMountPath) case hostutil.</description>
+    </item>
+    
     <item>
       <title>Kubelet VolumeManager源码分析: 卷的挂载</title>
       <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E5%AE%B9%E5%99%A8%E9%9B%86%E7%BE%A4%E5%AE%89%E5%85%A8/k8s/%E6%BA%90%E7%A0%81%E5%AE%A1%E8%AE%A1/k8s%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/kubelet/VolumeManager/Kubelet-VolumeManager%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90-%E5%8D%B7%E7%9A%84%E6%8C%82%E8%BD%BD.html</link>
@@ -17,9 +28,9 @@
 1. 入口 reconciler是kubernetes的一个重要设计模式，定期将现实状态同步为期望状态，常见于controller中。
 在VolumeManager中，reconciler定期处理卷的卸载和挂载，本文分析挂载部分。
 https://github.com/kubernetes/kubernetes/blob/v1.23.1/pkg/kubelet/volumemanager/reconciler/reconciler.go#L163-L178
-func (rc *reconciler) reconcile() { rc.unmountVolumes() rc.mountAttachVolumes() rc.unmountDetachDevices() } 遍历期望状态中要挂载的卷，根据其挂载的阶段，执行相应分支的操作。
+func (rc *reconciler) reconcile() { rc.unmountVolumes() rc.mountAttachVolumes() rc.unmountDetachDevices() }  遍历期望状态中要挂载的卷，根据其挂载的阶段，执行相应分支的操作。
 这些分支分别处理以下情况:
- 卷未被&amp;quot;attach&amp;quot;到node 卷未被挂载到pod，或被标记为需要重新挂载 卷需要重新设置权限，即&amp;quot;ExpandInUsePersistentVolumes&amp;quot;特性  https://github.com/kubernetes/kubernetes/blob/v1.23.1/pkg/kubelet/volumemanager/reconciler/reconciler.go#L200
+ 卷未被&amp;quot;attach&amp;quot;到node 卷未被挂载到pod，或被标记为需要重新挂载 卷需要重新设置大小，即&amp;quot;ExpandInUsePersistentVolumes&amp;quot;特性  https://github.com/kubernetes/kubernetes/blob/v1.23.1/pkg/kubelet/volumemanager/reconciler/reconciler.go#L200
 func (rc *reconciler) mountAttachVolumes() { // Ensure volumes that should be attached/mounted are attached/mounted.  for _, volumeToMount := range rc.desiredStateOfWorld.GetVolumesToMount() { volMounted, devicePath, err := rc.actualStateOfWorld.PodExistsInVolume(volumeToMount.PodName, volumeToMount.VolumeName) ... if cache.IsVolumeNotAttachedError(err) { ... } else if !volMounted || cache.IsRemountRequiredError(err) { .</description>
     </item>
     
@@ -83,7 +94,7 @@ func runCreate(dockerCli command.Cli, flags *pflag.</description>
       <pubDate>Sun, 20 Mar 2022 08:06:57 +0000</pubDate>
       
       <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E8%BF%9B%E7%A8%8B%E5%AE%B9%E5%99%A8/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%B9%E5%99%A8/containerd/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/ctr-container-create-%E6%B5%81%E7%A8%8B.html</guid>
-      <description>tags: 源码分析,container ctr container create 流程 1. ctr 从cmd/ctr/commands/containers目录找到createCommand, 一直跟踪下去，都是在处理参数和调用新的Create函数。
+      <description>tags: 源码分析,container ctr container create 流程源码分析 1. ctr 从cmd/ctr/commands/containers目录找到createCommand, 一直跟踪下去，都是在处理参数和调用新的Create函数。
 https://github.com/containerd/containerd/blob/v1.6.0/cmd/ctr/commands/containers/containers.go#L85
 var createCommand = cli.Command{ ... Action: func(context *cli.Context) error { ... _, err = run.NewContainer(ctx, client, context) ... }, } https://github.com/containerd/containerd/blob/v1.6.0/cmd/ctr/commands/run/run_unix.go#L347
 func NewContainer(ctx gocontext.Context, client *containerd.Client, context *cli.Context) (containerd.Container, error) { ... return client.NewContainer(ctx, id, cOpts...) } https://github.com/containerd/containerd/blob/v1.6.0/client.go#L289
