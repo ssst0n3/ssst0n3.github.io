@@ -54,7 +54,7 @@ func (rc *reconciler) reconcile() { rc.unmountVolumes() rc.mountAttachVolumes() 
 func (rc *reconciler) mountAttachVolumes() { // Ensure volumes that should be attached/mounted are attached/mounted.  for _, volumeToMount := range rc.desiredStateOfWorld.GetVolumesToMount() { volMounted, devicePath, err := rc.actualStateOfWorld.PodExistsInVolume(volumeToMount.PodName, volumeToMount.VolumeName) ... if cache.IsVolumeNotAttachedError(err) { ... } else if !volMounted || cache.IsRemountRequiredError(err) { .">
 <meta itemprop="datePublished" content="2022-04-11T03:30:24+00:00" />
 <meta itemprop="dateModified" content="2022-04-11T03:30:24+00:00" />
-<meta itemprop="wordCount" content="2685">
+<meta itemprop="wordCount" content="1271">
 
 
 
@@ -617,42 +617,13 @@ func (rc *reconciler) mountAttachVolumes() { // Ensure volumes that should be at
 <li><a href="https://ssst0n3.github.io/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E5%AE%B9%E5%99%A8%E9%9B%86%E7%BE%A4%E5%AE%89%E5%85%A8/k8s/%E6%BA%90%E7%A0%81%E5%AE%A1%E8%AE%A1/k8s%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/kubelet/volume-plugin/k8s-volume-plugin-%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90-Local%E5%8D%B7-MountDevice.html">k8s volume plugin 源码分析: Local卷 MountDevice</a></li>
 </ul>
 <hr>
-<h4 id="315">3.1.5</h4>
+<h4 id="315-mountersetup">3.1.5 Mounter.SetUp</h4>
+<p>最终，执行<code>SetUp</code>方法，真正将卷挂载至pod内。</p>
+<p><a href="https://github.com/kubernetes/kubernetes/blob/v1.23.1/pkg/volume/util/operationexecutor/operation_generator.go#L725">https://github.com/kubernetes/kubernetes/blob/v1.23.1/pkg/volume/util/operationexecutor/operation_generator.go#L725</a></p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">og</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">operationGenerator</span>) <span style="color:#a6e22e">GenerateMountVolumeFunc</span>(<span style="color:#f92672">...</span>) <span style="color:#a6e22e">volumetypes</span>.<span style="color:#a6e22e">GeneratedOperations</span> {
     <span style="color:#f92672">...</span>
     <span style="color:#a6e22e">mountVolumeFunc</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">func</span>() <span style="color:#a6e22e">volumetypes</span>.<span style="color:#a6e22e">OperationContext</span> {
         <span style="color:#f92672">...</span>
-        <span style="color:#a6e22e">volumeMounter</span>, <span style="color:#a6e22e">newMounterErr</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">volumePlugin</span>.<span style="color:#a6e22e">NewMounter</span>(
-            <span style="color:#a6e22e">volumeToMount</span>.<span style="color:#a6e22e">VolumeSpec</span>,
-            <span style="color:#a6e22e">volumeToMount</span>.<span style="color:#a6e22e">Pod</span>,
-            <span style="color:#a6e22e">volume</span>.<span style="color:#a6e22e">VolumeOptions</span>{})
-        <span style="color:#f92672">...</span>
-
-        <span style="color:#75715e">// get deviceMounter, if possible
-</span><span style="color:#75715e"></span>        <span style="color:#a6e22e">deviceMountableVolumePlugin</span>, <span style="color:#a6e22e">_</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">og</span>.<span style="color:#a6e22e">volumePluginMgr</span>.<span style="color:#a6e22e">FindDeviceMountablePluginBySpec</span>(<span style="color:#a6e22e">volumeToMount</span>.<span style="color:#a6e22e">VolumeSpec</span>)
-        <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">volumeDeviceMounter</span> <span style="color:#a6e22e">volume</span>.<span style="color:#a6e22e">DeviceMounter</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">deviceMountableVolumePlugin</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
-            <span style="color:#a6e22e">volumeDeviceMounter</span>, <span style="color:#a6e22e">_</span> = <span style="color:#a6e22e">deviceMountableVolumePlugin</span>.<span style="color:#a6e22e">NewDeviceMounter</span>()
-        }
-        <span style="color:#f92672">...</span>
-        <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">resizeDone</span> <span style="color:#66d9ef">bool</span>
-        <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">resizeError</span> <span style="color:#66d9ef">error</span>
-        <span style="color:#a6e22e">resizeOptions</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">volume</span>.<span style="color:#a6e22e">NodeResizeOptions</span>{
-            <span style="color:#a6e22e">DevicePath</span>: <span style="color:#a6e22e">devicePath</span>,
-        }
-
-        <span style="color:#f92672">...</span>
-
-        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">og</span>.<span style="color:#a6e22e">checkNodeCapabilitiesBeforeMount</span> {
-            <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">canMountErr</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">volumeMounter</span>.<span style="color:#a6e22e">CanMount</span>(); <span style="color:#a6e22e">canMountErr</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
-                <span style="color:#a6e22e">err</span> = <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Errorf</span>(
-                    <span style="color:#e6db74">&#34;verify that your node machine has the required components before attempting to mount this volume type. %s&#34;</span>,
-                    <span style="color:#a6e22e">canMountErr</span>)
-                <span style="color:#a6e22e">eventErr</span>, <span style="color:#a6e22e">detailedErr</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">volumeToMount</span>.<span style="color:#a6e22e">GenerateError</span>(<span style="color:#e6db74">&#34;MountVolume.CanMount failed&#34;</span>, <span style="color:#a6e22e">err</span>)
-                <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">volumetypes</span>.<span style="color:#a6e22e">NewOperationContext</span>(<span style="color:#a6e22e">eventErr</span>, <span style="color:#a6e22e">detailedErr</span>, <span style="color:#a6e22e">migrated</span>)
-            }
-        }
-
         <span style="color:#75715e">// Execute mount
 </span><span style="color:#75715e"></span>        <span style="color:#a6e22e">mountErr</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">volumeMounter</span>.<span style="color:#a6e22e">SetUp</span>(<span style="color:#a6e22e">volume</span>.<span style="color:#a6e22e">MounterArgs</span>{
             <span style="color:#a6e22e">FsUser</span>:              <span style="color:#a6e22e">util</span>.<span style="color:#a6e22e">FsUserFrom</span>(<span style="color:#a6e22e">volumeToMount</span>.<span style="color:#a6e22e">Pod</span>),
@@ -660,305 +631,16 @@ func (rc *reconciler) mountAttachVolumes() { // Ensure volumes that should be at
             <span style="color:#a6e22e">DesiredSize</span>:         <span style="color:#a6e22e">volumeToMount</span>.<span style="color:#a6e22e">DesiredSizeLimit</span>,
             <span style="color:#a6e22e">FSGroupChangePolicy</span>: <span style="color:#a6e22e">fsGroupChangePolicy</span>,
         })
-        <span style="color:#75715e">// Update actual state of world
-</span><span style="color:#75715e"></span>        <span style="color:#a6e22e">markOpts</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">MarkVolumeOpts</span>{
-            <span style="color:#a6e22e">PodName</span>:             <span style="color:#a6e22e">volumeToMount</span>.<span style="color:#a6e22e">PodName</span>,
-            <span style="color:#a6e22e">PodUID</span>:              <span style="color:#a6e22e">volumeToMount</span>.<span style="color:#a6e22e">Pod</span>.<span style="color:#a6e22e">UID</span>,
-            <span style="color:#a6e22e">VolumeName</span>:          <span style="color:#a6e22e">volumeToMount</span>.<span style="color:#a6e22e">VolumeName</span>,
-            <span style="color:#a6e22e">Mounter</span>:             <span style="color:#a6e22e">volumeMounter</span>,
-            <span style="color:#a6e22e">OuterVolumeSpecName</span>: <span style="color:#a6e22e">volumeToMount</span>.<span style="color:#a6e22e">OuterVolumeSpecName</span>,
-            <span style="color:#a6e22e">VolumeGidVolume</span>:     <span style="color:#a6e22e">volumeToMount</span>.<span style="color:#a6e22e">VolumeGidValue</span>,
-            <span style="color:#a6e22e">VolumeSpec</span>:          <span style="color:#a6e22e">volumeToMount</span>.<span style="color:#a6e22e">VolumeSpec</span>,
-            <span style="color:#a6e22e">VolumeMountState</span>:    <span style="color:#a6e22e">VolumeMounted</span>,
-        }
-        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">mountErr</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
-            <span style="color:#a6e22e">og</span>.<span style="color:#a6e22e">checkForFailedMount</span>(<span style="color:#a6e22e">volumeToMount</span>, <span style="color:#a6e22e">mountErr</span>)
-            <span style="color:#a6e22e">og</span>.<span style="color:#a6e22e">markVolumeErrorState</span>(<span style="color:#a6e22e">volumeToMount</span>, <span style="color:#a6e22e">markOpts</span>, <span style="color:#a6e22e">mountErr</span>, <span style="color:#a6e22e">actualStateOfWorld</span>)
-            <span style="color:#75715e">// On failure, return error. Caller will log and retry.
-</span><span style="color:#75715e"></span>            <span style="color:#a6e22e">eventErr</span>, <span style="color:#a6e22e">detailedErr</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">volumeToMount</span>.<span style="color:#a6e22e">GenerateError</span>(<span style="color:#e6db74">&#34;MountVolume.SetUp failed&#34;</span>, <span style="color:#a6e22e">mountErr</span>)
-            <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">volumetypes</span>.<span style="color:#a6e22e">NewOperationContext</span>(<span style="color:#a6e22e">eventErr</span>, <span style="color:#a6e22e">detailedErr</span>, <span style="color:#a6e22e">migrated</span>)
-        }
-
-        <span style="color:#a6e22e">detailedMsg</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">volumeToMount</span>.<span style="color:#a6e22e">GenerateMsgDetailed</span>(<span style="color:#e6db74">&#34;MountVolume.SetUp succeeded&#34;</span>, <span style="color:#e6db74">&#34;&#34;</span>)
-        <span style="color:#a6e22e">verbosity</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">klog</span>.<span style="color:#a6e22e">Level</span>(<span style="color:#ae81ff">1</span>)
-        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">isRemount</span> {
-            <span style="color:#a6e22e">verbosity</span> = <span style="color:#a6e22e">klog</span>.<span style="color:#a6e22e">Level</span>(<span style="color:#ae81ff">4</span>)
-        }
-        <span style="color:#a6e22e">klog</span>.<span style="color:#a6e22e">V</span>(<span style="color:#a6e22e">verbosity</span>).<span style="color:#a6e22e">InfoS</span>(<span style="color:#a6e22e">detailedMsg</span>, <span style="color:#e6db74">&#34;pod&#34;</span>, <span style="color:#a6e22e">klog</span>.<span style="color:#a6e22e">KObj</span>(<span style="color:#a6e22e">volumeToMount</span>.<span style="color:#a6e22e">Pod</span>))
-        <span style="color:#a6e22e">resizeOptions</span>.<span style="color:#a6e22e">DeviceMountPath</span> = <span style="color:#a6e22e">volumeMounter</span>.<span style="color:#a6e22e">GetPath</span>()
-        <span style="color:#a6e22e">resizeOptions</span>.<span style="color:#a6e22e">CSIVolumePhase</span> = <span style="color:#a6e22e">volume</span>.<span style="color:#a6e22e">CSIVolumePublished</span>
-
-        <span style="color:#75715e">// We need to call resizing here again in case resizing was not done during device mount. There could be
-</span><span style="color:#75715e"></span>        <span style="color:#75715e">// two reasons of that:
-</span><span style="color:#75715e"></span>        <span style="color:#75715e">//	- Volume does not support DeviceMounter interface.
-</span><span style="color:#75715e"></span>        <span style="color:#75715e">//	- In case of CSI the volume does not have node stage_unstage capability.
-</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> !<span style="color:#a6e22e">resizeDone</span> {
-            <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">resizeError</span> = <span style="color:#a6e22e">og</span>.<span style="color:#a6e22e">nodeExpandVolume</span>(<span style="color:#a6e22e">volumeToMount</span>, <span style="color:#a6e22e">actualStateOfWorld</span>, <span style="color:#a6e22e">resizeOptions</span>)
-            <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">resizeError</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
-                <span style="color:#a6e22e">klog</span>.<span style="color:#a6e22e">Errorf</span>(<span style="color:#e6db74">&#34;MountVolume.NodeExpandVolume failed with %v&#34;</span>, <span style="color:#a6e22e">resizeError</span>)
-                <span style="color:#a6e22e">eventErr</span>, <span style="color:#a6e22e">detailedErr</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">volumeToMount</span>.<span style="color:#a6e22e">GenerateError</span>(<span style="color:#e6db74">&#34;MountVolume.Setup failed while expanding volume&#34;</span>, <span style="color:#a6e22e">resizeError</span>)
-                <span style="color:#75715e">// At this point, MountVolume.Setup already succeeded, we should add volume into actual state
-</span><span style="color:#75715e"></span>                <span style="color:#75715e">// so that reconciler can clean up volume when needed. However, volume resize failed,
-</span><span style="color:#75715e"></span>                <span style="color:#75715e">// we should not mark the volume as mounted to avoid pod starts using it.
-</span><span style="color:#75715e"></span>                <span style="color:#75715e">// Considering the above situations, we mark volume as uncertain here so that reconciler will tigger
-</span><span style="color:#75715e"></span>                <span style="color:#75715e">// volume tear down when pod is deleted, and also makes sure pod will not start using it.
-</span><span style="color:#75715e"></span>                <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">actualStateOfWorld</span>.<span style="color:#a6e22e">MarkVolumeMountAsUncertain</span>(<span style="color:#a6e22e">markOpts</span>); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
-                    <span style="color:#a6e22e">klog</span>.<span style="color:#a6e22e">Errorf</span>(<span style="color:#a6e22e">volumeToMount</span>.<span style="color:#a6e22e">GenerateErrorDetailed</span>(<span style="color:#e6db74">&#34;MountVolume.MarkVolumeMountAsUncertain failed&#34;</span>, <span style="color:#a6e22e">err</span>).<span style="color:#a6e22e">Error</span>())
-                }
-                <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">volumetypes</span>.<span style="color:#a6e22e">NewOperationContext</span>(<span style="color:#a6e22e">eventErr</span>, <span style="color:#a6e22e">detailedErr</span>, <span style="color:#a6e22e">migrated</span>)
-            }
-        }
-
+        <span style="color:#f92672">...</span>
         <span style="color:#a6e22e">markVolMountedErr</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">actualStateOfWorld</span>.<span style="color:#a6e22e">MarkVolumeAsMounted</span>(<span style="color:#a6e22e">markOpts</span>)
-        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">markVolMountedErr</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
-            <span style="color:#75715e">// On failure, return error. Caller will log and retry.
-</span><span style="color:#75715e"></span>            <span style="color:#a6e22e">eventErr</span>, <span style="color:#a6e22e">detailedErr</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">volumeToMount</span>.<span style="color:#a6e22e">GenerateError</span>(<span style="color:#e6db74">&#34;MountVolume.MarkVolumeAsMounted failed&#34;</span>, <span style="color:#a6e22e">markVolMountedErr</span>)
-            <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">volumetypes</span>.<span style="color:#a6e22e">NewOperationContext</span>(<span style="color:#a6e22e">eventErr</span>, <span style="color:#a6e22e">detailedErr</span>, <span style="color:#a6e22e">migrated</span>)
-        }
-        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">volumetypes</span>.<span style="color:#a6e22e">NewOperationContext</span>(<span style="color:#66d9ef">nil</span>, <span style="color:#66d9ef">nil</span>, <span style="color:#a6e22e">migrated</span>)
+        <span style="color:#f92672">...</span>
     }
     <span style="color:#f92672">...</span>
 }
-</code></pre></div><h3 id="32-block模式卷的挂载">3.2 Block模式卷的挂载</h3>
-<p><a href="https://github.com/kubernetes/kubernetes/blob/v1.23.1/pkg/volume/util/operationexecutor/operation_generator.go#L1088">https://github.com/kubernetes/kubernetes/blob/v1.23.1/pkg/volume/util/operationexecutor/operation_generator.go#L1088</a></p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">og</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">operationGenerator</span>) <span style="color:#a6e22e">GenerateMapVolumeFunc</span>(
-	<span style="color:#a6e22e">waitForAttachTimeout</span> <span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Duration</span>,
-	<span style="color:#a6e22e">volumeToMount</span> <span style="color:#a6e22e">VolumeToMount</span>,
-	<span style="color:#a6e22e">actualStateOfWorld</span> <span style="color:#a6e22e">ActualStateOfWorldMounterUpdater</span>) (<span style="color:#a6e22e">volumetypes</span>.<span style="color:#a6e22e">GeneratedOperations</span>, <span style="color:#66d9ef">error</span>) {
-
-    <span style="color:#75715e">// Get block volume mapper plugin
-</span><span style="color:#75715e"></span>    <span style="color:#a6e22e">blockVolumePlugin</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span>
-        <span style="color:#a6e22e">og</span>.<span style="color:#a6e22e">volumePluginMgr</span>.<span style="color:#a6e22e">FindMapperPluginBySpec</span>(<span style="color:#a6e22e">volumeToMount</span>.<span style="color:#a6e22e">VolumeSpec</span>)
-    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
-        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">volumetypes</span>.<span style="color:#a6e22e">GeneratedOperations</span>{}, <span style="color:#a6e22e">volumeToMount</span>.<span style="color:#a6e22e">GenerateErrorDetailed</span>(<span style="color:#e6db74">&#34;MapVolume.FindMapperPluginBySpec failed&#34;</span>, <span style="color:#a6e22e">err</span>)
-    }
-
-    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">blockVolumePlugin</span> <span style="color:#f92672">==</span> <span style="color:#66d9ef">nil</span> {
-        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">volumetypes</span>.<span style="color:#a6e22e">GeneratedOperations</span>{}, <span style="color:#a6e22e">volumeToMount</span>.<span style="color:#a6e22e">GenerateErrorDetailed</span>(<span style="color:#e6db74">&#34;MapVolume.FindMapperPluginBySpec failed to find BlockVolumeMapper plugin. Volume plugin is nil.&#34;</span>, <span style="color:#66d9ef">nil</span>)
-    }
-
-    <span style="color:#a6e22e">affinityErr</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">checkNodeAffinity</span>(<span style="color:#a6e22e">og</span>, <span style="color:#a6e22e">volumeToMount</span>)
-    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">affinityErr</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
-        <span style="color:#a6e22e">eventErr</span>, <span style="color:#a6e22e">detailedErr</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">volumeToMount</span>.<span style="color:#a6e22e">GenerateError</span>(<span style="color:#e6db74">&#34;MapVolume.NodeAffinity check failed&#34;</span>, <span style="color:#a6e22e">affinityErr</span>)
-        <span style="color:#a6e22e">og</span>.<span style="color:#a6e22e">recorder</span>.<span style="color:#a6e22e">Eventf</span>(<span style="color:#a6e22e">volumeToMount</span>.<span style="color:#a6e22e">Pod</span>, <span style="color:#a6e22e">v1</span>.<span style="color:#a6e22e">EventTypeWarning</span>, <span style="color:#a6e22e">kevents</span>.<span style="color:#a6e22e">FailedMountVolume</span>, <span style="color:#a6e22e">eventErr</span>.<span style="color:#a6e22e">Error</span>())
-        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">volumetypes</span>.<span style="color:#a6e22e">GeneratedOperations</span>{}, <span style="color:#a6e22e">detailedErr</span>
-    }
-    <span style="color:#a6e22e">blockVolumeMapper</span>, <span style="color:#a6e22e">newMapperErr</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">blockVolumePlugin</span>.<span style="color:#a6e22e">NewBlockVolumeMapper</span>(
-        <span style="color:#a6e22e">volumeToMount</span>.<span style="color:#a6e22e">VolumeSpec</span>,
-        <span style="color:#a6e22e">volumeToMount</span>.<span style="color:#a6e22e">Pod</span>,
-        <span style="color:#a6e22e">volume</span>.<span style="color:#a6e22e">VolumeOptions</span>{})
-    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">newMapperErr</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
-        <span style="color:#a6e22e">eventErr</span>, <span style="color:#a6e22e">detailedErr</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">volumeToMount</span>.<span style="color:#a6e22e">GenerateError</span>(<span style="color:#e6db74">&#34;MapVolume.NewBlockVolumeMapper initialization failed&#34;</span>, <span style="color:#a6e22e">newMapperErr</span>)
-        <span style="color:#a6e22e">og</span>.<span style="color:#a6e22e">recorder</span>.<span style="color:#a6e22e">Eventf</span>(<span style="color:#a6e22e">volumeToMount</span>.<span style="color:#a6e22e">Pod</span>, <span style="color:#a6e22e">v1</span>.<span style="color:#a6e22e">EventTypeWarning</span>, <span style="color:#a6e22e">kevents</span>.<span style="color:#a6e22e">FailedMapVolume</span>, <span style="color:#a6e22e">eventErr</span>.<span style="color:#a6e22e">Error</span>())
-        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">volumetypes</span>.<span style="color:#a6e22e">GeneratedOperations</span>{}, <span style="color:#a6e22e">detailedErr</span>
-    }
-
-    <span style="color:#75715e">// Get attacher, if possible
-</span><span style="color:#75715e"></span>    <span style="color:#a6e22e">attachableVolumePlugin</span>, <span style="color:#a6e22e">_</span> <span style="color:#f92672">:=</span>
-        <span style="color:#a6e22e">og</span>.<span style="color:#a6e22e">volumePluginMgr</span>.<span style="color:#a6e22e">FindAttachablePluginBySpec</span>(<span style="color:#a6e22e">volumeToMount</span>.<span style="color:#a6e22e">VolumeSpec</span>)
-    <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">volumeAttacher</span> <span style="color:#a6e22e">volume</span>.<span style="color:#a6e22e">Attacher</span>
-    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">attachableVolumePlugin</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
-        <span style="color:#a6e22e">volumeAttacher</span>, <span style="color:#a6e22e">_</span> = <span style="color:#a6e22e">attachableVolumePlugin</span>.<span style="color:#a6e22e">NewAttacher</span>()
-    }
-
-    <span style="color:#a6e22e">mapVolumeFunc</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">func</span>() (<span style="color:#a6e22e">operationContext</span> <span style="color:#a6e22e">volumetypes</span>.<span style="color:#a6e22e">OperationContext</span>) {
-        <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">devicePath</span> <span style="color:#66d9ef">string</span>
-        <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">stagingPath</span> <span style="color:#66d9ef">string</span>
-
-        <span style="color:#a6e22e">migrated</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">getMigratedStatusBySpec</span>(<span style="color:#a6e22e">volumeToMount</span>.<span style="color:#a6e22e">VolumeSpec</span>)
-
-        <span style="color:#75715e">// Enforce ReadWriteOncePod access mode. This is also enforced during scheduling.
-</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">utilfeature</span>.<span style="color:#a6e22e">DefaultFeatureGate</span>.<span style="color:#a6e22e">Enabled</span>(<span style="color:#a6e22e">features</span>.<span style="color:#a6e22e">ReadWriteOncePod</span>) <span style="color:#f92672">&amp;&amp;</span>
-            <span style="color:#a6e22e">actualStateOfWorld</span>.<span style="color:#a6e22e">IsVolumeMountedElsewhere</span>(<span style="color:#a6e22e">volumeToMount</span>.<span style="color:#a6e22e">VolumeName</span>, <span style="color:#a6e22e">volumeToMount</span>.<span style="color:#a6e22e">PodName</span>) <span style="color:#f92672">&amp;&amp;</span>
-            <span style="color:#75715e">// Because we do not know what access mode the pod intends to use if there are multiple.
-</span><span style="color:#75715e"></span>            len(<span style="color:#a6e22e">volumeToMount</span>.<span style="color:#a6e22e">VolumeSpec</span>.<span style="color:#a6e22e">PersistentVolume</span>.<span style="color:#a6e22e">Spec</span>.<span style="color:#a6e22e">AccessModes</span>) <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">&amp;&amp;</span>
-            <span style="color:#a6e22e">v1helper</span>.<span style="color:#a6e22e">ContainsAccessMode</span>(<span style="color:#a6e22e">volumeToMount</span>.<span style="color:#a6e22e">VolumeSpec</span>.<span style="color:#a6e22e">PersistentVolume</span>.<span style="color:#a6e22e">Spec</span>.<span style="color:#a6e22e">AccessModes</span>, <span style="color:#a6e22e">v1</span>.<span style="color:#a6e22e">ReadWriteOncePod</span>) {
-
-            <span style="color:#a6e22e">err</span> = <span style="color:#a6e22e">goerrors</span>.<span style="color:#a6e22e">New</span>(<span style="color:#e6db74">&#34;volume uses the ReadWriteOncePod access mode and is already in use by another pod&#34;</span>)
-            <span style="color:#a6e22e">eventErr</span>, <span style="color:#a6e22e">detailedErr</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">volumeToMount</span>.<span style="color:#a6e22e">GenerateError</span>(<span style="color:#e6db74">&#34;MapVolume.SetUpDevice failed&#34;</span>, <span style="color:#a6e22e">err</span>)
-            <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">volumetypes</span>.<span style="color:#a6e22e">NewOperationContext</span>(<span style="color:#a6e22e">eventErr</span>, <span style="color:#a6e22e">detailedErr</span>, <span style="color:#a6e22e">migrated</span>)
-        }
-
-        <span style="color:#75715e">// Set up global map path under the given plugin directory using symbolic link
-</span><span style="color:#75715e"></span>        <span style="color:#a6e22e">globalMapPath</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span>
-            <span style="color:#a6e22e">blockVolumeMapper</span>.<span style="color:#a6e22e">GetGlobalMapPath</span>(<span style="color:#a6e22e">volumeToMount</span>.<span style="color:#a6e22e">VolumeSpec</span>)
-        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
-            <span style="color:#75715e">// On failure, return error. Caller will log and retry.
-</span><span style="color:#75715e"></span>            <span style="color:#a6e22e">eventErr</span>, <span style="color:#a6e22e">detailedErr</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">volumeToMount</span>.<span style="color:#a6e22e">GenerateError</span>(<span style="color:#e6db74">&#34;MapVolume.GetGlobalMapPath failed&#34;</span>, <span style="color:#a6e22e">err</span>)
-            <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">volumetypes</span>.<span style="color:#a6e22e">NewOperationContext</span>(<span style="color:#a6e22e">eventErr</span>, <span style="color:#a6e22e">detailedErr</span>, <span style="color:#a6e22e">migrated</span>)
-        }
-        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">volumeAttacher</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
-            <span style="color:#75715e">// Wait for attachable volumes to finish attaching
-</span><span style="color:#75715e"></span>            <span style="color:#a6e22e">klog</span>.<span style="color:#a6e22e">InfoS</span>(<span style="color:#a6e22e">volumeToMount</span>.<span style="color:#a6e22e">GenerateMsgDetailed</span>(<span style="color:#e6db74">&#34;MapVolume.WaitForAttach entering&#34;</span>, <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Sprintf</span>(<span style="color:#e6db74">&#34;DevicePath %q&#34;</span>, <span style="color:#a6e22e">volumeToMount</span>.<span style="color:#a6e22e">DevicePath</span>)), <span style="color:#e6db74">&#34;pod&#34;</span>, <span style="color:#a6e22e">klog</span>.<span style="color:#a6e22e">KObj</span>(<span style="color:#a6e22e">volumeToMount</span>.<span style="color:#a6e22e">Pod</span>))
-
-            <span style="color:#a6e22e">devicePath</span>, <span style="color:#a6e22e">err</span> = <span style="color:#a6e22e">volumeAttacher</span>.<span style="color:#a6e22e">WaitForAttach</span>(
-                <span style="color:#a6e22e">volumeToMount</span>.<span style="color:#a6e22e">VolumeSpec</span>, <span style="color:#a6e22e">volumeToMount</span>.<span style="color:#a6e22e">DevicePath</span>, <span style="color:#a6e22e">volumeToMount</span>.<span style="color:#a6e22e">Pod</span>, <span style="color:#a6e22e">waitForAttachTimeout</span>)
-            <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
-                <span style="color:#75715e">// On failure, return error. Caller will log and retry.
-</span><span style="color:#75715e"></span>                <span style="color:#a6e22e">eventErr</span>, <span style="color:#a6e22e">detailedErr</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">volumeToMount</span>.<span style="color:#a6e22e">GenerateError</span>(<span style="color:#e6db74">&#34;MapVolume.WaitForAttach failed&#34;</span>, <span style="color:#a6e22e">err</span>)
-                <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">volumetypes</span>.<span style="color:#a6e22e">NewOperationContext</span>(<span style="color:#a6e22e">eventErr</span>, <span style="color:#a6e22e">detailedErr</span>, <span style="color:#a6e22e">migrated</span>)
-            }
-
-            <span style="color:#a6e22e">klog</span>.<span style="color:#a6e22e">InfoS</span>(<span style="color:#a6e22e">volumeToMount</span>.<span style="color:#a6e22e">GenerateMsgDetailed</span>(<span style="color:#e6db74">&#34;MapVolume.WaitForAttach succeeded&#34;</span>, <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Sprintf</span>(<span style="color:#e6db74">&#34;DevicePath %q&#34;</span>, <span style="color:#a6e22e">devicePath</span>)), <span style="color:#e6db74">&#34;pod&#34;</span>, <span style="color:#a6e22e">klog</span>.<span style="color:#a6e22e">KObj</span>(<span style="color:#a6e22e">volumeToMount</span>.<span style="color:#a6e22e">Pod</span>))
-
-        }
-        <span style="color:#75715e">// Call SetUpDevice if blockVolumeMapper implements CustomBlockVolumeMapper
-</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">customBlockVolumeMapper</span>, <span style="color:#a6e22e">ok</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">blockVolumeMapper</span>.(<span style="color:#a6e22e">volume</span>.<span style="color:#a6e22e">CustomBlockVolumeMapper</span>); <span style="color:#a6e22e">ok</span> {
-            <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">mapErr</span> <span style="color:#66d9ef">error</span>
-            <span style="color:#a6e22e">stagingPath</span>, <span style="color:#a6e22e">mapErr</span> = <span style="color:#a6e22e">customBlockVolumeMapper</span>.<span style="color:#a6e22e">SetUpDevice</span>()
-            <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">mapErr</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
-                <span style="color:#a6e22e">og</span>.<span style="color:#a6e22e">markDeviceErrorState</span>(<span style="color:#a6e22e">volumeToMount</span>, <span style="color:#a6e22e">devicePath</span>, <span style="color:#a6e22e">globalMapPath</span>, <span style="color:#a6e22e">mapErr</span>, <span style="color:#a6e22e">actualStateOfWorld</span>)
-                <span style="color:#75715e">// On failure, return error. Caller will log and retry.
-</span><span style="color:#75715e"></span>                <span style="color:#a6e22e">eventErr</span>, <span style="color:#a6e22e">detailedErr</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">volumeToMount</span>.<span style="color:#a6e22e">GenerateError</span>(<span style="color:#e6db74">&#34;MapVolume.SetUpDevice failed&#34;</span>, <span style="color:#a6e22e">mapErr</span>)
-                <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">volumetypes</span>.<span style="color:#a6e22e">NewOperationContext</span>(<span style="color:#a6e22e">eventErr</span>, <span style="color:#a6e22e">detailedErr</span>, <span style="color:#a6e22e">migrated</span>)
-            }
-        }
-
-        <span style="color:#75715e">// Update actual state of world to reflect volume is globally mounted
-</span><span style="color:#75715e"></span>        <span style="color:#a6e22e">markedDevicePath</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">devicePath</span>
-        <span style="color:#a6e22e">markDeviceMappedErr</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">actualStateOfWorld</span>.<span style="color:#a6e22e">MarkDeviceAsMounted</span>(
-            <span style="color:#a6e22e">volumeToMount</span>.<span style="color:#a6e22e">VolumeName</span>, <span style="color:#a6e22e">markedDevicePath</span>, <span style="color:#a6e22e">globalMapPath</span>)
-        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">markDeviceMappedErr</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
-            <span style="color:#75715e">// On failure, return error. Caller will log and retry.
-</span><span style="color:#75715e"></span>            <span style="color:#a6e22e">eventErr</span>, <span style="color:#a6e22e">detailedErr</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">volumeToMount</span>.<span style="color:#a6e22e">GenerateError</span>(<span style="color:#e6db74">&#34;MapVolume.MarkDeviceAsMounted failed&#34;</span>, <span style="color:#a6e22e">markDeviceMappedErr</span>)
-            <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">volumetypes</span>.<span style="color:#a6e22e">NewOperationContext</span>(<span style="color:#a6e22e">eventErr</span>, <span style="color:#a6e22e">detailedErr</span>, <span style="color:#a6e22e">migrated</span>)
-        }
-
-        <span style="color:#a6e22e">markVolumeOpts</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">MarkVolumeOpts</span>{
-            <span style="color:#a6e22e">PodName</span>:             <span style="color:#a6e22e">volumeToMount</span>.<span style="color:#a6e22e">PodName</span>,
-            <span style="color:#a6e22e">PodUID</span>:              <span style="color:#a6e22e">volumeToMount</span>.<span style="color:#a6e22e">Pod</span>.<span style="color:#a6e22e">UID</span>,
-            <span style="color:#a6e22e">VolumeName</span>:          <span style="color:#a6e22e">volumeToMount</span>.<span style="color:#a6e22e">VolumeName</span>,
-            <span style="color:#a6e22e">BlockVolumeMapper</span>:   <span style="color:#a6e22e">blockVolumeMapper</span>,
-            <span style="color:#a6e22e">OuterVolumeSpecName</span>: <span style="color:#a6e22e">volumeToMount</span>.<span style="color:#a6e22e">OuterVolumeSpecName</span>,
-            <span style="color:#a6e22e">VolumeGidVolume</span>:     <span style="color:#a6e22e">volumeToMount</span>.<span style="color:#a6e22e">VolumeGidValue</span>,
-            <span style="color:#a6e22e">VolumeSpec</span>:          <span style="color:#a6e22e">volumeToMount</span>.<span style="color:#a6e22e">VolumeSpec</span>,
-            <span style="color:#a6e22e">VolumeMountState</span>:    <span style="color:#a6e22e">VolumeMounted</span>,
-        }
-
-        <span style="color:#75715e">// Call MapPodDevice if blockVolumeMapper implements CustomBlockVolumeMapper
-</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">customBlockVolumeMapper</span>, <span style="color:#a6e22e">ok</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">blockVolumeMapper</span>.(<span style="color:#a6e22e">volume</span>.<span style="color:#a6e22e">CustomBlockVolumeMapper</span>); <span style="color:#a6e22e">ok</span> {
-            <span style="color:#75715e">// Execute driver specific map
-</span><span style="color:#75715e"></span>            <span style="color:#a6e22e">pluginDevicePath</span>, <span style="color:#a6e22e">mapErr</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">customBlockVolumeMapper</span>.<span style="color:#a6e22e">MapPodDevice</span>()
-            <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">mapErr</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
-                <span style="color:#75715e">// On failure, return error. Caller will log and retry.
-</span><span style="color:#75715e"></span>                <span style="color:#a6e22e">og</span>.<span style="color:#a6e22e">markVolumeErrorState</span>(<span style="color:#a6e22e">volumeToMount</span>, <span style="color:#a6e22e">markVolumeOpts</span>, <span style="color:#a6e22e">mapErr</span>, <span style="color:#a6e22e">actualStateOfWorld</span>)
-                <span style="color:#a6e22e">eventErr</span>, <span style="color:#a6e22e">detailedErr</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">volumeToMount</span>.<span style="color:#a6e22e">GenerateError</span>(<span style="color:#e6db74">&#34;MapVolume.MapPodDevice failed&#34;</span>, <span style="color:#a6e22e">mapErr</span>)
-                <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">volumetypes</span>.<span style="color:#a6e22e">NewOperationContext</span>(<span style="color:#a6e22e">eventErr</span>, <span style="color:#a6e22e">detailedErr</span>, <span style="color:#a6e22e">migrated</span>)
-            }
-
-            <span style="color:#75715e">// From now on, the volume is mapped. Mark it as uncertain on error,
-</span><span style="color:#75715e"></span>            <span style="color:#75715e">// so it is is unmapped when corresponding pod is deleted.
-</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">defer</span> <span style="color:#66d9ef">func</span>() {
-                <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">operationContext</span>.<span style="color:#a6e22e">EventErr</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
-                    <span style="color:#a6e22e">errText</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">operationContext</span>.<span style="color:#a6e22e">EventErr</span>.<span style="color:#a6e22e">Error</span>()
-                    <span style="color:#a6e22e">og</span>.<span style="color:#a6e22e">markVolumeErrorState</span>(<span style="color:#a6e22e">volumeToMount</span>, <span style="color:#a6e22e">markVolumeOpts</span>, <span style="color:#a6e22e">volumetypes</span>.<span style="color:#a6e22e">NewUncertainProgressError</span>(<span style="color:#a6e22e">errText</span>), <span style="color:#a6e22e">actualStateOfWorld</span>)
-                }
-            }()
-
-            <span style="color:#75715e">// if pluginDevicePath is provided, assume attacher may not provide device
-</span><span style="color:#75715e"></span>            <span style="color:#75715e">// or attachment flow uses SetupDevice to get device path
-</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">if</span> len(<span style="color:#a6e22e">pluginDevicePath</span>) <span style="color:#f92672">!=</span> <span style="color:#ae81ff">0</span> {
-                <span style="color:#a6e22e">devicePath</span> = <span style="color:#a6e22e">pluginDevicePath</span>
-            }
-            <span style="color:#66d9ef">if</span> len(<span style="color:#a6e22e">devicePath</span>) <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span> {
-                <span style="color:#a6e22e">eventErr</span>, <span style="color:#a6e22e">detailedErr</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">volumeToMount</span>.<span style="color:#a6e22e">GenerateError</span>(<span style="color:#e6db74">&#34;MapVolume failed&#34;</span>, <span style="color:#a6e22e">goerrors</span>.<span style="color:#a6e22e">New</span>(<span style="color:#e6db74">&#34;device path of the volume is empty&#34;</span>))
-                <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">volumetypes</span>.<span style="color:#a6e22e">NewOperationContext</span>(<span style="color:#a6e22e">eventErr</span>, <span style="color:#a6e22e">detailedErr</span>, <span style="color:#a6e22e">migrated</span>)
-            }
-        }
-
-        <span style="color:#75715e">// When kubelet is containerized, devicePath may be a symlink at a place unavailable to
-</span><span style="color:#75715e"></span>        <span style="color:#75715e">// kubelet, so evaluate it on the host and expect that it links to a device in /dev,
-</span><span style="color:#75715e"></span>        <span style="color:#75715e">// which will be available to containerized kubelet. If still it does not exist,
-</span><span style="color:#75715e"></span>        <span style="color:#75715e">// AttachFileDevice will fail. If kubelet is not containerized, eval it anyway.
-</span><span style="color:#75715e"></span>        <span style="color:#a6e22e">kvh</span>, <span style="color:#a6e22e">ok</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">og</span>.<span style="color:#a6e22e">GetVolumePluginMgr</span>().<span style="color:#a6e22e">Host</span>.(<span style="color:#a6e22e">volume</span>.<span style="color:#a6e22e">KubeletVolumeHost</span>)
-        <span style="color:#66d9ef">if</span> !<span style="color:#a6e22e">ok</span> {
-            <span style="color:#a6e22e">eventErr</span>, <span style="color:#a6e22e">detailedErr</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">volumeToMount</span>.<span style="color:#a6e22e">GenerateError</span>(<span style="color:#e6db74">&#34;MapVolume type assertion error&#34;</span>, <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Errorf</span>(<span style="color:#e6db74">&#34;volume host does not implement KubeletVolumeHost interface&#34;</span>))
-            <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">volumetypes</span>.<span style="color:#a6e22e">NewOperationContext</span>(<span style="color:#a6e22e">eventErr</span>, <span style="color:#a6e22e">detailedErr</span>, <span style="color:#a6e22e">migrated</span>)
-        }
-        <span style="color:#a6e22e">hu</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">kvh</span>.<span style="color:#a6e22e">GetHostUtil</span>()
-        <span style="color:#a6e22e">devicePath</span>, <span style="color:#a6e22e">err</span> = <span style="color:#a6e22e">hu</span>.<span style="color:#a6e22e">EvalHostSymlinks</span>(<span style="color:#a6e22e">devicePath</span>)
-        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
-            <span style="color:#a6e22e">eventErr</span>, <span style="color:#a6e22e">detailedErr</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">volumeToMount</span>.<span style="color:#a6e22e">GenerateError</span>(<span style="color:#e6db74">&#34;MapVolume.EvalHostSymlinks failed&#34;</span>, <span style="color:#a6e22e">err</span>)
-            <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">volumetypes</span>.<span style="color:#a6e22e">NewOperationContext</span>(<span style="color:#a6e22e">eventErr</span>, <span style="color:#a6e22e">detailedErr</span>, <span style="color:#a6e22e">migrated</span>)
-        }
-
-        <span style="color:#75715e">// Update actual state of world with the devicePath again, if devicePath has changed from markedDevicePath
-</span><span style="color:#75715e"></span>        <span style="color:#75715e">// TODO: This can be improved after #82492 is merged and ASW has state.
-</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">markedDevicePath</span> <span style="color:#f92672">!=</span> <span style="color:#a6e22e">devicePath</span> {
-            <span style="color:#a6e22e">markDeviceMappedErr</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">actualStateOfWorld</span>.<span style="color:#a6e22e">MarkDeviceAsMounted</span>(
-                <span style="color:#a6e22e">volumeToMount</span>.<span style="color:#a6e22e">VolumeName</span>, <span style="color:#a6e22e">devicePath</span>, <span style="color:#a6e22e">globalMapPath</span>)
-            <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">markDeviceMappedErr</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
-                <span style="color:#75715e">// On failure, return error. Caller will log and retry.
-</span><span style="color:#75715e"></span>                <span style="color:#a6e22e">eventErr</span>, <span style="color:#a6e22e">detailedErr</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">volumeToMount</span>.<span style="color:#a6e22e">GenerateError</span>(<span style="color:#e6db74">&#34;MapVolume.MarkDeviceAsMounted failed&#34;</span>, <span style="color:#a6e22e">markDeviceMappedErr</span>)
-                <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">volumetypes</span>.<span style="color:#a6e22e">NewOperationContext</span>(<span style="color:#a6e22e">eventErr</span>, <span style="color:#a6e22e">detailedErr</span>, <span style="color:#a6e22e">migrated</span>)
-            }
-        }
-
-        <span style="color:#75715e">// Execute common map
-</span><span style="color:#75715e"></span>        <span style="color:#a6e22e">volumeMapPath</span>, <span style="color:#a6e22e">volName</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">blockVolumeMapper</span>.<span style="color:#a6e22e">GetPodDeviceMapPath</span>()
-        <span style="color:#a6e22e">mapErr</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">util</span>.<span style="color:#a6e22e">MapBlockVolume</span>(<span style="color:#a6e22e">og</span>.<span style="color:#a6e22e">blkUtil</span>, <span style="color:#a6e22e">devicePath</span>, <span style="color:#a6e22e">globalMapPath</span>, <span style="color:#a6e22e">volumeMapPath</span>, <span style="color:#a6e22e">volName</span>, <span style="color:#a6e22e">volumeToMount</span>.<span style="color:#a6e22e">Pod</span>.<span style="color:#a6e22e">UID</span>)
-        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">mapErr</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
-            <span style="color:#75715e">// On failure, return error. Caller will log and retry.
-</span><span style="color:#75715e"></span>            <span style="color:#a6e22e">eventErr</span>, <span style="color:#a6e22e">detailedErr</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">volumeToMount</span>.<span style="color:#a6e22e">GenerateError</span>(<span style="color:#e6db74">&#34;MapVolume.MapBlockVolume failed&#34;</span>, <span style="color:#a6e22e">mapErr</span>)
-            <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">volumetypes</span>.<span style="color:#a6e22e">NewOperationContext</span>(<span style="color:#a6e22e">eventErr</span>, <span style="color:#a6e22e">detailedErr</span>, <span style="color:#a6e22e">migrated</span>)
-        }
-
-        <span style="color:#75715e">// Device mapping for global map path succeeded
-</span><span style="color:#75715e"></span>        <span style="color:#a6e22e">simpleMsg</span>, <span style="color:#a6e22e">detailedMsg</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">volumeToMount</span>.<span style="color:#a6e22e">GenerateMsg</span>(<span style="color:#e6db74">&#34;MapVolume.MapPodDevice succeeded&#34;</span>, <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Sprintf</span>(<span style="color:#e6db74">&#34;globalMapPath %q&#34;</span>, <span style="color:#a6e22e">globalMapPath</span>))
-        <span style="color:#a6e22e">verbosity</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">klog</span>.<span style="color:#a6e22e">Level</span>(<span style="color:#ae81ff">4</span>)
-        <span style="color:#a6e22e">og</span>.<span style="color:#a6e22e">recorder</span>.<span style="color:#a6e22e">Eventf</span>(<span style="color:#a6e22e">volumeToMount</span>.<span style="color:#a6e22e">Pod</span>, <span style="color:#a6e22e">v1</span>.<span style="color:#a6e22e">EventTypeNormal</span>, <span style="color:#a6e22e">kevents</span>.<span style="color:#a6e22e">SuccessfulMountVolume</span>, <span style="color:#a6e22e">simpleMsg</span>)
-        <span style="color:#a6e22e">klog</span>.<span style="color:#a6e22e">V</span>(<span style="color:#a6e22e">verbosity</span>).<span style="color:#a6e22e">InfoS</span>(<span style="color:#a6e22e">detailedMsg</span>, <span style="color:#e6db74">&#34;pod&#34;</span>, <span style="color:#a6e22e">klog</span>.<span style="color:#a6e22e">KObj</span>(<span style="color:#a6e22e">volumeToMount</span>.<span style="color:#a6e22e">Pod</span>))
-
-        <span style="color:#75715e">// Device mapping for pod device map path succeeded
-</span><span style="color:#75715e"></span>        <span style="color:#a6e22e">simpleMsg</span>, <span style="color:#a6e22e">detailedMsg</span> = <span style="color:#a6e22e">volumeToMount</span>.<span style="color:#a6e22e">GenerateMsg</span>(<span style="color:#e6db74">&#34;MapVolume.MapPodDevice succeeded&#34;</span>, <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Sprintf</span>(<span style="color:#e6db74">&#34;volumeMapPath %q&#34;</span>, <span style="color:#a6e22e">volumeMapPath</span>))
-        <span style="color:#a6e22e">verbosity</span> = <span style="color:#a6e22e">klog</span>.<span style="color:#a6e22e">Level</span>(<span style="color:#ae81ff">1</span>)
-        <span style="color:#a6e22e">og</span>.<span style="color:#a6e22e">recorder</span>.<span style="color:#a6e22e">Eventf</span>(<span style="color:#a6e22e">volumeToMount</span>.<span style="color:#a6e22e">Pod</span>, <span style="color:#a6e22e">v1</span>.<span style="color:#a6e22e">EventTypeNormal</span>, <span style="color:#a6e22e">kevents</span>.<span style="color:#a6e22e">SuccessfulMountVolume</span>, <span style="color:#a6e22e">simpleMsg</span>)
-        <span style="color:#a6e22e">klog</span>.<span style="color:#a6e22e">V</span>(<span style="color:#a6e22e">verbosity</span>).<span style="color:#a6e22e">InfoS</span>(<span style="color:#a6e22e">detailedMsg</span>, <span style="color:#e6db74">&#34;pod&#34;</span>, <span style="color:#a6e22e">klog</span>.<span style="color:#a6e22e">KObj</span>(<span style="color:#a6e22e">volumeToMount</span>.<span style="color:#a6e22e">Pod</span>))
-
-        <span style="color:#a6e22e">resizeOptions</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">volume</span>.<span style="color:#a6e22e">NodeResizeOptions</span>{
-            <span style="color:#a6e22e">DevicePath</span>:      <span style="color:#a6e22e">devicePath</span>,
-            <span style="color:#a6e22e">DeviceStagePath</span>: <span style="color:#a6e22e">stagingPath</span>,
-            <span style="color:#a6e22e">CSIVolumePhase</span>:  <span style="color:#a6e22e">volume</span>.<span style="color:#a6e22e">CSIVolumePublished</span>,
-        }
-        <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">resizeError</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">og</span>.<span style="color:#a6e22e">nodeExpandVolume</span>(<span style="color:#a6e22e">volumeToMount</span>, <span style="color:#a6e22e">actualStateOfWorld</span>, <span style="color:#a6e22e">resizeOptions</span>)
-        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">resizeError</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
-            <span style="color:#a6e22e">klog</span>.<span style="color:#a6e22e">Errorf</span>(<span style="color:#e6db74">&#34;MapVolume.NodeExpandVolume failed with %v&#34;</span>, <span style="color:#a6e22e">resizeError</span>)
-            <span style="color:#a6e22e">eventErr</span>, <span style="color:#a6e22e">detailedErr</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">volumeToMount</span>.<span style="color:#a6e22e">GenerateError</span>(<span style="color:#e6db74">&#34;MapVolume.MarkVolumeAsMounted failed while expanding volume&#34;</span>, <span style="color:#a6e22e">resizeError</span>)
-            <span style="color:#75715e">// At this point, MountVolume.Setup already succeeded, we should add volume into actual state
-</span><span style="color:#75715e"></span>            <span style="color:#75715e">// so that reconciler can clean up volume when needed. However, if nodeExpandVolume failed,
-</span><span style="color:#75715e"></span>            <span style="color:#75715e">// we should not mark the volume as mounted to avoid pod starts using it.
-</span><span style="color:#75715e"></span>            <span style="color:#75715e">// Considering the above situations, we mark volume as uncertain here so that reconciler will tigger
-</span><span style="color:#75715e"></span>            <span style="color:#75715e">// volume tear down when pod is deleted, and also makes sure pod will not start using it.
-</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">actualStateOfWorld</span>.<span style="color:#a6e22e">MarkVolumeMountAsUncertain</span>(<span style="color:#a6e22e">markVolumeOpts</span>); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
-                <span style="color:#a6e22e">klog</span>.<span style="color:#a6e22e">Errorf</span>(<span style="color:#a6e22e">volumeToMount</span>.<span style="color:#a6e22e">GenerateErrorDetailed</span>(<span style="color:#e6db74">&#34;MountVolume.MarkVolumeMountAsUncertain failed&#34;</span>, <span style="color:#a6e22e">err</span>).<span style="color:#a6e22e">Error</span>())
-            }
-            <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">volumetypes</span>.<span style="color:#a6e22e">NewOperationContext</span>(<span style="color:#a6e22e">eventErr</span>, <span style="color:#a6e22e">detailedErr</span>, <span style="color:#a6e22e">migrated</span>)
-        }
-
-        <span style="color:#a6e22e">markVolMountedErr</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">actualStateOfWorld</span>.<span style="color:#a6e22e">MarkVolumeAsMounted</span>(<span style="color:#a6e22e">markVolumeOpts</span>)
-        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">markVolMountedErr</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
-            <span style="color:#75715e">// On failure, return error. Caller will log and retry.
-</span><span style="color:#75715e"></span>            <span style="color:#a6e22e">eventErr</span>, <span style="color:#a6e22e">detailedErr</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">volumeToMount</span>.<span style="color:#a6e22e">GenerateError</span>(<span style="color:#e6db74">&#34;MapVolume.MarkVolumeAsMounted failed&#34;</span>, <span style="color:#a6e22e">markVolMountedErr</span>)
-            <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">volumetypes</span>.<span style="color:#a6e22e">NewOperationContext</span>(<span style="color:#a6e22e">eventErr</span>, <span style="color:#a6e22e">detailedErr</span>, <span style="color:#a6e22e">migrated</span>)
-        }
-
-        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">volumetypes</span>.<span style="color:#a6e22e">NewOperationContext</span>(<span style="color:#66d9ef">nil</span>, <span style="color:#66d9ef">nil</span>, <span style="color:#a6e22e">migrated</span>)
-    }
-
-    <span style="color:#a6e22e">eventRecorderFunc</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">err</span> <span style="color:#f92672">*</span><span style="color:#66d9ef">error</span>) {
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
-            <span style="color:#a6e22e">og</span>.<span style="color:#a6e22e">recorder</span>.<span style="color:#a6e22e">Eventf</span>(<span style="color:#a6e22e">volumeToMount</span>.<span style="color:#a6e22e">Pod</span>, <span style="color:#a6e22e">v1</span>.<span style="color:#a6e22e">EventTypeWarning</span>, <span style="color:#a6e22e">kevents</span>.<span style="color:#a6e22e">FailedMapVolume</span>, (<span style="color:#f92672">*</span><span style="color:#a6e22e">err</span>).<span style="color:#a6e22e">Error</span>())
-        }
-    }
-
-    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">volumetypes</span>.<span style="color:#a6e22e">GeneratedOperations</span>{
-        <span style="color:#a6e22e">OperationName</span>:     <span style="color:#e6db74">&#34;map_volume&#34;</span>,
-        <span style="color:#a6e22e">OperationFunc</span>:     <span style="color:#a6e22e">mapVolumeFunc</span>,
-        <span style="color:#a6e22e">EventRecorderFunc</span>: <span style="color:#a6e22e">eventRecorderFunc</span>,
-        <span style="color:#a6e22e">CompleteFunc</span>:      <span style="color:#a6e22e">util</span>.<span style="color:#a6e22e">OperationCompleteHook</span>(<span style="color:#a6e22e">util</span>.<span style="color:#a6e22e">GetFullQualifiedPluginNameForVolume</span>(<span style="color:#a6e22e">blockVolumePlugin</span>.<span style="color:#a6e22e">GetPluginName</span>(), <span style="color:#a6e22e">volumeToMount</span>.<span style="color:#a6e22e">VolumeSpec</span>), <span style="color:#e6db74">&#34;map_volume&#34;</span>),
-    }, <span style="color:#66d9ef">nil</span>
-}
-</code></pre></div><h2 id="4-fsresize">4. FSResize</h2>
+</code></pre></div><hr>
+<p>同样的，不是所有类型的卷，都实现了SetUp方法。不同类型的卷的实现也有所不同，这里以local卷的实现为例进行分析。其他类型卷的实现，将在对每个plugin进行分析的文章中体现。</p>
+<h3 id="32-block模式卷的挂载">3.2 Block模式卷的挂载</h3>
+<h2 id="4-fsresize">4. FSResize</h2>
 
             </div>
         </article>
