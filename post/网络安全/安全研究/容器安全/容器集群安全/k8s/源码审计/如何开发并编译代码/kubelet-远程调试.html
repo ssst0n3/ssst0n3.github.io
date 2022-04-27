@@ -42,7 +42,7 @@
 # Note: This dropin only works with kubeadm and kubelet v1.11&#43; [Service] Environment=&quot;KUBELET_KUBECONFIG_ARGS=--bootstrap-kubeconfig=/etc/kubernetes/bootstrap-kubelet.conf --kubeconfig=/etc/kubernetes/kubelet.conf&quot; Environment=&quot;KUBELET_CONFIG_ARGS=--config=/var/lib/kubelet/config.yaml&quot; # This is a file that &quot;kubeadm init&quot; and &quot;kubeadm join&quot; generates at runtime, populating the KUBELET_KUBEADM_ARGS variable dynamically EnvironmentFile=-/var/lib/kubelet/kubeadm-flags.env # This is a file that the user can use for overrides of the kubelet args as a last resort. Preferably, the user should use # the .">
 <meta itemprop="datePublished" content="2022-03-30T07:47:41+00:00" />
 <meta itemprop="dateModified" content="2022-03-30T07:47:41+00:00" />
-<meta itemprop="wordCount" content="301">
+<meta itemprop="wordCount" content="310">
 
 
 
@@ -203,7 +203,11 @@ root@st0n3-host:~# systemctl restart kubelet.service
 </code></pre><p>此时kubelet命令实际还未真正启动，在GoLand中运行刚刚添加的配置，连接上dlv后，kubelet才会运行。</p>
 <p>下好断点，点击debug按钮，我们就可以在IDE中对kubelet进行调试了。</p>
 <p><img src="https://st0n3-img.obs.cn-south-1.myhuaweicloud.com/golang/goland-delve-remote-kubelet.png" alt=""></p>
-
+<h2 id="5-其他容器软件编译命令">5. 其他容器软件编译命令</h2>
+<h3 id="51-runc">5.1 runc</h3>
+<pre><code>make shell
+make EXTRA_FLAGS='-gcflags=&quot;all=-N -l&quot;'
+</code></pre>
             </div>
         </article>
 
