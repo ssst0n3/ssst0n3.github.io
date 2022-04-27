@@ -48,7 +48,7 @@ https://github.com/kubernetes/kubernetes/blob/v1.23.1/pkg/volume/local/local.go#
 func (m *localVolumeMounter) SetUp(mounterArgs volume.MounterArgs) error { return m.SetUpAt(m.GetPath(), mounterArgs) } func (m *localVolumeMounter) SetUpAt(dir string, mounterArgs volume.">
 <meta itemprop="datePublished" content="2022-04-25T03:47:33+00:00" />
 <meta itemprop="dateModified" content="2022-04-25T03:47:33+00:00" />
-<meta itemprop="wordCount" content="817">
+<meta itemprop="wordCount" content="975">
 
 
 
@@ -342,7 +342,10 @@ func (m *localVolumeMounter) SetUp(mounterArgs volume.MounterArgs) error { retur
     <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">mountArgs</span>, <span style="color:#a6e22e">mountArgsLogStr</span>
 }
 </code></pre></div><h2 id="5">5.</h2>
+<p>最后一步是设置文件的组属主。<code>SetVolumeOwnership</code>修改给定的卷，使其为fsGroup所有，并设置SetGid，使新创建的文件为fsGroup所有。如果fsGroup为nil，则不做任何事情。</p>
+<p><a href="https://github.com/kubernetes/kubernetes/blob/v1.23.1/pkg/volume/local/local.go#L619">https://github.com/kubernetes/kubernetes/blob/v1.23.1/pkg/volume/local/local.go#L619</a></p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">m</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">localVolumeMounter</span>) <span style="color:#a6e22e">SetUpAt</span>(<span style="color:#a6e22e">dir</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">mounterArgs</span> <span style="color:#a6e22e">volume</span>.<span style="color:#a6e22e">MounterArgs</span>) <span style="color:#66d9ef">error</span> {
+    <span style="color:#f92672">...</span>
     <span style="color:#66d9ef">if</span> !<span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">readOnly</span> {
         <span style="color:#75715e">// Volume owner will be written only once on the first volume mount
 </span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> len(<span style="color:#a6e22e">refs</span>) <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span> {
@@ -351,7 +354,59 @@ func (m *localVolumeMounter) SetUp(mounterArgs volume.MounterArgs) error { retur
     }
     <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>
 }
+</code></pre></div><p><a href="https://github.com/kubernetes/kubernetes/blob/v1.23.1/pkg/volume/volume_linux.go#L43">https://github.com/kubernetes/kubernetes/blob/v1.23.1/pkg/volume/volume_linux.go#L43</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">SetVolumeOwnership</span>(<span style="color:#a6e22e">mounter</span> <span style="color:#a6e22e">Mounter</span>, <span style="color:#a6e22e">fsGroup</span> <span style="color:#f92672">*</span><span style="color:#66d9ef">int64</span>, <span style="color:#a6e22e">fsGroupChangePolicy</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">v1</span>.<span style="color:#a6e22e">PodFSGroupChangePolicy</span>, <span style="color:#a6e22e">completeFunc</span> <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">types</span>.<span style="color:#a6e22e">CompleteFuncParam</span>)) <span style="color:#66d9ef">error</span> {
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">fsGroup</span> <span style="color:#f92672">==</span> <span style="color:#66d9ef">nil</span> {
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>
+    }
+    <span style="color:#f92672">...</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">skipPermissionChange</span>(<span style="color:#a6e22e">mounter</span>, <span style="color:#a6e22e">fsGroup</span>, <span style="color:#a6e22e">fsGroupChangePolicy</span>) {
+        <span style="color:#a6e22e">klog</span>.<span style="color:#a6e22e">V</span>(<span style="color:#ae81ff">3</span>).<span style="color:#a6e22e">InfoS</span>(<span style="color:#e6db74">&#34;Skipping permission and ownership change for volume&#34;</span>, <span style="color:#e6db74">&#34;path&#34;</span>, <span style="color:#a6e22e">mounter</span>.<span style="color:#a6e22e">GetPath</span>())
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>
+    }
 
+    <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">walkDeep</span>(<span style="color:#a6e22e">mounter</span>.<span style="color:#a6e22e">GetPath</span>(), <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">path</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">info</span> <span style="color:#a6e22e">os</span>.<span style="color:#a6e22e">FileInfo</span>, <span style="color:#a6e22e">err</span> <span style="color:#66d9ef">error</span>) <span style="color:#66d9ef">error</span> {
+        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+            <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">err</span>
+        }
+        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">changeFilePermission</span>(<span style="color:#a6e22e">path</span>, <span style="color:#a6e22e">fsGroup</span>, <span style="color:#a6e22e">mounter</span>.<span style="color:#a6e22e">GetAttributes</span>().<span style="color:#a6e22e">ReadOnly</span>, <span style="color:#a6e22e">info</span>)
+    })
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">completeFunc</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+        <span style="color:#a6e22e">completeFunc</span>(<span style="color:#a6e22e">types</span>.<span style="color:#a6e22e">CompleteFuncParam</span>{
+            <span style="color:#a6e22e">Err</span>: <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">err</span>,
+        })
+    }
+    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">err</span>
+}
+</code></pre></div><p><code>os.Lchown()</code> 方法用于更改文件所有者，类似 chown，但是不追踪链接。uid为-1表示不修改uid。</p>
+<p><code>os.Chmod(filename, info.Mode()|mask)</code> 表示确保拥有者有读写权限。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">changeFilePermission</span>(<span style="color:#a6e22e">filename</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">fsGroup</span> <span style="color:#f92672">*</span><span style="color:#66d9ef">int64</span>, <span style="color:#a6e22e">readonly</span> <span style="color:#66d9ef">bool</span>, <span style="color:#a6e22e">info</span> <span style="color:#a6e22e">os</span>.<span style="color:#a6e22e">FileInfo</span>) <span style="color:#66d9ef">error</span> {
+    <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">os</span>.<span style="color:#a6e22e">Lchown</span>(<span style="color:#a6e22e">filename</span>, <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>, int(<span style="color:#f92672">*</span><span style="color:#a6e22e">fsGroup</span>))
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+        <span style="color:#a6e22e">klog</span>.<span style="color:#a6e22e">ErrorS</span>(<span style="color:#a6e22e">err</span>, <span style="color:#e6db74">&#34;Lchown failed&#34;</span>, <span style="color:#e6db74">&#34;path&#34;</span>, <span style="color:#a6e22e">filename</span>)
+    }
+
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">info</span>.<span style="color:#a6e22e">Mode</span>()<span style="color:#f92672">&amp;</span><span style="color:#a6e22e">os</span>.<span style="color:#a6e22e">ModeSymlink</span> <span style="color:#f92672">!=</span> <span style="color:#ae81ff">0</span> {
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>
+    }
+
+    <span style="color:#a6e22e">mask</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">rwMask</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">readonly</span> {
+        <span style="color:#a6e22e">mask</span> = <span style="color:#a6e22e">roMask</span>
+    }
+
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">info</span>.<span style="color:#a6e22e">IsDir</span>() {
+        <span style="color:#a6e22e">mask</span> <span style="color:#f92672">|=</span> <span style="color:#a6e22e">os</span>.<span style="color:#a6e22e">ModeSetgid</span>
+        <span style="color:#a6e22e">mask</span> <span style="color:#f92672">|=</span> <span style="color:#a6e22e">execMask</span>
+    }
+
+    <span style="color:#a6e22e">err</span> = <span style="color:#a6e22e">os</span>.<span style="color:#a6e22e">Chmod</span>(<span style="color:#a6e22e">filename</span>, <span style="color:#a6e22e">info</span>.<span style="color:#a6e22e">Mode</span>()|<span style="color:#a6e22e">mask</span>)
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+        <span style="color:#a6e22e">klog</span>.<span style="color:#a6e22e">ErrorS</span>(<span style="color:#a6e22e">err</span>, <span style="color:#e6db74">&#34;Chown failed&#34;</span>, <span style="color:#e6db74">&#34;path&#34;</span>, <span style="color:#a6e22e">filename</span>)
+    }
+
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>
+}
 </code></pre></div><h2 id="附部署local卷yaml">附：部署local卷yaml</h2>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">v1</span>
 <span style="color:#f92672">kind</span>: <span style="color:#ae81ff">Pod</span>
