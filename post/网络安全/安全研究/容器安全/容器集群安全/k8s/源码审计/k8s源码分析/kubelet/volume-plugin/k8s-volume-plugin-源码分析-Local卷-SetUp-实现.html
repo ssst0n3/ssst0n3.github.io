@@ -7,7 +7,11 @@
 <meta name="author"
     content="">
 <meta name="description"
-    content=" tags: k8s,kubernetes,container,源码分析 k8s volume plugin 源码分析: Local卷 SetUp 实现 " />
+    content="tags: k8s,kubernetes,container,源码分析 k8s volume plugin 源码分析: Local卷 SetUp 实现 1. 调用点 在VolumeManager中挂载卷时，执行SetUp方法，将卷挂载至pod内。
+https://github.com/kubernetes/kubernetes/blob/v1.23.1/pkg/volume/util/operationexecutor/operation_generator.go#L725
+func (og *operationGenerator) GenerateMountVolumeFunc(...) volumetypes.GeneratedOperations { ... mountVolumeFunc := func() volumetypes.OperationContext { ... // Execute mount  mountErr := volumeMounter.SetUp(volume.MounterArgs{ FsUser: util.FsUserFrom(volumeToMount.Pod), FsGroup: fsGroup, DesiredSize: volumeToMount.DesiredSizeLimit, FSGroupChangePolicy: fsGroupChangePolicy, }) ... markVolMountedErr := actualStateOfWorld.MarkVolumeAsMounted(markOpts) ... } ... }  不是所有类型的卷，都实现了SetUp方法。不同类型的卷的实现也有所不同，这里以local卷的实现为例进行分析。
+https://github.com/kubernetes/kubernetes/blob/v1.23.1/pkg/volume/local/local.go#L521
+func (m *localVolumeMounter) SetUp(mounterArgs volume.MounterArgs) error { return m.SetUpAt(m.GetPath(), mounterArgs) } func (m *localVolumeMounter) SetUpAt(dir string, mounterArgs volume." />
 <meta name="keywords" content="" />
 <meta name="robots" content="noodp" />
 <link rel="canonical" href="/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E5%AE%B9%E5%99%A8%E9%9B%86%E7%BE%A4%E5%AE%89%E5%85%A8/k8s/%E6%BA%90%E7%A0%81%E5%AE%A1%E8%AE%A1/k8s%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/kubelet/volume-plugin/k8s-volume-plugin-%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90-Local%E5%8D%B7-SetUp-%E5%AE%9E%E7%8E%B0.html" />
@@ -37,17 +41,25 @@
 <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#252627">
 <link rel="shortcut icon" href="/favicon.ico">
 <meta name="theme-color" content="#252627"><meta itemprop="name" content="k8s volume plugin 源码分析: Local卷 SetUp 实现">
-<meta itemprop="description" content=" tags: k8s,kubernetes,container,源码分析 k8s volume plugin 源码分析: Local卷 SetUp 实现 ">
+<meta itemprop="description" content="tags: k8s,kubernetes,container,源码分析 k8s volume plugin 源码分析: Local卷 SetUp 实现 1. 调用点 在VolumeManager中挂载卷时，执行SetUp方法，将卷挂载至pod内。
+https://github.com/kubernetes/kubernetes/blob/v1.23.1/pkg/volume/util/operationexecutor/operation_generator.go#L725
+func (og *operationGenerator) GenerateMountVolumeFunc(...) volumetypes.GeneratedOperations { ... mountVolumeFunc := func() volumetypes.OperationContext { ... // Execute mount  mountErr := volumeMounter.SetUp(volume.MounterArgs{ FsUser: util.FsUserFrom(volumeToMount.Pod), FsGroup: fsGroup, DesiredSize: volumeToMount.DesiredSizeLimit, FSGroupChangePolicy: fsGroupChangePolicy, }) ... markVolMountedErr := actualStateOfWorld.MarkVolumeAsMounted(markOpts) ... } ... }  不是所有类型的卷，都实现了SetUp方法。不同类型的卷的实现也有所不同，这里以local卷的实现为例进行分析。
+https://github.com/kubernetes/kubernetes/blob/v1.23.1/pkg/volume/local/local.go#L521
+func (m *localVolumeMounter) SetUp(mounterArgs volume.MounterArgs) error { return m.SetUpAt(m.GetPath(), mounterArgs) } func (m *localVolumeMounter) SetUpAt(dir string, mounterArgs volume.">
 <meta itemprop="datePublished" content="2022-04-25T03:47:33+00:00" />
 <meta itemprop="dateModified" content="2022-04-25T03:47:33+00:00" />
-<meta itemprop="wordCount" content="9">
+<meta itemprop="wordCount" content="817">
 
 
 
 <meta itemprop="keywords" content="" />
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="k8s volume plugin 源码分析: Local卷 SetUp 实现"/>
-<meta name="twitter:description" content=" tags: k8s,kubernetes,container,源码分析 k8s volume plugin 源码分析: Local卷 SetUp 实现 "/>
+<meta name="twitter:description" content="tags: k8s,kubernetes,container,源码分析 k8s volume plugin 源码分析: Local卷 SetUp 实现 1. 调用点 在VolumeManager中挂载卷时，执行SetUp方法，将卷挂载至pod内。
+https://github.com/kubernetes/kubernetes/blob/v1.23.1/pkg/volume/util/operationexecutor/operation_generator.go#L725
+func (og *operationGenerator) GenerateMountVolumeFunc(...) volumetypes.GeneratedOperations { ... mountVolumeFunc := func() volumetypes.OperationContext { ... // Execute mount  mountErr := volumeMounter.SetUp(volume.MounterArgs{ FsUser: util.FsUserFrom(volumeToMount.Pod), FsGroup: fsGroup, DesiredSize: volumeToMount.DesiredSizeLimit, FSGroupChangePolicy: fsGroupChangePolicy, }) ... markVolMountedErr := actualStateOfWorld.MarkVolumeAsMounted(markOpts) ... } ... }  不是所有类型的卷，都实现了SetUp方法。不同类型的卷的实现也有所不同，这里以local卷的实现为例进行分析。
+https://github.com/kubernetes/kubernetes/blob/v1.23.1/pkg/volume/local/local.go#L521
+func (m *localVolumeMounter) SetUp(mounterArgs volume.MounterArgs) error { return m.SetUpAt(m.GetPath(), mounterArgs) } func (m *localVolumeMounter) SetUpAt(dir string, mounterArgs volume."/>
 
 
 
@@ -121,7 +133,289 @@
                 <hr>
 <h2 id="tags-k8skubernetescontainer源码分析">tags: k8s,kubernetes,container,源码分析</h2>
 <h1 id="k8s-volume-plugin-源码分析-local卷-setup-实现">k8s volume plugin 源码分析: Local卷 SetUp 实现</h1>
+<h2 id="1-调用点">1. 调用点</h2>
+<p>在VolumeManager中挂载卷时，执行<code>SetUp</code>方法，将卷挂载至pod内。</p>
+<p><a href="https://github.com/kubernetes/kubernetes/blob/v1.23.1/pkg/volume/util/operationexecutor/operation_generator.go#L725">https://github.com/kubernetes/kubernetes/blob/v1.23.1/pkg/volume/util/operationexecutor/operation_generator.go#L725</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">og</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">operationGenerator</span>) <span style="color:#a6e22e">GenerateMountVolumeFunc</span>(<span style="color:#f92672">...</span>) <span style="color:#a6e22e">volumetypes</span>.<span style="color:#a6e22e">GeneratedOperations</span> {
+    <span style="color:#f92672">...</span>
+    <span style="color:#a6e22e">mountVolumeFunc</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">func</span>() <span style="color:#a6e22e">volumetypes</span>.<span style="color:#a6e22e">OperationContext</span> {
+        <span style="color:#f92672">...</span>
+        <span style="color:#75715e">// Execute mount
+</span><span style="color:#75715e"></span>        <span style="color:#a6e22e">mountErr</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">volumeMounter</span>.<span style="color:#a6e22e">SetUp</span>(<span style="color:#a6e22e">volume</span>.<span style="color:#a6e22e">MounterArgs</span>{
+            <span style="color:#a6e22e">FsUser</span>:              <span style="color:#a6e22e">util</span>.<span style="color:#a6e22e">FsUserFrom</span>(<span style="color:#a6e22e">volumeToMount</span>.<span style="color:#a6e22e">Pod</span>),
+            <span style="color:#a6e22e">FsGroup</span>:             <span style="color:#a6e22e">fsGroup</span>,
+            <span style="color:#a6e22e">DesiredSize</span>:         <span style="color:#a6e22e">volumeToMount</span>.<span style="color:#a6e22e">DesiredSizeLimit</span>,
+            <span style="color:#a6e22e">FSGroupChangePolicy</span>: <span style="color:#a6e22e">fsGroupChangePolicy</span>,
+        })
+        <span style="color:#f92672">...</span>
+        <span style="color:#a6e22e">markVolMountedErr</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">actualStateOfWorld</span>.<span style="color:#a6e22e">MarkVolumeAsMounted</span>(<span style="color:#a6e22e">markOpts</span>)
+        <span style="color:#f92672">...</span>
+    }
+    <span style="color:#f92672">...</span>
+}
+</code></pre></div><hr>
+<p>不是所有类型的卷，都实现了SetUp方法。不同类型的卷的实现也有所不同，这里以local卷的实现为例进行分析。</p>
+<p><a href="https://github.com/kubernetes/kubernetes/blob/v1.23.1/pkg/volume/local/local.go#L521">https://github.com/kubernetes/kubernetes/blob/v1.23.1/pkg/volume/local/local.go#L521</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">m</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">localVolumeMounter</span>) <span style="color:#a6e22e">SetUp</span>(<span style="color:#a6e22e">mounterArgs</span> <span style="color:#a6e22e">volume</span>.<span style="color:#a6e22e">MounterArgs</span>) <span style="color:#66d9ef">error</span> {
+    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">SetUpAt</span>(<span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">GetPath</span>(), <span style="color:#a6e22e">mounterArgs</span>)
+}
 
+<span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">m</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">localVolumeMounter</span>) <span style="color:#a6e22e">SetUpAt</span>(<span style="color:#a6e22e">dir</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">mounterArgs</span> <span style="color:#a6e22e">volume</span>.<span style="color:#a6e22e">MounterArgs</span>) <span style="color:#66d9ef">error</span> {
+    <span style="color:#f92672">...</span>
+}
+</code></pre></div><hr>
+<p>其中，<code>m.GetPath</code>得到路径一般为
+<code>/var/lib/kubelet/pods/{POD_UID}/volumes/kubernetes.io/local-volume/{VOLUME_NAME}</code>, 这就是最终要把卷挂载到的目的路径。</p>
+<p><a href="https://github.com/kubernetes/kubernetes/blob/v1.23.1/pkg/volume/local/local.go#L493">https://github.com/kubernetes/kubernetes/blob/v1.23.1/pkg/volume/local/local.go#L493</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">l</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">localVolume</span>) <span style="color:#a6e22e">GetPath</span>() <span style="color:#66d9ef">string</span> {
+    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">l</span>.<span style="color:#a6e22e">plugin</span>.<span style="color:#a6e22e">host</span>.<span style="color:#a6e22e">GetPodVolumeDir</span>(<span style="color:#a6e22e">l</span>.<span style="color:#a6e22e">podUID</span>, <span style="color:#a6e22e">utilstrings</span>.<span style="color:#a6e22e">EscapeQualifiedName</span>(<span style="color:#a6e22e">localVolumePluginName</span>), <span style="color:#a6e22e">l</span>.<span style="color:#a6e22e">volName</span>)
+}
+</code></pre></div><h2 id="2-校验路径穿越">2. 校验路径穿越</h2>
+<p>要求<code>globalPath</code>不能目录穿越。</p>
+<p><a href="https://github.com/kubernetes/kubernetes/blob/v1.23.1/pkg/volume/local/local.go#L534">https://github.com/kubernetes/kubernetes/blob/v1.23.1/pkg/volume/local/local.go#L534</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">m</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">localVolumeMounter</span>) <span style="color:#a6e22e">SetUpAt</span>(<span style="color:#a6e22e">dir</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">mounterArgs</span> <span style="color:#a6e22e">volume</span>.<span style="color:#a6e22e">MounterArgs</span>) <span style="color:#66d9ef">error</span> {
+    <span style="color:#f92672">...</span>
+    <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">validation</span>.<span style="color:#a6e22e">ValidatePathNoBacksteps</span>(<span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">globalPath</span>)
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Errorf</span>(<span style="color:#e6db74">&#34;invalid path: %s %v&#34;</span>, <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">globalPath</span>, <span style="color:#a6e22e">err</span>)
+    }
+    <span style="color:#f92672">...</span>
+}
+</code></pre></div><p><a href="https://github.com/kubernetes/kubernetes/blob/v1.23.1/pkg/volume/validation/pv_validation.go#L62">https://github.com/kubernetes/kubernetes/blob/v1.23.1/pkg/volume/validation/pv_validation.go#L62</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">ValidatePathNoBacksteps</span>(<span style="color:#a6e22e">targetPath</span> <span style="color:#66d9ef">string</span>) <span style="color:#66d9ef">error</span> {
+    <span style="color:#a6e22e">parts</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">strings</span>.<span style="color:#a6e22e">Split</span>(<span style="color:#a6e22e">filepath</span>.<span style="color:#a6e22e">ToSlash</span>(<span style="color:#a6e22e">targetPath</span>), <span style="color:#e6db74">&#34;/&#34;</span>)
+    <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">item</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">parts</span> {
+        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">item</span> <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;..&#34;</span> {
+            <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">errors</span>.<span style="color:#a6e22e">New</span>(<span style="color:#e6db74">&#34;must not contain &#39;..&#39;&#34;</span>)
+        }
+    }
+
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>
+}
+</code></pre></div><hr>
+<p>其中，<code>globalPath</code>是由Pod Spec中的配置拼接而来，存在风险，历史上也确实在此处出过<a href="https://github.com/kubernetes/kubernetes/issues/47107">问题</a>, 该问题的修复引入了此校验。</p>
+<p><a href="https://github.com/kubernetes/kubernetes/blob/v1.23.1/pkg/volume/local/local.go#L120">https://github.com/kubernetes/kubernetes/blob/v1.23.1/pkg/volume/local/local.go#L120</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">plugin</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">localVolumePlugin</span>) <span style="color:#a6e22e">NewMounter</span>(<span style="color:#a6e22e">spec</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">volume</span>.<span style="color:#a6e22e">Spec</span>, <span style="color:#a6e22e">pod</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">v1</span>.<span style="color:#a6e22e">Pod</span>, <span style="color:#a6e22e">_</span> <span style="color:#a6e22e">volume</span>.<span style="color:#a6e22e">VolumeOptions</span>) (<span style="color:#a6e22e">volume</span>.<span style="color:#a6e22e">Mounter</span>, <span style="color:#66d9ef">error</span>) {
+    <span style="color:#f92672">...</span>
+    <span style="color:#a6e22e">globalLocalPath</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">plugin</span>.<span style="color:#a6e22e">getGlobalLocalPath</span>(<span style="color:#a6e22e">spec</span>)
+    <span style="color:#f92672">...</span>
+}
+</code></pre></div><p><a href="https://github.com/kubernetes/kubernetes/blob/v1.23.1/pkg/volume/local/local.go#L268">https://github.com/kubernetes/kubernetes/blob/v1.23.1/pkg/volume/local/local.go#L268</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">plugin</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">localVolumePlugin</span>) <span style="color:#a6e22e">getGlobalLocalPath</span>(<span style="color:#a6e22e">spec</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">volume</span>.<span style="color:#a6e22e">Spec</span>) (<span style="color:#66d9ef">string</span>, <span style="color:#66d9ef">error</span>) {
+    <span style="color:#f92672">...</span>
+    <span style="color:#a6e22e">kvh</span>, <span style="color:#a6e22e">ok</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">plugin</span>.<span style="color:#a6e22e">host</span>.(<span style="color:#a6e22e">volume</span>.<span style="color:#a6e22e">KubeletVolumeHost</span>)
+    <span style="color:#66d9ef">if</span> !<span style="color:#a6e22e">ok</span> {
+        <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;&#34;</span>, <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Errorf</span>(<span style="color:#e6db74">&#34;plugin volume host does not implement KubeletVolumeHost interface&#34;</span>)
+    }
+
+    <span style="color:#a6e22e">fileType</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">kvh</span>.<span style="color:#a6e22e">GetHostUtil</span>().<span style="color:#a6e22e">GetFileType</span>(<span style="color:#a6e22e">spec</span>.<span style="color:#a6e22e">PersistentVolume</span>.<span style="color:#a6e22e">Spec</span>.<span style="color:#a6e22e">Local</span>.<span style="color:#a6e22e">Path</span>)
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+        <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;&#34;</span>, <span style="color:#a6e22e">err</span>
+    }
+    <span style="color:#66d9ef">switch</span> <span style="color:#a6e22e">fileType</span> {
+    <span style="color:#66d9ef">case</span> <span style="color:#a6e22e">hostutil</span>.<span style="color:#a6e22e">FileTypeDirectory</span>:
+        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">spec</span>.<span style="color:#a6e22e">PersistentVolume</span>.<span style="color:#a6e22e">Spec</span>.<span style="color:#a6e22e">Local</span>.<span style="color:#a6e22e">Path</span>, <span style="color:#66d9ef">nil</span>
+    <span style="color:#66d9ef">case</span> <span style="color:#a6e22e">hostutil</span>.<span style="color:#a6e22e">FileTypeBlockDev</span>:
+        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">filepath</span>.<span style="color:#a6e22e">Join</span>(<span style="color:#a6e22e">plugin</span>.<span style="color:#a6e22e">generateBlockDeviceBaseGlobalPath</span>(), <span style="color:#a6e22e">spec</span>.<span style="color:#a6e22e">Name</span>()), <span style="color:#66d9ef">nil</span>
+    <span style="color:#66d9ef">default</span>:
+        <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;&#34;</span>, <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Errorf</span>(<span style="color:#e6db74">&#34;only directory and block device are supported&#34;</span>)
+    }
+}
+</code></pre></div><h2 id="3-避免重复挂载">3. 避免重复挂载</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">m</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">localVolumeMounter</span>) <span style="color:#a6e22e">SetUpAt</span>(<span style="color:#a6e22e">dir</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">mounterArgs</span> <span style="color:#a6e22e">volume</span>.<span style="color:#a6e22e">MounterArgs</span>) <span style="color:#66d9ef">error</span> {
+    <span style="color:#f92672">...</span>
+    <span style="color:#a6e22e">notMnt</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">mount</span>.<span style="color:#a6e22e">IsNotMountPoint</span>(<span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">mounter</span>, <span style="color:#a6e22e">dir</span>)
+    <span style="color:#f92672">...</span>    
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> <span style="color:#f92672">&amp;&amp;</span> !<span style="color:#a6e22e">os</span>.<span style="color:#a6e22e">IsNotExist</span>(<span style="color:#a6e22e">err</span>) {
+        <span style="color:#a6e22e">klog</span>.<span style="color:#a6e22e">Errorf</span>(<span style="color:#e6db74">&#34;cannot validate mount point: %s %v&#34;</span>, <span style="color:#a6e22e">dir</span>, <span style="color:#a6e22e">err</span>)
+        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">err</span>
+    }
+
+    <span style="color:#66d9ef">if</span> !<span style="color:#a6e22e">notMnt</span> {
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>
+    }
+    <span style="color:#f92672">...</span>
+}
+</code></pre></div><h2 id="4-bind-mount">4. bind mount</h2>
+<p>使用bind mount, 是为了允许一个卷被挂载至多个pod。</p>
+<p><a href="https://github.com/kubernetes/kubernetes/blob/v1.23.1/pkg/volume/local/local.go#L587">https://github.com/kubernetes/kubernetes/blob/v1.23.1/pkg/volume/local/local.go#L587</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">m</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">localVolumeMounter</span>) <span style="color:#a6e22e">SetUpAt</span>(<span style="color:#a6e22e">dir</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">mounterArgs</span> <span style="color:#a6e22e">volume</span>.<span style="color:#a6e22e">MounterArgs</span>) <span style="color:#66d9ef">error</span> {
+    <span style="color:#f92672">...</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">os</span>.<span style="color:#a6e22e">MkdirAll</span>(<span style="color:#a6e22e">dir</span>, <span style="color:#ae81ff">0750</span>); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+            <span style="color:#f92672">...</span>
+            <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">err</span>
+        }
+    <span style="color:#f92672">...</span>
+    <span style="color:#a6e22e">options</span> <span style="color:#f92672">:=</span> []<span style="color:#66d9ef">string</span>{<span style="color:#e6db74">&#34;bind&#34;</span>}
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">readOnly</span> {
+        <span style="color:#a6e22e">options</span> = append(<span style="color:#a6e22e">options</span>, <span style="color:#e6db74">&#34;ro&#34;</span>)
+    }
+    <span style="color:#a6e22e">mountOptions</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">util</span>.<span style="color:#a6e22e">JoinMountOptions</span>(<span style="color:#a6e22e">options</span>, <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">mountOptions</span>)
+    <span style="color:#f92672">...</span>
+    <span style="color:#a6e22e">err</span> = <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">mounter</span>.<span style="color:#a6e22e">MountSensitiveWithoutSystemd</span>(<span style="color:#a6e22e">globalPath</span>, <span style="color:#a6e22e">dir</span>, <span style="color:#e6db74">&#34;&#34;</span>, <span style="color:#a6e22e">mountOptions</span>, <span style="color:#66d9ef">nil</span>)
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+        <span style="color:#f92672">...</span>
+        <span style="color:#a6e22e">notMnt</span>, <span style="color:#a6e22e">mntErr</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">mount</span>.<span style="color:#a6e22e">IsNotMountPoint</span>(<span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">mounter</span>, <span style="color:#a6e22e">dir</span>)
+        <span style="color:#f92672">...</span>
+        <span style="color:#66d9ef">if</span> !<span style="color:#a6e22e">notMnt</span> {
+            <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">mntErr</span> = <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">mounter</span>.<span style="color:#a6e22e">Unmount</span>(<span style="color:#a6e22e">dir</span>); <span style="color:#a6e22e">mntErr</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+                <span style="color:#a6e22e">klog</span>.<span style="color:#a6e22e">Errorf</span>(<span style="color:#e6db74">&#34;Failed to unmount: %v&#34;</span>, <span style="color:#a6e22e">mntErr</span>)
+                <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">err</span>
+            }
+            <span style="color:#f92672">...</span>
+        }
+        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">rmErr</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">os</span>.<span style="color:#a6e22e">Remove</span>(<span style="color:#a6e22e">dir</span>); <span style="color:#a6e22e">rmErr</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+            <span style="color:#a6e22e">klog</span>.<span style="color:#a6e22e">Warningf</span>(<span style="color:#e6db74">&#34;failed to remove %s: %v&#34;</span>, <span style="color:#a6e22e">dir</span>, <span style="color:#a6e22e">rmErr</span>)
+        }
+        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">err</span>
+    }
+    <span style="color:#f92672">...</span>
+}
+</code></pre></div><p><a href="https://github.com/kubernetes/kubernetes/blob/v1.23.1/staging/src/k8s.io/mount-utils/mount_linux.go#L113">https://github.com/kubernetes/kubernetes/blob/v1.23.1/staging/src/k8s.io/mount-utils/mount_linux.go#L113</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">mounter</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Mounter</span>) <span style="color:#a6e22e">MountSensitiveWithoutSystemd</span>(<span style="color:#a6e22e">source</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">target</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">fstype</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">options</span> []<span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">sensitiveOptions</span> []<span style="color:#66d9ef">string</span>) <span style="color:#66d9ef">error</span> {
+	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">mounter</span>.<span style="color:#a6e22e">MountSensitiveWithoutSystemdWithMountFlags</span>(<span style="color:#a6e22e">source</span>, <span style="color:#a6e22e">target</span>, <span style="color:#a6e22e">fstype</span>, <span style="color:#a6e22e">options</span>, <span style="color:#a6e22e">sensitiveOptions</span>, <span style="color:#66d9ef">nil</span> <span style="color:#75715e">/* mountFlags */</span>)
+}
+</code></pre></div><hr>
+<p>bind mount，需要执行两次mount。remount一次是为了应用挂载选项，因为bind mount可能会<a href="https://unix.stackexchange.com/questions/128336/why-doesnt-mount-respect-the-read-only-option-for-bind-mounts">忽略一些选项</a>;</p>
+<p><a href="https://github.com/kubernetes/kubernetes/blob/v1.23.1/staging/src/k8s.io/mount-utils/mount_linux.go#L118">https://github.com/kubernetes/kubernetes/blob/v1.23.1/staging/src/k8s.io/mount-utils/mount_linux.go#L118</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">mounter</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Mounter</span>) <span style="color:#a6e22e">MountSensitiveWithoutSystemdWithMountFlags</span>(<span style="color:#a6e22e">source</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">target</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">fstype</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">options</span> []<span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">sensitiveOptions</span> []<span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">mountFlags</span> []<span style="color:#66d9ef">string</span>) <span style="color:#66d9ef">error</span> {
+    <span style="color:#f92672">...</span>
+    <span style="color:#a6e22e">bind</span>, <span style="color:#a6e22e">bindOpts</span>, <span style="color:#a6e22e">bindRemountOpts</span>, <span style="color:#a6e22e">bindRemountOptsSensitive</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">MakeBindOptsSensitive</span>(<span style="color:#a6e22e">options</span>, <span style="color:#a6e22e">sensitiveOptions</span>)
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">bind</span> {
+        <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">mounter</span>.<span style="color:#a6e22e">doMount</span>(<span style="color:#a6e22e">mounterPath</span>, <span style="color:#a6e22e">defaultMountCommand</span>, <span style="color:#a6e22e">source</span>, <span style="color:#a6e22e">target</span>, <span style="color:#a6e22e">fstype</span>, <span style="color:#a6e22e">bindOpts</span>, <span style="color:#a6e22e">bindRemountOptsSensitive</span>, <span style="color:#a6e22e">mountFlags</span>, <span style="color:#66d9ef">false</span>)
+        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+            <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">err</span>
+        }
+        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">mounter</span>.<span style="color:#a6e22e">doMount</span>(<span style="color:#a6e22e">mounterPath</span>, <span style="color:#a6e22e">defaultMountCommand</span>, <span style="color:#a6e22e">source</span>, <span style="color:#a6e22e">target</span>, <span style="color:#a6e22e">fstype</span>, <span style="color:#a6e22e">bindRemountOpts</span>, <span style="color:#a6e22e">bindRemountOptsSensitive</span>, <span style="color:#a6e22e">mountFlags</span>, <span style="color:#66d9ef">false</span>)
+    }
+    <span style="color:#f92672">...</span>
+    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">mounter</span>.<span style="color:#a6e22e">doMount</span>(<span style="color:#a6e22e">mounterPath</span>, <span style="color:#a6e22e">defaultMountCommand</span>, <span style="color:#a6e22e">source</span>, <span style="color:#a6e22e">target</span>, <span style="color:#a6e22e">fstype</span>, <span style="color:#a6e22e">options</span>, <span style="color:#a6e22e">sensitiveOptions</span>, <span style="color:#a6e22e">mountFlags</span>, <span style="color:#66d9ef">false</span>)
+}
+</code></pre></div><hr>
+<p><code>Mounter.doMount</code>调用<code>MakeMountArgsSensitiveWithMountFlags</code>函数组装命令，然后执行。</p>
+<p><a href="https://github.com/kubernetes/kubernetes/blob/v1.23.1/staging/src/k8s.io/mount-utils/mount_linux.go#L144">https://github.com/kubernetes/kubernetes/blob/v1.23.1/staging/src/k8s.io/mount-utils/mount_linux.go#L144</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">mounter</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Mounter</span>) <span style="color:#a6e22e">doMount</span>(<span style="color:#a6e22e">mounterPath</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">mountCmd</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">source</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">target</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">fstype</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">options</span> []<span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">sensitiveOptions</span> []<span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">mountFlags</span> []<span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">systemdMountRequired</span> <span style="color:#66d9ef">bool</span>) <span style="color:#66d9ef">error</span> {
+    <span style="color:#a6e22e">mountArgs</span>, <span style="color:#a6e22e">mountArgsLogStr</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">MakeMountArgsSensitiveWithMountFlags</span>(<span style="color:#a6e22e">source</span>, <span style="color:#a6e22e">target</span>, <span style="color:#a6e22e">fstype</span>, <span style="color:#a6e22e">options</span>, <span style="color:#a6e22e">sensitiveOptions</span>, <span style="color:#a6e22e">mountFlags</span>)
+    <span style="color:#66d9ef">if</span> len(<span style="color:#a6e22e">mounterPath</span>) &gt; <span style="color:#ae81ff">0</span> {
+        <span style="color:#a6e22e">mountArgs</span> = append([]<span style="color:#66d9ef">string</span>{<span style="color:#a6e22e">mountCmd</span>}, <span style="color:#a6e22e">mountArgs</span><span style="color:#f92672">...</span>)
+        <span style="color:#a6e22e">mountArgsLogStr</span> = <span style="color:#a6e22e">mountCmd</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34; &#34;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">mountArgsLogStr</span>
+        <span style="color:#a6e22e">mountCmd</span> = <span style="color:#a6e22e">mounterPath</span>
+    }
+    <span style="color:#f92672">...</span>
+    <span style="color:#a6e22e">command</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">exec</span>.<span style="color:#a6e22e">Command</span>(<span style="color:#a6e22e">mountCmd</span>, <span style="color:#a6e22e">mountArgs</span><span style="color:#f92672">...</span>)
+    <span style="color:#a6e22e">output</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">command</span>.<span style="color:#a6e22e">CombinedOutput</span>()
+    <span style="color:#f92672">...</span>
+    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">err</span>
+}
+</code></pre></div><hr>
+<p>以挂载<code>/dev/vdb</code>为例</p>
+<ol>
+<li>第一次将执行<code>mount -o bind /var/lib/kubelet/plugins/kubernetes.io/local-volume/mounts/example-local-filesystem-pv /var/lib/kubelet/pods/53a1376e-80ed-4cbf-8c6f-dc52176b6938/volumes/kubernetes.io~local-volume/example-local-filesystem-pv</code></li>
+<li>第二次将执行<code>mount -o bind,remount /var/lib/kubelet/plugins/kubernetes.io/local-volume/mounts/example-local-filesystem-pv /var/lib/kubelet/pods/53a1376e-80ed-4cbf-8c6f-dc52176b6938/volumes/kubernetes.io~local-volume/example-local-filesystem-pv</code></li>
+</ol>
+<p>这里我们举的例子没有额外的挂载选项，导致两次mount命令几乎相同，如果有额外的挂载选项，则将在第二次mount时，有所区别。</p>
+<p><a href="https://github.com/kubernetes/kubernetes/blob/v1.23.1/staging/src/k8s.io/mount-utils/mount_linux.go#L243">https://github.com/kubernetes/kubernetes/blob/v1.23.1/staging/src/k8s.io/mount-utils/mount_linux.go#L243</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">MakeMountArgsSensitiveWithMountFlags</span>(<span style="color:#a6e22e">source</span>, <span style="color:#a6e22e">target</span>, <span style="color:#a6e22e">fstype</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">options</span> []<span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">sensitiveOptions</span> []<span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">mountFlags</span> []<span style="color:#66d9ef">string</span>) (<span style="color:#a6e22e">mountArgs</span> []<span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">mountArgsLogStr</span> <span style="color:#66d9ef">string</span>) {
+	<span style="color:#75715e">// Build mount command as follows:
+</span><span style="color:#75715e"></span>	<span style="color:#75715e">//   mount [$mountFlags] [-t $fstype] [-o $options] [$source] $target
+</span><span style="color:#75715e"></span>    <span style="color:#a6e22e">mountArgs</span> = []<span style="color:#66d9ef">string</span>{}
+    <span style="color:#f92672">...</span>
+    <span style="color:#a6e22e">mountArgs</span> = append(<span style="color:#a6e22e">mountArgs</span>, <span style="color:#a6e22e">mountFlags</span><span style="color:#f92672">...</span>)
+    <span style="color:#f92672">...</span>
+    <span style="color:#66d9ef">if</span> len(<span style="color:#a6e22e">fstype</span>) &gt; <span style="color:#ae81ff">0</span> {
+        <span style="color:#a6e22e">mountArgs</span> = append(<span style="color:#a6e22e">mountArgs</span>, <span style="color:#e6db74">&#34;-t&#34;</span>, <span style="color:#a6e22e">fstype</span>)
+        <span style="color:#f92672">...</span>
+    }
+    <span style="color:#66d9ef">if</span> len(<span style="color:#a6e22e">options</span>) &gt; <span style="color:#ae81ff">0</span> <span style="color:#f92672">||</span> len(<span style="color:#a6e22e">sensitiveOptions</span>) &gt; <span style="color:#ae81ff">0</span> {
+        <span style="color:#a6e22e">combinedOptions</span> <span style="color:#f92672">:=</span> []<span style="color:#66d9ef">string</span>{}
+        <span style="color:#a6e22e">combinedOptions</span> = append(<span style="color:#a6e22e">combinedOptions</span>, <span style="color:#a6e22e">options</span><span style="color:#f92672">...</span>)
+        <span style="color:#a6e22e">combinedOptions</span> = append(<span style="color:#a6e22e">combinedOptions</span>, <span style="color:#a6e22e">sensitiveOptions</span><span style="color:#f92672">...</span>)
+        <span style="color:#a6e22e">mountArgs</span> = append(<span style="color:#a6e22e">mountArgs</span>, <span style="color:#e6db74">&#34;-o&#34;</span>, <span style="color:#a6e22e">strings</span>.<span style="color:#a6e22e">Join</span>(<span style="color:#a6e22e">combinedOptions</span>, <span style="color:#e6db74">&#34;,&#34;</span>))
+        <span style="color:#f92672">...</span>
+    }
+    <span style="color:#66d9ef">if</span> len(<span style="color:#a6e22e">source</span>) &gt; <span style="color:#ae81ff">0</span> {
+        <span style="color:#a6e22e">mountArgs</span> = append(<span style="color:#a6e22e">mountArgs</span>, <span style="color:#a6e22e">source</span>)
+        <span style="color:#f92672">...</span>
+    }
+    <span style="color:#a6e22e">mountArgs</span> = append(<span style="color:#a6e22e">mountArgs</span>, <span style="color:#a6e22e">target</span>)
+    <span style="color:#f92672">...</span>
+    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">mountArgs</span>, <span style="color:#a6e22e">mountArgsLogStr</span>
+}
+</code></pre></div><h2 id="5">5.</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">m</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">localVolumeMounter</span>) <span style="color:#a6e22e">SetUpAt</span>(<span style="color:#a6e22e">dir</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">mounterArgs</span> <span style="color:#a6e22e">volume</span>.<span style="color:#a6e22e">MounterArgs</span>) <span style="color:#66d9ef">error</span> {
+    <span style="color:#66d9ef">if</span> !<span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">readOnly</span> {
+        <span style="color:#75715e">// Volume owner will be written only once on the first volume mount
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> len(<span style="color:#a6e22e">refs</span>) <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span> {
+            <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">volume</span>.<span style="color:#a6e22e">SetVolumeOwnership</span>(<span style="color:#a6e22e">m</span>, <span style="color:#a6e22e">mounterArgs</span>.<span style="color:#a6e22e">FsGroup</span>, <span style="color:#a6e22e">mounterArgs</span>.<span style="color:#a6e22e">FSGroupChangePolicy</span>, <span style="color:#a6e22e">util</span>.<span style="color:#a6e22e">FSGroupCompleteHook</span>(<span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">plugin</span>, <span style="color:#66d9ef">nil</span>))
+        }
+    }
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>
+}
+
+</code></pre></div><h2 id="附部署local卷yaml">附：部署local卷yaml</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">v1</span>
+<span style="color:#f92672">kind</span>: <span style="color:#ae81ff">Pod</span>
+<span style="color:#f92672">metadata</span>:
+  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">test-local-filesystem-pod</span>
+<span style="color:#f92672">spec</span>:
+  <span style="color:#f92672">containers</span>:
+  - <span style="color:#f92672">image</span>: <span style="color:#ae81ff">ubuntu</span>
+    <span style="color:#f92672">name</span>: <span style="color:#ae81ff">local-filesystem-container</span>
+    <span style="color:#f92672">tty</span>: <span style="color:#66d9ef">true</span>
+    <span style="color:#f92672">volumeMounts</span>:
+    - <span style="color:#f92672">mountPath</span>: <span style="color:#ae81ff">/mnt</span>
+      <span style="color:#f92672">name</span>: <span style="color:#ae81ff">mypd</span>
+  <span style="color:#f92672">volumes</span>:
+    - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">mypd</span>
+      <span style="color:#f92672">persistentVolumeClaim</span>:
+        <span style="color:#f92672">claimName</span>: <span style="color:#ae81ff">example-local-system-filesystem-claim</span>
+
+---
+<span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">v1</span>
+<span style="color:#f92672">kind</span>: <span style="color:#ae81ff">PersistentVolume</span>
+<span style="color:#f92672">metadata</span>:
+  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">example-local-filesystem-pv</span>
+<span style="color:#f92672">spec</span>:
+  <span style="color:#f92672">capacity</span>:
+    <span style="color:#f92672">storage</span>: <span style="color:#ae81ff">1Gi</span>
+  <span style="color:#f92672">volumeMode</span>: <span style="color:#ae81ff">Filesystem</span>
+  <span style="color:#f92672">accessModes</span>:
+  - <span style="color:#ae81ff">ReadWriteOnce</span>
+  <span style="color:#f92672">persistentVolumeReclaimPolicy</span>: <span style="color:#ae81ff">Delete</span>
+  <span style="color:#f92672">storageClassName</span>: <span style="color:#ae81ff">local-system-storage</span>
+  <span style="color:#f92672">local</span>:
+    <span style="color:#f92672">path</span>: <span style="color:#ae81ff">/dev/vdb</span>
+  <span style="color:#f92672">nodeAffinity</span>:
+    <span style="color:#f92672">required</span>:
+      <span style="color:#f92672">nodeSelectorTerms</span>:
+      - <span style="color:#f92672">matchExpressions</span>:
+        - <span style="color:#f92672">key</span>: <span style="color:#ae81ff">kubernetes.io/hostname</span>
+          <span style="color:#f92672">operator</span>: <span style="color:#ae81ff">In</span>
+          <span style="color:#f92672">values</span>:
+          - <span style="color:#ae81ff">wanglei-k8s-containerd</span>
+
+---
+<span style="color:#f92672">kind</span>: <span style="color:#ae81ff">StorageClass</span>
+<span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">storage.k8s.io/v1</span>
+<span style="color:#f92672">metadata</span>:
+  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">local-system-storage</span>
+<span style="color:#f92672">provisioner</span>: <span style="color:#ae81ff">kubernetes.io/no-provisioner</span>
+<span style="color:#f92672">volumeBindingMode</span>: <span style="color:#ae81ff">WaitForFirstConsumer</span>
+
+---
+<span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">v1</span>
+<span style="color:#f92672">kind</span>: <span style="color:#ae81ff">PersistentVolumeClaim</span>
+<span style="color:#f92672">metadata</span>:
+  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">example-local-system-filesystem-claim</span>
+<span style="color:#f92672">spec</span>:
+  <span style="color:#f92672">volumeMode</span>: <span style="color:#ae81ff">Filesystem</span>
+  <span style="color:#f92672">storageClassName</span>: <span style="color:#ae81ff">local-system-storage</span>
+  <span style="color:#f92672">accessModes</span>:
+    - <span style="color:#ae81ff">ReadWriteOnce</span>
+  <span style="color:#f92672">resources</span>:
+    <span style="color:#f92672">requests</span>:
+      <span style="color:#f92672">storage</span>: <span style="color:#ae81ff">1Gi</span>
+</code></pre></div>
             </div>
         </article>
 

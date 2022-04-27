@@ -413,7 +413,8 @@ func (og *operationGenerator) GenerateMountVolumeFunc(...) volumetypes.Generated
     <span style="color:#f92672">...</span>
     <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">err</span>
 }
-</code></pre></div><p>以挂载<code>/dev/vdb</code>为例，将执行<code>mount -t ext4 -o defaults /dev/vdb /var/lib/kubelet/plugins/kubernetes.io/local-volume/mounts/example-local-filesystem-pv</code></p>
+</code></pre></div><hr>
+<p>以挂载<code>/dev/vdb</code>为例，将执行<code>mount -t ext4 -o defaults /dev/vdb /var/lib/kubelet/plugins/kubernetes.io/local-volume/mounts/example-local-filesystem-pv</code></p>
 <p><a href="https://github.com/kubernetes/kubernetes/blob/v1.23.1/staging/src/k8s.io/mount-utils/mount_linux.go#L243">https://github.com/kubernetes/kubernetes/blob/v1.23.1/staging/src/k8s.io/mount-utils/mount_linux.go#L243</a></p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">MakeMountArgsSensitiveWithMountFlags</span>(<span style="color:#a6e22e">source</span>, <span style="color:#a6e22e">target</span>, <span style="color:#a6e22e">fstype</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">options</span> []<span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">sensitiveOptions</span> []<span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">mountFlags</span> []<span style="color:#66d9ef">string</span>) (<span style="color:#a6e22e">mountArgs</span> []<span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">mountArgsLogStr</span> <span style="color:#66d9ef">string</span>) {
 	<span style="color:#75715e">// Build mount command as follows:
