@@ -48,7 +48,7 @@ https://github.com/kubernetes/kubernetes/blob/v1.23.1/pkg/volume/local/local.go#
 func (m *localVolumeMounter) SetUp(mounterArgs volume.MounterArgs) error { return m.SetUpAt(m.GetPath(), mounterArgs) } func (m *localVolumeMounter) SetUpAt(dir string, mounterArgs volume.">
 <meta itemprop="datePublished" content="2022-04-25T03:47:33+00:00" />
 <meta itemprop="dateModified" content="2022-04-25T03:47:33+00:00" />
-<meta itemprop="wordCount" content="975">
+<meta itemprop="wordCount" content="976">
 
 
 
@@ -341,7 +341,7 @@ func (m *localVolumeMounter) SetUp(mounterArgs volume.MounterArgs) error { retur
     <span style="color:#f92672">...</span>
     <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">mountArgs</span>, <span style="color:#a6e22e">mountArgsLogStr</span>
 }
-</code></pre></div><h2 id="5">5.</h2>
+</code></pre></div><h2 id="5-设置文件组用户">5. 设置文件组用户</h2>
 <p>最后一步是设置文件的组属主。<code>SetVolumeOwnership</code>修改给定的卷，使其为fsGroup所有，并设置SetGid，使新创建的文件为fsGroup所有。如果fsGroup为nil，则不做任何事情。</p>
 <p><a href="https://github.com/kubernetes/kubernetes/blob/v1.23.1/pkg/volume/local/local.go#L619">https://github.com/kubernetes/kubernetes/blob/v1.23.1/pkg/volume/local/local.go#L619</a></p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">m</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">localVolumeMounter</span>) <span style="color:#a6e22e">SetUpAt</span>(<span style="color:#a6e22e">dir</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">mounterArgs</span> <span style="color:#a6e22e">volume</span>.<span style="color:#a6e22e">MounterArgs</span>) <span style="color:#66d9ef">error</span> {
