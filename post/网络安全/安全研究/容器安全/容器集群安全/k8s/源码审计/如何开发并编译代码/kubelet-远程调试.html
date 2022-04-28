@@ -217,7 +217,7 @@ chmod +x /usr/bin/runc
 </code></pre><h3 id="52-docker-cli">5.2 docker-cli</h3>
 <h4 id="编译-1">编译</h4>
 <p>修改<code>scripts/build/binary</code>中的编译命令如下：删除LDFLAGS，添加gcflags</p>
-<p>`go build -o &ldquo;${TARGET}&rdquo; -tags &ldquo;${GO_BUILDTAGS}&rdquo; -gcflags=&ldquo;all=-N -l&rdquo; ${GO_BUILDMODE} &ldquo;${SOURCE}&quot;``</p>
+<p><code>go build -o &quot;${TARGET}&quot; -tags &quot;${GO_BUILDTAGS}&quot; -gcflags=&quot;all=-N -l&quot; ${GO_BUILDMODE} &quot;${SOURCE}&quot;</code></p>
 <pre><code>make -f docker.Makefile shell
 make binary
 </code></pre><h4 id="调试-1">调试</h4>
