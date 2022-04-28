@@ -236,7 +236,7 @@ PORT   STATE SERVICE
 80/tcp open  http
 </code></pre><p>经过类似上述常规的思路进行信息收集后，我们还是觉得不太够。好在我们本地已有环境的所有内容。我们分析一下比赛提供给选手的本地镜像文件：</p>
 <pre><code class="language-!" data-lang="!">╰$ docker ps |grep escape                         
-d95748ab048b        swr.cn-north-1.myhuaweicloud.com/hwstaff_pub_pentest/ctf_nday_docker_escape:v0.1   &quot;/start_vm.sh&quot;           13 hours ago        Up 13 hours         0.0.0.0:2222-&gt;22/tcp                 downloads_challenge_1
+d95748ab048b        swr.cn-north-1.myhuaweicloud.com/huaweictf/ctf_nday_docker_escape:v0.1   &quot;/start_vm.sh&quot;           13 hours ago        Up 13 hours         0.0.0.0:2222-&gt;22/tcp                 downloads_challenge_1
 ╰$ docker exec -ti -u root d95 bash               
 root@d95748ab048b:/# ls
 bin  boot  cloud.img  cloud.txt  dev  etc  home  init_qemu.expect  lib  lib32  lib64  libx32  media  mnt  opt  proc  root  run  sbin  srv  start_vm.sh  sys  tmp  ubuntu-20.04-server-cloudimg-amd64.img  usr  var
