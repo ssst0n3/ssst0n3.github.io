@@ -6,7 +6,16 @@
     <description>Recent content on welcome to st0n3&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 25 Apr 2022 03:47:33 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 28 Apr 2022 07:57:10 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>docker container inspect 源码分析</title>
+      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E8%BF%9B%E7%A8%8B%E5%AE%B9%E5%99%A8/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%B9%E5%99%A8/runc/%E6%BA%90%E7%A0%81%E5%AE%A1%E8%AE%A1/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/docker-container-inspect-%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90.html</link>
+      <pubDate>Thu, 28 Apr 2022 07:57:10 +0000</pubDate>
+      
+      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E8%BF%9B%E7%A8%8B%E5%AE%B9%E5%99%A8/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%B9%E5%99%A8/runc/%E6%BA%90%E7%A0%81%E5%AE%A1%E8%AE%A1/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/docker-container-inspect-%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90.html</guid>
+      <description> tags: docker,container,源码分析 docker container inspect 源码分析 </description>
+    </item>
+    
     <item>
       <title>k8s volume plugin 源码分析: Local卷 SetUp 实现</title>
       <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E5%AE%B9%E5%99%A8%E9%9B%86%E7%BE%A4%E5%AE%89%E5%85%A8/k8s/%E6%BA%90%E7%A0%81%E5%AE%A1%E8%AE%A1/k8s%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/kubelet/volume-plugin/k8s-volume-plugin-%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90-Local%E5%8D%B7-SetUp-%E5%AE%9E%E7%8E%B0.html</link>
@@ -89,13 +98,13 @@ func (oe *operationExecutor) UnmountVolume( volumeToUnmount MountedVolume, actua
       <pubDate>Wed, 23 Mar 2022 06:18:50 +0000</pubDate>
       
       <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E8%BF%9B%E7%A8%8B%E5%AE%B9%E5%99%A8/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%B9%E5%99%A8/docker/docker%E6%BA%90%E7%A0%81%E5%AE%A1%E8%AE%A1/docker%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/docker-container/docker-container-create-%E6%B5%81%E7%A8%8B-%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90.html</guid>
-      <description>tags: container,源码分析 docker container create 流程 源码分析 1. docker container create 简介 创建容器，通过docker container create命令调用，该流程在运行容器时也会执行。
+      <description>tags: docker,container,源码分析 docker container create 流程 源码分析 1. docker container create 简介 创建容器，通过docker container create命令调用，该流程在运行容器时也会执行。
 https://docs.docker.com/engine/reference/commandline/container_create/
 2. 源码入口位置 由cli接收docker container create命令参数,发送至docker engine api
 cli与engine api的代码入口分别位于:
 cli https://github.com/docker/cli/blob/v20.10.13/cli/command/container/create.go#L43
 engine https://github.com/moby/moby/blob/v20.10.13/api/server/router/container/container.go#L49
-3. cli docker使用 github.com/spf13/cobra 实现cli功能，NewCreateCommand函数中就定义了cobra.Command。该函数中用户输入的参数经解析后，会被传给runCreate函数。
+3. cli docker使用 github.com/spf13/cobra 实现cli功能，NewCreateCommand函数中就定义了cobra.Command。该函数中用户输入的参数经cobra解析后，会被传给runCreate函数。
 https://github.com/docker/cli/blob/v20.10.13/cli/command/container/create.go#L56
 func NewCreateCommand(dockerCli command.Cli) *cobra.Command { ... cmd := &amp;amp;cobra.Command{ ... RunE: func(cmd *cobra.Command, args []string) error { ... return runCreate(dockerCli, cmd.Flags(), &amp;amp;opts, copts) }, } ... return cmd } https://github.com/docker/cli/blob/v20.10.13/cli/command/container/create.go#L97
 func runCreate(dockerCli command.Cli, flags *pflag.</description>
