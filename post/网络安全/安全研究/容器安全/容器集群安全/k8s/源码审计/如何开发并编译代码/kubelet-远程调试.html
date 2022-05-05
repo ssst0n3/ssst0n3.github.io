@@ -42,7 +42,7 @@
 # Note: This dropin only works with kubeadm and kubelet v1.11&#43; [Service] Environment=&quot;KUBELET_KUBECONFIG_ARGS=--bootstrap-kubeconfig=/etc/kubernetes/bootstrap-kubelet.conf --kubeconfig=/etc/kubernetes/kubelet.conf&quot; Environment=&quot;KUBELET_CONFIG_ARGS=--config=/var/lib/kubelet/config.yaml&quot; # This is a file that &quot;kubeadm init&quot; and &quot;kubeadm join&quot; generates at runtime, populating the KUBELET_KUBEADM_ARGS variable dynamically EnvironmentFile=-/var/lib/kubelet/kubeadm-flags.env # This is a file that the user can use for overrides of the kubelet args as a last resort. Preferably, the user should use # the .">
 <meta itemprop="datePublished" content="2022-03-30T07:47:41+00:00" />
 <meta itemprop="dateModified" content="2022-03-30T07:47:41+00:00" />
-<meta itemprop="wordCount" content="373">
+<meta itemprop="wordCount" content="488">
 
 
 
@@ -217,8 +217,21 @@ chmod +x /usr/bin/runc
 </code></pre><h3 id="52-docker-cli">5.2 docker-cli</h3>
 <h4 id="编译-1">编译</h4>
 <p>修改<code>scripts/build/binary</code>中的编译命令如下：删除LDFLAGS，添加gcflags</p>
-<p><code>go build -o &quot;${TARGET}&quot; -tags &quot;${GO_BUILDTAGS}&quot; -gcflags=&quot;all=-N -l&quot; ${GO_BUILDMODE} &quot;${SOURCE}&quot;</code></p>
-<pre><code>make -f docker.Makefile shell
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-diff" data-lang="diff">root@st0n3:~/cli# git diff
+diff --git a/scripts/build/binary b/scripts/build/binary
+index e4c5e12a6b..155528e501 100755
+<span style="color:#f92672">--- a/scripts/build/binary
+</span><span style="color:#f92672"></span><span style="color:#a6e22e">+++ b/scripts/build/binary
+</span><span style="color:#a6e22e"></span><span style="color:#75715e">@@ -74,7 +74,7 @@ fi
+</span><span style="color:#75715e"></span> echo &#34;Building $GO_LINKMODE $(basename &#34;${TARGET}&#34;)&#34;
+ 
+ export GO111MODULE=auto
+<span style="color:#f92672">-
+</span><span style="color:#f92672">-go build -o &#34;${TARGET}&#34; -tags &#34;${GO_BUILDTAGS}&#34; --ldflags &#34;${LDFLAGS}&#34; ${GO_BUILDMODE} &#34;${SOURCE}&#34;
+</span><span style="color:#f92672"></span><span style="color:#a6e22e">+go build -o &#34;${TARGET}&#34; -tags &#34;${GO_BUILDTAGS}&#34; -gcflags=&#34;all=-N -l&#34; ${GO_BUILDMODE} &#34;${SOURCE}&#34;
+</span><span style="color:#a6e22e"></span> 
+ ln -sf &#34;$(basename &#34;${TARGET}&#34;)&#34; &#34;$(dirname &#34;${TARGET}&#34;)/docker&#34;
+</code></pre></div><pre><code>make -f docker.Makefile shell
 make binary
 </code></pre><h4 id="调试-1">调试</h4>
 <pre><code>cat &lt;&lt;EOF &gt; docker.debug
@@ -227,7 +240,31 @@ dlv --listen=:2344 --headless=true --api-version=2 --accept-multiclient exec ./d
 chmod +x docker.debug
 </code></pre><h3 id="53-dockerd">5.3 dockerd</h3>
 <h4 id="编译-2">编译</h4>
-
+<p>修改<code>hack/make/.binary</code>文件中的编译命令</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-diff" data-lang="diff">root@st0n3:~/moby# git diff
+diff --git a/hack/make/.binary b/hack/make/.binary
+index d56e3f3126..3e23865c81 100644
+<span style="color:#f92672">--- a/hack/make/.binary
+</span><span style="color:#f92672"></span><span style="color:#a6e22e">+++ b/hack/make/.binary
+</span><span style="color:#a6e22e"></span><span style="color:#75715e">@@ -81,11 +81,11 @@ hash_files() {
+</span><span style="color:#75715e"></span> 
+        echo &#34;Building: $DEST/$BINARY_FULLNAME&#34;
+        echo &#34;GOOS=\&#34;${GOOS}\&#34; GOARCH=\&#34;${GOARCH}\&#34; GOARM=\&#34;${GOARM}\&#34;&#34;
+<span style="color:#f92672">-       go build \
+</span><span style="color:#f92672"></span><span style="color:#a6e22e">+       set -x
+</span><span style="color:#a6e22e">+       go build -gcflags &#34;all=-N -l&#34;  \
+</span><span style="color:#a6e22e"></span>                -o &#34;$DEST/$BINARY_FULLNAME&#34; \
+                &#34;${BUILDFLAGS[@]}&#34; \
+                -ldflags &#34;
+<span style="color:#f92672">-               $LDFLAGS
+</span><span style="color:#f92672"></span>                $LDFLAGS_STATIC_DOCKER
+                $DOCKER_LDFLAGS
+        &#34; \
+</code></pre></div><pre><code>make BIND_DIR=. shell
+hack/make.sh binary
+</code></pre><h4 id="调试-2">调试</h4>
+<pre><code>/root/go/bin/dlv --listen=:2343 --headless=true --api-version=2 --accept-multiclient exec /usr/bin/dockerd.debug -- -H unix:///var/run/docker.sock --containerd=/run/containerd/containerd.sock
+</code></pre>
             </div>
         </article>
 
