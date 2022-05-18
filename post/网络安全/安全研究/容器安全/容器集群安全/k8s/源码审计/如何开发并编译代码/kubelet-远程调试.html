@@ -42,7 +42,7 @@
 # Note: This dropin only works with kubeadm and kubelet v1.11&#43; [Service] Environment=&quot;KUBELET_KUBECONFIG_ARGS=--bootstrap-kubeconfig=/etc/kubernetes/bootstrap-kubelet.conf --kubeconfig=/etc/kubernetes/kubelet.conf&quot; Environment=&quot;KUBELET_CONFIG_ARGS=--config=/var/lib/kubelet/config.yaml&quot; # This is a file that &quot;kubeadm init&quot; and &quot;kubeadm join&quot; generates at runtime, populating the KUBELET_KUBEADM_ARGS variable dynamically EnvironmentFile=-/var/lib/kubelet/kubeadm-flags.env # This is a file that the user can use for overrides of the kubelet args as a last resort. Preferably, the user should use # the .">
 <meta itemprop="datePublished" content="2022-03-30T07:47:41+00:00" />
 <meta itemprop="dateModified" content="2022-03-30T07:47:41+00:00" />
-<meta itemprop="wordCount" content="488">
+<meta itemprop="wordCount" content="489">
 
 
 
@@ -263,7 +263,7 @@ index d56e3f3126..3e23865c81 100644
 </code></pre></div><pre><code>make BIND_DIR=. shell
 hack/make.sh binary
 </code></pre><h4 id="调试-2">调试</h4>
-<pre><code>/root/go/bin/dlv --listen=:2343 --headless=true --api-version=2 --accept-multiclient exec /usr/bin/dockerd.debug -- -H unix:///var/run/docker.sock --containerd=/run/containerd/containerd.sock
+<pre><code>/root/go/bin/dlv --listen=:2343 --headless=true --api-version=2 --accept-multiclient exec /usr/bin/dockerd.debug -- -D -H unix:///var/run/docker.sock --containerd=/run/containerd/containerd.sock
 </code></pre>
             </div>
         </article>
