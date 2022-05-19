@@ -7,7 +7,14 @@
 <meta name="author"
     content="">
 <meta name="description"
-    content=" tags: container,docker,源码分析 docker reexec docker-mountfrom 源码分析 " />
+    content="tags: container,docker,源码分析 docker reexec docker-mountfrom 源码分析 本文中代码均为v20.10.6分支的代码。
+1. 简介 docker-mountfrom 是 dockerd 的一个“子命令”，用于实现对相对目录的挂载。
+2. 使用 2.1 代码使用 参考 docker reexec源码分析。
+2.2 二进制使用 除了通过以类似fork的形式在代码中使用，docker-mountfrom 也可以通过二进制的形式使用，但这种形式不常见。这种使用方式的价值在于能方便得直接进入 docker-mountfrom 的逻辑，在分析其实现、或研究相关的安全问题时，比较方便、直观。
+将 dockerd 复制一份，或建立软链接，得到名为 docker-mountfrom 的文件，dockerd 与 docker-mountfrom 的文件内容相同，通过执行时的不同的cmdline，进入不同的代码逻辑。
+ln -s /usr/bin/dockerd /usr/bin/docker-mountfrom docker-mountfrom的stdin是json格式的配置选项，arg1是相对路径所在的目录。
+echo &#39;{&amp;quot;device&amp;quot;:&amp;quot;shm&amp;quot;,&amp;quot;target&amp;quot;:&amp;quot;dst&amp;quot;,&amp;quot;type&amp;quot;:&amp;quot;tmpfs&amp;quot;,&amp;quot;label&amp;quot;:&amp;quot;&amp;quot;, &amp;quot;flag&amp;quot;:0}&#39; &amp;gt; /tmp/json mkdir /tmp/dst docker-mountfrom &amp;lt; /tmp/json /tmp 其中，配置选项的具体格式为：
+type mountOptions struct { Device string Target string Type string Label string Flag uint32 } 3. 实现分析 docker-mountfrom命令被注册到 mountFromMain 函数。" />
 <meta name="keywords" content="" />
 <meta name="robots" content="noodp" />
 <link rel="canonical" href="/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E8%BF%9B%E7%A8%8B%E5%AE%B9%E5%99%A8/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%B9%E5%99%A8/docker/docker%E6%BA%90%E7%A0%81%E5%AE%A1%E8%AE%A1/docker%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/docker-reexec%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/docker-reexec-docker-mountfrom-%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90.html" />
@@ -37,17 +44,31 @@
 <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#252627">
 <link rel="shortcut icon" href="/favicon.ico">
 <meta name="theme-color" content="#252627"><meta itemprop="name" content="docker reexec docker-mountfrom 源码分析">
-<meta itemprop="description" content=" tags: container,docker,源码分析 docker reexec docker-mountfrom 源码分析 ">
+<meta itemprop="description" content="tags: container,docker,源码分析 docker reexec docker-mountfrom 源码分析 本文中代码均为v20.10.6分支的代码。
+1. 简介 docker-mountfrom 是 dockerd 的一个“子命令”，用于实现对相对目录的挂载。
+2. 使用 2.1 代码使用 参考 docker reexec源码分析。
+2.2 二进制使用 除了通过以类似fork的形式在代码中使用，docker-mountfrom 也可以通过二进制的形式使用，但这种形式不常见。这种使用方式的价值在于能方便得直接进入 docker-mountfrom 的逻辑，在分析其实现、或研究相关的安全问题时，比较方便、直观。
+将 dockerd 复制一份，或建立软链接，得到名为 docker-mountfrom 的文件，dockerd 与 docker-mountfrom 的文件内容相同，通过执行时的不同的cmdline，进入不同的代码逻辑。
+ln -s /usr/bin/dockerd /usr/bin/docker-mountfrom docker-mountfrom的stdin是json格式的配置选项，arg1是相对路径所在的目录。
+echo &#39;{&quot;device&quot;:&quot;shm&quot;,&quot;target&quot;:&quot;dst&quot;,&quot;type&quot;:&quot;tmpfs&quot;,&quot;label&quot;:&quot;&quot;, &quot;flag&quot;:0}&#39; &gt; /tmp/json mkdir /tmp/dst docker-mountfrom &lt; /tmp/json /tmp 其中，配置选项的具体格式为：
+type mountOptions struct { Device string Target string Type string Label string Flag uint32 } 3. 实现分析 docker-mountfrom命令被注册到 mountFromMain 函数。">
 <meta itemprop="datePublished" content="2022-05-18T09:16:08+00:00" />
 <meta itemprop="dateModified" content="2022-05-18T09:16:08+00:00" />
-<meta itemprop="wordCount" content="6">
+<meta itemprop="wordCount" content="256">
 
 
 
 <meta itemprop="keywords" content="" />
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="docker reexec docker-mountfrom 源码分析"/>
-<meta name="twitter:description" content=" tags: container,docker,源码分析 docker reexec docker-mountfrom 源码分析 "/>
+<meta name="twitter:description" content="tags: container,docker,源码分析 docker reexec docker-mountfrom 源码分析 本文中代码均为v20.10.6分支的代码。
+1. 简介 docker-mountfrom 是 dockerd 的一个“子命令”，用于实现对相对目录的挂载。
+2. 使用 2.1 代码使用 参考 docker reexec源码分析。
+2.2 二进制使用 除了通过以类似fork的形式在代码中使用，docker-mountfrom 也可以通过二进制的形式使用，但这种形式不常见。这种使用方式的价值在于能方便得直接进入 docker-mountfrom 的逻辑，在分析其实现、或研究相关的安全问题时，比较方便、直观。
+将 dockerd 复制一份，或建立软链接，得到名为 docker-mountfrom 的文件，dockerd 与 docker-mountfrom 的文件内容相同，通过执行时的不同的cmdline，进入不同的代码逻辑。
+ln -s /usr/bin/dockerd /usr/bin/docker-mountfrom docker-mountfrom的stdin是json格式的配置选项，arg1是相对路径所在的目录。
+echo &#39;{&quot;device&quot;:&quot;shm&quot;,&quot;target&quot;:&quot;dst&quot;,&quot;type&quot;:&quot;tmpfs&quot;,&quot;label&quot;:&quot;&quot;, &quot;flag&quot;:0}&#39; &gt; /tmp/json mkdir /tmp/dst docker-mountfrom &lt; /tmp/json /tmp 其中，配置选项的具体格式为：
+type mountOptions struct { Device string Target string Type string Label string Flag uint32 } 3. 实现分析 docker-mountfrom命令被注册到 mountFromMain 函数。"/>
 
 
 
@@ -121,7 +142,94 @@
                 <hr>
 <h2 id="tags-containerdocker源码分析">tags: container,docker,源码分析</h2>
 <h1 id="docker-reexec-docker-mountfrom-源码分析">docker reexec docker-mountfrom 源码分析</h1>
+<p><small>本文中代码均为v20.10.6分支的代码。</small></p>
+<h2 id="1-简介">1. 简介</h2>
+<p><code>docker-mountfrom</code> 是 <code>dockerd</code> 的一个“子命令”，用于实现对相对目录的挂载。</p>
+<h2 id="2-使用">2. 使用</h2>
+<h3 id="21-代码使用">2.1 代码使用</h3>
+<p>参考 <a href="https://ssst0n3.github.io/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E8%BF%9B%E7%A8%8B%E5%AE%B9%E5%99%A8/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%B9%E5%99%A8/docker/docker%E6%BA%90%E7%A0%81%E5%AE%A1%E8%AE%A1/docker%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/docker-reexec%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90.html">docker reexec源码分析</a>。</p>
+<h3 id="22-二进制使用">2.2 二进制使用</h3>
+<p>除了通过以类似fork的形式在代码中使用，<code>docker-mountfrom</code> 也可以通过二进制的形式使用，但这种形式不常见。这种使用方式的价值在于能方便得直接进入 <code>docker-mountfrom</code> 的逻辑，在分析其实现、或研究相关的安全问题时，比较方便、直观。</p>
+<p>将 <code>dockerd</code> 复制一份，或建立软链接，得到名为 <code>docker-mountfrom</code> 的文件，<code>dockerd</code> 与 <code>docker-mountfrom</code> 的文件内容相同，通过执行时的不同的cmdline，进入不同的代码逻辑。</p>
+<pre><code>ln -s /usr/bin/dockerd /usr/bin/docker-mountfrom
+</code></pre><p>docker-mountfrom的stdin是json格式的配置选项，arg1是相对路径所在的目录。</p>
+<pre><code>echo '{&quot;device&quot;:&quot;shm&quot;,&quot;target&quot;:&quot;dst&quot;,&quot;type&quot;:&quot;tmpfs&quot;,&quot;label&quot;:&quot;&quot;, &quot;flag&quot;:0}' &gt; /tmp/json
+mkdir /tmp/dst
+docker-mountfrom &lt; /tmp/json /tmp
+</code></pre><p>其中，配置选项的具体格式为：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">mountOptions</span> <span style="color:#66d9ef">struct</span> {
+	<span style="color:#a6e22e">Device</span> <span style="color:#66d9ef">string</span>
+	<span style="color:#a6e22e">Target</span> <span style="color:#66d9ef">string</span>
+	<span style="color:#a6e22e">Type</span>   <span style="color:#66d9ef">string</span>
+	<span style="color:#a6e22e">Label</span>  <span style="color:#66d9ef">string</span>
+	<span style="color:#a6e22e">Flag</span>   <span style="color:#66d9ef">uint32</span>
+}
+</code></pre></div><h2 id="3-实现分析">3. 实现分析</h2>
+<p><code>docker-mountfrom</code>命令被注册到 <code>mountFromMain</code> 函数。</p>
+<p><a href="https://github.com/moby/moby/blob/master/daemon/graphdriver/overlay2/mount.go#L18-L20">https://github.com/moby/moby/blob/master/daemon/graphdriver/overlay2/mount.go#L18-L20</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">init</span>() {
+    <span style="color:#a6e22e">reexec</span>.<span style="color:#a6e22e">Register</span>(<span style="color:#e6db74">&#34;docker-mountfrom&#34;</span>, <span style="color:#a6e22e">mountFromMain</span>)
+}
+</code></pre></div><hr>
+<p>可以看到，该命令的第一个参数为一个路径，会chroot到该目录；其余参数由stdin中获取，传递给<code>unix.Mount</code>系统调用。</p>
+<p><a href="https://github.com/moby/moby/blob/master/daemon/graphdriver/overlay2/mount.go#L71-L90">https://github.com/moby/moby/blob/master/daemon/graphdriver/overlay2/mount.go#L71-L90</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">mountFromMain</span>() {
+    <span style="color:#f92672">...</span>
+    <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">options</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">mountOptions</span>
 
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">json</span>.<span style="color:#a6e22e">NewDecoder</span>(<span style="color:#a6e22e">os</span>.<span style="color:#a6e22e">Stdin</span>).<span style="color:#a6e22e">Decode</span>(<span style="color:#f92672">&amp;</span><span style="color:#a6e22e">options</span>); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+        <span style="color:#a6e22e">fatal</span>(<span style="color:#a6e22e">err</span>)
+    }
+
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">os</span>.<span style="color:#a6e22e">Chdir</span>(<span style="color:#a6e22e">flag</span>.<span style="color:#a6e22e">Arg</span>(<span style="color:#ae81ff">0</span>)); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+        <span style="color:#a6e22e">fatal</span>(<span style="color:#a6e22e">err</span>)
+    }
+
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">unix</span>.<span style="color:#a6e22e">Mount</span>(<span style="color:#a6e22e">options</span>.<span style="color:#a6e22e">Device</span>, <span style="color:#a6e22e">options</span>.<span style="color:#a6e22e">Target</span>, <span style="color:#a6e22e">options</span>.<span style="color:#a6e22e">Type</span>, uintptr(<span style="color:#a6e22e">options</span>.<span style="color:#a6e22e">Flag</span>), <span style="color:#a6e22e">options</span>.<span style="color:#a6e22e">Label</span>); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+        <span style="color:#a6e22e">fatal</span>(<span style="color:#a6e22e">err</span>)
+    }
+
+    <span style="color:#a6e22e">os</span>.<span style="color:#a6e22e">Exit</span>(<span style="color:#ae81ff">0</span>)
+}
+</code></pre></div><hr>
+<p>目前(v20.10.14), <code>docker-mountfrom</code>命令只在<code>mountFrom</code>函数中被调用。</p>
+<p><a href="https://github.com/moby/moby/blob/master/daemon/graphdriver/overlay2/mount.go#L35">https://github.com/moby/moby/blob/master/daemon/graphdriver/overlay2/mount.go#L35</a></p>
+<p>mount的参数形式为<code>mountOptions</code>结构体，以json格式传递至<code>mountFrom</code>命令的stdin中。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">mountFrom</span>(<span style="color:#a6e22e">dir</span>, <span style="color:#a6e22e">device</span>, <span style="color:#a6e22e">target</span>, <span style="color:#a6e22e">mType</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">flags</span> <span style="color:#66d9ef">uintptr</span>, <span style="color:#a6e22e">label</span> <span style="color:#66d9ef">string</span>) <span style="color:#66d9ef">error</span> {
+    <span style="color:#a6e22e">options</span> <span style="color:#f92672">:=</span> <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">mountOptions</span>{
+        <span style="color:#a6e22e">Device</span>: <span style="color:#a6e22e">device</span>,
+        <span style="color:#a6e22e">Target</span>: <span style="color:#a6e22e">target</span>,
+        <span style="color:#a6e22e">Type</span>:   <span style="color:#a6e22e">mType</span>,
+        <span style="color:#a6e22e">Flag</span>:   uint32(<span style="color:#a6e22e">flags</span>),
+        <span style="color:#a6e22e">Label</span>:  <span style="color:#a6e22e">label</span>,
+    }
+
+    <span style="color:#a6e22e">cmd</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">reexec</span>.<span style="color:#a6e22e">Command</span>(<span style="color:#e6db74">&#34;docker-mountfrom&#34;</span>, <span style="color:#a6e22e">dir</span>)
+    <span style="color:#a6e22e">w</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">cmd</span>.<span style="color:#a6e22e">StdinPipe</span>()
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Errorf</span>(<span style="color:#e6db74">&#34;mountfrom error on pipe creation: %v&#34;</span>, <span style="color:#a6e22e">err</span>)
+    }
+
+    <span style="color:#a6e22e">output</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">bytes</span>.<span style="color:#a6e22e">NewBuffer</span>(<span style="color:#66d9ef">nil</span>)
+    <span style="color:#a6e22e">cmd</span>.<span style="color:#a6e22e">Stdout</span> = <span style="color:#a6e22e">output</span>
+    <span style="color:#a6e22e">cmd</span>.<span style="color:#a6e22e">Stderr</span> = <span style="color:#a6e22e">output</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">cmd</span>.<span style="color:#a6e22e">Start</span>(); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+        <span style="color:#a6e22e">w</span>.<span style="color:#a6e22e">Close</span>()
+        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Errorf</span>(<span style="color:#e6db74">&#34;mountfrom error on re-exec cmd: %v&#34;</span>, <span style="color:#a6e22e">err</span>)
+    }
+    <span style="color:#75715e">// write the options to the pipe for the untar exec to read
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">json</span>.<span style="color:#a6e22e">NewEncoder</span>(<span style="color:#a6e22e">w</span>).<span style="color:#a6e22e">Encode</span>(<span style="color:#a6e22e">options</span>); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+        <span style="color:#a6e22e">w</span>.<span style="color:#a6e22e">Close</span>()
+        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Errorf</span>(<span style="color:#e6db74">&#34;mountfrom json encode to pipe failed: %v&#34;</span>, <span style="color:#a6e22e">err</span>)
+    }
+    <span style="color:#a6e22e">w</span>.<span style="color:#a6e22e">Close</span>()
+
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">cmd</span>.<span style="color:#a6e22e">Wait</span>(); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Errorf</span>(<span style="color:#e6db74">&#34;mountfrom re-exec error: %v: output: %v&#34;</span>, <span style="color:#a6e22e">err</span>, <span style="color:#a6e22e">output</span>)
+    }
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>
+}
+</code></pre></div>
             </div>
         </article>
 
