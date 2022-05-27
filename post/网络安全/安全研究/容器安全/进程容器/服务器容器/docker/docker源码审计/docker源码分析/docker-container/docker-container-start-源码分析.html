@@ -1,0 +1,1391 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author"
+    content="">
+<meta name="description"
+    content="tags: docker,container,源码分析 docker container start 源码分析  本文编写时，最新release为v20.10.14, 下文涉及代码均为该版本的代码。  1. docker container start 简介 启动容器，通过docker container start命令调用，该流程在运行容器时也会执行。
+详见官方文档： https://docs.docker.com/engine/reference/commandline/container_start/
+2. 源码入口位置 由cli接收docker container start命令参数,发送至docker engine api
+cli与engine api的代码入口分别位于:
+cli
+https://github.com/docker/cli/blob/v20.10.14/cli/command/container/start.go#L29
+func NewStartCommand(dockerCli command.Cli) *cobra.Command { ... }  engine
+https://github.com/moby/moby/blob/v20.10.14/api/server/router/container/container.go#L54
+func (r *containerRouter) initRoutes() { r.routes = []router.Route{ ... router.NewPostRoute(&amp;#34;/containers/{name:.*}/start&amp;#34;, r.postContainersStart), ... } } 3. cli docker使用 github.com/spf13/cobra 实现cli功能，NewStartCommand函数中定义了cobra.Command。该函数中用户输入的参数经cobra解析后，会被传给runStart函数。
+https://github.com/docker/cli/blob/v20.10.14/cli/command/container/start.go#L38
+func NewStartCommand(dockerCli command.Cli) *cobra.Command { ... cmd := &amp;amp;cobra." />
+<meta name="keywords" content="" />
+<meta name="robots" content="noodp" />
+<link rel="canonical" href="/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E8%BF%9B%E7%A8%8B%E5%AE%B9%E5%99%A8/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%B9%E5%99%A8/docker/docker%E6%BA%90%E7%A0%81%E5%AE%A1%E8%AE%A1/docker%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/docker-container/docker-container-start-%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90.html" />
+
+
+<title>
+    
+    docker container start 源码分析 :: welcome to st0n3&#39;s blog 
+    
+</title>
+
+
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.2.1/css/flag-icon.min.css" rel="stylesheet"
+    type="text/css">
+
+
+
+<link rel="stylesheet" href="/main.min.de959d61dd13c2cd41136acd491ffb0749779e1afe37b1fed6d5cba0b7e1938d.css">
+
+
+
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#252627">
+<link rel="shortcut icon" href="/favicon.ico">
+<meta name="theme-color" content="#252627"><meta itemprop="name" content="docker container start 源码分析">
+<meta itemprop="description" content="tags: docker,container,源码分析 docker container start 源码分析  本文编写时，最新release为v20.10.14, 下文涉及代码均为该版本的代码。  1. docker container start 简介 启动容器，通过docker container start命令调用，该流程在运行容器时也会执行。
+详见官方文档： https://docs.docker.com/engine/reference/commandline/container_start/
+2. 源码入口位置 由cli接收docker container start命令参数,发送至docker engine api
+cli与engine api的代码入口分别位于:
+cli
+https://github.com/docker/cli/blob/v20.10.14/cli/command/container/start.go#L29
+func NewStartCommand(dockerCli command.Cli) *cobra.Command { ... }  engine
+https://github.com/moby/moby/blob/v20.10.14/api/server/router/container/container.go#L54
+func (r *containerRouter) initRoutes() { r.routes = []router.Route{ ... router.NewPostRoute(&#34;/containers/{name:.*}/start&#34;, r.postContainersStart), ... } } 3. cli docker使用 github.com/spf13/cobra 实现cli功能，NewStartCommand函数中定义了cobra.Command。该函数中用户输入的参数经cobra解析后，会被传给runStart函数。
+https://github.com/docker/cli/blob/v20.10.14/cli/command/container/start.go#L38
+func NewStartCommand(dockerCli command.Cli) *cobra.Command { ... cmd := &amp;cobra.">
+<meta itemprop="datePublished" content="2022-05-27T03:12:55+00:00" />
+<meta itemprop="dateModified" content="2022-05-27T03:12:55+00:00" />
+<meta itemprop="wordCount" content="3616">
+
+
+
+<meta itemprop="keywords" content="" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="docker container start 源码分析"/>
+<meta name="twitter:description" content="tags: docker,container,源码分析 docker container start 源码分析  本文编写时，最新release为v20.10.14, 下文涉及代码均为该版本的代码。  1. docker container start 简介 启动容器，通过docker container start命令调用，该流程在运行容器时也会执行。
+详见官方文档： https://docs.docker.com/engine/reference/commandline/container_start/
+2. 源码入口位置 由cli接收docker container start命令参数,发送至docker engine api
+cli与engine api的代码入口分别位于:
+cli
+https://github.com/docker/cli/blob/v20.10.14/cli/command/container/start.go#L29
+func NewStartCommand(dockerCli command.Cli) *cobra.Command { ... }  engine
+https://github.com/moby/moby/blob/v20.10.14/api/server/router/container/container.go#L54
+func (r *containerRouter) initRoutes() { r.routes = []router.Route{ ... router.NewPostRoute(&#34;/containers/{name:.*}/start&#34;, r.postContainersStart), ... } } 3. cli docker使用 github.com/spf13/cobra 实现cli功能，NewStartCommand函数中定义了cobra.Command。该函数中用户输入的参数经cobra解析后，会被传给runStart函数。
+https://github.com/docker/cli/blob/v20.10.14/cli/command/container/start.go#L38
+func NewStartCommand(dockerCli command.Cli) *cobra.Command { ... cmd := &amp;cobra."/>
+
+
+
+
+<meta property="article:published_time" content="2022-05-27 03:12:55 &#43;0000 UTC" />
+
+
+
+
+
+
+
+    </head>
+
+    <body class="dark-theme">
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text">$ cd /home/st0n3</span>
+            <span class="logo__cursor"></span>
+        
+    </div>
+</a>
+
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="/aboutme.html">About</a></li><li><a href="/post.html">Blog</a></li><li><a href="/hackerbot">Hackerbot</a></li><li><a href="/skill_tree/">SkillTree</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+
+            <span class="theme-toggle"><svg class="theme-toggler" width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M22 41C32.4934 41 41 32.4934 41 22C41 11.5066 32.4934 3 22
+  3C11.5066 3 3 11.5066 3 22C3 32.4934 11.5066 41 22 41ZM7 22C7
+  13.7157 13.7157 7 22 7V37C13.7157 37 7 30.2843 7 22Z"/>
+</svg>
+</span>
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
+                
+    <main class="post">
+
+        <div class="post-info">
+            
+            </p>
+        </div>
+
+        <article>
+            <h2 class="post-title"><a href="/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E8%BF%9B%E7%A8%8B%E5%AE%B9%E5%99%A8/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%B9%E5%99%A8/docker/docker%E6%BA%90%E7%A0%81%E5%AE%A1%E8%AE%A1/docker%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/docker-container/docker-container-start-%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90.html">docker container start 源码分析</a></h2>
+
+            
+
+            <div class="post-content">
+                <hr>
+<h2 id="tags-dockercontainer源码分析">tags: docker,container,源码分析</h2>
+<h1 id="docker-container-start-源码分析">docker container start 源码分析</h1>
+<small>
+本文编写时，最新release为v20.10.14, 下文涉及代码均为该版本的代码。
+</small>
+<h2 id="1-docker-container-start-简介">1. docker container start 简介</h2>
+<p>启动容器，通过<code>docker container start</code>命令调用，该流程在运行容器时也会执行。</p>
+<p>详见官方文档： <a href="https://docs.docker.com/engine/reference/commandline/container_start/">https://docs.docker.com/engine/reference/commandline/container_start/</a></p>
+<h2 id="2-源码入口位置">2. 源码入口位置</h2>
+<p>由cli接收<code>docker container start</code>命令参数,发送至docker engine api</p>
+<p>cli与engine api的代码入口分别位于:</p>
+<p>cli</p>
+<p><a href="https://github.com/docker/cli/blob/v20.10.14/cli/command/container/start.go#L29">https://github.com/docker/cli/blob/v20.10.14/cli/command/container/start.go#L29</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">NewStartCommand</span>(<span style="color:#a6e22e">dockerCli</span> <span style="color:#a6e22e">command</span>.<span style="color:#a6e22e">Cli</span>) <span style="color:#f92672">*</span><span style="color:#a6e22e">cobra</span>.<span style="color:#a6e22e">Command</span> {
+    <span style="color:#f92672">...</span>
+}
+</code></pre></div><hr>
+<p>engine</p>
+<p><a href="https://github.com/moby/moby/blob/v20.10.14/api/server/router/container/container.go#L54">https://github.com/moby/moby/blob/v20.10.14/api/server/router/container/container.go#L54</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">r</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">containerRouter</span>) <span style="color:#a6e22e">initRoutes</span>() {
+    <span style="color:#a6e22e">r</span>.<span style="color:#a6e22e">routes</span> = []<span style="color:#a6e22e">router</span>.<span style="color:#a6e22e">Route</span>{
+        <span style="color:#f92672">...</span>
+        <span style="color:#a6e22e">router</span>.<span style="color:#a6e22e">NewPostRoute</span>(<span style="color:#e6db74">&#34;/containers/{name:.*}/start&#34;</span>, <span style="color:#a6e22e">r</span>.<span style="color:#a6e22e">postContainersStart</span>),
+        <span style="color:#f92672">...</span>
+    }
+}
+</code></pre></div><h2 id="3-cli">3. cli</h2>
+<p>docker使用 <code>github.com/spf13/cobra</code> 实现cli功能，<code>NewStartCommand</code>函数中定义了<code>cobra.Command</code>。该函数中用户输入的参数经<code>cobra</code>解析后，会被传给<code>runStart</code>函数。</p>
+<p><a href="https://github.com/docker/cli/blob/v20.10.14/cli/command/container/start.go#L38">https://github.com/docker/cli/blob/v20.10.14/cli/command/container/start.go#L38</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">NewStartCommand</span>(<span style="color:#a6e22e">dockerCli</span> <span style="color:#a6e22e">command</span>.<span style="color:#a6e22e">Cli</span>) <span style="color:#f92672">*</span><span style="color:#a6e22e">cobra</span>.<span style="color:#a6e22e">Command</span> {
+    <span style="color:#f92672">...</span>
+    <span style="color:#a6e22e">cmd</span> <span style="color:#f92672">:=</span> <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">cobra</span>.<span style="color:#a6e22e">Command</span>{
+        <span style="color:#f92672">...</span>
+        <span style="color:#a6e22e">RunE</span>: <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">cmd</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">cobra</span>.<span style="color:#a6e22e">Command</span>, <span style="color:#a6e22e">args</span> []<span style="color:#66d9ef">string</span>) <span style="color:#66d9ef">error</span> {
+            <span style="color:#a6e22e">opts</span>.<span style="color:#a6e22e">containers</span> = <span style="color:#a6e22e">args</span>
+            <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">runStart</span>(<span style="color:#a6e22e">dockerCli</span>, <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">opts</span>)
+        },
+    }
+    <span style="color:#f92672">...</span>
+}
+</code></pre></div><hr>
+<h3 id="31-attach">3.1 attach</h3>
+<p>如果参数中指定了<code>--attach</code>或<code>--interactive</code>, 则需要将容器的STDOUT/STDERR，或STDIN &ldquo;attach&quot;到当前shell。</p>
+<h4 id="311-确保只有一个容器">3.1.1 确保只有一个容器</h4>
+<p>因为是要<code>attach</code>容器, 所以需要确认要启动的只有一个容器。</p>
+<p><a href="https://github.com/docker/cli/blob/v20.10.14/cli/command/container/start.go#L64-L66">https://github.com/docker/cli/blob/v20.10.14/cli/command/container/start.go#L64-L66</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">runStart</span>(<span style="color:#a6e22e">dockerCli</span> <span style="color:#a6e22e">command</span>.<span style="color:#a6e22e">Cli</span>, <span style="color:#a6e22e">opts</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">startOptions</span>) <span style="color:#66d9ef">error</span> {
+    <span style="color:#f92672">...</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">opts</span>.<span style="color:#a6e22e">attach</span> <span style="color:#f92672">||</span> <span style="color:#a6e22e">opts</span>.<span style="color:#a6e22e">openStdin</span> {
+        <span style="color:#75715e">// We&#39;re going to attach to a container.
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">// 1. Ensure we only have one container.
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> len(<span style="color:#a6e22e">opts</span>.<span style="color:#a6e22e">containers</span>) &gt; <span style="color:#ae81ff">1</span> {
+            <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">errors</span>.<span style="color:#a6e22e">New</span>(<span style="color:#e6db74">&#34;you cannot start and attach multiple containers at once&#34;</span>)
+        }
+        <span style="color:#f92672">...</span>
+    } <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">opts</span>.<span style="color:#a6e22e">checkpoint</span> <span style="color:#f92672">!=</span> <span style="color:#e6db74">&#34;&#34;</span> {
+        <span style="color:#f92672">...</span>
+    } <span style="color:#66d9ef">else</span> {
+        <span style="color:#f92672">...</span>
+    }
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>
+}
+</code></pre></div><h4 id="312-attach">3.1.2 attach</h4>
+<p>调用docker inspect api, 判断容器的配置中有无设置<code>tty</code>选项。如果没有，则将信号直接发给容器。其中，inspect部分的分析详见<a href="https://ssst0n3.github.io/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E8%BF%9B%E7%A8%8B%E5%AE%B9%E5%99%A8/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%B9%E5%99%A8/docker/docker%E6%BA%90%E7%A0%81%E5%AE%A1%E8%AE%A1/docker%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/docker-container/docker-container-inspect-%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90.html">docker container inspect 源码分析</a>。</p>
+<p><a href="https://github.com/docker/cli/blob/v20.10.14/cli/command/container/start.go#L69-L80">https://github.com/docker/cli/blob/v20.10.14/cli/command/container/start.go#L69-L80</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">runStart</span>(<span style="color:#a6e22e">dockerCli</span> <span style="color:#a6e22e">command</span>.<span style="color:#a6e22e">Cli</span>, <span style="color:#a6e22e">opts</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">startOptions</span>) <span style="color:#66d9ef">error</span> {
+    <span style="color:#f92672">...</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">opts</span>.<span style="color:#a6e22e">attach</span> <span style="color:#f92672">||</span> <span style="color:#a6e22e">opts</span>.<span style="color:#a6e22e">openStdin</span> {
+        <span style="color:#f92672">...</span>
+        <span style="color:#75715e">// 2. Attach to the container.
+</span><span style="color:#75715e"></span>        <span style="color:#a6e22e">container</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">opts</span>.<span style="color:#a6e22e">containers</span>[<span style="color:#ae81ff">0</span>]
+        <span style="color:#a6e22e">c</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">dockerCli</span>.<span style="color:#a6e22e">Client</span>().<span style="color:#a6e22e">ContainerInspect</span>(<span style="color:#a6e22e">ctx</span>, <span style="color:#a6e22e">container</span>)
+        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+            <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">err</span>
+        }
+
+        <span style="color:#75715e">// We always use c.ID instead of container to maintain consistency during `docker start`
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> !<span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">Config</span>.<span style="color:#a6e22e">Tty</span> {
+            <span style="color:#a6e22e">sigc</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">notfiyAllSignals</span>()
+            <span style="color:#66d9ef">go</span> <span style="color:#a6e22e">ForwardAllSignals</span>(<span style="color:#a6e22e">ctx</span>, <span style="color:#a6e22e">dockerCli</span>, <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">ID</span>, <span style="color:#a6e22e">sigc</span>)
+            <span style="color:#66d9ef">defer</span> <span style="color:#a6e22e">signal</span>.<span style="color:#a6e22e">StopCatch</span>(<span style="color:#a6e22e">sigc</span>)
+        }
+        <span style="color:#f92672">...</span>
+    } <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">opts</span>.<span style="color:#a6e22e">checkpoint</span> <span style="color:#f92672">!=</span> <span style="color:#e6db74">&#34;&#34;</span> {
+        <span style="color:#f92672">...</span>
+    } <span style="color:#66d9ef">else</span> {
+        <span style="color:#f92672">...</span>
+    }
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>
+}
+</code></pre></div><hr>
+<p>覆盖detach按键。</p>
+<p><a href="https://github.com/docker/cli/blob/v20.10.14/cli/command/container/start.go#L82-L84">https://github.com/docker/cli/blob/v20.10.14/cli/command/container/start.go#L82-L84</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">runStart</span>(<span style="color:#a6e22e">dockerCli</span> <span style="color:#a6e22e">command</span>.<span style="color:#a6e22e">Cli</span>, <span style="color:#a6e22e">opts</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">startOptions</span>) <span style="color:#66d9ef">error</span> {
+    <span style="color:#f92672">...</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">opts</span>.<span style="color:#a6e22e">attach</span> <span style="color:#f92672">||</span> <span style="color:#a6e22e">opts</span>.<span style="color:#a6e22e">openStdin</span> {
+        <span style="color:#f92672">...</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">opts</span>.<span style="color:#a6e22e">detachKeys</span> <span style="color:#f92672">!=</span> <span style="color:#e6db74">&#34;&#34;</span> {
+            <span style="color:#a6e22e">dockerCli</span>.<span style="color:#a6e22e">ConfigFile</span>().<span style="color:#a6e22e">DetachKeys</span> = <span style="color:#a6e22e">opts</span>.<span style="color:#a6e22e">detachKeys</span>
+        }
+        <span style="color:#f92672">...</span>
+    } <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">opts</span>.<span style="color:#a6e22e">checkpoint</span> <span style="color:#f92672">!=</span> <span style="color:#e6db74">&#34;&#34;</span> {
+        <span style="color:#f92672">...</span>
+    } <span style="color:#66d9ef">else</span> {
+        <span style="color:#f92672">...</span>
+    }
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>
+}
+</code></pre></div><hr>
+<p>调用docker container attach api 实现attach，详细内容参见<a href="https://ssst0n3.github.io/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E8%BF%9B%E7%A8%8B%E5%AE%B9%E5%99%A8/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%B9%E5%99%A8/docker/docker%E6%BA%90%E7%A0%81%E5%AE%A1%E8%AE%A1/docker%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/docker-container/docker-container-attach-%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90.html">docker container attach 源码分析</a>。</p>
+<p>调用attach api后，将io流绑定到std上。</p>
+<p><a href="https://github.com/docker/cli/blob/v20.10.14/cli/command/container/start.go#L86-L104">https://github.com/docker/cli/blob/v20.10.14/cli/command/container/start.go#L86-L104</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">runStart</span>(<span style="color:#a6e22e">dockerCli</span> <span style="color:#a6e22e">command</span>.<span style="color:#a6e22e">Cli</span>, <span style="color:#a6e22e">opts</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">startOptions</span>) <span style="color:#66d9ef">error</span> {
+    <span style="color:#f92672">...</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">opts</span>.<span style="color:#a6e22e">attach</span> <span style="color:#f92672">||</span> <span style="color:#a6e22e">opts</span>.<span style="color:#a6e22e">openStdin</span> {
+        <span style="color:#f92672">...</span>
+        <span style="color:#a6e22e">options</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">types</span>.<span style="color:#a6e22e">ContainerAttachOptions</span>{
+            <span style="color:#a6e22e">Stream</span>:     <span style="color:#66d9ef">true</span>,
+            <span style="color:#a6e22e">Stdin</span>:      <span style="color:#a6e22e">opts</span>.<span style="color:#a6e22e">openStdin</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">Config</span>.<span style="color:#a6e22e">OpenStdin</span>,
+            <span style="color:#a6e22e">Stdout</span>:     <span style="color:#66d9ef">true</span>,
+            <span style="color:#a6e22e">Stderr</span>:     <span style="color:#66d9ef">true</span>,
+            <span style="color:#a6e22e">DetachKeys</span>: <span style="color:#a6e22e">dockerCli</span>.<span style="color:#a6e22e">ConfigFile</span>().<span style="color:#a6e22e">DetachKeys</span>,
+        }
+
+        <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">in</span> <span style="color:#a6e22e">io</span>.<span style="color:#a6e22e">ReadCloser</span>
+
+        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">options</span>.<span style="color:#a6e22e">Stdin</span> {
+            <span style="color:#a6e22e">in</span> = <span style="color:#a6e22e">dockerCli</span>.<span style="color:#a6e22e">In</span>()
+        }
+
+        <span style="color:#a6e22e">resp</span>, <span style="color:#a6e22e">errAttach</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">dockerCli</span>.<span style="color:#a6e22e">Client</span>().<span style="color:#a6e22e">ContainerAttach</span>(<span style="color:#a6e22e">ctx</span>, <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">ID</span>, <span style="color:#a6e22e">options</span>)
+        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">errAttach</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+            <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">errAttach</span>
+        }
+        <span style="color:#66d9ef">defer</span> <span style="color:#a6e22e">resp</span>.<span style="color:#a6e22e">Close</span>()
+        
+        <span style="color:#a6e22e">cErr</span> <span style="color:#f92672">:=</span> make(<span style="color:#66d9ef">chan</span> <span style="color:#66d9ef">error</span>, <span style="color:#ae81ff">1</span>)
+
+        <span style="color:#66d9ef">go</span> <span style="color:#66d9ef">func</span>() {
+            <span style="color:#a6e22e">cErr</span> <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">func</span>() <span style="color:#66d9ef">error</span> {
+                <span style="color:#a6e22e">streamer</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">hijackedIOStreamer</span>{
+                    <span style="color:#a6e22e">streams</span>:      <span style="color:#a6e22e">dockerCli</span>,
+                    <span style="color:#a6e22e">inputStream</span>:  <span style="color:#a6e22e">in</span>,
+                    <span style="color:#a6e22e">outputStream</span>: <span style="color:#a6e22e">dockerCli</span>.<span style="color:#a6e22e">Out</span>(),
+                    <span style="color:#a6e22e">errorStream</span>:  <span style="color:#a6e22e">dockerCli</span>.<span style="color:#a6e22e">Err</span>(),
+                    <span style="color:#a6e22e">resp</span>:         <span style="color:#a6e22e">resp</span>,
+                    <span style="color:#a6e22e">tty</span>:          <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">Config</span>.<span style="color:#a6e22e">Tty</span>,
+                    <span style="color:#a6e22e">detachKeys</span>:   <span style="color:#a6e22e">options</span>.<span style="color:#a6e22e">DetachKeys</span>,
+                }
+
+                <span style="color:#a6e22e">errHijack</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">streamer</span>.<span style="color:#a6e22e">stream</span>(<span style="color:#a6e22e">ctx</span>)
+                <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">errHijack</span> <span style="color:#f92672">==</span> <span style="color:#66d9ef">nil</span> {
+                    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">errAttach</span>
+                }
+                <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">errHijack</span>
+            }()
+        }()
+        <span style="color:#f92672">...</span>
+    } <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">opts</span>.<span style="color:#a6e22e">checkpoint</span> <span style="color:#f92672">!=</span> <span style="color:#e6db74">&#34;&#34;</span> {
+        <span style="color:#f92672">...</span>
+    } <span style="color:#66d9ef">else</span> {
+        <span style="color:#f92672">...</span>
+    }
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>
+}
+</code></pre></div><hr>
+<h4 id="313-等待容器退出或删除">3.1.3 等待容器退出或删除</h4>
+<p>等待容器退出或删除，退出或被删除后<code>statusChan</code>将收到信号。</p>
+<p><a href="https://github.com/docker/cli/blob/v20.10.14/cli/command/container/start.go#L130-L134">https://github.com/docker/cli/blob/v20.10.14/cli/command/container/start.go#L130-L134</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">runStart</span>(<span style="color:#a6e22e">dockerCli</span> <span style="color:#a6e22e">command</span>.<span style="color:#a6e22e">Cli</span>, <span style="color:#a6e22e">opts</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">startOptions</span>) <span style="color:#66d9ef">error</span> {
+    <span style="color:#f92672">...</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">opts</span>.<span style="color:#a6e22e">attach</span> <span style="color:#f92672">||</span> <span style="color:#a6e22e">opts</span>.<span style="color:#a6e22e">openStdin</span> {
+        <span style="color:#f92672">...</span>
+        <span style="color:#75715e">// 3. We should open a channel for receiving status code of the container
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">// no matter it&#39;s detached, removed on daemon side(--rm) or exit normally.
+</span><span style="color:#75715e"></span>        <span style="color:#a6e22e">statusChan</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">waitExitOrRemoved</span>(<span style="color:#a6e22e">ctx</span>, <span style="color:#a6e22e">dockerCli</span>, <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">ID</span>, <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">HostConfig</span>.<span style="color:#a6e22e">AutoRemove</span>)
+        <span style="color:#a6e22e">startOptions</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">types</span>.<span style="color:#a6e22e">ContainerStartOptions</span>{
+            <span style="color:#a6e22e">CheckpointID</span>:  <span style="color:#a6e22e">opts</span>.<span style="color:#a6e22e">checkpoint</span>,
+            <span style="color:#a6e22e">CheckpointDir</span>: <span style="color:#a6e22e">opts</span>.<span style="color:#a6e22e">checkpointDir</span>,
+        }
+        <span style="color:#f92672">...</span>
+    } <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">opts</span>.<span style="color:#a6e22e">checkpoint</span> <span style="color:#f92672">!=</span> <span style="color:#e6db74">&#34;&#34;</span> {
+        <span style="color:#f92672">...</span>
+    } <span style="color:#66d9ef">else</span> {
+        <span style="color:#f92672">...</span>
+    }
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>
+}
+</code></pre></div><hr>
+<p><code>waitExitOrRemoved</code>函数会调用多个api，相关api的分析详见：</p>
+<ul>
+<li><a href="https://ssst0n3.github.io/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E8%BF%9B%E7%A8%8B%E5%AE%B9%E5%99%A8/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%B9%E5%99%A8/docker/docker%E6%BA%90%E7%A0%81%E5%AE%A1%E8%AE%A1/docker%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/docker-events-%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90.html">docker events</a></li>
+<li><a href="https://ssst0n3.github.io/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E8%BF%9B%E7%A8%8B%E5%AE%B9%E5%99%A8/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%B9%E5%99%A8/docker/docker%E6%BA%90%E7%A0%81%E5%AE%A1%E8%AE%A1/docker%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/docker-container/docker-container-remove-%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90.html">docker container remove</a></li>
+<li><a href="https://ssst0n3.github.io/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E8%BF%9B%E7%A8%8B%E5%AE%B9%E5%99%A8/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%B9%E5%99%A8/docker/docker%E6%BA%90%E7%A0%81%E5%AE%A1%E8%AE%A1/docker%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/docker-container/docker-container-wait-%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90.html">docker container wait</a></li>
+</ul>
+<p><a href="https://github.com/docker/cli/blob/v20.10.14/cli/command/container/utils.go#L16">https://github.com/docker/cli/blob/v20.10.14/cli/command/container/utils.go#L16</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">waitExitOrRemoved</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">dockerCli</span> <span style="color:#a6e22e">command</span>.<span style="color:#a6e22e">Cli</span>, <span style="color:#a6e22e">containerID</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">waitRemove</span> <span style="color:#66d9ef">bool</span>) <span style="color:#f92672">&lt;-</span><span style="color:#66d9ef">chan</span> <span style="color:#66d9ef">int</span> {
+    <span style="color:#66d9ef">if</span> len(<span style="color:#a6e22e">containerID</span>) <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span> {
+        <span style="color:#75715e">// containerID can never be empty
+</span><span style="color:#75715e"></span>        panic(<span style="color:#e6db74">&#34;Internal Error: waitExitOrRemoved needs a containerID as parameter&#34;</span>)
+    }
+
+    <span style="color:#75715e">// Older versions used the Events API, and even older versions did not
+</span><span style="color:#75715e"></span>    <span style="color:#75715e">// support server-side removal. This legacyWaitExitOrRemoved method
+</span><span style="color:#75715e"></span>    <span style="color:#75715e">// preserves that old behavior and any issues it may have.
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">versions</span>.<span style="color:#a6e22e">LessThan</span>(<span style="color:#a6e22e">dockerCli</span>.<span style="color:#a6e22e">Client</span>().<span style="color:#a6e22e">ClientVersion</span>(), <span style="color:#e6db74">&#34;1.30&#34;</span>) {
+        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">legacyWaitExitOrRemoved</span>(<span style="color:#a6e22e">ctx</span>, <span style="color:#a6e22e">dockerCli</span>, <span style="color:#a6e22e">containerID</span>, <span style="color:#a6e22e">waitRemove</span>)
+    }
+
+    <span style="color:#a6e22e">condition</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">WaitConditionNextExit</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">waitRemove</span> {
+        <span style="color:#a6e22e">condition</span> = <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">WaitConditionRemoved</span>
+    }
+
+    <span style="color:#a6e22e">resultC</span>, <span style="color:#a6e22e">errC</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">dockerCli</span>.<span style="color:#a6e22e">Client</span>().<span style="color:#a6e22e">ContainerWait</span>(<span style="color:#a6e22e">ctx</span>, <span style="color:#a6e22e">containerID</span>, <span style="color:#a6e22e">condition</span>)
+
+    <span style="color:#a6e22e">statusC</span> <span style="color:#f92672">:=</span> make(<span style="color:#66d9ef">chan</span> <span style="color:#66d9ef">int</span>)
+    <span style="color:#66d9ef">go</span> <span style="color:#66d9ef">func</span>() {
+        <span style="color:#66d9ef">select</span> {
+        <span style="color:#66d9ef">case</span> <span style="color:#a6e22e">result</span> <span style="color:#f92672">:=</span> <span style="color:#f92672">&lt;-</span><span style="color:#a6e22e">resultC</span>:
+            <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">result</span>.<span style="color:#a6e22e">Error</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+                <span style="color:#a6e22e">logrus</span>.<span style="color:#a6e22e">Errorf</span>(<span style="color:#e6db74">&#34;Error waiting for container: %v&#34;</span>, <span style="color:#a6e22e">result</span>.<span style="color:#a6e22e">Error</span>.<span style="color:#a6e22e">Message</span>)
+                <span style="color:#a6e22e">statusC</span> <span style="color:#f92672">&lt;-</span> <span style="color:#ae81ff">125</span>
+            } <span style="color:#66d9ef">else</span> {
+                <span style="color:#a6e22e">statusC</span> <span style="color:#f92672">&lt;-</span> int(<span style="color:#a6e22e">result</span>.<span style="color:#a6e22e">StatusCode</span>)
+            }
+        <span style="color:#66d9ef">case</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#f92672">&lt;-</span><span style="color:#a6e22e">errC</span>:
+            <span style="color:#a6e22e">logrus</span>.<span style="color:#a6e22e">Errorf</span>(<span style="color:#e6db74">&#34;error waiting for container: %v&#34;</span>, <span style="color:#a6e22e">err</span>)
+            <span style="color:#a6e22e">statusC</span> <span style="color:#f92672">&lt;-</span> <span style="color:#ae81ff">125</span>
+        }
+    }()
+
+    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">statusC</span>
+}
+</code></pre></div><hr>
+<h4 id="314-启动容器">3.1.4 启动容器</h4>
+<p><a href="https://github.com/docker/cli/blob/v20.10.14/cli/command/container/start.go#L136-L145">https://github.com/docker/cli/blob/v20.10.14/cli/command/container/start.go#L136-L145</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">runStart</span>(<span style="color:#a6e22e">dockerCli</span> <span style="color:#a6e22e">command</span>.<span style="color:#a6e22e">Cli</span>, <span style="color:#a6e22e">opts</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">startOptions</span>) <span style="color:#66d9ef">error</span> {
+    <span style="color:#f92672">...</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">opts</span>.<span style="color:#a6e22e">attach</span> <span style="color:#f92672">||</span> <span style="color:#a6e22e">opts</span>.<span style="color:#a6e22e">openStdin</span> {
+        <span style="color:#f92672">...</span>
+        <span style="color:#75715e">// 4. Start the container.
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">dockerCli</span>.<span style="color:#a6e22e">Client</span>().<span style="color:#a6e22e">ContainerStart</span>(<span style="color:#a6e22e">ctx</span>, <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">ID</span>, <span style="color:#a6e22e">startOptions</span>); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+            <span style="color:#a6e22e">cancelFun</span>()
+            <span style="color:#f92672">&lt;-</span><span style="color:#a6e22e">cErr</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">HostConfig</span>.<span style="color:#a6e22e">AutoRemove</span> {
+                <span style="color:#75715e">// wait container to be removed
+</span><span style="color:#75715e"></span>                <span style="color:#f92672">&lt;-</span><span style="color:#a6e22e">statusChan</span>
+            }
+            <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">err</span>
+        }
+        <span style="color:#f92672">...</span>
+    } <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">opts</span>.<span style="color:#a6e22e">checkpoint</span> <span style="color:#f92672">!=</span> <span style="color:#e6db74">&#34;&#34;</span> {
+        <span style="color:#f92672">...</span>
+    } <span style="color:#66d9ef">else</span> {
+        <span style="color:#f92672">...</span>
+    }
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>
+}
+</code></pre></div><hr>
+<p>调用docker engine <code>/containers/{CONTAINERID}/start</code></p>
+<p><a href="https://github.com/docker/cli/blob/v20.10.14/vendor/github.com/docker/docker/client/container_start.go#L11">https://github.com/docker/cli/blob/v20.10.14/vendor/github.com/docker/docker/client/container_start.go#L11</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">cli</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Client</span>) <span style="color:#a6e22e">ContainerStart</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">containerID</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">options</span> <span style="color:#a6e22e">types</span>.<span style="color:#a6e22e">ContainerStartOptions</span>) <span style="color:#66d9ef">error</span> {
+    <span style="color:#a6e22e">query</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">url</span>.<span style="color:#a6e22e">Values</span>{}
+    <span style="color:#66d9ef">if</span> len(<span style="color:#a6e22e">options</span>.<span style="color:#a6e22e">CheckpointID</span>) <span style="color:#f92672">!=</span> <span style="color:#ae81ff">0</span> {
+        <span style="color:#a6e22e">query</span>.<span style="color:#a6e22e">Set</span>(<span style="color:#e6db74">&#34;checkpoint&#34;</span>, <span style="color:#a6e22e">options</span>.<span style="color:#a6e22e">CheckpointID</span>)
+    }
+    <span style="color:#66d9ef">if</span> len(<span style="color:#a6e22e">options</span>.<span style="color:#a6e22e">CheckpointDir</span>) <span style="color:#f92672">!=</span> <span style="color:#ae81ff">0</span> {
+        <span style="color:#a6e22e">query</span>.<span style="color:#a6e22e">Set</span>(<span style="color:#e6db74">&#34;checkpoint-dir&#34;</span>, <span style="color:#a6e22e">options</span>.<span style="color:#a6e22e">CheckpointDir</span>)
+    }
+
+    <span style="color:#a6e22e">resp</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">cli</span>.<span style="color:#a6e22e">post</span>(<span style="color:#a6e22e">ctx</span>, <span style="color:#e6db74">&#34;/containers/&#34;</span><span style="color:#f92672">+</span><span style="color:#a6e22e">containerID</span><span style="color:#f92672">+</span><span style="color:#e6db74">&#34;/start&#34;</span>, <span style="color:#a6e22e">query</span>, <span style="color:#66d9ef">nil</span>, <span style="color:#66d9ef">nil</span>)
+    <span style="color:#a6e22e">ensureReaderClosed</span>(<span style="color:#a6e22e">resp</span>)
+    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">err</span>
+}
+</code></pre></div><h4 id="315-等待attach退出">3.1.5 等待attach退出</h4>
+<p>接收管道消息，即等待attach退出。</p>
+<p><a href="https://github.com/docker/cli/blob/v20.10.14/cli/command/container/start.go#L148-L163">https://github.com/docker/cli/blob/v20.10.14/cli/command/container/start.go#L148-L163</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">runStart</span>(<span style="color:#a6e22e">dockerCli</span> <span style="color:#a6e22e">command</span>.<span style="color:#a6e22e">Cli</span>, <span style="color:#a6e22e">opts</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">startOptions</span>) <span style="color:#66d9ef">error</span> {
+    <span style="color:#f92672">...</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">opts</span>.<span style="color:#a6e22e">attach</span> <span style="color:#f92672">||</span> <span style="color:#a6e22e">opts</span>.<span style="color:#a6e22e">openStdin</span> {
+        <span style="color:#f92672">...</span>
+        <span style="color:#75715e">// 5. Wait for attachment to break.
+</span><span style="color:#75715e"></span>        <span style="color:#f92672">...</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">attachErr</span> <span style="color:#f92672">:=</span> <span style="color:#f92672">&lt;-</span><span style="color:#a6e22e">cErr</span>; <span style="color:#a6e22e">attachErr</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+            <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">ok</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">attachErr</span>.(<span style="color:#a6e22e">term</span>.<span style="color:#a6e22e">EscapeError</span>); <span style="color:#a6e22e">ok</span> {
+                <span style="color:#75715e">// The user entered the detach escape sequence.
+</span><span style="color:#75715e"></span>                <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>
+            }
+            <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">attachErr</span>
+        }
+
+        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">status</span> <span style="color:#f92672">:=</span> <span style="color:#f92672">&lt;-</span><span style="color:#a6e22e">statusChan</span>; <span style="color:#a6e22e">status</span> <span style="color:#f92672">!=</span> <span style="color:#ae81ff">0</span> {
+            <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">cli</span>.<span style="color:#a6e22e">StatusError</span>{<span style="color:#a6e22e">StatusCode</span>: <span style="color:#a6e22e">status</span>}
+        }
+    } <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">opts</span>.<span style="color:#a6e22e">checkpoint</span> <span style="color:#f92672">!=</span> <span style="color:#e6db74">&#34;&#34;</span> {
+        <span style="color:#f92672">...</span>
+    } <span style="color:#66d9ef">else</span> {
+        <span style="color:#f92672">...</span>
+    }
+
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>
+}
+</code></pre></div><h3 id="32-未attach且设置了checkpoint">3.2 未attach，且设置了checkpoint</h3>
+<h3 id="33-未attach-也未设置checkpoint">3.3 未attach, 也未设置checkpoint</h3>
+<h2 id="4-dockerd-api">4. dockerd api</h2>
+<p>api <code>/containers/{CONTAINERID}/start</code> 对应 <code>r.postContainersStart</code>方法。</p>
+<p><a href="https://github.com/moby/moby/blob/v20.10.14/api/server/router/container/container.go#L54">https://github.com/moby/moby/blob/v20.10.14/api/server/router/container/container.go#L54</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">r</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">containerRouter</span>) <span style="color:#a6e22e">initRoutes</span>() {
+    <span style="color:#a6e22e">r</span>.<span style="color:#a6e22e">routes</span> = []<span style="color:#a6e22e">router</span>.<span style="color:#a6e22e">Route</span>{
+        <span style="color:#f92672">...</span>
+        <span style="color:#a6e22e">router</span>.<span style="color:#a6e22e">NewPostRoute</span>(<span style="color:#e6db74">&#34;/containers/{name:.*}/start&#34;</span>, <span style="color:#a6e22e">r</span>.<span style="color:#a6e22e">postContainersStart</span>),
+        <span style="color:#f92672">...</span>
+    }
+}
+</code></pre></div><p><a href="https://github.com/moby/moby/blob/v20.10.14/api/server/router/container/container_routes.go#L210">https://github.com/moby/moby/blob/v20.10.14/api/server/router/container/container_routes.go#L210</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">s</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">containerRouter</span>) <span style="color:#a6e22e">postContainersStart</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">w</span> <span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">ResponseWriter</span>, <span style="color:#a6e22e">r</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">Request</span>, <span style="color:#a6e22e">vars</span> <span style="color:#66d9ef">map</span>[<span style="color:#66d9ef">string</span>]<span style="color:#66d9ef">string</span>) <span style="color:#66d9ef">error</span> {
+    <span style="color:#f92672">...</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">s</span>.<span style="color:#a6e22e">backend</span>.<span style="color:#a6e22e">ContainerStart</span>(<span style="color:#a6e22e">vars</span>[<span style="color:#e6db74">&#34;name&#34;</span>], <span style="color:#a6e22e">hostConfig</span>, <span style="color:#a6e22e">checkpoint</span>, <span style="color:#a6e22e">checkpointDir</span>); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">err</span>
+    }
+    <span style="color:#f92672">...</span>
+}
+</code></pre></div><hr>
+<h3 id="41-daemoncontainerstart">4.1 <code>Daemon.ContainerStart</code></h3>
+<p>跟进到<code>Daemon.ContainerStart</code>方法，该方法封装了<code>Daemon.containerStart</code>方法，作为Backend的实现，供api调用。</p>
+<p>该方法内容较长，下面我们依次走读一下。</p>
+<hr>
+<p>根据客户端提供的容器名称找到容器对象。</p>
+<p>容器名称参数可以是：</p>
+<ol>
+<li>容器完整ID</li>
+<li>容器完整名称</li>
+<li>容器部分ID</li>
+</ol>
+<p><code>Daemon.GetContainer</code>会按照上述顺序依次查找对应的容器对象。</p>
+<p><a href="https://github.com/moby/moby/blob/v20.10.14/daemon/start.go#L17">https://github.com/moby/moby/blob/v20.10.14/daemon/start.go#L17</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">daemon</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Daemon</span>) <span style="color:#a6e22e">ContainerStart</span>(<span style="color:#a6e22e">name</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">hostConfig</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">containertypes</span>.<span style="color:#a6e22e">HostConfig</span>, <span style="color:#a6e22e">checkpoint</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">checkpointDir</span> <span style="color:#66d9ef">string</span>) <span style="color:#66d9ef">error</span> {
+    <span style="color:#f92672">...</span>
+    <span style="color:#a6e22e">ctr</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">daemon</span>.<span style="color:#a6e22e">GetContainer</span>(<span style="color:#a6e22e">name</span>)
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">err</span>
+    }
+    <span style="color:#f92672">...</span>
+}
+</code></pre></div><p><a href="https://github.com/moby/moby/blob/v20.10.14/daemon/container.go#L38">https://github.com/moby/moby/blob/v20.10.14/daemon/container.go#L38</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">daemon</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Daemon</span>) <span style="color:#a6e22e">GetContainer</span>(<span style="color:#a6e22e">prefixOrName</span> <span style="color:#66d9ef">string</span>) (<span style="color:#f92672">*</span><span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">Container</span>, <span style="color:#66d9ef">error</span>) {
+    <span style="color:#f92672">...</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">containerByID</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">daemon</span>.<span style="color:#a6e22e">containers</span>.<span style="color:#a6e22e">Get</span>(<span style="color:#a6e22e">prefixOrName</span>); <span style="color:#a6e22e">containerByID</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">containerByID</span>, <span style="color:#66d9ef">nil</span>
+    }
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">containerByName</span>, <span style="color:#a6e22e">_</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">daemon</span>.<span style="color:#a6e22e">GetByName</span>(<span style="color:#a6e22e">prefixOrName</span>); <span style="color:#a6e22e">containerByName</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">containerByName</span>, <span style="color:#66d9ef">nil</span>
+    }
+    <span style="color:#a6e22e">containerID</span>, <span style="color:#a6e22e">indexError</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">daemon</span>.<span style="color:#a6e22e">idIndex</span>.<span style="color:#a6e22e">Get</span>(<span style="color:#a6e22e">prefixOrName</span>)
+    <span style="color:#f92672">...</span>
+    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">daemon</span>.<span style="color:#a6e22e">containers</span>.<span style="color:#a6e22e">Get</span>(<span style="color:#a6e22e">containerID</span>), <span style="color:#66d9ef">nil</span>
+}
+</code></pre></div><hr>
+<p>校验容器状态，如果容器处在Paused, Running, RemovalInProgress, Dead状态，则返回错误。</p>
+<p><a href="https://github.com/moby/moby/blob/v20.10.14/daemon/start.go#L27-L43">https://github.com/moby/moby/blob/v20.10.14/daemon/start.go#L27-L43</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">daemon</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Daemon</span>) <span style="color:#a6e22e">ContainerStart</span>(<span style="color:#a6e22e">name</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">hostConfig</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">containertypes</span>.<span style="color:#a6e22e">HostConfig</span>, <span style="color:#a6e22e">checkpoint</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">checkpointDir</span> <span style="color:#66d9ef">string</span>) <span style="color:#66d9ef">error</span> {
+    <span style="color:#f92672">...</span>
+    <span style="color:#a6e22e">validateState</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">func</span>() <span style="color:#66d9ef">error</span> {
+        <span style="color:#a6e22e">ctr</span>.<span style="color:#a6e22e">Lock</span>()
+        <span style="color:#66d9ef">defer</span> <span style="color:#a6e22e">ctr</span>.<span style="color:#a6e22e">Unlock</span>()
+
+        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">ctr</span>.<span style="color:#a6e22e">Paused</span> {
+            <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">errdefs</span>.<span style="color:#a6e22e">Conflict</span>(<span style="color:#a6e22e">errors</span>.<span style="color:#a6e22e">New</span>(<span style="color:#e6db74">&#34;cannot start a paused container, try unpause instead&#34;</span>))
+        }
+
+        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">ctr</span>.<span style="color:#a6e22e">Running</span> {
+            <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">containerNotModifiedError</span>{<span style="color:#a6e22e">running</span>: <span style="color:#66d9ef">true</span>}
+        }
+
+        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">ctr</span>.<span style="color:#a6e22e">RemovalInProgress</span> <span style="color:#f92672">||</span> <span style="color:#a6e22e">ctr</span>.<span style="color:#a6e22e">Dead</span> {
+            <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">errdefs</span>.<span style="color:#a6e22e">Conflict</span>(<span style="color:#a6e22e">errors</span>.<span style="color:#a6e22e">New</span>(<span style="color:#e6db74">&#34;container is marked for removal and cannot be started&#34;</span>))
+        }
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>
+    }
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">validateState</span>(); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">err</span>
+    }
+    <span style="color:#f92672">...</span>
+}
+</code></pre></div><hr>
+<p>在调用start api时，可以通过body传递容器的HostConfig, 不过当前版本(v20.10.14)docker cli不传递请求体。</p>
+<p><a href="https://github.com/moby/moby/blob/v20.10.14/daemon/start.go#L50-L93">https://github.com/moby/moby/blob/v20.10.14/daemon/start.go#L50-L93</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">daemon</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Daemon</span>) <span style="color:#a6e22e">ContainerStart</span>(<span style="color:#a6e22e">name</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">hostConfig</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">containertypes</span>.<span style="color:#a6e22e">HostConfig</span>, <span style="color:#a6e22e">checkpoint</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">checkpointDir</span> <span style="color:#66d9ef">string</span>) <span style="color:#66d9ef">error</span> {
+    <span style="color:#f92672">...</span>
+    <span style="color:#75715e">// Windows does not have the backwards compatibility issue here.
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">runtime</span>.<span style="color:#a6e22e">GOOS</span> <span style="color:#f92672">!=</span> <span style="color:#e6db74">&#34;windows&#34;</span> {
+        <span style="color:#75715e">// This is kept for backward compatibility - hostconfig should be passed when
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">// creating a container, not during start.
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">hostConfig</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+            <span style="color:#a6e22e">logrus</span>.<span style="color:#a6e22e">Warn</span>(<span style="color:#e6db74">&#34;DEPRECATED: Setting host configuration options when the container starts is deprecated and has been removed in Docker 1.12&#34;</span>)
+            <span style="color:#a6e22e">oldNetworkMode</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">ctr</span>.<span style="color:#a6e22e">HostConfig</span>.<span style="color:#a6e22e">NetworkMode</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">daemon</span>.<span style="color:#a6e22e">setSecurityOptions</span>(<span style="color:#a6e22e">ctr</span>, <span style="color:#a6e22e">hostConfig</span>); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+                <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">errdefs</span>.<span style="color:#a6e22e">InvalidParameter</span>(<span style="color:#a6e22e">err</span>)
+            }
+            <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">daemon</span>.<span style="color:#a6e22e">mergeAndVerifyLogConfig</span>(<span style="color:#f92672">&amp;</span><span style="color:#a6e22e">hostConfig</span>.<span style="color:#a6e22e">LogConfig</span>); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+                <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">errdefs</span>.<span style="color:#a6e22e">InvalidParameter</span>(<span style="color:#a6e22e">err</span>)
+            }
+            <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">daemon</span>.<span style="color:#a6e22e">setHostConfig</span>(<span style="color:#a6e22e">ctr</span>, <span style="color:#a6e22e">hostConfig</span>); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+                <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">errdefs</span>.<span style="color:#a6e22e">InvalidParameter</span>(<span style="color:#a6e22e">err</span>)
+            }
+            <span style="color:#a6e22e">newNetworkMode</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">ctr</span>.<span style="color:#a6e22e">HostConfig</span>.<span style="color:#a6e22e">NetworkMode</span>
+            <span style="color:#66d9ef">if</span> string(<span style="color:#a6e22e">oldNetworkMode</span>) <span style="color:#f92672">!=</span> string(<span style="color:#a6e22e">newNetworkMode</span>) {
+                <span style="color:#75715e">// if user has change the network mode on starting, clean up the
+</span><span style="color:#75715e"></span>                <span style="color:#75715e">// old networks. It is a deprecated feature and has been removed in Docker 1.12
+</span><span style="color:#75715e"></span>                <span style="color:#a6e22e">ctr</span>.<span style="color:#a6e22e">NetworkSettings</span>.<span style="color:#a6e22e">Networks</span> = <span style="color:#66d9ef">nil</span>
+                <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">ctr</span>.<span style="color:#a6e22e">CheckpointTo</span>(<span style="color:#a6e22e">daemon</span>.<span style="color:#a6e22e">containersReplica</span>); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+                    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">errdefs</span>.<span style="color:#a6e22e">System</span>(<span style="color:#a6e22e">err</span>)
+                }
+            }
+            <span style="color:#a6e22e">ctr</span>.<span style="color:#a6e22e">InitDNSHostConfig</span>()
+        }
+    }
+    <span style="color:#f92672">...</span>
+    <span style="color:#75715e">// check if hostConfig is in line with the current system settings.
+</span><span style="color:#75715e"></span>    <span style="color:#75715e">// It may happen cgroups are umounted or the like.
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">err</span> = <span style="color:#a6e22e">daemon</span>.<span style="color:#a6e22e">verifyContainerSettings</span>(<span style="color:#a6e22e">ctr</span>.<span style="color:#a6e22e">OS</span>, <span style="color:#a6e22e">ctr</span>.<span style="color:#a6e22e">HostConfig</span>, <span style="color:#66d9ef">nil</span>, <span style="color:#66d9ef">false</span>); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">errdefs</span>.<span style="color:#a6e22e">InvalidParameter</span>(<span style="color:#a6e22e">err</span>)
+    }
+    <span style="color:#75715e">// Adapt for old containers in case we have updates in this function and
+</span><span style="color:#75715e"></span>    <span style="color:#75715e">// old containers never have chance to call the new function in create stage.
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">hostConfig</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">daemon</span>.<span style="color:#a6e22e">adaptContainerSettings</span>(<span style="color:#a6e22e">ctr</span>.<span style="color:#a6e22e">HostConfig</span>, <span style="color:#66d9ef">false</span>); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+            <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">errdefs</span>.<span style="color:#a6e22e">InvalidParameter</span>(<span style="color:#a6e22e">err</span>)
+        }
+    }
+    <span style="color:#f92672">...</span>
+}
+</code></pre></div><hr>
+<p>调用<code>Daemon.containerStart</code>方法。</p>
+<p><a href="https://github.com/moby/moby/blob/v20.10.14/daemon/start.go#L94">https://github.com/moby/moby/blob/v20.10.14/daemon/start.go#L94</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">daemon</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Daemon</span>) <span style="color:#a6e22e">ContainerStart</span>(<span style="color:#a6e22e">name</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">hostConfig</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">containertypes</span>.<span style="color:#a6e22e">HostConfig</span>, <span style="color:#a6e22e">checkpoint</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">checkpointDir</span> <span style="color:#66d9ef">string</span>) <span style="color:#66d9ef">error</span> {
+    <span style="color:#f92672">...</span>
+    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">daemon</span>.<span style="color:#a6e22e">containerStart</span>(<span style="color:#a6e22e">ctr</span>, <span style="color:#a6e22e">checkpoint</span>, <span style="color:#a6e22e">checkpointDir</span>, <span style="color:#66d9ef">true</span>)
+}
+</code></pre></div><hr>
+<h3 id="42-daemoncontainerstart">4.2 <code>Daemon.containerStart</code></h3>
+<p><code>Daemon.containerStart</code>方法实际处理容器启动。</p>
+<p>该方法内容较长，下面我们依次走读一下。</p>
+<hr>
+<h4 id="421-checkpointdir">4.2.1 checkpointDir</h4>
+<p>可以看到，尽管docker cli中已经有了checkpointDir参数，但该功能在daemon中还未被支持。</p>
+<p><a href="https://github.com/moby/moby/blob/v20.10.14/daemon/start.go#L114-L117">https://github.com/moby/moby/blob/v20.10.14/daemon/start.go#L114-L117</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">daemon</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Daemon</span>) <span style="color:#a6e22e">containerStart</span>(<span style="color:#a6e22e">container</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">Container</span>, <span style="color:#a6e22e">checkpoint</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">checkpointDir</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">resetRestartManager</span> <span style="color:#66d9ef">bool</span>) (<span style="color:#a6e22e">err</span> <span style="color:#66d9ef">error</span>) {
+    <span style="color:#f92672">...</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">checkpointDir</span> <span style="color:#f92672">!=</span> <span style="color:#e6db74">&#34;&#34;</span> {
+        <span style="color:#75715e">// TODO(mlaventure): how would we support that?
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">errdefs</span>.<span style="color:#a6e22e">Forbidden</span>(<span style="color:#a6e22e">errors</span>.<span style="color:#a6e22e">New</span>(<span style="color:#e6db74">&#34;custom checkpointdir is not supported&#34;</span>))
+    }
+    <span style="color:#f92672">...</span>
+}
+</code></pre></div><hr>
+<h4 id="422-遇到错误清理容器">4.2.2 遇到错误清理容器</h4>
+<p>预埋一个defer函数，在<code>Daemon.containerStart</code>方法结束前，如果有报错，统一在这个函数里做一些清理工作，使得容器恢复到可以再次被启动的状态。</p>
+<p><code>Daemon.Cleanup</code>方法将释放分配给容器的网络资源，以及卸载容器文件系统。该方法也会在<code>Daemon.handleContainerExit</code>方法中被调用（即处理容器退出事件时）。</p>
+<p><code>daemon.ContainerRm</code>方法在配置自动删除容器选项时被调用，用于删除容器。该方法在执行<code>docker container rm</code>时也会被调用，本文不对该方法进行分析。</p>
+<p><a href="https://github.com/moby/moby/blob/v20.10.14/daemon/start.go#L121-L143">https://github.com/moby/moby/blob/v20.10.14/daemon/start.go#L121-L143</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">daemon</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Daemon</span>) <span style="color:#a6e22e">containerStart</span>(<span style="color:#a6e22e">container</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">Container</span>, <span style="color:#a6e22e">checkpoint</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">checkpointDir</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">resetRestartManager</span> <span style="color:#66d9ef">bool</span>) (<span style="color:#a6e22e">err</span> <span style="color:#66d9ef">error</span>) {
+    <span style="color:#f92672">...</span>
+    <span style="color:#66d9ef">defer</span> <span style="color:#66d9ef">func</span>() {
+        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+            <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">SetError</span>(<span style="color:#a6e22e">err</span>)
+            <span style="color:#75715e">// if no one else has set it, make sure we don&#39;t leave it at zero
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">ExitCode</span>() <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span> {
+                <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">SetExitCode</span>(<span style="color:#ae81ff">128</span>)
+            }
+            <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">CheckpointTo</span>(<span style="color:#a6e22e">daemon</span>.<span style="color:#a6e22e">containersReplica</span>); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+                <span style="color:#a6e22e">logrus</span>.<span style="color:#a6e22e">Errorf</span>(<span style="color:#e6db74">&#34;%s: failed saving state on start failure: %v&#34;</span>, <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">ID</span>, <span style="color:#a6e22e">err</span>)
+            }
+            <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">Reset</span>(<span style="color:#66d9ef">false</span>)
+
+            <span style="color:#a6e22e">daemon</span>.<span style="color:#a6e22e">Cleanup</span>(<span style="color:#a6e22e">container</span>)
+            <span style="color:#75715e">// if containers AutoRemove flag is set, remove it after clean up
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">HostConfig</span>.<span style="color:#a6e22e">AutoRemove</span> {
+                <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">Unlock</span>()
+                <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">daemon</span>.<span style="color:#a6e22e">ContainerRm</span>(<span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">ID</span>, <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">types</span>.<span style="color:#a6e22e">ContainerRmConfig</span>{<span style="color:#a6e22e">ForceRemove</span>: <span style="color:#66d9ef">true</span>, <span style="color:#a6e22e">RemoveVolume</span>: <span style="color:#66d9ef">true</span>}); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+                    <span style="color:#a6e22e">logrus</span>.<span style="color:#a6e22e">Errorf</span>(<span style="color:#e6db74">&#34;can&#39;t remove container %s: %v&#34;</span>, <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">ID</span>, <span style="color:#a6e22e">err</span>)
+                }
+                <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">Lock</span>()
+            }
+        }
+    }()
+    <span style="color:#f92672">...</span>
+}
+</code></pre></div><hr>
+<p><code>daemon.releaseNetwork</code>方法释放与容器连接的相关网络资源(libnetwork.sandbox,libnetwork.Network), 清除容器网络配置。</p>
+<p><a href="https://github.com/moby/moby/blob/v20.10.14/daemon/start.go#L229">https://github.com/moby/moby/blob/v20.10.14/daemon/start.go#L229</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">daemon</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Daemon</span>) <span style="color:#a6e22e">Cleanup</span>(<span style="color:#a6e22e">container</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">Container</span>) {
+    <span style="color:#a6e22e">daemon</span>.<span style="color:#a6e22e">releaseNetwork</span>(<span style="color:#a6e22e">container</span>)
+    <span style="color:#f92672">...</span>
+}
+</code></pre></div><p><a href="https://github.com/moby/moby/blob/v20.10.14/daemon/container_operations.go#L1012">https://github.com/moby/moby/blob/v20.10.14/daemon/container_operations.go#L1012</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">daemon</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Daemon</span>) <span style="color:#a6e22e">releaseNetwork</span>(<span style="color:#a6e22e">container</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">Container</span>) {
+    <span style="color:#f92672">...</span>
+    <span style="color:#a6e22e">settings</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">NetworkSettings</span>.<span style="color:#a6e22e">Networks</span>
+    <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">NetworkSettings</span>.<span style="color:#a6e22e">Ports</span> = <span style="color:#66d9ef">nil</span>
+    <span style="color:#f92672">...</span>
+    <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">networks</span> []<span style="color:#a6e22e">libnetwork</span>.<span style="color:#a6e22e">Network</span>
+    <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">n</span>, <span style="color:#a6e22e">epSettings</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">settings</span> {
+        <span style="color:#f92672">...</span>
+        <span style="color:#a6e22e">cleanOperationalData</span>(<span style="color:#a6e22e">epSettings</span>)
+    }
+
+    <span style="color:#a6e22e">sb</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">daemon</span>.<span style="color:#a6e22e">netController</span>.<span style="color:#a6e22e">SandboxByID</span>(<span style="color:#a6e22e">sid</span>)
+    <span style="color:#f92672">...</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">sb</span>.<span style="color:#a6e22e">Delete</span>(); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+        <span style="color:#a6e22e">logrus</span>.<span style="color:#a6e22e">Errorf</span>(<span style="color:#e6db74">&#34;Error deleting sandbox id %s for container %s: %v&#34;</span>, <span style="color:#a6e22e">sid</span>, <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">ID</span>, <span style="color:#a6e22e">err</span>)
+    }
+
+    <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">nw</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">networks</span> {
+        <span style="color:#a6e22e">daemon</span>.<span style="color:#a6e22e">tryDetachContainerFromClusterNetwork</span>(<span style="color:#a6e22e">nw</span>, <span style="color:#a6e22e">container</span>)
+    }
+    <span style="color:#f92672">...</span>
+}
+</code></pre></div><hr>
+<p><code>Container.UnmountIpcMount</code>方法用于卸载shm。</p>
+<p>共享了IPC的容器会在容器的“工作目录”创建shm文件，供其他容器挂载。</p>
+<p>例如，使用<code>docker run -ti -d --ipc=shareable ubuntu</code>命令创建的容器，将存在形如<code>/var/lib/docker/containers/{ContainerID}/mounts/shm</code>的挂载点。</p>
+<p>而<code>Container.UnmountIpcMount</code>方法，就是用于卸载上述挂载点。但如果容器中存在主动挂载至<code>/dev/shm</code>的情况(例如<code>docker run -v test:/dev/shm</code>)时，则不会卸载。</p>
+<p><a href="https://github.com/moby/moby/blob/v20.10.14/daemon/start.go#L231-L233">https://github.com/moby/moby/blob/v20.10.14/daemon/start.go#L231-L233</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">daemon</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Daemon</span>) <span style="color:#a6e22e">Cleanup</span>(<span style="color:#a6e22e">container</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">Container</span>) {
+    <span style="color:#f92672">...</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">UnmountIpcMount</span>(); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+        <span style="color:#a6e22e">logrus</span>.<span style="color:#a6e22e">Warnf</span>(<span style="color:#e6db74">&#34;%s cleanup: failed to unmount IPC: %s&#34;</span>, <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">ID</span>, <span style="color:#a6e22e">err</span>)
+    }
+    <span style="color:#f92672">...</span>
+}
+</code></pre></div><p><a href="https://github.com/moby/moby/blob/v20.10.14/container/container_unix.go#L179">https://github.com/moby/moby/blob/v20.10.14/container/container_unix.go#L179</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">container</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Container</span>) <span style="color:#a6e22e">UnmountIpcMount</span>() <span style="color:#66d9ef">error</span> {
+	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">HasMountFor</span>(<span style="color:#e6db74">&#34;/dev/shm&#34;</span>) {
+		<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>
+	}
+	<span style="color:#a6e22e">shmPath</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">ShmResourcePath</span>()
+	<span style="color:#f92672">...</span>
+	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> = <span style="color:#a6e22e">mount</span>.<span style="color:#a6e22e">Unmount</span>(<span style="color:#a6e22e">shmPath</span>); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> <span style="color:#f92672">&amp;&amp;</span> !<span style="color:#a6e22e">errors</span>.<span style="color:#a6e22e">Is</span>(<span style="color:#a6e22e">err</span>, <span style="color:#a6e22e">os</span>.<span style="color:#a6e22e">ErrNotExist</span>) {
+		<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">err</span>
+	}
+	<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>
+}
+</code></pre></div><hr>
+<p>卸载容器的rootfs。</p>
+<p><a href="https://github.com/moby/moby/blob/v20.10.14/daemon/start.go#L235-L241">https://github.com/moby/moby/blob/v20.10.14/daemon/start.go#L235-L241</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">daemon</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Daemon</span>) <span style="color:#a6e22e">Cleanup</span>(<span style="color:#a6e22e">container</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">Container</span>) {
+    <span style="color:#f92672">...</span>    
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">daemon</span>.<span style="color:#a6e22e">conditionalUnmountOnCleanup</span>(<span style="color:#a6e22e">container</span>); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+        <span style="color:#75715e">// FIXME: remove once reference counting for graphdrivers has been refactored
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">// Ensure that all the mounts are gone
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">mountid</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">daemon</span>.<span style="color:#a6e22e">imageService</span>.<span style="color:#a6e22e">GetLayerMountID</span>(<span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">ID</span>, <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">OS</span>); <span style="color:#a6e22e">err</span> <span style="color:#f92672">==</span> <span style="color:#66d9ef">nil</span> {
+            <span style="color:#a6e22e">daemon</span>.<span style="color:#a6e22e">cleanupMountsByID</span>(<span style="color:#a6e22e">mountid</span>)
+        }
+    }
+    <span style="color:#f92672">...</span>
+}
+</code></pre></div><p><a href="https://github.com/moby/moby/blob/v20.10.14/daemon/daemon_unix.go#L1365">https://github.com/moby/moby/blob/v20.10.14/daemon/daemon_unix.go#L1365</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">daemon</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Daemon</span>) <span style="color:#a6e22e">conditionalUnmountOnCleanup</span>(<span style="color:#a6e22e">container</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">Container</span>) <span style="color:#66d9ef">error</span> {
+    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">daemon</span>.<span style="color:#a6e22e">Unmount</span>(<span style="color:#a6e22e">container</span>)
+}
+</code></pre></div><p><a href="https://github.com/moby/moby/blob/v20.10.14/daemon/daemon.go#L1341">https://github.com/moby/moby/blob/v20.10.14/daemon/daemon.go#L1341</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">daemon</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Daemon</span>) <span style="color:#a6e22e">Unmount</span>(<span style="color:#a6e22e">container</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">Container</span>) <span style="color:#66d9ef">error</span> {
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">RWLayer</span> <span style="color:#f92672">==</span> <span style="color:#66d9ef">nil</span> {
+        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">errors</span>.<span style="color:#a6e22e">New</span>(<span style="color:#e6db74">&#34;RWLayer of container &#34;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">ID</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34; is unexpectedly nil&#34;</span>)
+    }
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">RWLayer</span>.<span style="color:#a6e22e">Unmount</span>(); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+        <span style="color:#a6e22e">logrus</span>.<span style="color:#a6e22e">WithField</span>(<span style="color:#e6db74">&#34;container&#34;</span>, <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">ID</span>).<span style="color:#a6e22e">WithError</span>(<span style="color:#a6e22e">err</span>).<span style="color:#a6e22e">Error</span>(<span style="color:#e6db74">&#34;error unmounting container&#34;</span>)
+        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">err</span>
+    }
+
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>
+}
+</code></pre></div><hr>
+<p>使用swarm secrets时，secrets会挂载在<code>/var/lib/docker/containers/{ContainerID}/mounts/secrets</code>目录。在清理时，会递归卸载该目录。</p>
+<p><a href="https://github.com/moby/moby/blob/v20.10.14/daemon/start.go#L243">https://github.com/moby/moby/blob/v20.10.14/daemon/start.go#L243</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">daemon</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Daemon</span>) <span style="color:#a6e22e">Cleanup</span>(<span style="color:#a6e22e">container</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">Container</span>) {
+    <span style="color:#f92672">...</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">UnmountSecrets</span>(); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+        <span style="color:#a6e22e">logrus</span>.<span style="color:#a6e22e">Warnf</span>(<span style="color:#e6db74">&#34;%s cleanup: failed to unmount secrets: %s&#34;</span>, <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">ID</span>, <span style="color:#a6e22e">err</span>)
+    }
+    <span style="color:#f92672">...</span>
+}
+</code></pre></div><p><a href="https://github.com/moby/moby/blob/v20.10.14/container/container_unix.go#L255">https://github.com/moby/moby/blob/v20.10.14/container/container_unix.go#L255</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">container</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Container</span>) <span style="color:#a6e22e">UnmountSecrets</span>() <span style="color:#66d9ef">error</span> {
+    <span style="color:#a6e22e">p</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">SecretMountPath</span>()
+    <span style="color:#f92672">...</span>
+    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">mount</span>.<span style="color:#a6e22e">RecursiveUnmount</span>(<span style="color:#a6e22e">p</span>)
+}
+</code></pre></div><p><a href="https://github.com/moby/moby/blob/v20.10.14/vendor/github.com/moby/sys/mount/mount_unix.go#L43">https://github.com/moby/moby/blob/v20.10.14/vendor/github.com/moby/sys/mount/mount_unix.go#L43</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">RecursiveUnmount</span>(<span style="color:#a6e22e">target</span> <span style="color:#66d9ef">string</span>) <span style="color:#66d9ef">error</span> {
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">unix</span>.<span style="color:#a6e22e">Unmount</span>(<span style="color:#a6e22e">target</span>, <span style="color:#a6e22e">mntDetach</span>); <span style="color:#a6e22e">err</span> <span style="color:#f92672">==</span> <span style="color:#66d9ef">nil</span> {
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>
+    }
+    <span style="color:#f92672">...</span>
+}
+</code></pre></div><hr>
+<p>递归卸载容器的&quot;工作目录&rdquo;, 即<code>/var/lib/docker/containers/{ContainerID}/</code>目录。</p>
+<p><a href="https://github.com/moby/moby/blob/v20.10.14/daemon/start.go#L247-L249">https://github.com/moby/moby/blob/v20.10.14/daemon/start.go#L247-L249</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">daemon</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Daemon</span>) <span style="color:#a6e22e">Cleanup</span>(<span style="color:#a6e22e">container</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">Container</span>) {
+    <span style="color:#f92672">...</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">recursiveUnmount</span>(<span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">Root</span>); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+        <span style="color:#a6e22e">logrus</span>.<span style="color:#a6e22e">WithError</span>(<span style="color:#a6e22e">err</span>).<span style="color:#a6e22e">WithField</span>(<span style="color:#e6db74">&#34;container&#34;</span>, <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">ID</span>).<span style="color:#a6e22e">Warn</span>(<span style="color:#e6db74">&#34;Error while cleaning up container resource mounts.&#34;</span>)
+    }
+    <span style="color:#f92672">...</span>
+}
+</code></pre></div><p><a href="https://github.com/moby/moby/blob/v20.10.14/daemon/daemon_unix.go#L1726">https://github.com/moby/moby/blob/v20.10.14/daemon/daemon_unix.go#L1726</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">recursiveUnmount</span>(<span style="color:#a6e22e">target</span> <span style="color:#66d9ef">string</span>) <span style="color:#66d9ef">error</span> {
+    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">mount</span>.<span style="color:#a6e22e">RecursiveUnmount</span>(<span style="color:#a6e22e">target</span>)
+}
+</code></pre></div><p><a href="https://github.com/moby/moby/blob/v20.10.14/vendor/github.com/moby/sys/mount/mount_unix.go#L43">https://github.com/moby/moby/blob/v20.10.14/vendor/github.com/moby/sys/mount/mount_unix.go#L43</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">RecursiveUnmount</span>(<span style="color:#a6e22e">target</span> <span style="color:#66d9ef">string</span>) <span style="color:#66d9ef">error</span> {
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">unix</span>.<span style="color:#a6e22e">Unmount</span>(<span style="color:#a6e22e">target</span>, <span style="color:#a6e22e">mntDetach</span>); <span style="color:#a6e22e">err</span> <span style="color:#f92672">==</span> <span style="color:#66d9ef">nil</span> {
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>
+    }
+    <span style="color:#f92672">...</span>
+}
+</code></pre></div><hr>
+<p>取消注册容器的exec命令。（该命令在执行docker exec或Health Check时被添加）</p>
+<p><a href="https://github.com/moby/moby/blob/v20.10.14/daemon/start.go#L251">https://github.com/moby/moby/blob/v20.10.14/daemon/start.go#L251</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">daemon</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Daemon</span>) <span style="color:#a6e22e">Cleanup</span>(<span style="color:#a6e22e">container</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">Container</span>) {
+    <span style="color:#f92672">...</span>
+    <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">eConfig</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">ExecCommands</span>.<span style="color:#a6e22e">Commands</span>() {
+        <span style="color:#a6e22e">daemon</span>.<span style="color:#a6e22e">unregisterExecCommand</span>(<span style="color:#a6e22e">container</span>, <span style="color:#a6e22e">eConfig</span>)
+    }
+    <span style="color:#f92672">...</span>
+}
+</code></pre></div><hr>
+<p>卸载容器挂载的卷。</p>
+<p><a href="https://github.com/moby/moby/blob/v20.10.14/daemon/start.go#L256">https://github.com/moby/moby/blob/v20.10.14/daemon/start.go#L256</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">daemon</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Daemon</span>) <span style="color:#a6e22e">Cleanup</span>(<span style="color:#a6e22e">container</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">Container</span>) {
+    <span style="color:#f92672">...</span> 
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">BaseFS</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">BaseFS</span>.<span style="color:#a6e22e">Path</span>() <span style="color:#f92672">!=</span> <span style="color:#e6db74">&#34;&#34;</span> {
+        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">UnmountVolumes</span>(<span style="color:#a6e22e">daemon</span>.<span style="color:#a6e22e">LogVolumeEvent</span>); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+            <span style="color:#a6e22e">logrus</span>.<span style="color:#a6e22e">Warnf</span>(<span style="color:#e6db74">&#34;%s cleanup: Failed to umount volumes: %v&#34;</span>, <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">ID</span>, <span style="color:#a6e22e">err</span>)
+        }
+    }
+    <span style="color:#f92672">...</span>
+}
+</code></pre></div><p><a href="https://github.com/moby/moby/blob/v20.10.14/container/container.go#L493">https://github.com/moby/moby/blob/v20.10.14/container/container.go#L493</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">container</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Container</span>) <span style="color:#a6e22e">UnmountVolumes</span>(<span style="color:#a6e22e">volumeEventLog</span> <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">name</span>, <span style="color:#a6e22e">action</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">attributes</span> <span style="color:#66d9ef">map</span>[<span style="color:#66d9ef">string</span>]<span style="color:#66d9ef">string</span>)) <span style="color:#66d9ef">error</span> {
+    <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">errors</span> []<span style="color:#66d9ef">string</span>
+    <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">volumeMount</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">MountPoints</span> {
+        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">volumeMount</span>.<span style="color:#a6e22e">Volume</span> <span style="color:#f92672">==</span> <span style="color:#66d9ef">nil</span> {
+            <span style="color:#66d9ef">continue</span>
+        }
+
+        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">volumeMount</span>.<span style="color:#a6e22e">Cleanup</span>(); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+            <span style="color:#a6e22e">errors</span> = append(<span style="color:#a6e22e">errors</span>, <span style="color:#a6e22e">err</span>.<span style="color:#a6e22e">Error</span>())
+            <span style="color:#66d9ef">continue</span>
+        }
+
+        <span style="color:#f92672">...</span>
+    }
+    <span style="color:#f92672">...</span>
+}
+</code></pre></div><p><a href="https://github.com/moby/moby/blob/v20.10.14/volume/mounts/mounts.go#L78">https://github.com/moby/moby/blob/v20.10.14/volume/mounts/mounts.go#L78</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">m</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">MountPoint</span>) <span style="color:#a6e22e">Cleanup</span>() <span style="color:#66d9ef">error</span> {
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">Volume</span> <span style="color:#f92672">==</span> <span style="color:#66d9ef">nil</span> <span style="color:#f92672">||</span> <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">ID</span> <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;&#34;</span> {
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>
+    }
+
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">Volume</span>.<span style="color:#a6e22e">Unmount</span>(<span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">ID</span>); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">errors</span>.<span style="color:#a6e22e">Wrapf</span>(<span style="color:#a6e22e">err</span>, <span style="color:#e6db74">&#34;error unmounting volume %s&#34;</span>, <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">Volume</span>.<span style="color:#a6e22e">Name</span>())
+    }
+    <span style="color:#f92672">...</span>
+}
+</code></pre></div><hr>
+<p>取消Attach。在attach流程中，会等待至<code>container.attachContext</code>结束时detach。</p>
+<p><a href="https://github.com/moby/moby/blob/v20.10.14/daemon/start.go#L261">https://github.com/moby/moby/blob/v20.10.14/daemon/start.go#L261</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">daemon</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Daemon</span>) <span style="color:#a6e22e">Cleanup</span>(<span style="color:#a6e22e">container</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">Container</span>) {
+    <span style="color:#f92672">...</span> 
+    <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">CancelAttachContext</span>()
+    <span style="color:#f92672">...</span>
+}
+</code></pre></div><p><a href="https://github.com/moby/moby/blob/v20.10.14/container/container.go#L625">https://github.com/moby/moby/blob/v20.10.14/container/container.go#L625</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">container</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Container</span>) <span style="color:#a6e22e">CancelAttachContext</span>() {
+    <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">attachContext</span>.<span style="color:#a6e22e">mu</span>.<span style="color:#a6e22e">Lock</span>()
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">attachContext</span>.<span style="color:#a6e22e">ctx</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+        <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">attachContext</span>.<span style="color:#a6e22e">cancel</span>()
+        <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">attachContext</span>.<span style="color:#a6e22e">ctx</span> = <span style="color:#66d9ef">nil</span>
+    }
+    <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">attachContext</span>.<span style="color:#a6e22e">mu</span>.<span style="color:#a6e22e">Unlock</span>()
+}
+</code></pre></div><hr>
+<p>最后，调用containerd删除容器。containerd具体如何删除将在下一章节分析containerd源码时统一分析。</p>
+<p><a href="https://github.com/moby/moby/blob/v20.10.14/daemon/start.go#L263">https://github.com/moby/moby/blob/v20.10.14/daemon/start.go#L263</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">daemon</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Daemon</span>) <span style="color:#a6e22e">Cleanup</span>(<span style="color:#a6e22e">container</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">Container</span>) {
+    <span style="color:#f92672">...</span> 
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">daemon</span>.<span style="color:#a6e22e">containerd</span>.<span style="color:#a6e22e">Delete</span>(<span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Background</span>(), <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">ID</span>); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+        <span style="color:#a6e22e">logrus</span>.<span style="color:#a6e22e">Errorf</span>(<span style="color:#e6db74">&#34;%s cleanup: failed to delete container from containerd: %v&#34;</span>, <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">ID</span>, <span style="color:#a6e22e">err</span>)
+    }
+}
+</code></pre></div><p><a href="https://github.com/moby/moby/blob/v20.10.14/libcontainerd/remote/client.go#L482">https://github.com/moby/moby/blob/v20.10.14/libcontainerd/remote/client.go#L482</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">c</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">client</span>) <span style="color:#a6e22e">Delete</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">containerID</span> <span style="color:#66d9ef">string</span>) <span style="color:#66d9ef">error</span> {
+    <span style="color:#a6e22e">ctr</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">getContainer</span>(<span style="color:#a6e22e">ctx</span>, <span style="color:#a6e22e">containerID</span>)
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">err</span>
+    }
+    <span style="color:#f92672">...</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">ctr</span>.<span style="color:#a6e22e">Delete</span>(<span style="color:#a6e22e">ctx</span>); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">wrapError</span>(<span style="color:#a6e22e">err</span>)
+    }
+    <span style="color:#f92672">...</span>
+}
+</code></pre></div><hr>
+<h4 id="423-挂载容器rootfs">4.2.3 挂载容器rootfs</h4>
+<p>挂载容器的rootfs。</p>
+<p><a href="https://github.com/moby/moby/blob/v20.10.14/daemon/start.go#L145">https://github.com/moby/moby/blob/v20.10.14/daemon/start.go#L145</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">daemon</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Daemon</span>) <span style="color:#a6e22e">containerStart</span>(<span style="color:#a6e22e">container</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">Container</span>, <span style="color:#a6e22e">checkpoint</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">checkpointDir</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">resetRestartManager</span> <span style="color:#66d9ef">bool</span>) (<span style="color:#a6e22e">err</span> <span style="color:#66d9ef">error</span>) {
+    <span style="color:#f92672">...</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">daemon</span>.<span style="color:#a6e22e">conditionalMountOnStart</span>(<span style="color:#a6e22e">container</span>); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">err</span>
+    }
+    <span style="color:#f92672">...</span>
+}
+</code></pre></div><p><a href="https://github.com/moby/moby/blob/v20.10.14/daemon/daemon_unix.go#L1359">https://github.com/moby/moby/blob/v20.10.14/daemon/daemon_unix.go#L1359</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">daemon</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Daemon</span>) <span style="color:#a6e22e">conditionalMountOnStart</span>(<span style="color:#a6e22e">container</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">Container</span>) <span style="color:#66d9ef">error</span> {
+    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">daemon</span>.<span style="color:#a6e22e">Mount</span>(<span style="color:#a6e22e">container</span>)
+}
+</code></pre></div><p><a href="https://github.com/moby/moby/blob/v20.10.14/daemon/daemon.go#L1316">https://github.com/moby/moby/blob/v20.10.14/daemon/daemon.go#L1316</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">daemon</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Daemon</span>) <span style="color:#a6e22e">Mount</span>(<span style="color:#a6e22e">container</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">Container</span>) <span style="color:#66d9ef">error</span> {
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">RWLayer</span> <span style="color:#f92672">==</span> <span style="color:#66d9ef">nil</span> {
+        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">errors</span>.<span style="color:#a6e22e">New</span>(<span style="color:#e6db74">&#34;RWLayer of container &#34;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">ID</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34; is unexpectedly nil&#34;</span>)
+    }
+    <span style="color:#a6e22e">dir</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">RWLayer</span>.<span style="color:#a6e22e">Mount</span>(<span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">GetMountLabel</span>())
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">err</span>
+    }
+    <span style="color:#f92672">...</span>
+    <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">BaseFS</span> = <span style="color:#a6e22e">dir</span> <span style="color:#75715e">// TODO: combine these fields
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>
+}
+</code></pre></div><hr>
+<p>具体的挂载由graphDriver实现。例如overlay2驱动挂载的路径将返回形如 <code>/var/lib/docker/overlay2/${LayerID}/merged</code>的rootfs路径。</p>
+<p>下文我仅以overlay2为例，展开分析，至于其他类型的驱动，可在未来针对graphDriver进行源码分析时进行。</p>
+<p><a href="https://github.com/moby/moby/blob/v20.10.14/layer/mounted_layer.go#L103">https://github.com/moby/moby/blob/v20.10.14/layer/mounted_layer.go#L103</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">rl</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">referencedRWLayer</span>) <span style="color:#a6e22e">Mount</span>(<span style="color:#a6e22e">mountLabel</span> <span style="color:#66d9ef">string</span>) (<span style="color:#a6e22e">containerfs</span>.<span style="color:#a6e22e">ContainerFS</span>, <span style="color:#66d9ef">error</span>) {
+    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">rl</span>.<span style="color:#a6e22e">layerStore</span>.<span style="color:#a6e22e">driver</span>.<span style="color:#a6e22e">Get</span>(<span style="color:#a6e22e">rl</span>.<span style="color:#a6e22e">mountedLayer</span>.<span style="color:#a6e22e">mountID</span>, <span style="color:#a6e22e">mountLabel</span>)
+}
+</code></pre></div><hr>
+<p>生成调用mount函数将要传入的参数。</p>
+<ul>
+<li>mountData形如 <code>index=off,lowerdir=/var/lib/docker/overlay2/l/{LowerID}:/var/lib/docker/overlay2/l/{LowerID},upperdir=/var/lib/docker/overlay2/{LayerID}/diff,workdir=/var/lib/docker/overlay2/{LayerID}/work</code>。</li>
+<li>mountTarget形如<code>/var/lib/docker/overlay2/{LayerID}/merged</code>。</li>
+<li>要调用的mount函数即golang对mount系统调用的封装。</li>
+</ul>
+<p>其中LowerId是指向相关目录的软链接。</p>
+<p><a href="https://github.com/moby/moby/blob/v20.10.14/daemon/graphdriver/overlay2/overlay.go#L524">https://github.com/moby/moby/blob/v20.10.14/daemon/graphdriver/overlay2/overlay.go#L524</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">d</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Driver</span>) <span style="color:#a6e22e">Get</span>(<span style="color:#a6e22e">id</span>, <span style="color:#a6e22e">mountLabel</span> <span style="color:#66d9ef">string</span>) (<span style="color:#a6e22e">_</span> <span style="color:#a6e22e">containerfs</span>.<span style="color:#a6e22e">ContainerFS</span>, <span style="color:#a6e22e">retErr</span> <span style="color:#66d9ef">error</span>) {
+    <span style="color:#f92672">...</span>
+    <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">opts</span> <span style="color:#66d9ef">string</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">readonly</span> {
+        <span style="color:#a6e22e">opts</span> = <span style="color:#a6e22e">indexOff</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">userxattr</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;lowerdir=&#34;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">diffDir</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;:&#34;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">strings</span>.<span style="color:#a6e22e">Join</span>(<span style="color:#a6e22e">absLowers</span>, <span style="color:#e6db74">&#34;:&#34;</span>)
+    } <span style="color:#66d9ef">else</span> {
+        <span style="color:#a6e22e">opts</span> = <span style="color:#a6e22e">indexOff</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">userxattr</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;lowerdir=&#34;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">strings</span>.<span style="color:#a6e22e">Join</span>(<span style="color:#a6e22e">absLowers</span>, <span style="color:#e6db74">&#34;:&#34;</span>) <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;,upperdir=&#34;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">diffDir</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;,workdir=&#34;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">workDir</span>
+    }
+
+    <span style="color:#a6e22e">mountData</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">label</span>.<span style="color:#a6e22e">FormatMountLabel</span>(<span style="color:#a6e22e">opts</span>, <span style="color:#a6e22e">mountLabel</span>)
+    <span style="color:#a6e22e">mount</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">unix</span>.<span style="color:#a6e22e">Mount</span>
+    <span style="color:#a6e22e">mountTarget</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">mergedDir</span>
+
+    <span style="color:#a6e22e">rootUID</span>, <span style="color:#a6e22e">rootGID</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">idtools</span>.<span style="color:#a6e22e">GetRootUIDGID</span>(<span style="color:#a6e22e">d</span>.<span style="color:#a6e22e">uidMaps</span>, <span style="color:#a6e22e">d</span>.<span style="color:#a6e22e">gidMaps</span>)
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>, <span style="color:#a6e22e">err</span>
+    }
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">idtools</span>.<span style="color:#a6e22e">MkdirAndChown</span>(<span style="color:#a6e22e">mergedDir</span>, <span style="color:#ae81ff">0700</span>, <span style="color:#a6e22e">idtools</span>.<span style="color:#a6e22e">Identity</span>{<span style="color:#a6e22e">UID</span>: <span style="color:#a6e22e">rootUID</span>, <span style="color:#a6e22e">GID</span>: <span style="color:#a6e22e">rootGID</span>}); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>, <span style="color:#a6e22e">err</span>
+    }
+    <span style="color:#f92672">...</span>
+}
+</code></pre></div><p>但mount系统调用的data参数有长度限制，只会使用在page size内的mount data。</p>
+<p><a href="https://elixir.bootlin.com/linux/latest/source/fs/namespace.c#L3224">https://elixir.bootlin.com/linux/latest/source/fs/namespace.c#L3224</a></p>
+<pre><code class="language-clike" data-lang="clike">static void *copy_mount_options(const void __user * data)
+{
+    char *copy;
+    unsigned left, offset;
+
+    if (!data)
+        return NULL;
+
+    copy = kmalloc(PAGE_SIZE, GFP_KERNEL);
+    if (!copy)
+        return ERR_PTR(-ENOMEM);
+
+    left = copy_from_user(copy, data, PAGE_SIZE);
+
+    /*
+     * Not all architectures have an exact copy_from_user(). Resort to
+     * byte at a time.
+     */
+    offset = PAGE_SIZE - left;
+    while (left) {
+        char c;
+        if (get_user(c, (const char __user *)data + offset))
+            break;
+        copy[offset] = c;
+        left--;
+        offset++;
+    }
+
+    if (left == PAGE_SIZE) {
+        kfree(copy);
+        return ERR_PTR(-EFAULT);
+    }
+
+    return copy;
+}
+</code></pre><hr>
+<p>因为有了page size的限制，所以docker才使用会使用“lower目录”，通过较短的软链接替代较长的路径。常见情况下，已经不需要考虑page size的边界问题。</p>
+<p>如果mount data长度超过了page size, 则可以使用相对路径以减少长度。</p>
+<p>如果还是超出了长度，则报错。</p>
+<p><a href="https://github.com/moby/moby/blob/v20.10.14/daemon/graphdriver/overlay2/overlay.go#L592-L613">https://github.com/moby/moby/blob/v20.10.14/daemon/graphdriver/overlay2/overlay.go#L592-L613</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">d</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Driver</span>) <span style="color:#a6e22e">Get</span>(<span style="color:#a6e22e">id</span>, <span style="color:#a6e22e">mountLabel</span> <span style="color:#66d9ef">string</span>) (<span style="color:#a6e22e">_</span> <span style="color:#a6e22e">containerfs</span>.<span style="color:#a6e22e">ContainerFS</span>, <span style="color:#a6e22e">retErr</span> <span style="color:#66d9ef">error</span>) {
+    <span style="color:#f92672">...</span>
+    <span style="color:#a6e22e">pageSize</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">unix</span>.<span style="color:#a6e22e">Getpagesize</span>()
+
+    <span style="color:#75715e">// Use relative paths and mountFrom when the mount data has exceeded
+</span><span style="color:#75715e"></span>    <span style="color:#75715e">// the page size. The mount syscall fails if the mount data cannot
+</span><span style="color:#75715e"></span>    <span style="color:#75715e">// fit within a page and relative links make the mount data much
+</span><span style="color:#75715e"></span>    <span style="color:#75715e">// smaller at the expense of requiring a fork exec to chroot.
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> len(<span style="color:#a6e22e">mountData</span>) &gt; <span style="color:#a6e22e">pageSize</span><span style="color:#f92672">-</span><span style="color:#ae81ff">1</span> {
+        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">readonly</span> {
+            <span style="color:#a6e22e">opts</span> = <span style="color:#a6e22e">indexOff</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">userxattr</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;lowerdir=&#34;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">path</span>.<span style="color:#a6e22e">Join</span>(<span style="color:#a6e22e">id</span>, <span style="color:#a6e22e">diffDirName</span>) <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;:&#34;</span> <span style="color:#f92672">+</span> string(<span style="color:#a6e22e">lowers</span>)
+        } <span style="color:#66d9ef">else</span> {
+            <span style="color:#a6e22e">opts</span> = <span style="color:#a6e22e">indexOff</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">userxattr</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;lowerdir=&#34;</span> <span style="color:#f92672">+</span> string(<span style="color:#a6e22e">lowers</span>) <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;,upperdir=&#34;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">path</span>.<span style="color:#a6e22e">Join</span>(<span style="color:#a6e22e">id</span>, <span style="color:#a6e22e">diffDirName</span>) <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;,workdir=&#34;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">path</span>.<span style="color:#a6e22e">Join</span>(<span style="color:#a6e22e">id</span>, <span style="color:#a6e22e">workDirName</span>)
+        }
+        <span style="color:#a6e22e">mountData</span> = <span style="color:#a6e22e">label</span>.<span style="color:#a6e22e">FormatMountLabel</span>(<span style="color:#a6e22e">opts</span>, <span style="color:#a6e22e">mountLabel</span>)
+        <span style="color:#66d9ef">if</span> len(<span style="color:#a6e22e">mountData</span>) &gt; <span style="color:#a6e22e">pageSize</span><span style="color:#f92672">-</span><span style="color:#ae81ff">1</span> {
+            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>, <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Errorf</span>(<span style="color:#e6db74">&#34;cannot mount layer, mount label too large %d&#34;</span>, len(<span style="color:#a6e22e">mountData</span>))
+        }
+
+        <span style="color:#a6e22e">mount</span> = <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">source</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">target</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">mType</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">flags</span> <span style="color:#66d9ef">uintptr</span>, <span style="color:#a6e22e">label</span> <span style="color:#66d9ef">string</span>) <span style="color:#66d9ef">error</span> {
+            <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">mountFrom</span>(<span style="color:#a6e22e">d</span>.<span style="color:#a6e22e">home</span>, <span style="color:#a6e22e">source</span>, <span style="color:#a6e22e">target</span>, <span style="color:#a6e22e">mType</span>, <span style="color:#a6e22e">flags</span>, <span style="color:#a6e22e">label</span>)
+        }
+        <span style="color:#a6e22e">mountTarget</span> = <span style="color:#a6e22e">path</span>.<span style="color:#a6e22e">Join</span>(<span style="color:#a6e22e">id</span>, <span style="color:#a6e22e">mergedDirName</span>)
+    }
+    <span style="color:#f92672">...</span>
+}
+</code></pre></div><hr>
+<p>注意到，使用相对路径时，mount函数需要替换成<code>mountFrom</code>函数。<code>mountFrom</code>函数中实际调用了docker自己实现的命令<code>docker-mountfrom</code>。关于该命令的源码分析，我们将在 <a href="https://ssst0n3.github.io/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E8%BF%9B%E7%A8%8B%E5%AE%B9%E5%99%A8/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%B9%E5%99%A8/docker/docker%E6%BA%90%E7%A0%81%E5%AE%A1%E8%AE%A1/docker%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/docker-reexec%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/docker-reexec-docker-mountfrom-%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90.html">docker reexec docker-mountfrom 源码分析</a> 一文中详细展开。该函数的作用是，先chroot到一个目录，然后在该目录中执行mount，即可实现使用相对路径进行mount。</p>
+<p><a href="https://github.com/moby/moby/blob/v20.10.14/daemon/graphdriver/overlay2/overlay.go#L609">https://github.com/moby/moby/blob/v20.10.14/daemon/graphdriver/overlay2/overlay.go#L609</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">d</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Driver</span>) <span style="color:#a6e22e">Get</span>(<span style="color:#a6e22e">id</span>, <span style="color:#a6e22e">mountLabel</span> <span style="color:#66d9ef">string</span>) (<span style="color:#a6e22e">_</span> <span style="color:#a6e22e">containerfs</span>.<span style="color:#a6e22e">ContainerFS</span>, <span style="color:#a6e22e">retErr</span> <span style="color:#66d9ef">error</span>) {
+    <span style="color:#f92672">...</span>
+    <span style="color:#66d9ef">if</span> len(<span style="color:#a6e22e">mountData</span>) &gt; <span style="color:#a6e22e">pageSize</span><span style="color:#f92672">-</span><span style="color:#ae81ff">1</span> {
+        <span style="color:#f92672">...</span>
+        <span style="color:#a6e22e">mount</span> = <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">source</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">target</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">mType</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">flags</span> <span style="color:#66d9ef">uintptr</span>, <span style="color:#a6e22e">label</span> <span style="color:#66d9ef">string</span>) <span style="color:#66d9ef">error</span> {
+            <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">mountFrom</span>(<span style="color:#a6e22e">d</span>.<span style="color:#a6e22e">home</span>, <span style="color:#a6e22e">source</span>, <span style="color:#a6e22e">target</span>, <span style="color:#a6e22e">mType</span>, <span style="color:#a6e22e">flags</span>, <span style="color:#a6e22e">label</span>)
+        }
+        <span style="color:#f92672">...</span>
+    }
+    <span style="color:#f92672">...</span>
+}
+</code></pre></div><p><a href="https://github.com/moby/moby/blob/v20.10.14/daemon/graphdriver/overlay2/mount.go#L34">https://github.com/moby/moby/blob/v20.10.14/daemon/graphdriver/overlay2/mount.go#L34</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">mountFrom</span>(<span style="color:#a6e22e">dir</span>, <span style="color:#a6e22e">device</span>, <span style="color:#a6e22e">target</span>, <span style="color:#a6e22e">mType</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">flags</span> <span style="color:#66d9ef">uintptr</span>, <span style="color:#a6e22e">label</span> <span style="color:#66d9ef">string</span>) <span style="color:#66d9ef">error</span> {
+    <span style="color:#f92672">...</span>
+    <span style="color:#a6e22e">cmd</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">reexec</span>.<span style="color:#a6e22e">Command</span>(<span style="color:#e6db74">&#34;docker-mountfrom&#34;</span>, <span style="color:#a6e22e">dir</span>)
+    <span style="color:#a6e22e">w</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">cmd</span>.<span style="color:#a6e22e">StdinPipe</span>()
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Errorf</span>(<span style="color:#e6db74">&#34;mountfrom error on pipe creation: %v&#34;</span>, <span style="color:#a6e22e">err</span>)
+    }
+
+    <span style="color:#a6e22e">output</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">bytes</span>.<span style="color:#a6e22e">NewBuffer</span>(<span style="color:#66d9ef">nil</span>)
+    <span style="color:#a6e22e">cmd</span>.<span style="color:#a6e22e">Stdout</span> = <span style="color:#a6e22e">output</span>
+    <span style="color:#a6e22e">cmd</span>.<span style="color:#a6e22e">Stderr</span> = <span style="color:#a6e22e">output</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">cmd</span>.<span style="color:#a6e22e">Start</span>(); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+        <span style="color:#a6e22e">w</span>.<span style="color:#a6e22e">Close</span>()
+        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Errorf</span>(<span style="color:#e6db74">&#34;mountfrom error on re-exec cmd: %v&#34;</span>, <span style="color:#a6e22e">err</span>)
+    }
+    <span style="color:#75715e">// write the options to the pipe for the untar exec to read
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">json</span>.<span style="color:#a6e22e">NewEncoder</span>(<span style="color:#a6e22e">w</span>).<span style="color:#a6e22e">Encode</span>(<span style="color:#a6e22e">options</span>); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+        <span style="color:#a6e22e">w</span>.<span style="color:#a6e22e">Close</span>()
+        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Errorf</span>(<span style="color:#e6db74">&#34;mountfrom json encode to pipe failed: %v&#34;</span>, <span style="color:#a6e22e">err</span>)
+    }
+    <span style="color:#f92672">...</span>
+}
+</code></pre></div><hr>
+<p>最后调用mount函数，挂载rootfs。</p>
+<p><a href="https://github.com/moby/moby/blob/v20.10.14/daemon/graphdriver/overlay2/overlay.go#L615-L617">https://github.com/moby/moby/blob/v20.10.14/daemon/graphdriver/overlay2/overlay.go#L615-L617</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">d</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Driver</span>) <span style="color:#a6e22e">Get</span>(<span style="color:#a6e22e">id</span>, <span style="color:#a6e22e">mountLabel</span> <span style="color:#66d9ef">string</span>) (<span style="color:#a6e22e">_</span> <span style="color:#a6e22e">containerfs</span>.<span style="color:#a6e22e">ContainerFS</span>, <span style="color:#a6e22e">retErr</span> <span style="color:#66d9ef">error</span>) {
+    <span style="color:#f92672">...</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">mount</span>(<span style="color:#e6db74">&#34;overlay&#34;</span>, <span style="color:#a6e22e">mountTarget</span>, <span style="color:#e6db74">&#34;overlay&#34;</span>, <span style="color:#ae81ff">0</span>, <span style="color:#a6e22e">mountData</span>); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>, <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Errorf</span>(<span style="color:#e6db74">&#34;error creating overlay mount to %s: %v&#34;</span>, <span style="color:#a6e22e">mergedDir</span>, <span style="color:#a6e22e">err</span>)
+    }
+
+    <span style="color:#66d9ef">if</span> !<span style="color:#a6e22e">readonly</span> {
+        <span style="color:#75715e">// chown &#34;workdir/work&#34; to the remapped root UID/GID. Overlay fs inside a
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">// user namespace requires this to move a directory from lower to upper.
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">os</span>.<span style="color:#a6e22e">Chown</span>(<span style="color:#a6e22e">path</span>.<span style="color:#a6e22e">Join</span>(<span style="color:#a6e22e">workDir</span>, <span style="color:#a6e22e">workDirName</span>), <span style="color:#a6e22e">rootUID</span>, <span style="color:#a6e22e">rootGID</span>); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>, <span style="color:#a6e22e">err</span>
+        }
+    }
+
+    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">containerfs</span>.<span style="color:#a6e22e">NewLocalContainerFS</span>(<span style="color:#a6e22e">mergedDir</span>), <span style="color:#66d9ef">nil</span>
+}
+</code></pre></div><hr>
+<h4 id="424-初始化容器网络">4.2.4 初始化容器网络</h4>
+<p><a href="https://github.com/moby/moby/blob/v20.10.14/daemon/start.go#L149">https://github.com/moby/moby/blob/v20.10.14/daemon/start.go#L149</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">daemon</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Daemon</span>) <span style="color:#a6e22e">containerStart</span>(<span style="color:#a6e22e">container</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">Container</span>, <span style="color:#a6e22e">checkpoint</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">checkpointDir</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">resetRestartManager</span> <span style="color:#66d9ef">bool</span>) (<span style="color:#a6e22e">err</span> <span style="color:#66d9ef">error</span>) {
+    <span style="color:#f92672">...</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">daemon</span>.<span style="color:#a6e22e">initializeNetworking</span>(<span style="color:#a6e22e">container</span>); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">err</span>
+    }
+    <span style="color:#f92672">...</span>
+}
+</code></pre></div><hr>
+<p>如果是与其他容器共享网络 (即使用<code>--network container:{ContainerID}</code>参数运行容器，参见<a href="https://docs.docker.com/engine/reference/run/#network-container">官方文档</a>) ,则初始化网络过程较为简单。</p>
+<p>因为网络已经存在，找到共享网络的容器，更新hostname等配置即可。然后直接返回，初始化网络流程结束。</p>
+<p><a href="https://github.com/moby/moby/blob/v20.10.14/daemon/container_operations.go#L958">https://github.com/moby/moby/blob/v20.10.14/daemon/container_operations.go#L958</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">daemon</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Daemon</span>) <span style="color:#a6e22e">initializeNetworking</span>(<span style="color:#a6e22e">container</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">Container</span>) <span style="color:#66d9ef">error</span> {
+    <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">err</span> <span style="color:#66d9ef">error</span>
+
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">HostConfig</span>.<span style="color:#a6e22e">NetworkMode</span>.<span style="color:#a6e22e">IsContainer</span>() {
+        <span style="color:#75715e">// we need to get the hosts files from the container to join
+</span><span style="color:#75715e"></span>        <span style="color:#a6e22e">nc</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">daemon</span>.<span style="color:#a6e22e">getNetworkedContainer</span>(<span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">ID</span>, <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">HostConfig</span>.<span style="color:#a6e22e">NetworkMode</span>.<span style="color:#a6e22e">ConnectedContainer</span>())
+        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+            <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">err</span>
+        }
+
+        <span style="color:#a6e22e">err</span> = <span style="color:#a6e22e">daemon</span>.<span style="color:#a6e22e">initializeNetworkingPaths</span>(<span style="color:#a6e22e">container</span>, <span style="color:#a6e22e">nc</span>)
+        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+            <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">err</span>
+        }
+
+        <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">Config</span>.<span style="color:#a6e22e">Hostname</span> = <span style="color:#a6e22e">nc</span>.<span style="color:#a6e22e">Config</span>.<span style="color:#a6e22e">Hostname</span>
+        <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">Config</span>.<span style="color:#a6e22e">Domainname</span> = <span style="color:#a6e22e">nc</span>.<span style="color:#a6e22e">Config</span>.<span style="color:#a6e22e">Domainname</span>
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>
+    }
+    <span style="color:#f92672">...</span>
+}
+</code></pre></div><p><a href="https://github.com/moby/moby/blob/v20.10.14/daemon/container_operations_unix.go#L448">https://github.com/moby/moby/blob/v20.10.14/daemon/container_operations_unix.go#L448</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">daemon</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Daemon</span>) <span style="color:#a6e22e">initializeNetworkingPaths</span>(<span style="color:#a6e22e">container</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">Container</span>, <span style="color:#a6e22e">nc</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">Container</span>) <span style="color:#66d9ef">error</span> {
+    <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">HostnamePath</span> = <span style="color:#a6e22e">nc</span>.<span style="color:#a6e22e">HostnamePath</span>
+    <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">HostsPath</span> = <span style="color:#a6e22e">nc</span>.<span style="color:#a6e22e">HostsPath</span>
+    <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">ResolvConfPath</span> = <span style="color:#a6e22e">nc</span>.<span style="color:#a6e22e">ResolvConfPath</span>
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>
+}
+</code></pre></div><hr>
+<p>如果是host模式的网络，需要额外配置hostname，并继续执行。</p>
+<p><a href="https://github.com/moby/moby/blob/v20.10.14/daemon/container_operations_unix.go#L448">https://github.com/moby/moby/blob/v20.10.14/daemon/container_operations_unix.go#L448</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">daemon</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Daemon</span>) <span style="color:#a6e22e">initializeNetworking</span>(<span style="color:#a6e22e">container</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">Container</span>) <span style="color:#66d9ef">error</span> {
+    <span style="color:#f92672">...</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">HostConfig</span>.<span style="color:#a6e22e">NetworkMode</span>.<span style="color:#a6e22e">IsHost</span>() {
+        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">Config</span>.<span style="color:#a6e22e">Hostname</span> <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;&#34;</span> {
+            <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">Config</span>.<span style="color:#a6e22e">Hostname</span>, <span style="color:#a6e22e">err</span> = <span style="color:#a6e22e">os</span>.<span style="color:#a6e22e">Hostname</span>()
+            <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+                <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">err</span>
+            }
+        }
+    }
+    <span style="color:#f92672">...</span>
+}
+</code></pre></div><hr>
+<p>调用 <code>daemon.allocateNetwork</code>，创建并连接至网络。</p>
+<p><a href="https://github.com/moby/moby/blob/v20.10.14/daemon/container_operations.go#L987">https://github.com/moby/moby/blob/v20.10.14/daemon/container_operations.go#L987</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">daemon</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Daemon</span>) <span style="color:#a6e22e">initializeNetworking</span>(<span style="color:#a6e22e">container</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">Container</span>) <span style="color:#66d9ef">error</span> {
+    <span style="color:#f92672">...</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">daemon</span>.<span style="color:#a6e22e">allocateNetwork</span>(<span style="color:#a6e22e">container</span>); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">err</span>
+    }
+    <span style="color:#f92672">...</span>
+}
+</code></pre></div><hr>
+<p>创建sandbox, endpoint, 连接至容器网络。</p>
+<p><a href="https://github.com/moby/moby/blob/v20.10.14/daemon/container_operations.go#L559-L605">https://github.com/moby/moby/blob/v20.10.14/daemon/container_operations.go#L559-L605</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">daemon</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Daemon</span>) <span style="color:#a6e22e">allocateNetwork</span>(<span style="color:#a6e22e">container</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">Container</span>) (<span style="color:#a6e22e">retErr</span> <span style="color:#66d9ef">error</span>) {
+    <span style="color:#f92672">...</span>
+    <span style="color:#a6e22e">defaultNetName</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">runconfig</span>.<span style="color:#a6e22e">DefaultDaemonNetworkMode</span>().<span style="color:#a6e22e">NetworkName</span>()
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">nConf</span>, <span style="color:#a6e22e">ok</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">NetworkSettings</span>.<span style="color:#a6e22e">Networks</span>[<span style="color:#a6e22e">defaultNetName</span>]; <span style="color:#a6e22e">ok</span> {
+        <span style="color:#a6e22e">cleanOperationalData</span>(<span style="color:#a6e22e">nConf</span>)
+        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">daemon</span>.<span style="color:#a6e22e">connectToNetwork</span>(<span style="color:#a6e22e">container</span>, <span style="color:#a6e22e">defaultNetName</span>, <span style="color:#a6e22e">nConf</span>.<span style="color:#a6e22e">EndpointSettings</span>, <span style="color:#a6e22e">updateSettings</span>); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+            <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">err</span>
+        }
+
+    }
+
+    <span style="color:#75715e">// the intermediate map is necessary because &#34;connectToNetwork&#34; modifies &#34;container.NetworkSettings.Networks&#34;
+</span><span style="color:#75715e"></span>    <span style="color:#a6e22e">networks</span> <span style="color:#f92672">:=</span> make(<span style="color:#66d9ef">map</span>[<span style="color:#66d9ef">string</span>]<span style="color:#f92672">*</span><span style="color:#a6e22e">network</span>.<span style="color:#a6e22e">EndpointSettings</span>)
+    <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">n</span>, <span style="color:#a6e22e">epConf</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">NetworkSettings</span>.<span style="color:#a6e22e">Networks</span> {
+        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">n</span> <span style="color:#f92672">==</span> <span style="color:#a6e22e">defaultNetName</span> {
+            <span style="color:#66d9ef">continue</span>
+        }
+
+        <span style="color:#a6e22e">networks</span>[<span style="color:#a6e22e">n</span>] = <span style="color:#a6e22e">epConf</span>
+    }
+
+    <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">netName</span>, <span style="color:#a6e22e">epConf</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">networks</span> {
+        <span style="color:#a6e22e">cleanOperationalData</span>(<span style="color:#a6e22e">epConf</span>)
+        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">daemon</span>.<span style="color:#a6e22e">connectToNetwork</span>(<span style="color:#a6e22e">container</span>, <span style="color:#a6e22e">netName</span>, <span style="color:#a6e22e">epConf</span>.<span style="color:#a6e22e">EndpointSettings</span>, <span style="color:#a6e22e">updateSettings</span>); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+            <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">err</span>
+        }
+    }
+
+    <span style="color:#75715e">// If the container is not to be connected to any network,
+</span><span style="color:#75715e"></span>    <span style="color:#75715e">// create its network sandbox now if not present
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> len(<span style="color:#a6e22e">networks</span>) <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span> {
+        <span style="color:#66d9ef">if</span> <span style="color:#66d9ef">nil</span> <span style="color:#f92672">==</span> <span style="color:#a6e22e">daemon</span>.<span style="color:#a6e22e">getNetworkSandbox</span>(<span style="color:#a6e22e">container</span>) {
+            <span style="color:#a6e22e">sbOptions</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">daemon</span>.<span style="color:#a6e22e">buildSandboxOptions</span>(<span style="color:#a6e22e">container</span>)
+            <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+                <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">err</span>
+            }
+            <span style="color:#a6e22e">sb</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">daemon</span>.<span style="color:#a6e22e">netController</span>.<span style="color:#a6e22e">NewSandbox</span>(<span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">ID</span>, <span style="color:#a6e22e">sbOptions</span><span style="color:#f92672">...</span>)
+            <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+                <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">err</span>
+            }
+            <span style="color:#a6e22e">updateSandboxNetworkSettings</span>(<span style="color:#a6e22e">container</span>, <span style="color:#a6e22e">sb</span>)
+            <span style="color:#66d9ef">defer</span> <span style="color:#66d9ef">func</span>() {
+                <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">retErr</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+                    <span style="color:#a6e22e">sb</span>.<span style="color:#a6e22e">Delete</span>()
+                }
+            }()
+        }
+
+    }
+    <span style="color:#f92672">...</span>
+}
+</code></pre></div><hr>
+<p><code>Daemon.allocateNetwork</code>方法最后更新HostConfig文件。</p>
+<p>hostconfig文件位于<code>/var/lib/docker/{ContainerID}/hostconfig.json</code>, 以json格式存储了容器的host配置。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">daemon</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Daemon</span>) <span style="color:#a6e22e">allocateNetwork</span>(<span style="color:#a6e22e">container</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">Container</span>) (<span style="color:#a6e22e">retErr</span> <span style="color:#66d9ef">error</span>) {
+    <span style="color:#f92672">...</span>    
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">WriteHostConfig</span>(); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">err</span>
+    }
+    <span style="color:#f92672">...</span>
+}
+</code></pre></div><hr>
+<p><code>Daemon.initializeNetworking</code>方法最后创建hostname文件。</p>
+<p>除了container类型的网络，其他类型都会在容器“工作目录”例如<code>/var/lib/docker/containers/{ContainerID}</code>创建hostname文件，并写入容器的hostname。</p>
+<p><a href="https://github.com/moby/moby/blob/v20.10.14/daemon/container_operations.go#L991">https://github.com/moby/moby/blob/v20.10.14/daemon/container_operations.go#L991</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">daemon</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Daemon</span>) <span style="color:#a6e22e">initializeNetworking</span>(<span style="color:#a6e22e">container</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">Container</span>) <span style="color:#66d9ef">error</span> {
+    <span style="color:#f92672">...</span>
+    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">BuildHostnameFile</span>()
+}
+</code></pre></div><p><a href="https://github.com/moby/moby/blob/v20.10.14/container/container_unix.go#L54">https://github.com/moby/moby/blob/v20.10.14/container/container_unix.go#L54</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">container</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Container</span>) <span style="color:#a6e22e">BuildHostnameFile</span>() <span style="color:#66d9ef">error</span> {
+    <span style="color:#a6e22e">hostnamePath</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">GetRootResourcePath</span>(<span style="color:#e6db74">&#34;hostname&#34;</span>)
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">err</span>
+    }
+    <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">HostnamePath</span> = <span style="color:#a6e22e">hostnamePath</span>
+    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">ioutil</span>.<span style="color:#a6e22e">WriteFile</span>(<span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">HostnamePath</span>, []byte(<span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">Config</span>.<span style="color:#a6e22e">Hostname</span><span style="color:#f92672">+</span><span style="color:#e6db74">&#34;\n&#34;</span>), <span style="color:#ae81ff">0644</span>)
+}
+</code></pre></div><hr>
+<h4 id="425-创建oci配置">4.2.5 创建oci配置</h4>
+<p>创建符合oci标准的容器配置，后续该配置将传递给oci。</p>
+<p><a href="https://github.com/moby/moby/blob/master/daemon/start.go#L153-L156">https://github.com/moby/moby/blob/master/daemon/start.go#L153-L156</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">daemon</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Daemon</span>) <span style="color:#a6e22e">containerStart</span>(<span style="color:#a6e22e">container</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">Container</span>, <span style="color:#a6e22e">checkpoint</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">checkpointDir</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">resetRestartManager</span> <span style="color:#66d9ef">bool</span>) (<span style="color:#a6e22e">err</span> <span style="color:#66d9ef">error</span>) {
+    <span style="color:#f92672">...</span>
+    <span style="color:#a6e22e">spec</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">daemon</span>.<span style="color:#a6e22e">createSpec</span>(<span style="color:#a6e22e">container</span>)
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">errdefs</span>.<span style="color:#a6e22e">System</span>(<span style="color:#a6e22e">err</span>)
+    }
+    <span style="color:#f92672">...</span>
+}
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">daemon</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Daemon</span>) <span style="color:#a6e22e">createSpec</span>(<span style="color:#a6e22e">c</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">Container</span>) (<span style="color:#a6e22e">retSpec</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">specs</span>.<span style="color:#a6e22e">Spec</span>, <span style="color:#a6e22e">err</span> <span style="color:#66d9ef">error</span>) {
+    <span style="color:#66d9ef">var</span> (
+        <span style="color:#a6e22e">opts</span> []<span style="color:#a6e22e">coci</span>.<span style="color:#a6e22e">SpecOpts</span>
+        <span style="color:#a6e22e">s</span>    = <span style="color:#a6e22e">oci</span>.<span style="color:#a6e22e">DefaultSpec</span>()
+    )
+    <span style="color:#a6e22e">opts</span> = append(<span style="color:#a6e22e">opts</span>,
+        <span style="color:#a6e22e">WithCommonOptions</span>(<span style="color:#a6e22e">daemon</span>, <span style="color:#a6e22e">c</span>),
+        <span style="color:#a6e22e">WithCgroups</span>(<span style="color:#a6e22e">daemon</span>, <span style="color:#a6e22e">c</span>),
+        <span style="color:#a6e22e">WithResources</span>(<span style="color:#a6e22e">c</span>),
+        <span style="color:#a6e22e">WithSysctls</span>(<span style="color:#a6e22e">c</span>),
+        <span style="color:#a6e22e">WithDevices</span>(<span style="color:#a6e22e">daemon</span>, <span style="color:#a6e22e">c</span>),
+        <span style="color:#a6e22e">WithUser</span>(<span style="color:#a6e22e">c</span>),
+        <span style="color:#a6e22e">WithRlimits</span>(<span style="color:#a6e22e">daemon</span>, <span style="color:#a6e22e">c</span>),
+        <span style="color:#a6e22e">WithNamespaces</span>(<span style="color:#a6e22e">daemon</span>, <span style="color:#a6e22e">c</span>),
+        <span style="color:#a6e22e">WithCapabilities</span>(<span style="color:#a6e22e">c</span>),
+        <span style="color:#a6e22e">WithSeccomp</span>(<span style="color:#a6e22e">daemon</span>, <span style="color:#a6e22e">c</span>),
+        <span style="color:#a6e22e">WithMounts</span>(<span style="color:#a6e22e">daemon</span>, <span style="color:#a6e22e">c</span>),
+        <span style="color:#a6e22e">WithLibnetwork</span>(<span style="color:#a6e22e">daemon</span>, <span style="color:#a6e22e">c</span>),
+        <span style="color:#a6e22e">WithApparmor</span>(<span style="color:#a6e22e">c</span>),
+        <span style="color:#a6e22e">WithSelinux</span>(<span style="color:#a6e22e">c</span>),
+        <span style="color:#a6e22e">WithOOMScore</span>(<span style="color:#f92672">&amp;</span><span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">HostConfig</span>.<span style="color:#a6e22e">OomScoreAdj</span>),
+    )
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">NoNewPrivileges</span> {
+        <span style="color:#a6e22e">opts</span> = append(<span style="color:#a6e22e">opts</span>, <span style="color:#a6e22e">coci</span>.<span style="color:#a6e22e">WithNoNewPrivileges</span>)
+    }
+
+    <span style="color:#75715e">// Set the masked and readonly paths with regard to the host config options if they are set.
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">HostConfig</span>.<span style="color:#a6e22e">MaskedPaths</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+        <span style="color:#a6e22e">opts</span> = append(<span style="color:#a6e22e">opts</span>, <span style="color:#a6e22e">coci</span>.<span style="color:#a6e22e">WithMaskedPaths</span>(<span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">HostConfig</span>.<span style="color:#a6e22e">MaskedPaths</span>))
+    }
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">HostConfig</span>.<span style="color:#a6e22e">ReadonlyPaths</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+        <span style="color:#a6e22e">opts</span> = append(<span style="color:#a6e22e">opts</span>, <span style="color:#a6e22e">coci</span>.<span style="color:#a6e22e">WithReadonlyPaths</span>(<span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">HostConfig</span>.<span style="color:#a6e22e">ReadonlyPaths</span>))
+    }
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">daemon</span>.<span style="color:#a6e22e">configStore</span>.<span style="color:#a6e22e">Rootless</span> {
+        <span style="color:#a6e22e">opts</span> = append(<span style="color:#a6e22e">opts</span>, <span style="color:#a6e22e">WithRootless</span>(<span style="color:#a6e22e">daemon</span>))
+    }
+    <span style="color:#66d9ef">return</span> <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">s</span>, <span style="color:#a6e22e">coci</span>.<span style="color:#a6e22e">ApplyOpts</span>(<span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Background</span>(), <span style="color:#66d9ef">nil</span>, <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">containers</span>.<span style="color:#a6e22e">Container</span>{
+        <span style="color:#a6e22e">ID</span>: <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">ID</span>,
+    }, <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">s</span>, <span style="color:#a6e22e">opts</span><span style="color:#f92672">...</span>)
+}
+</code></pre></div><hr>
+<h4 id="426">4.2.6</h4>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">daemon</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Daemon</span>) <span style="color:#a6e22e">containerStart</span>(<span style="color:#a6e22e">container</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">Container</span>, <span style="color:#a6e22e">checkpoint</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">checkpointDir</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">resetRestartManager</span> <span style="color:#66d9ef">bool</span>) (<span style="color:#a6e22e">err</span> <span style="color:#66d9ef">error</span>) {
+    <span style="color:#f92672">...</span>    
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">resetRestartManager</span> {
+        <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">ResetRestartManager</span>(<span style="color:#66d9ef">true</span>)
+        <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">HasBeenManuallyStopped</span> = <span style="color:#66d9ef">false</span>
+    }
+
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">daemon</span>.<span style="color:#a6e22e">saveAppArmorConfig</span>(<span style="color:#a6e22e">container</span>); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">err</span>
+    }
+
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">checkpoint</span> <span style="color:#f92672">!=</span> <span style="color:#e6db74">&#34;&#34;</span> {
+        <span style="color:#a6e22e">checkpointDir</span>, <span style="color:#a6e22e">err</span> = <span style="color:#a6e22e">getCheckpointDir</span>(<span style="color:#a6e22e">checkpointDir</span>, <span style="color:#a6e22e">checkpoint</span>, <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">Name</span>, <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">ID</span>, <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">CheckpointDir</span>(), <span style="color:#66d9ef">false</span>)
+        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+            <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">err</span>
+        }
+    }
+
+    <span style="color:#a6e22e">shim</span>, <span style="color:#a6e22e">createOptions</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">daemon</span>.<span style="color:#a6e22e">getLibcontainerdCreateOptions</span>(<span style="color:#a6e22e">container</span>)
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">err</span>
+    }
+
+    <span style="color:#a6e22e">ctx</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">TODO</span>()
+
+    <span style="color:#a6e22e">err</span> = <span style="color:#a6e22e">daemon</span>.<span style="color:#a6e22e">containerd</span>.<span style="color:#a6e22e">Create</span>(<span style="color:#a6e22e">ctx</span>, <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">ID</span>, <span style="color:#a6e22e">spec</span>, <span style="color:#a6e22e">shim</span>, <span style="color:#a6e22e">createOptions</span>)
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">errdefs</span>.<span style="color:#a6e22e">IsConflict</span>(<span style="color:#a6e22e">err</span>) {
+            <span style="color:#a6e22e">logrus</span>.<span style="color:#a6e22e">WithError</span>(<span style="color:#a6e22e">err</span>).<span style="color:#a6e22e">WithField</span>(<span style="color:#e6db74">&#34;container&#34;</span>, <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">ID</span>).<span style="color:#a6e22e">Error</span>(<span style="color:#e6db74">&#34;Container not cleaned up from containerd from previous run&#34;</span>)
+            <span style="color:#75715e">// best effort to clean up old container object
+</span><span style="color:#75715e"></span>            <span style="color:#a6e22e">daemon</span>.<span style="color:#a6e22e">containerd</span>.<span style="color:#a6e22e">DeleteTask</span>(<span style="color:#a6e22e">ctx</span>, <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">ID</span>)
+            <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">daemon</span>.<span style="color:#a6e22e">containerd</span>.<span style="color:#a6e22e">Delete</span>(<span style="color:#a6e22e">ctx</span>, <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">ID</span>); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> <span style="color:#f92672">&amp;&amp;</span> !<span style="color:#a6e22e">errdefs</span>.<span style="color:#a6e22e">IsNotFound</span>(<span style="color:#a6e22e">err</span>) {
+                <span style="color:#a6e22e">logrus</span>.<span style="color:#a6e22e">WithError</span>(<span style="color:#a6e22e">err</span>).<span style="color:#a6e22e">WithField</span>(<span style="color:#e6db74">&#34;container&#34;</span>, <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">ID</span>).<span style="color:#a6e22e">Error</span>(<span style="color:#e6db74">&#34;Error cleaning up stale containerd container object&#34;</span>)
+            }
+            <span style="color:#a6e22e">err</span> = <span style="color:#a6e22e">daemon</span>.<span style="color:#a6e22e">containerd</span>.<span style="color:#a6e22e">Create</span>(<span style="color:#a6e22e">ctx</span>, <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">ID</span>, <span style="color:#a6e22e">spec</span>, <span style="color:#a6e22e">shim</span>, <span style="color:#a6e22e">createOptions</span>)
+        }
+        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+            <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">translateContainerdStartErr</span>(<span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">Path</span>, <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">SetExitCode</span>, <span style="color:#a6e22e">err</span>)
+        }
+    }
+
+    <span style="color:#75715e">// TODO(mlaventure): we need to specify checkpoint options here
+</span><span style="color:#75715e"></span>    <span style="color:#a6e22e">pid</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">daemon</span>.<span style="color:#a6e22e">containerd</span>.<span style="color:#a6e22e">Start</span>(<span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Background</span>(), <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">ID</span>, <span style="color:#a6e22e">checkpointDir</span>,
+        <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">StreamConfig</span>.<span style="color:#a6e22e">Stdin</span>() <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> <span style="color:#f92672">||</span> <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">Config</span>.<span style="color:#a6e22e">Tty</span>,
+        <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">InitializeStdio</span>)
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">daemon</span>.<span style="color:#a6e22e">containerd</span>.<span style="color:#a6e22e">Delete</span>(<span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Background</span>(), <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">ID</span>); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+            <span style="color:#a6e22e">logrus</span>.<span style="color:#a6e22e">WithError</span>(<span style="color:#a6e22e">err</span>).<span style="color:#a6e22e">WithField</span>(<span style="color:#e6db74">&#34;container&#34;</span>, <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">ID</span>).
+                <span style="color:#a6e22e">Error</span>(<span style="color:#e6db74">&#34;failed to delete failed start container&#34;</span>)
+        }
+        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">translateContainerdStartErr</span>(<span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">Path</span>, <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">SetExitCode</span>, <span style="color:#a6e22e">err</span>)
+    }
+
+    <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">SetRunning</span>(<span style="color:#a6e22e">pid</span>, <span style="color:#66d9ef">true</span>)
+    <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">HasBeenStartedBefore</span> = <span style="color:#66d9ef">true</span>
+    <span style="color:#a6e22e">daemon</span>.<span style="color:#a6e22e">setStateCounter</span>(<span style="color:#a6e22e">container</span>)
+
+    <span style="color:#a6e22e">daemon</span>.<span style="color:#a6e22e">initHealthMonitor</span>(<span style="color:#a6e22e">container</span>)
+
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">CheckpointTo</span>(<span style="color:#a6e22e">daemon</span>.<span style="color:#a6e22e">containersReplica</span>); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+        <span style="color:#a6e22e">logrus</span>.<span style="color:#a6e22e">WithError</span>(<span style="color:#a6e22e">err</span>).<span style="color:#a6e22e">WithField</span>(<span style="color:#e6db74">&#34;container&#34;</span>, <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">ID</span>).
+            <span style="color:#a6e22e">Errorf</span>(<span style="color:#e6db74">&#34;failed to store container&#34;</span>)
+    }
+
+    <span style="color:#a6e22e">daemon</span>.<span style="color:#a6e22e">LogContainerEvent</span>(<span style="color:#a6e22e">container</span>, <span style="color:#e6db74">&#34;start&#34;</span>)
+    <span style="color:#a6e22e">containerActions</span>.<span style="color:#a6e22e">WithValues</span>(<span style="color:#e6db74">&#34;start&#34;</span>).<span style="color:#a6e22e">UpdateSince</span>(<span style="color:#a6e22e">start</span>)
+
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>
+}
+</code></pre></div><h2 id="5-containerd">5. containerd</h2>
+<h3 id="containerdelete">container.Delete</h3>
+
+            </div>
+        </article>
+
+        <hr />
+
+        <div class="post-info">
+  			</div>
+
+        
+    </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>&copy; 2022</span>
+            
+            <span></span>
+            <span> <a href="/posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a></span>
+        </div>
+    </div>
+    <div class="footer__inner">
+        <div class="footer__content">
+
+        </div>
+    </div>
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>Powered by <a href="http://gohugo.io">Hugo</a></span>
+            <span>Made with &#10084; by <a href="https://github.com/st0n3">st0n3</a></span>
+            <span>Based on <a href="https://github.com/rhazdon">rhazdon</a></span>
+        </div>
+    </div>
+
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      extensions: ["tex2jax.js"],
+      
+      jax: ["input/TeX", "output/CommonHTML"],
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+        displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+        processEscapes: true
+      },
+      "HTML-CSS": { fonts: ["TeX"] },
+      displayAlign: "left"
+    });
+  </script>
+
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_CHTML"></script>
+
+
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+
+<script type="text/javascript" src="/bundle.min.4c3fb12a087ceed4a52cb5d57068a9795c7069617a01ca70f788052ad66e1791779e6c72686e1dc0ca13dc03b0203204b6566bb0dd1ee80de2b7ff4d8fe53db2.js" integrity="sha512-TD&#43;xKgh87tSlLLXVcGipeVxwaWF6Acpw94gFKtZuF5F3nmxyaG4dwMoT3AOwIDIEtlZrsN0e6A3it/9Nj&#43;U9sg=="></script>
+
+
+
+    </body>
+</html>

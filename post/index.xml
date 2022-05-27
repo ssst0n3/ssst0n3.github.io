@@ -6,7 +6,38 @@
     <description>Recent content in Post on welcome to st0n3&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 18 May 2022 09:16:08 +0000</lastBuildDate><atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 27 May 2022 03:13:52 +0000</lastBuildDate><atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>docker 创建oci运行时配置 源码分析</title>
+      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E8%BF%9B%E7%A8%8B%E5%AE%B9%E5%99%A8/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%B9%E5%99%A8/docker/docker%E6%BA%90%E7%A0%81%E5%AE%A1%E8%AE%A1/docker%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/docker-container/docker-container-start-%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/docker-%E5%88%9B%E5%BB%BAoci%E8%BF%90%E8%A1%8C%E6%97%B6%E9%85%8D%E7%BD%AE-%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90.html</link>
+      <pubDate>Fri, 27 May 2022 03:13:52 +0000</pubDate>
+      
+      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E8%BF%9B%E7%A8%8B%E5%AE%B9%E5%99%A8/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%B9%E5%99%A8/docker/docker%E6%BA%90%E7%A0%81%E5%AE%A1%E8%AE%A1/docker%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/docker-container/docker-container-start-%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/docker-%E5%88%9B%E5%BB%BAoci%E8%BF%90%E8%A1%8C%E6%97%B6%E9%85%8D%E7%BD%AE-%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90.html</guid>
+      <description> tags: container,docker,源码分析 docker 创建oci运行时配置 源码分析 1. 简介 OCI(Open Container Initiative)是一个开放的治理结构，其围绕容器格式和运行时创建了开放的行业标准。OCI于2015年6月由Docker和容器行业的其他领导者成立，目前包含两个规范：运行时规范（runtime-spec）和图像规范（image-spec）。
+本文分析容器启动时，docker如何创建运行时配置(runtime-spec)。
+2. 入口 这一过程发生在
+3. </description>
+    </item>
+    
+    <item>
+      <title>docker container start 源码分析</title>
+      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E8%BF%9B%E7%A8%8B%E5%AE%B9%E5%99%A8/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%B9%E5%99%A8/docker/docker%E6%BA%90%E7%A0%81%E5%AE%A1%E8%AE%A1/docker%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/docker-container/docker-container-start-%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90.html</link>
+      <pubDate>Fri, 27 May 2022 03:12:55 +0000</pubDate>
+      
+      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E8%BF%9B%E7%A8%8B%E5%AE%B9%E5%99%A8/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%B9%E5%99%A8/docker/docker%E6%BA%90%E7%A0%81%E5%AE%A1%E8%AE%A1/docker%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/docker-container/docker-container-start-%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90.html</guid>
+      <description>tags: docker,container,源码分析 docker container start 源码分析  本文编写时，最新release为v20.10.14, 下文涉及代码均为该版本的代码。  1. docker container start 简介 启动容器，通过docker container start命令调用，该流程在运行容器时也会执行。
+详见官方文档： https://docs.docker.com/engine/reference/commandline/container_start/
+2. 源码入口位置 由cli接收docker container start命令参数,发送至docker engine api
+cli与engine api的代码入口分别位于:
+cli
+https://github.com/docker/cli/blob/v20.10.14/cli/command/container/start.go#L29
+func NewStartCommand(dockerCli command.Cli) *cobra.Command { ... }  engine
+https://github.com/moby/moby/blob/v20.10.14/api/server/router/container/container.go#L54
+func (r *containerRouter) initRoutes() { r.routes = []router.Route{ ... router.NewPostRoute(&amp;#34;/containers/{name:.*}/start&amp;#34;, r.postContainersStart), ... } } 3. cli docker使用 github.com/spf13/cobra 实现cli功能，NewStartCommand函数中定义了cobra.Command。该函数中用户输入的参数经cobra解析后，会被传给runStart函数。
+https://github.com/docker/cli/blob/v20.10.14/cli/command/container/start.go#L38
+func NewStartCommand(dockerCli command.Cli) *cobra.Command { ... cmd := &amp;amp;cobra.</description>
+    </item>
+    
     <item>
       <title>docker reexec docker-mountfrom 源码分析</title>
       <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E8%BF%9B%E7%A8%8B%E5%AE%B9%E5%99%A8/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%B9%E5%99%A8/docker/docker%E6%BA%90%E7%A0%81%E5%AE%A1%E8%AE%A1/docker%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/docker-reexec%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/docker-reexec-docker-mountfrom-%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90.html</link>
