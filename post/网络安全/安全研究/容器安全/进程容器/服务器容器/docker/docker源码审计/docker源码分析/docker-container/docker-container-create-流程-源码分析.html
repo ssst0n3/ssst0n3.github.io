@@ -58,7 +58,7 @@ func NewCreateCommand(dockerCli command.Cli) *cobra.Command { ... cmd := &amp;co
 func runCreate(dockerCli command.Cli, flags *pflag.">
 <meta itemprop="datePublished" content="2022-03-23T06:18:50+00:00" />
 <meta itemprop="dateModified" content="2022-03-23T06:18:50+00:00" />
-<meta itemprop="wordCount" content="784">
+<meta itemprop="wordCount" content="978">
 
 
 
@@ -332,6 +332,69 @@ func runCreate(dockerCli command.Cli, flags *pflag."/>
     }
     <span style="color:#f92672">...</span>
     <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">i</span>.<span style="color:#a6e22e">layerStores</span>[<span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">OS</span>].<span style="color:#a6e22e">CreateRWLayer</span>(<span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">ID</span>, <span style="color:#a6e22e">layerID</span>, <span style="color:#a6e22e">rwLayerOpts</span>)
+}
+</code></pre></div><p><a href="https://github.com/moby/moby/blob/v20.10.13/daemon/daemon_unix.go#L1069">https://github.com/moby/moby/blob/v20.10.13/daemon/daemon_unix.go#L1069</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">setupInitLayer</span>(<span style="color:#a6e22e">idMapping</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">idtools</span>.<span style="color:#a6e22e">IdentityMapping</span>) <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">containerfs</span>.<span style="color:#a6e22e">ContainerFS</span>) <span style="color:#66d9ef">error</span> {
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">initPath</span> <span style="color:#a6e22e">containerfs</span>.<span style="color:#a6e22e">ContainerFS</span>) <span style="color:#66d9ef">error</span> {
+        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">initlayer</span>.<span style="color:#a6e22e">Setup</span>(<span style="color:#a6e22e">initPath</span>, <span style="color:#a6e22e">idMapping</span>.<span style="color:#a6e22e">RootPair</span>())
+    }
+}
+</code></pre></div><hr>
+<p>其中，在创建读写层前，先对容器的rootfs做了一些设置：清除并重建了一些重要路径。</p>
+<p><a href="https://github.com/moby/moby/blob/v20.10.13/daemon/initlayer/setup_unix.go#L20">https://github.com/moby/moby/blob/v20.10.13/daemon/initlayer/setup_unix.go#L20</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">Setup</span>(<span style="color:#a6e22e">initLayerFs</span> <span style="color:#a6e22e">containerfs</span>.<span style="color:#a6e22e">ContainerFS</span>, <span style="color:#a6e22e">rootIdentity</span> <span style="color:#a6e22e">idtools</span>.<span style="color:#a6e22e">Identity</span>) <span style="color:#66d9ef">error</span> {
+    <span style="color:#75715e">// Since all paths are local to the container, we can just extract initLayerFs.Path()
+</span><span style="color:#75715e"></span>    <span style="color:#a6e22e">initLayer</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">initLayerFs</span>.<span style="color:#a6e22e">Path</span>()
+
+    <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">pth</span>, <span style="color:#a6e22e">typ</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#66d9ef">map</span>[<span style="color:#66d9ef">string</span>]<span style="color:#66d9ef">string</span>{
+        <span style="color:#e6db74">&#34;/dev/pts&#34;</span>:         <span style="color:#e6db74">&#34;dir&#34;</span>,
+        <span style="color:#e6db74">&#34;/dev/shm&#34;</span>:         <span style="color:#e6db74">&#34;dir&#34;</span>,
+        <span style="color:#e6db74">&#34;/proc&#34;</span>:            <span style="color:#e6db74">&#34;dir&#34;</span>,
+        <span style="color:#e6db74">&#34;/sys&#34;</span>:             <span style="color:#e6db74">&#34;dir&#34;</span>,
+        <span style="color:#e6db74">&#34;/.dockerenv&#34;</span>:      <span style="color:#e6db74">&#34;file&#34;</span>,
+        <span style="color:#e6db74">&#34;/etc/resolv.conf&#34;</span>: <span style="color:#e6db74">&#34;file&#34;</span>,
+        <span style="color:#e6db74">&#34;/etc/hosts&#34;</span>:       <span style="color:#e6db74">&#34;file&#34;</span>,
+        <span style="color:#e6db74">&#34;/etc/hostname&#34;</span>:    <span style="color:#e6db74">&#34;file&#34;</span>,
+        <span style="color:#e6db74">&#34;/dev/console&#34;</span>:     <span style="color:#e6db74">&#34;file&#34;</span>,
+        <span style="color:#e6db74">&#34;/etc/mtab&#34;</span>:        <span style="color:#e6db74">&#34;/proc/mounts&#34;</span>,
+    } {
+        <span style="color:#a6e22e">parts</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">strings</span>.<span style="color:#a6e22e">Split</span>(<span style="color:#a6e22e">pth</span>, <span style="color:#e6db74">&#34;/&#34;</span>)
+        <span style="color:#a6e22e">prev</span> <span style="color:#f92672">:=</span> <span style="color:#e6db74">&#34;/&#34;</span>
+        <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">p</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">parts</span>[<span style="color:#ae81ff">1</span>:] {
+            <span style="color:#a6e22e">prev</span> = <span style="color:#a6e22e">filepath</span>.<span style="color:#a6e22e">Join</span>(<span style="color:#a6e22e">prev</span>, <span style="color:#a6e22e">p</span>)
+            <span style="color:#a6e22e">unix</span>.<span style="color:#a6e22e">Unlink</span>(<span style="color:#a6e22e">filepath</span>.<span style="color:#a6e22e">Join</span>(<span style="color:#a6e22e">initLayer</span>, <span style="color:#a6e22e">prev</span>))
+        }
+
+        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">os</span>.<span style="color:#a6e22e">Stat</span>(<span style="color:#a6e22e">filepath</span>.<span style="color:#a6e22e">Join</span>(<span style="color:#a6e22e">initLayer</span>, <span style="color:#a6e22e">pth</span>)); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+            <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">os</span>.<span style="color:#a6e22e">IsNotExist</span>(<span style="color:#a6e22e">err</span>) {
+                <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">idtools</span>.<span style="color:#a6e22e">MkdirAllAndChownNew</span>(<span style="color:#a6e22e">filepath</span>.<span style="color:#a6e22e">Join</span>(<span style="color:#a6e22e">initLayer</span>, <span style="color:#a6e22e">filepath</span>.<span style="color:#a6e22e">Dir</span>(<span style="color:#a6e22e">pth</span>)), <span style="color:#ae81ff">0755</span>, <span style="color:#a6e22e">rootIdentity</span>); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+                    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">err</span>
+                }
+                <span style="color:#66d9ef">switch</span> <span style="color:#a6e22e">typ</span> {
+                <span style="color:#66d9ef">case</span> <span style="color:#e6db74">&#34;dir&#34;</span>:
+                    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">idtools</span>.<span style="color:#a6e22e">MkdirAllAndChownNew</span>(<span style="color:#a6e22e">filepath</span>.<span style="color:#a6e22e">Join</span>(<span style="color:#a6e22e">initLayer</span>, <span style="color:#a6e22e">pth</span>), <span style="color:#ae81ff">0755</span>, <span style="color:#a6e22e">rootIdentity</span>); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+                        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">err</span>
+                    }
+                <span style="color:#66d9ef">case</span> <span style="color:#e6db74">&#34;file&#34;</span>:
+                    <span style="color:#a6e22e">f</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">os</span>.<span style="color:#a6e22e">OpenFile</span>(<span style="color:#a6e22e">filepath</span>.<span style="color:#a6e22e">Join</span>(<span style="color:#a6e22e">initLayer</span>, <span style="color:#a6e22e">pth</span>), <span style="color:#a6e22e">os</span>.<span style="color:#a6e22e">O_CREATE</span>, <span style="color:#ae81ff">0755</span>)
+                    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+                        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">err</span>
+                    }
+                    <span style="color:#a6e22e">f</span>.<span style="color:#a6e22e">Chown</span>(<span style="color:#a6e22e">rootIdentity</span>.<span style="color:#a6e22e">UID</span>, <span style="color:#a6e22e">rootIdentity</span>.<span style="color:#a6e22e">GID</span>)
+                    <span style="color:#a6e22e">f</span>.<span style="color:#a6e22e">Close</span>()
+                <span style="color:#66d9ef">default</span>:
+                    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">os</span>.<span style="color:#a6e22e">Symlink</span>(<span style="color:#a6e22e">typ</span>, <span style="color:#a6e22e">filepath</span>.<span style="color:#a6e22e">Join</span>(<span style="color:#a6e22e">initLayer</span>, <span style="color:#a6e22e">pth</span>)); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+                        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">err</span>
+                    }
+                }
+            } <span style="color:#66d9ef">else</span> {
+                <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">err</span>
+            }
+        }
+    }
+
+    <span style="color:#75715e">// Layer is ready to use, if it wasn&#39;t before.
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>
 }
 </code></pre></div><hr>
 <p><code>setHostConfig</code>, <code>createContainerOSSpecificSettings</code>都主要是创建卷。</p>
