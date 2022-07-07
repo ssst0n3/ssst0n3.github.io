@@ -52,7 +52,7 @@ func (daemon *Daemon) containerStart(container *container.Container, checkpoint 
 func (daemon *Daemon) createSpec(c *container.Container) (retSpec *specs.Spec, err error) { var ( opts []coci.SpecOpts s = oci.DefaultSpec() ) opts = append(opts, WithCommonOptions(daemon, c), WithCgroups(daemon, c), WithResources(c), WithSysctls(c), WithDevices(daemon, c), WithUser(c), WithRlimits(daemon, c), WithNamespaces(daemon, c), WithCapabilities(c), WithSeccomp(daemon, c), WithMounts(daemon, c), WithLibnetwork(daemon, c), WithApparmor(c), WithSelinux(c), WithOOMScore(&amp;c.">
 <meta itemprop="datePublished" content="2022-05-27T03:13:52+00:00" />
 <meta itemprop="dateModified" content="2022-05-27T03:13:52+00:00" />
-<meta itemprop="wordCount" content="4653">
+<meta itemprop="wordCount" content="6914">
 
 
 
@@ -367,7 +367,7 @@ func (daemon *Daemon) createSpec(c *container.Container) (retSpec *specs.Spec, e
 }
 </code></pre></div><hr>
 <h3 id="34-设备">3.4 设备</h3>
-<p>没有添加设备，但runc有默认(即使oci配置中没有指定)会创建的设备null, zero, full, random, urandom, tty。</p>
+<p>docker默认没有添加设备。</p>
 <p><a href="https://github.com/moby/moby/blob/v20.10.14/oci/defaults.go#L127">https://github.com/moby/moby/blob/v20.10.14/oci/defaults.go#L127</a></p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">DefaultLinuxSpec</span>() <span style="color:#a6e22e">specs</span>.<span style="color:#a6e22e">Spec</span> {
     <span style="color:#f92672">...</span>
@@ -382,7 +382,8 @@ func (daemon *Daemon) createSpec(c *container.Container) (retSpec *specs.Spec, e
     }
     <span style="color:#f92672">...</span>
 }
-</code></pre></div><p><a href="https://github.com/opencontainers/runc/blob/v1.1.2/libcontainer/specconv/spec_linux.go#L191">https://github.com/opencontainers/runc/blob/v1.1.2/libcontainer/specconv/spec_linux.go#L191</a></p>
+</code></pre></div><p>但runc有默认(即使oci配置中没有指定)会创建的设备null, zero, full, random, urandom, tty。</p>
+<p><a href="https://github.com/opencontainers/runc/blob/v1.1.2/libcontainer/specconv/spec_linux.go#L191">https://github.com/opencontainers/runc/blob/v1.1.2/libcontainer/specconv/spec_linux.go#L191</a></p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">AllowedDevices</span> = []<span style="color:#f92672">*</span><span style="color:#a6e22e">devices</span>.<span style="color:#a6e22e">Device</span>{
     <span style="color:#f92672">...</span>
     {
@@ -465,7 +466,7 @@ func (daemon *Daemon) createSpec(c *container.Container) (retSpec *specs.Spec, e
     },
     <span style="color:#f92672">...</span>
 }
-</code></pre></div><p>通过设备号，配置了各设备的cgroup访问控制策略。</p>
+</code></pre></div><p>docker通过设备号，配置了各设备的cgroup访问控制策略。</p>
 <p>Linux中设备与设备号的约定参见 <a href="https://www.kernel.org/doc/Documentation/admin-guide/devices.txt">Linux Kernel文档</a>。</p>
 <p><a href="https://github.com/moby/moby/blob/v20.10.14/oci/defaults.go#L129-L183">https://github.com/moby/moby/blob/v20.10.14/oci/defaults.go#L129-L183</a></p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">DefaultLinuxSpec</span>() <span style="color:#a6e22e">specs</span>.<span style="color:#a6e22e">Spec</span> {
@@ -530,7 +531,7 @@ func (daemon *Daemon) createSpec(c *container.Container) (retSpec *specs.Spec, e
     }
     <span style="color:#f92672">...</span>
 }
-</code></pre></div><h2 id="4-各类型配置分析">4. 各类型配置分析</h2>
+</code></pre></div><h2 id="4-其他各类型配置分析">4. 其他各类型配置分析</h2>
 <h3 id="41-常规配置选项-withcommonoptions">4.1 常规配置选项: WithCommonOptions</h3>
 <h4 id="411-创建容器进程环境变量">4.1.1 创建容器进程环境变量</h4>
 <p><a href="https://github.com/moby/moby/blob/v20.10.14/daemon/oci_linux.go#L757">https://github.com/moby/moby/blob/v20.10.14/daemon/oci_linux.go#L757</a></p>
@@ -1525,16 +1526,108 @@ func (daemon *Daemon) createSpec(c *container.Container) (retSpec *specs.Spec, e
 }
 </code></pre></div><hr>
 <h3 id="411-withmounts">4.11 WithMounts</h3>
+<h4 id="4111-创建工作目录mounts">4.11.1 创建工作目录：mounts</h4>
+<p>在容器的工作目录创建mounts目录（形如<code>/var/lib/docker/containers/{CONTAINER_ID}/mounts</code>），后续部分文件会先挂载到该目录，再挂载到容器rootfs。</p>
+<p><a href="https://github.com/moby/moby/blob/v20.10.14/daemon/oci_linux.go#L486-L488">https://github.com/moby/moby/blob/v20.10.14/daemon/oci_linux.go#L486-L488</a></p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">WithMounts</span>(<span style="color:#a6e22e">daemon</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Daemon</span>, <span style="color:#a6e22e">c</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">Container</span>) <span style="color:#a6e22e">coci</span>.<span style="color:#a6e22e">SpecOpts</span> {
     <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">_</span> <span style="color:#a6e22e">coci</span>.<span style="color:#a6e22e">Client</span>, <span style="color:#a6e22e">_</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">containers</span>.<span style="color:#a6e22e">Container</span>, <span style="color:#a6e22e">s</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">coci</span>.<span style="color:#a6e22e">Spec</span>) (<span style="color:#a6e22e">err</span> <span style="color:#66d9ef">error</span>) {
         <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">daemon</span>.<span style="color:#a6e22e">setupContainerMountsRoot</span>(<span style="color:#a6e22e">c</span>); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
             <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">err</span>
         }
-
+        <span style="color:#f92672">...</span>
+    }
+}
+</code></pre></div><p><a href="https://github.com/moby/moby/blob/v20.10.14/daemon/container_operations_unix.go#L455">https://github.com/moby/moby/blob/v20.10.14/daemon/container_operations_unix.go#L455</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">daemon</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Daemon</span>) <span style="color:#a6e22e">setupContainerMountsRoot</span>(<span style="color:#a6e22e">c</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">Container</span>) <span style="color:#66d9ef">error</span> {
+	<span style="color:#75715e">// get the root mount path so we can make it unbindable
+</span><span style="color:#75715e"></span>	<span style="color:#a6e22e">p</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">MountsResourcePath</span>(<span style="color:#e6db74">&#34;&#34;</span>)
+	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+		<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">err</span>
+	}
+	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">idtools</span>.<span style="color:#a6e22e">MkdirAllAndChown</span>(<span style="color:#a6e22e">p</span>, <span style="color:#ae81ff">0710</span>, <span style="color:#a6e22e">idtools</span>.<span style="color:#a6e22e">Identity</span>{<span style="color:#a6e22e">UID</span>: <span style="color:#a6e22e">idtools</span>.<span style="color:#a6e22e">CurrentIdentity</span>().<span style="color:#a6e22e">UID</span>, <span style="color:#a6e22e">GID</span>: <span style="color:#a6e22e">daemon</span>.<span style="color:#a6e22e">IdentityMapping</span>().<span style="color:#a6e22e">RootPair</span>().<span style="color:#a6e22e">GID</span>})
+}
+</code></pre></div><hr>
+<h4 id="4112-创建工作目录shm">4.11.2 创建工作目录：shm</h4>
+<p><a href="https://github.com/moby/moby/blob/v20.10.14/daemon/oci_linux.go#L490-L492">https://github.com/moby/moby/blob/v20.10.14/daemon/oci_linux.go#L490-L492</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">WithMounts</span>(<span style="color:#a6e22e">daemon</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Daemon</span>, <span style="color:#a6e22e">c</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">Container</span>) <span style="color:#a6e22e">coci</span>.<span style="color:#a6e22e">SpecOpts</span> {
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">_</span> <span style="color:#a6e22e">coci</span>.<span style="color:#a6e22e">Client</span>, <span style="color:#a6e22e">_</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">containers</span>.<span style="color:#a6e22e">Container</span>, <span style="color:#a6e22e">s</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">coci</span>.<span style="color:#a6e22e">Spec</span>) (<span style="color:#a6e22e">err</span> <span style="color:#66d9ef">error</span>) {
+        <span style="color:#f92672">...</span>
         <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">daemon</span>.<span style="color:#a6e22e">setupIpcDirs</span>(<span style="color:#a6e22e">c</span>); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
             <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">err</span>
         }
+        <span style="color:#f92672">...</span>
+    }
+}
+</code></pre></div><p>docker在创建容器时，可以通过<code>--ipc</code>参数，指定容器使用私有或共享的ipc。</p>
+<ul>
+<li>如果共享其他容器或宿主机的IPC，在<code>setupIpcDirs</code>函数中，将容器的<code>ShmPath</code>属性更新为要共享的路径。</li>
+<li>如果使用私有的IPC或不使用IPC，则将<code>ShmPath</code>置空。</li>
+<li>如果IPC模式为<code>shareable</code>，则可以向其他容器共享IPC。创建shm工作目录，路径形如<code>/var/lib/docker/containers/{CONTAINER_ID}/mounts/shm</code>，然后将shm挂载至该路径，并将容器的<code>ShmPath</code>属性设置为该路径。后续该路径将以bind模式被挂载至容器rootfs。</li>
+</ul>
+<p>设置<code>ShmPath</code>属性，是为了其他容器在试图共享该容器的IPC时可以得知shm路径。</p>
+<p><a href="https://github.com/moby/moby/blob/v20.10.14/daemon/container_operations_unix.go#L106">https://github.com/moby/moby/blob/v20.10.14/daemon/container_operations_unix.go#L106</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">daemon</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Daemon</span>) <span style="color:#a6e22e">setupIpcDirs</span>(<span style="color:#a6e22e">c</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">Container</span>) <span style="color:#66d9ef">error</span> {
+    <span style="color:#a6e22e">ipcMode</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">HostConfig</span>.<span style="color:#a6e22e">IpcMode</span>
 
+    <span style="color:#66d9ef">switch</span> {
+    <span style="color:#66d9ef">case</span> <span style="color:#a6e22e">ipcMode</span>.<span style="color:#a6e22e">IsContainer</span>():
+        <span style="color:#a6e22e">ic</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">daemon</span>.<span style="color:#a6e22e">getIpcContainer</span>(<span style="color:#a6e22e">ipcMode</span>.<span style="color:#a6e22e">Container</span>())
+        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+            <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">err</span>
+        }
+        <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">ShmPath</span> = <span style="color:#a6e22e">ic</span>.<span style="color:#a6e22e">ShmPath</span>
+
+    <span style="color:#66d9ef">case</span> <span style="color:#a6e22e">ipcMode</span>.<span style="color:#a6e22e">IsHost</span>():
+        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">os</span>.<span style="color:#a6e22e">Stat</span>(<span style="color:#e6db74">&#34;/dev/shm&#34;</span>); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+            <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Errorf</span>(<span style="color:#e6db74">&#34;/dev/shm is not mounted, but must be for --ipc=host&#34;</span>)
+        }
+        <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">ShmPath</span> = <span style="color:#e6db74">&#34;/dev/shm&#34;</span>
+
+    <span style="color:#66d9ef">case</span> <span style="color:#a6e22e">ipcMode</span>.<span style="color:#a6e22e">IsPrivate</span>(), <span style="color:#a6e22e">ipcMode</span>.<span style="color:#a6e22e">IsNone</span>():
+        <span style="color:#75715e">// c.ShmPath will/should not be used, so make it empty.
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">// Container&#39;s /dev/shm mount comes from OCI spec.
+</span><span style="color:#75715e"></span>        <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">ShmPath</span> = <span style="color:#e6db74">&#34;&#34;</span>
+
+    <span style="color:#66d9ef">case</span> <span style="color:#a6e22e">ipcMode</span>.<span style="color:#a6e22e">IsEmpty</span>():
+        <span style="color:#75715e">// A container was created by an older version of the daemon.
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">// The default behavior used to be what is now called &#34;shareable&#34;.
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">fallthrough</span>
+
+    <span style="color:#66d9ef">case</span> <span style="color:#a6e22e">ipcMode</span>.<span style="color:#a6e22e">IsShareable</span>():
+        <span style="color:#a6e22e">rootIDs</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">daemon</span>.<span style="color:#a6e22e">idMapping</span>.<span style="color:#a6e22e">RootPair</span>()
+        <span style="color:#66d9ef">if</span> !<span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">HasMountFor</span>(<span style="color:#e6db74">&#34;/dev/shm&#34;</span>) {
+            <span style="color:#a6e22e">shmPath</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">ShmResourcePath</span>()
+            <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+                <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">err</span>
+            }
+
+            <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">idtools</span>.<span style="color:#a6e22e">MkdirAllAndChown</span>(<span style="color:#a6e22e">shmPath</span>, <span style="color:#ae81ff">0700</span>, <span style="color:#a6e22e">rootIDs</span>); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+                <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">err</span>
+            }
+
+            <span style="color:#a6e22e">shmproperty</span> <span style="color:#f92672">:=</span> <span style="color:#e6db74">&#34;mode=1777,size=&#34;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">strconv</span>.<span style="color:#a6e22e">FormatInt</span>(<span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">HostConfig</span>.<span style="color:#a6e22e">ShmSize</span>, <span style="color:#ae81ff">10</span>)
+            <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">unix</span>.<span style="color:#a6e22e">Mount</span>(<span style="color:#e6db74">&#34;shm&#34;</span>, <span style="color:#a6e22e">shmPath</span>, <span style="color:#e6db74">&#34;tmpfs&#34;</span>, uintptr(<span style="color:#a6e22e">unix</span>.<span style="color:#a6e22e">MS_NOEXEC</span>|<span style="color:#a6e22e">unix</span>.<span style="color:#a6e22e">MS_NOSUID</span>|<span style="color:#a6e22e">unix</span>.<span style="color:#a6e22e">MS_NODEV</span>), <span style="color:#a6e22e">label</span>.<span style="color:#a6e22e">FormatMountLabel</span>(<span style="color:#a6e22e">shmproperty</span>, <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">GetMountLabel</span>())); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+                <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Errorf</span>(<span style="color:#e6db74">&#34;mounting shm tmpfs: %s&#34;</span>, <span style="color:#a6e22e">err</span>)
+            }
+            <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">os</span>.<span style="color:#a6e22e">Chown</span>(<span style="color:#a6e22e">shmPath</span>, <span style="color:#a6e22e">rootIDs</span>.<span style="color:#a6e22e">UID</span>, <span style="color:#a6e22e">rootIDs</span>.<span style="color:#a6e22e">GID</span>); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+                <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">err</span>
+            }
+            <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">ShmPath</span> = <span style="color:#a6e22e">shmPath</span>
+        }
+
+    <span style="color:#66d9ef">default</span>:
+        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Errorf</span>(<span style="color:#e6db74">&#34;invalid IPC mode: %v&#34;</span>, <span style="color:#a6e22e">ipcMode</span>)
+    }
+
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>
+}
+</code></pre></div><hr>
+<h4 id="4113-设置工作目录secret">4.11.3 设置工作目录：secret</h4>
+<p>secret是swarm集群的功能，它将以文件形式被挂载至容器rootfs内。</p>
+<p><a href="https://github.com/moby/moby/blob/v20.10.14/daemon/oci_linux.go#L494-L502">https://github.com/moby/moby/blob/v20.10.14/daemon/oci_linux.go#L494-L502</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">WithMounts</span>(<span style="color:#a6e22e">daemon</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Daemon</span>, <span style="color:#a6e22e">c</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">Container</span>) <span style="color:#a6e22e">coci</span>.<span style="color:#a6e22e">SpecOpts</span> {
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">_</span> <span style="color:#a6e22e">coci</span>.<span style="color:#a6e22e">Client</span>, <span style="color:#a6e22e">_</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">containers</span>.<span style="color:#a6e22e">Container</span>, <span style="color:#a6e22e">s</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">coci</span>.<span style="color:#a6e22e">Spec</span>) (<span style="color:#a6e22e">err</span> <span style="color:#66d9ef">error</span>) {
+        <span style="color:#f92672">...</span>
         <span style="color:#66d9ef">defer</span> <span style="color:#66d9ef">func</span>() {
             <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
                 <span style="color:#a6e22e">daemon</span>.<span style="color:#a6e22e">cleanupSecretDir</span>(<span style="color:#a6e22e">c</span>)
@@ -1544,30 +1637,523 @@ func (daemon *Daemon) createSpec(c *container.Container) (retSpec *specs.Spec, e
         <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">daemon</span>.<span style="color:#a6e22e">setupSecretDir</span>(<span style="color:#a6e22e">c</span>); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
             <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">err</span>
         }
+        <span style="color:#f92672">...</span>
+    }
+}
+</code></pre></div><hr>
+<p>创建secret工作目录，路径形如<code>/var/lib/docker/containers/{CONTAINER_ID}/mounts/secrets</code>，并将tmpfs挂载至该路径。</p>
+<p><a href="https://github.com/moby/moby/blob/v20.10.14/daemon/container_operations_unix.go#L163-L174">https://github.com/moby/moby/blob/v20.10.14/daemon/container_operations_unix.go#L163-L174</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">daemon</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Daemon</span>) <span style="color:#a6e22e">setupSecretDir</span>(<span style="color:#a6e22e">c</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">Container</span>) (<span style="color:#a6e22e">setupErr</span> <span style="color:#66d9ef">error</span>) {
+    <span style="color:#66d9ef">if</span> len(<span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">SecretReferences</span>) <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">&amp;&amp;</span> len(<span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">ConfigReferences</span>) <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span> {
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>
+    }
 
-        <span style="color:#a6e22e">ms</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">daemon</span>.<span style="color:#a6e22e">setupMounts</span>(<span style="color:#a6e22e">c</span>)
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">daemon</span>.<span style="color:#a6e22e">createSecretsDir</span>(<span style="color:#a6e22e">c</span>); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">err</span>
+    }
+    <span style="color:#66d9ef">defer</span> <span style="color:#66d9ef">func</span>() {
+        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">setupErr</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+            <span style="color:#a6e22e">daemon</span>.<span style="color:#a6e22e">cleanupSecretDir</span>(<span style="color:#a6e22e">c</span>)
+        }
+    }()
+    <span style="color:#f92672">...</span>
+}
+</code></pre></div><p><a href="https://github.com/moby/moby/blob/v20.10.14/daemon/container_operations_unix.go#L285">https://github.com/moby/moby/blob/v20.10.14/daemon/container_operations_unix.go#L285</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">daemon</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Daemon</span>) <span style="color:#a6e22e">createSecretsDir</span>(<span style="color:#a6e22e">c</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">Container</span>) <span style="color:#66d9ef">error</span> {
+    <span style="color:#75715e">// retrieve possible remapped range start for root UID, GID
+</span><span style="color:#75715e"></span>    <span style="color:#a6e22e">rootIDs</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">daemon</span>.<span style="color:#a6e22e">idMapping</span>.<span style="color:#a6e22e">RootPair</span>()
+    <span style="color:#a6e22e">dir</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">SecretMountPath</span>()
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">errors</span>.<span style="color:#a6e22e">Wrap</span>(<span style="color:#a6e22e">err</span>, <span style="color:#e6db74">&#34;error getting container secrets dir&#34;</span>)
+    }
+
+    <span style="color:#75715e">// create tmpfs
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">idtools</span>.<span style="color:#a6e22e">MkdirAllAndChown</span>(<span style="color:#a6e22e">dir</span>, <span style="color:#ae81ff">0700</span>, <span style="color:#a6e22e">rootIDs</span>); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">errors</span>.<span style="color:#a6e22e">Wrap</span>(<span style="color:#a6e22e">err</span>, <span style="color:#e6db74">&#34;error creating secret local mount path&#34;</span>)
+    }
+
+    <span style="color:#a6e22e">tmpfsOwnership</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Sprintf</span>(<span style="color:#e6db74">&#34;uid=%d,gid=%d&#34;</span>, <span style="color:#a6e22e">rootIDs</span>.<span style="color:#a6e22e">UID</span>, <span style="color:#a6e22e">rootIDs</span>.<span style="color:#a6e22e">GID</span>)
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">mount</span>.<span style="color:#a6e22e">Mount</span>(<span style="color:#e6db74">&#34;tmpfs&#34;</span>, <span style="color:#a6e22e">dir</span>, <span style="color:#e6db74">&#34;tmpfs&#34;</span>, <span style="color:#e6db74">&#34;nodev,nosuid,noexec,&#34;</span><span style="color:#f92672">+</span><span style="color:#a6e22e">tmpfsOwnership</span>); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">errors</span>.<span style="color:#a6e22e">Wrap</span>(<span style="color:#a6e22e">err</span>, <span style="color:#e6db74">&#34;unable to setup secret mount&#34;</span>)
+    }
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>
+}
+</code></pre></div><hr>
+<p>将secret内容写入到<code>/var/lib/docker/containers/{CONTAINER_ID}/mounts/secrets/{SECRET_ID}</code></p>
+<p><a href="https://github.com/moby/moby/blob/v20.10.14/daemon/container_operations_unix.go#L183-L227">https://github.com/moby/moby/blob/v20.10.14/daemon/container_operations_unix.go#L183-L227</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">daemon</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Daemon</span>) <span style="color:#a6e22e">setupSecretDir</span>(<span style="color:#a6e22e">c</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">Container</span>) (<span style="color:#a6e22e">setupErr</span> <span style="color:#66d9ef">error</span>) {
+    <span style="color:#f92672">...</span>
+    <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">s</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">SecretReferences</span> {
+        <span style="color:#f92672">...</span>
+        <span style="color:#a6e22e">fPath</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">SecretFilePath</span>(<span style="color:#f92672">*</span><span style="color:#a6e22e">s</span>)
+        <span style="color:#f92672">...</span>
+        <span style="color:#a6e22e">secret</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">DependencyStore</span>.<span style="color:#a6e22e">Secrets</span>().<span style="color:#a6e22e">Get</span>(<span style="color:#a6e22e">s</span>.<span style="color:#a6e22e">SecretID</span>)
+        <span style="color:#f92672">...</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">ioutil</span>.<span style="color:#a6e22e">WriteFile</span>(<span style="color:#a6e22e">fPath</span>, <span style="color:#a6e22e">secret</span>.<span style="color:#a6e22e">Spec</span>.<span style="color:#a6e22e">Data</span>, <span style="color:#a6e22e">s</span>.<span style="color:#a6e22e">File</span>.<span style="color:#a6e22e">Mode</span>); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+        <span style="color:#f92672">...</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">os</span>.<span style="color:#a6e22e">Chown</span>(<span style="color:#a6e22e">fPath</span>, <span style="color:#a6e22e">rootIDs</span>.<span style="color:#a6e22e">UID</span><span style="color:#f92672">+</span><span style="color:#a6e22e">uid</span>, <span style="color:#a6e22e">rootIDs</span>.<span style="color:#a6e22e">GID</span><span style="color:#f92672">+</span><span style="color:#a6e22e">gid</span>); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+            <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">errors</span>.<span style="color:#a6e22e">Wrap</span>(<span style="color:#a6e22e">err</span>, <span style="color:#e6db74">&#34;error setting ownership for secret&#34;</span>)
+        }
+        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">os</span>.<span style="color:#a6e22e">Chmod</span>(<span style="color:#a6e22e">fPath</span>, <span style="color:#a6e22e">s</span>.<span style="color:#a6e22e">File</span>.<span style="color:#a6e22e">Mode</span>); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+            <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">errors</span>.<span style="color:#a6e22e">Wrap</span>(<span style="color:#a6e22e">err</span>, <span style="color:#e6db74">&#34;error setting file mode for secret&#34;</span>)
+        }
+    }
+    <span style="color:#f92672">...</span>
+}
+</code></pre></div><hr>
+<p>docker swarm另外还支持通过<code>--config</code>参数向容器注入config，因为其支持go语言的模板引擎，<a href="https://github.com/moby/moby/pull/33702">有可能在config中引入secret</a>, 因此，config文件也将写入secrets工作目录，具体路径形如<code>/var/lib/docker/containers/{CONTAINER_ID}/mounts/secrets/{CONFIG_ID}</code>。</p>
+<p><a href="https://github.com/moby/moby/blob/v20.10.14/daemon/container_operations_unix.go#L229-L278">https://github.com/moby/moby/blob/v20.10.14/daemon/container_operations_unix.go#L229-L278</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">daemon</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Daemon</span>) <span style="color:#a6e22e">setupSecretDir</span>(<span style="color:#a6e22e">c</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">Container</span>) (<span style="color:#a6e22e">setupErr</span> <span style="color:#66d9ef">error</span>) {
+    <span style="color:#f92672">...</span>
+    <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">configRef</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">ConfigReferences</span> {
+        <span style="color:#f92672">...</span>
+        <span style="color:#a6e22e">fPath</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">ConfigFilePath</span>(<span style="color:#f92672">*</span><span style="color:#a6e22e">configRef</span>)
+        <span style="color:#f92672">...</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">idtools</span>.<span style="color:#a6e22e">MkdirAllAndChown</span>(<span style="color:#a6e22e">filepath</span>.<span style="color:#a6e22e">Dir</span>(<span style="color:#a6e22e">fPath</span>), <span style="color:#ae81ff">0700</span>, <span style="color:#a6e22e">rootIDs</span>); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+        <span style="color:#f92672">...</span>
+        <span style="color:#a6e22e">config</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">DependencyStore</span>.<span style="color:#a6e22e">Configs</span>().<span style="color:#a6e22e">Get</span>(<span style="color:#a6e22e">configRef</span>.<span style="color:#a6e22e">ConfigID</span>)
+        <span style="color:#f92672">...</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">ioutil</span>.<span style="color:#a6e22e">WriteFile</span>(<span style="color:#a6e22e">fPath</span>, <span style="color:#a6e22e">config</span>.<span style="color:#a6e22e">Spec</span>.<span style="color:#a6e22e">Data</span>, <span style="color:#a6e22e">configRef</span>.<span style="color:#a6e22e">File</span>.<span style="color:#a6e22e">Mode</span>); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+            <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">errors</span>.<span style="color:#a6e22e">Wrap</span>(<span style="color:#a6e22e">err</span>, <span style="color:#e6db74">&#34;error injecting config&#34;</span>)
+        }
+
+        <span style="color:#a6e22e">uid</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">strconv</span>.<span style="color:#a6e22e">Atoi</span>(<span style="color:#a6e22e">configRef</span>.<span style="color:#a6e22e">File</span>.<span style="color:#a6e22e">UID</span>)
+        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+            <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">err</span>
+        }
+        <span style="color:#a6e22e">gid</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">strconv</span>.<span style="color:#a6e22e">Atoi</span>(<span style="color:#a6e22e">configRef</span>.<span style="color:#a6e22e">File</span>.<span style="color:#a6e22e">GID</span>)
         <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
             <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">err</span>
         }
 
+        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">os</span>.<span style="color:#a6e22e">Chown</span>(<span style="color:#a6e22e">fPath</span>, <span style="color:#a6e22e">rootIDs</span>.<span style="color:#a6e22e">UID</span><span style="color:#f92672">+</span><span style="color:#a6e22e">uid</span>, <span style="color:#a6e22e">rootIDs</span>.<span style="color:#a6e22e">GID</span><span style="color:#f92672">+</span><span style="color:#a6e22e">gid</span>); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+            <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">errors</span>.<span style="color:#a6e22e">Wrap</span>(<span style="color:#a6e22e">err</span>, <span style="color:#e6db74">&#34;error setting ownership for config&#34;</span>)
+        }
+        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">os</span>.<span style="color:#a6e22e">Chmod</span>(<span style="color:#a6e22e">fPath</span>, <span style="color:#a6e22e">configRef</span>.<span style="color:#a6e22e">File</span>.<span style="color:#a6e22e">Mode</span>); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+            <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">errors</span>.<span style="color:#a6e22e">Wrap</span>(<span style="color:#a6e22e">err</span>, <span style="color:#e6db74">&#34;error setting file mode for config&#34;</span>)
+        }
+    }
+    <span style="color:#f92672">...</span>
+}
+</code></pre></div><hr>
+<p>secret文件写入完毕，以只读方式重新挂载secrets工作目录。</p>
+<p><a href="https://github.com/moby/moby/blob/v20.10.14/daemon/container_operations_unix.go#L280">https://github.com/moby/moby/blob/v20.10.14/daemon/container_operations_unix.go#L280</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">daemon</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Daemon</span>) <span style="color:#a6e22e">setupSecretDir</span>(<span style="color:#a6e22e">c</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">Container</span>) (<span style="color:#a6e22e">setupErr</span> <span style="color:#66d9ef">error</span>) {
+    <span style="color:#f92672">...</span>
+    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">daemon</span>.<span style="color:#a6e22e">remountSecretDir</span>(<span style="color:#a6e22e">c</span>)
+}
+</code></pre></div><p><a href="https://github.com/moby/moby/blob/v20.10.14/daemon/container_operations_unix.go#L305">https://github.com/moby/moby/blob/v20.10.14/daemon/container_operations_unix.go#L305</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">daemon</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Daemon</span>) <span style="color:#a6e22e">remountSecretDir</span>(<span style="color:#a6e22e">c</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">Container</span>) <span style="color:#66d9ef">error</span> {
+    <span style="color:#a6e22e">dir</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">SecretMountPath</span>()
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">errors</span>.<span style="color:#a6e22e">Wrap</span>(<span style="color:#a6e22e">err</span>, <span style="color:#e6db74">&#34;error getting container secrets path&#34;</span>)
+    }
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">label</span>.<span style="color:#a6e22e">Relabel</span>(<span style="color:#a6e22e">dir</span>, <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">MountLabel</span>, <span style="color:#66d9ef">false</span>); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+        <span style="color:#a6e22e">logrus</span>.<span style="color:#a6e22e">WithError</span>(<span style="color:#a6e22e">err</span>).<span style="color:#a6e22e">WithField</span>(<span style="color:#e6db74">&#34;dir&#34;</span>, <span style="color:#a6e22e">dir</span>).<span style="color:#a6e22e">Warn</span>(<span style="color:#e6db74">&#34;Error while attempting to set selinux label&#34;</span>)
+    }
+    <span style="color:#a6e22e">rootIDs</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">daemon</span>.<span style="color:#a6e22e">idMapping</span>.<span style="color:#a6e22e">RootPair</span>()
+    <span style="color:#a6e22e">tmpfsOwnership</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Sprintf</span>(<span style="color:#e6db74">&#34;uid=%d,gid=%d&#34;</span>, <span style="color:#a6e22e">rootIDs</span>.<span style="color:#a6e22e">UID</span>, <span style="color:#a6e22e">rootIDs</span>.<span style="color:#a6e22e">GID</span>)
+
+    <span style="color:#75715e">// remount secrets ro
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">mount</span>.<span style="color:#a6e22e">Mount</span>(<span style="color:#e6db74">&#34;tmpfs&#34;</span>, <span style="color:#a6e22e">dir</span>, <span style="color:#e6db74">&#34;tmpfs&#34;</span>, <span style="color:#e6db74">&#34;remount,ro,&#34;</span><span style="color:#f92672">+</span><span style="color:#a6e22e">tmpfsOwnership</span>); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">errors</span>.<span style="color:#a6e22e">Wrap</span>(<span style="color:#a6e22e">err</span>, <span style="color:#e6db74">&#34;unable to remount dir as readonly&#34;</span>)
+    }
+
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>
+}
+</code></pre></div><hr>
+<h4 id="4114-setupmounts">4.11.4 setupMounts</h4>
+<p><a href="https://github.com/moby/moby/blob/v20.10.14/daemon/oci_linux.go#L504-L507">https://github.com/moby/moby/blob/v20.10.14/daemon/oci_linux.go#L504-L507</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">WithMounts</span>(<span style="color:#a6e22e">daemon</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Daemon</span>, <span style="color:#a6e22e">c</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">Container</span>) <span style="color:#a6e22e">coci</span>.<span style="color:#a6e22e">SpecOpts</span> {
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">_</span> <span style="color:#a6e22e">coci</span>.<span style="color:#a6e22e">Client</span>, <span style="color:#a6e22e">_</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">containers</span>.<span style="color:#a6e22e">Container</span>, <span style="color:#a6e22e">s</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">coci</span>.<span style="color:#a6e22e">Spec</span>) (<span style="color:#a6e22e">err</span> <span style="color:#66d9ef">error</span>) {
+        <span style="color:#f92672">...</span>
+        <span style="color:#a6e22e">ms</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">daemon</span>.<span style="color:#a6e22e">setupMounts</span>(<span style="color:#a6e22e">c</span>)
+        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+            <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">err</span>
+        }
+        <span style="color:#f92672">...</span>
+    }
+}
+</code></pre></div><hr>
+<p>遍历容器的挂载点，对每个挂载点调用<code>MountPoint.Setup()</code>方法。跳过tmpfs类型的挂载点，其中tmpfs从容器的HostConfig和MountPoints中收集而来。</p>
+<p><a href="https://github.com/moby/moby/blob/v20.10.14/daemon/volumes_unix.go#L25-L36">https://github.com/moby/moby/blob/v20.10.14/daemon/volumes_unix.go#L25-L36</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">daemon</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Daemon</span>) <span style="color:#a6e22e">setupMounts</span>(<span style="color:#a6e22e">c</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">Container</span>) ([]<span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">Mount</span>, <span style="color:#66d9ef">error</span>) {
+    <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">mounts</span> []<span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">Mount</span>
+    <span style="color:#75715e">// TODO: tmpfs mounts should be part of Mountpoints
+</span><span style="color:#75715e"></span>    <span style="color:#a6e22e">tmpfsMounts</span> <span style="color:#f92672">:=</span> make(<span style="color:#66d9ef">map</span>[<span style="color:#66d9ef">string</span>]<span style="color:#66d9ef">bool</span>)
+    <span style="color:#a6e22e">tmpfsMountInfo</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">TmpfsMounts</span>()
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>, <span style="color:#a6e22e">err</span>
+    }
+    <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">m</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">tmpfsMountInfo</span> {
+        <span style="color:#a6e22e">tmpfsMounts</span>[<span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">Destination</span>] = <span style="color:#66d9ef">true</span>
+    }
+    <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">m</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">MountPoints</span> {
+        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">tmpfsMounts</span>[<span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">Destination</span>] {
+            <span style="color:#66d9ef">continue</span>
+        }
+        <span style="color:#f92672">...</span>
+        <span style="color:#a6e22e">path</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">Setup</span>(<span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">MountLabel</span>, <span style="color:#a6e22e">daemon</span>.<span style="color:#a6e22e">idMapping</span>.<span style="color:#a6e22e">RootPair</span>(), <span style="color:#a6e22e">checkfunc</span>)
+        <span style="color:#f92672">...</span>
+    }
+    <span style="color:#f92672">...</span>
+}
+</code></pre></div><p><a href="https://github.com/moby/moby/blob/v20.10.14/container/container_unix.go#L421">https://github.com/moby/moby/blob/v20.10.14/container/container_unix.go#L421</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">container</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Container</span>) <span style="color:#a6e22e">TmpfsMounts</span>() ([]<span style="color:#a6e22e">Mount</span>, <span style="color:#66d9ef">error</span>) {
+    <span style="color:#a6e22e">parser</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">volumemounts</span>.<span style="color:#a6e22e">NewParser</span>(<span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">OS</span>)
+    <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">mounts</span> []<span style="color:#a6e22e">Mount</span>
+    <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">dest</span>, <span style="color:#a6e22e">data</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">HostConfig</span>.<span style="color:#a6e22e">Tmpfs</span> {
+        <span style="color:#a6e22e">mounts</span> = append(<span style="color:#a6e22e">mounts</span>, <span style="color:#a6e22e">Mount</span>{
+            <span style="color:#a6e22e">Source</span>:      <span style="color:#e6db74">&#34;tmpfs&#34;</span>,
+            <span style="color:#a6e22e">Destination</span>: <span style="color:#a6e22e">dest</span>,
+            <span style="color:#a6e22e">Data</span>:        <span style="color:#a6e22e">data</span>,
+        })
+    }
+    <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">dest</span>, <span style="color:#a6e22e">mnt</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">MountPoints</span> {
+        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">mnt</span>.<span style="color:#a6e22e">Type</span> <span style="color:#f92672">==</span> <span style="color:#a6e22e">mounttypes</span>.<span style="color:#a6e22e">TypeTmpfs</span> {
+            <span style="color:#a6e22e">data</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">parser</span>.<span style="color:#a6e22e">ConvertTmpfsOptions</span>(<span style="color:#a6e22e">mnt</span>.<span style="color:#a6e22e">Spec</span>.<span style="color:#a6e22e">TmpfsOptions</span>, <span style="color:#a6e22e">mnt</span>.<span style="color:#a6e22e">Spec</span>.<span style="color:#a6e22e">ReadOnly</span>)
+            <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+                <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>, <span style="color:#a6e22e">err</span>
+            }
+            <span style="color:#a6e22e">mounts</span> = append(<span style="color:#a6e22e">mounts</span>, <span style="color:#a6e22e">Mount</span>{
+                <span style="color:#a6e22e">Source</span>:      <span style="color:#e6db74">&#34;tmpfs&#34;</span>,
+                <span style="color:#a6e22e">Destination</span>: <span style="color:#a6e22e">dest</span>,
+                <span style="color:#a6e22e">Data</span>:        <span style="color:#a6e22e">data</span>,
+            })
+        }
+    }
+    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">mounts</span>, <span style="color:#66d9ef">nil</span>
+}
+</code></pre></div><hr>
+<p><code>MountPoint.Setup()</code>方法用于准备挂载点的源路径。</p>
+<p>如果挂载点是卷，则根据卷类型各自的方法挂载卷，返回卷路径。</p>
+<p>如果挂载点不是卷类型，通过bind mount挂载（仅使用<code>-v</code>或<code>--volume</code>参数，不含使用<code>--mount</code>的情况），则创建并修改源路径。</p>
+<p><a href="https://github.com/moby/moby/blob/v20.10.14/volume/mounts/mounts.go#L98">https://github.com/moby/moby/blob/v20.10.14/volume/mounts/mounts.go#L98</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">m</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">MountPoint</span>) <span style="color:#a6e22e">Setup</span>(<span style="color:#a6e22e">mountLabel</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">rootIDs</span> <span style="color:#a6e22e">idtools</span>.<span style="color:#a6e22e">Identity</span>, <span style="color:#a6e22e">checkFun</span> <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">m</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">MountPoint</span>) <span style="color:#66d9ef">error</span>) (<span style="color:#a6e22e">path</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">err</span> <span style="color:#66d9ef">error</span>) {
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">SkipMountpointCreation</span> {
+        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">Source</span>, <span style="color:#66d9ef">nil</span>
+    }
+    <span style="color:#f92672">...</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">Volume</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+        <span style="color:#a6e22e">id</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">ID</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">id</span> <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;&#34;</span> {
+            <span style="color:#a6e22e">id</span> = <span style="color:#a6e22e">stringid</span>.<span style="color:#a6e22e">GenerateRandomID</span>()
+        }
+        <span style="color:#a6e22e">path</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">Volume</span>.<span style="color:#a6e22e">Mount</span>(<span style="color:#a6e22e">id</span>)
+        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+            <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;&#34;</span>, <span style="color:#a6e22e">errors</span>.<span style="color:#a6e22e">Wrapf</span>(<span style="color:#a6e22e">err</span>, <span style="color:#e6db74">&#34;error while mounting volume &#39;%s&#39;&#34;</span>, <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">Source</span>)
+        }
+
+        <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">ID</span> = <span style="color:#a6e22e">id</span>
+        <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">active</span><span style="color:#f92672">++</span>
+        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">path</span>, <span style="color:#66d9ef">nil</span>
+    }
+    <span style="color:#f92672">...</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">Type</span> <span style="color:#f92672">==</span> <span style="color:#a6e22e">mounttypes</span>.<span style="color:#a6e22e">TypeBind</span> {
+        <span style="color:#f92672">...</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">idtools</span>.<span style="color:#a6e22e">MkdirAllAndChownNew</span>(<span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">Source</span>, <span style="color:#ae81ff">0755</span>, <span style="color:#a6e22e">rootIDs</span>); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+            <span style="color:#f92672">...</span>
+        }
+    }
+    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">Source</span>, <span style="color:#66d9ef">nil</span>
+}
+</code></pre></div><hr>
+<p>将挂载点添加至mounts变量中。如果挂载点的目的路径是网络相关的文件，则暂不处理，仅设置对应的容器属性。</p>
+<p><a href="https://github.com/moby/moby/blob/v20.10.14/daemon/volumes_unix.go#L55-L76">https://github.com/moby/moby/blob/v20.10.14/daemon/volumes_unix.go#L55-L76</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">daemon</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Daemon</span>) <span style="color:#a6e22e">setupMounts</span>(<span style="color:#a6e22e">c</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">Container</span>) ([]<span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">Mount</span>, <span style="color:#66d9ef">error</span>) {
+    <span style="color:#f92672">...</span>
+    <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">m</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">MountPoints</span> {
+        <span style="color:#f92672">...</span>
+        <span style="color:#66d9ef">if</span> !<span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">TrySetNetworkMount</span>(<span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">Destination</span>, <span style="color:#a6e22e">path</span>) {
+            <span style="color:#a6e22e">mnt</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">Mount</span>{
+                <span style="color:#a6e22e">Source</span>:      <span style="color:#a6e22e">path</span>,
+                <span style="color:#a6e22e">Destination</span>: <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">Destination</span>,
+                <span style="color:#a6e22e">Writable</span>:    <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">RW</span>,
+                <span style="color:#a6e22e">Propagation</span>: string(<span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">Propagation</span>),
+            }
+            <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">Spec</span>.<span style="color:#a6e22e">Type</span> <span style="color:#f92672">==</span> <span style="color:#a6e22e">mounttypes</span>.<span style="color:#a6e22e">TypeBind</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">Spec</span>.<span style="color:#a6e22e">BindOptions</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+                <span style="color:#a6e22e">mnt</span>.<span style="color:#a6e22e">NonRecursive</span> = <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">Spec</span>.<span style="color:#a6e22e">BindOptions</span>.<span style="color:#a6e22e">NonRecursive</span>
+            }
+            <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">Volume</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+                <span style="color:#a6e22e">attributes</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">map</span>[<span style="color:#66d9ef">string</span>]<span style="color:#66d9ef">string</span>{
+                    <span style="color:#e6db74">&#34;driver&#34;</span>:      <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">Volume</span>.<span style="color:#a6e22e">DriverName</span>(),
+                    <span style="color:#e6db74">&#34;container&#34;</span>:   <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">ID</span>,
+                    <span style="color:#e6db74">&#34;destination&#34;</span>: <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">Destination</span>,
+                    <span style="color:#e6db74">&#34;read/write&#34;</span>:  <span style="color:#a6e22e">strconv</span>.<span style="color:#a6e22e">FormatBool</span>(<span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">RW</span>),
+                    <span style="color:#e6db74">&#34;propagation&#34;</span>: string(<span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">Propagation</span>),
+                }
+                <span style="color:#a6e22e">daemon</span>.<span style="color:#a6e22e">LogVolumeEvent</span>(<span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">Volume</span>.<span style="color:#a6e22e">Name</span>(), <span style="color:#e6db74">&#34;mount&#34;</span>, <span style="color:#a6e22e">attributes</span>)
+            }
+            <span style="color:#a6e22e">mounts</span> = append(<span style="color:#a6e22e">mounts</span>, <span style="color:#a6e22e">mnt</span>)
+        }
+    }
+    <span style="color:#f92672">...</span>
+}
+</code></pre></div><p><a href="https://github.com/moby/moby/blob/v20.10.14/container/container_unix.go#L36">https://github.com/moby/moby/blob/v20.10.14/container/container_unix.go#L36</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">container</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Container</span>) <span style="color:#a6e22e">TrySetNetworkMount</span>(<span style="color:#a6e22e">destination</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">path</span> <span style="color:#66d9ef">string</span>) <span style="color:#66d9ef">bool</span> {
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">destination</span> <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;/etc/resolv.conf&#34;</span> {
+        <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">ResolvConfPath</span> = <span style="color:#a6e22e">path</span>
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span>
+    }
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">destination</span> <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;/etc/hostname&#34;</span> {
+        <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">HostnamePath</span> = <span style="color:#a6e22e">path</span>
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span>
+    }
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">destination</span> <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;/etc/hosts&#34;</span> {
+        <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">HostsPath</span> = <span style="color:#a6e22e">path</span>
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span>
+    }
+
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span>
+}
+</code></pre></div><hr>
+<p>对mounts变量按照目录层级进行排序，避免出现子目录先于父级目录被挂载的情况。</p>
+<p><a href="https://github.com/moby/moby/blob/v20.10.14/daemon/volumes_unix.go#L79">https://github.com/moby/moby/blob/v20.10.14/daemon/volumes_unix.go#L79</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">daemon</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Daemon</span>) <span style="color:#a6e22e">setupMounts</span>(<span style="color:#a6e22e">c</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">Container</span>) ([]<span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">Mount</span>, <span style="color:#66d9ef">error</span>) {
+    <span style="color:#f92672">...</span>
+	<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">m</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">MountPoints</span> {
+        <span style="color:#f92672">...</span>
+    }
+    <span style="color:#a6e22e">mounts</span> = <span style="color:#a6e22e">sortMounts</span>(<span style="color:#a6e22e">mounts</span>)
+    <span style="color:#f92672">...</span>
+}
+</code></pre></div><p><a href="https://github.com/moby/moby/blob/v20.10.14/daemon/volumes_unix.go#L101">https://github.com/moby/moby/blob/v20.10.14/daemon/volumes_unix.go#L101</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">sortMounts</span>(<span style="color:#a6e22e">m</span> []<span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">Mount</span>) []<span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">Mount</span> {
+    <span style="color:#a6e22e">sort</span>.<span style="color:#a6e22e">Sort</span>(<span style="color:#a6e22e">mounts</span>(<span style="color:#a6e22e">m</span>))
+    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">m</span>
+}
+</code></pre></div><hr>
+<p>将<code>/etc/resolv.conf</code>,<code>/etc/hostname</code>,<code>/etc/hosts</code>添加到挂载列表中。</p>
+<p><a href="https://github.com/moby/moby/blob/v20.10.14/daemon/volumes_unix.go#L80-L95">https://github.com/moby/moby/blob/v20.10.14/daemon/volumes_unix.go#L80-L95</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">daemon</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Daemon</span>) <span style="color:#a6e22e">setupMounts</span>(<span style="color:#a6e22e">c</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">Container</span>) ([]<span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">Mount</span>, <span style="color:#66d9ef">error</span>) {
+    <span style="color:#f92672">...</span>
+    <span style="color:#a6e22e">netMounts</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">NetworkMounts</span>()
+    <span style="color:#f92672">...</span>
+    <span style="color:#a6e22e">rootIDs</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">daemon</span>.<span style="color:#a6e22e">idMapping</span>.<span style="color:#a6e22e">RootPair</span>()
+    <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">mnt</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">netMounts</span> {
+        <span style="color:#f92672">...</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">strings</span>.<span style="color:#a6e22e">Index</span>(<span style="color:#a6e22e">mnt</span>.<span style="color:#a6e22e">Source</span>, <span style="color:#a6e22e">daemon</span>.<span style="color:#a6e22e">repository</span>) <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span> {
+            <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">os</span>.<span style="color:#a6e22e">Chown</span>(<span style="color:#a6e22e">mnt</span>.<span style="color:#a6e22e">Source</span>, <span style="color:#a6e22e">rootIDs</span>.<span style="color:#a6e22e">UID</span>, <span style="color:#a6e22e">rootIDs</span>.<span style="color:#a6e22e">GID</span>); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+                <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>, <span style="color:#a6e22e">err</span>
+            }
+        }
+    }
+    <span style="color:#66d9ef">return</span> append(<span style="color:#a6e22e">mounts</span>, <span style="color:#a6e22e">netMounts</span><span style="color:#f92672">...</span>), <span style="color:#66d9ef">nil</span>
+}
+</code></pre></div><p><a href="https://github.com/moby/moby/blob/v20.10.14/container/container_unix.go#L64">https://github.com/moby/moby/blob/v20.10.14/container/container_unix.go#L64</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">container</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Container</span>) <span style="color:#a6e22e">NetworkMounts</span>() []<span style="color:#a6e22e">Mount</span> {
+    <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">mounts</span> []<span style="color:#a6e22e">Mount</span>
+    <span style="color:#a6e22e">shared</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">HostConfig</span>.<span style="color:#a6e22e">NetworkMode</span>.<span style="color:#a6e22e">IsContainer</span>()
+    <span style="color:#a6e22e">parser</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">volumemounts</span>.<span style="color:#a6e22e">NewParser</span>(<span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">OS</span>)
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">ResolvConfPath</span> <span style="color:#f92672">!=</span> <span style="color:#e6db74">&#34;&#34;</span> {
+        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">os</span>.<span style="color:#a6e22e">Stat</span>(<span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">ResolvConfPath</span>); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+            <span style="color:#a6e22e">logrus</span>.<span style="color:#a6e22e">Warnf</span>(<span style="color:#e6db74">&#34;ResolvConfPath set to %q, but can&#39;t stat this filename (err = %v); skipping&#34;</span>, <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">ResolvConfPath</span>, <span style="color:#a6e22e">err</span>)
+        } <span style="color:#66d9ef">else</span> {
+            <span style="color:#a6e22e">writable</span> <span style="color:#f92672">:=</span> !<span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">HostConfig</span>.<span style="color:#a6e22e">ReadonlyRootfs</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">m</span>, <span style="color:#a6e22e">exists</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">MountPoints</span>[<span style="color:#e6db74">&#34;/etc/resolv.conf&#34;</span>]; <span style="color:#a6e22e">exists</span> {
+                <span style="color:#a6e22e">writable</span> = <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">RW</span>
+            } <span style="color:#66d9ef">else</span> {
+                <span style="color:#a6e22e">label</span>.<span style="color:#a6e22e">Relabel</span>(<span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">ResolvConfPath</span>, <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">MountLabel</span>, <span style="color:#a6e22e">shared</span>)
+            }
+            <span style="color:#a6e22e">mounts</span> = append(<span style="color:#a6e22e">mounts</span>, <span style="color:#a6e22e">Mount</span>{
+                <span style="color:#a6e22e">Source</span>:      <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">ResolvConfPath</span>,
+                <span style="color:#a6e22e">Destination</span>: <span style="color:#e6db74">&#34;/etc/resolv.conf&#34;</span>,
+                <span style="color:#a6e22e">Writable</span>:    <span style="color:#a6e22e">writable</span>,
+                <span style="color:#a6e22e">Propagation</span>: string(<span style="color:#a6e22e">parser</span>.<span style="color:#a6e22e">DefaultPropagationMode</span>()),
+            })
+        }
+    }
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">HostnamePath</span> <span style="color:#f92672">!=</span> <span style="color:#e6db74">&#34;&#34;</span> {
+        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">os</span>.<span style="color:#a6e22e">Stat</span>(<span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">HostnamePath</span>); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+            <span style="color:#a6e22e">logrus</span>.<span style="color:#a6e22e">Warnf</span>(<span style="color:#e6db74">&#34;HostnamePath set to %q, but can&#39;t stat this filename (err = %v); skipping&#34;</span>, <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">HostnamePath</span>, <span style="color:#a6e22e">err</span>)
+        } <span style="color:#66d9ef">else</span> {
+            <span style="color:#a6e22e">writable</span> <span style="color:#f92672">:=</span> !<span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">HostConfig</span>.<span style="color:#a6e22e">ReadonlyRootfs</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">m</span>, <span style="color:#a6e22e">exists</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">MountPoints</span>[<span style="color:#e6db74">&#34;/etc/hostname&#34;</span>]; <span style="color:#a6e22e">exists</span> {
+                <span style="color:#a6e22e">writable</span> = <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">RW</span>
+            } <span style="color:#66d9ef">else</span> {
+                <span style="color:#a6e22e">label</span>.<span style="color:#a6e22e">Relabel</span>(<span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">HostnamePath</span>, <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">MountLabel</span>, <span style="color:#a6e22e">shared</span>)
+            }
+            <span style="color:#a6e22e">mounts</span> = append(<span style="color:#a6e22e">mounts</span>, <span style="color:#a6e22e">Mount</span>{
+                <span style="color:#a6e22e">Source</span>:      <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">HostnamePath</span>,
+                <span style="color:#a6e22e">Destination</span>: <span style="color:#e6db74">&#34;/etc/hostname&#34;</span>,
+                <span style="color:#a6e22e">Writable</span>:    <span style="color:#a6e22e">writable</span>,
+                <span style="color:#a6e22e">Propagation</span>: string(<span style="color:#a6e22e">parser</span>.<span style="color:#a6e22e">DefaultPropagationMode</span>()),
+            })
+        }
+    }
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">HostsPath</span> <span style="color:#f92672">!=</span> <span style="color:#e6db74">&#34;&#34;</span> {
+        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">os</span>.<span style="color:#a6e22e">Stat</span>(<span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">HostsPath</span>); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+            <span style="color:#a6e22e">logrus</span>.<span style="color:#a6e22e">Warnf</span>(<span style="color:#e6db74">&#34;HostsPath set to %q, but can&#39;t stat this filename (err = %v); skipping&#34;</span>, <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">HostsPath</span>, <span style="color:#a6e22e">err</span>)
+        } <span style="color:#66d9ef">else</span> {
+            <span style="color:#a6e22e">writable</span> <span style="color:#f92672">:=</span> !<span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">HostConfig</span>.<span style="color:#a6e22e">ReadonlyRootfs</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">m</span>, <span style="color:#a6e22e">exists</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">MountPoints</span>[<span style="color:#e6db74">&#34;/etc/hosts&#34;</span>]; <span style="color:#a6e22e">exists</span> {
+                <span style="color:#a6e22e">writable</span> = <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">RW</span>
+            } <span style="color:#66d9ef">else</span> {
+                <span style="color:#a6e22e">label</span>.<span style="color:#a6e22e">Relabel</span>(<span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">HostsPath</span>, <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">MountLabel</span>, <span style="color:#a6e22e">shared</span>)
+            }
+            <span style="color:#a6e22e">mounts</span> = append(<span style="color:#a6e22e">mounts</span>, <span style="color:#a6e22e">Mount</span>{
+                <span style="color:#a6e22e">Source</span>:      <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">HostsPath</span>,
+                <span style="color:#a6e22e">Destination</span>: <span style="color:#e6db74">&#34;/etc/hosts&#34;</span>,
+                <span style="color:#a6e22e">Writable</span>:    <span style="color:#a6e22e">writable</span>,
+                <span style="color:#a6e22e">Propagation</span>: string(<span style="color:#a6e22e">parser</span>.<span style="color:#a6e22e">DefaultPropagationMode</span>()),
+            })
+        }
+    }
+    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">mounts</span>
+}
+</code></pre></div><hr>
+<h4 id="4115-添加ipc挂载点">4.11.5 添加IPC挂载点</h4>
+<p>将IPC挂载点添加到mount列表中。</p>
+<p><a href="https://github.com/moby/moby/blob/v20.10.14/daemon/oci_linux.go#L509-L511">https://github.com/moby/moby/blob/v20.10.14/daemon/oci_linux.go#L509-L511</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">WithMounts</span>(<span style="color:#a6e22e">daemon</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Daemon</span>, <span style="color:#a6e22e">c</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">Container</span>) <span style="color:#a6e22e">coci</span>.<span style="color:#a6e22e">SpecOpts</span> {
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">_</span> <span style="color:#a6e22e">coci</span>.<span style="color:#a6e22e">Client</span>, <span style="color:#a6e22e">_</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">containers</span>.<span style="color:#a6e22e">Container</span>, <span style="color:#a6e22e">s</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">coci</span>.<span style="color:#a6e22e">Spec</span>) (<span style="color:#a6e22e">err</span> <span style="color:#66d9ef">error</span>) {
+        <span style="color:#f92672">...</span>
         <span style="color:#66d9ef">if</span> !<span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">HostConfig</span>.<span style="color:#a6e22e">IpcMode</span>.<span style="color:#a6e22e">IsPrivate</span>() <span style="color:#f92672">&amp;&amp;</span> !<span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">HostConfig</span>.<span style="color:#a6e22e">IpcMode</span>.<span style="color:#a6e22e">IsEmpty</span>() {
             <span style="color:#a6e22e">ms</span> = append(<span style="color:#a6e22e">ms</span>, <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">IpcMounts</span>()<span style="color:#f92672">...</span>)
         }
+        <span style="color:#f92672">...</span>
+    }
+}
+</code></pre></div><p><a href="https://github.com/moby/moby/blob/v20.10.14/container/container_unix.go#L200">https://github.com/moby/moby/blob/v20.10.14/container/container_unix.go#L200</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">container</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Container</span>) <span style="color:#a6e22e">IpcMounts</span>() []<span style="color:#a6e22e">Mount</span> {
+    <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">mounts</span> []<span style="color:#a6e22e">Mount</span>
+    <span style="color:#a6e22e">parser</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">volumemounts</span>.<span style="color:#a6e22e">NewParser</span>(<span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">OS</span>)
 
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">HasMountFor</span>(<span style="color:#e6db74">&#34;/dev/shm&#34;</span>) {
+        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">mounts</span>
+    }
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">ShmPath</span> <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;&#34;</span> {
+        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">mounts</span>
+    }
+
+    <span style="color:#a6e22e">label</span>.<span style="color:#a6e22e">SetFileLabel</span>(<span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">ShmPath</span>, <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">MountLabel</span>)
+    <span style="color:#a6e22e">mounts</span> = append(<span style="color:#a6e22e">mounts</span>, <span style="color:#a6e22e">Mount</span>{
+        <span style="color:#a6e22e">Source</span>:      <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">ShmPath</span>,
+        <span style="color:#a6e22e">Destination</span>: <span style="color:#e6db74">&#34;/dev/shm&#34;</span>,
+        <span style="color:#a6e22e">Writable</span>:    <span style="color:#66d9ef">true</span>,
+        <span style="color:#a6e22e">Propagation</span>: string(<span style="color:#a6e22e">parser</span>.<span style="color:#a6e22e">DefaultPropagationMode</span>()),
+    })
+
+    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">mounts</span>
+}
+</code></pre></div><hr>
+<h4 id="4116-tmpfsmounts-添加用户设置的tmpfs挂载点">4.11.6 TmpfsMounts(): 添加用户设置的tmpfs挂载点</h4>
+<p><a href="https://github.com/moby/moby/blob/v20.10.14/daemon/oci_linux.go#L513-L517">https://github.com/moby/moby/blob/v20.10.14/daemon/oci_linux.go#L513-L517</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">WithMounts</span>(<span style="color:#a6e22e">daemon</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Daemon</span>, <span style="color:#a6e22e">c</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">Container</span>) <span style="color:#a6e22e">coci</span>.<span style="color:#a6e22e">SpecOpts</span> {
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">_</span> <span style="color:#a6e22e">coci</span>.<span style="color:#a6e22e">Client</span>, <span style="color:#a6e22e">_</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">containers</span>.<span style="color:#a6e22e">Container</span>, <span style="color:#a6e22e">s</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">coci</span>.<span style="color:#a6e22e">Spec</span>) (<span style="color:#a6e22e">err</span> <span style="color:#66d9ef">error</span>) {
+        <span style="color:#f92672">...</span>
         <span style="color:#a6e22e">tmpfsMounts</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">TmpfsMounts</span>()
         <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
             <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">err</span>
         }
         <span style="color:#a6e22e">ms</span> = append(<span style="color:#a6e22e">ms</span>, <span style="color:#a6e22e">tmpfsMounts</span><span style="color:#f92672">...</span>)
-
+        <span style="color:#f92672">...</span>
+    }
+}
+</code></pre></div><hr>
+<p>参考<a href="https://docs.docker.com/storage/tmpfs/#use-a-tmpfs-mount-in-a-container">docker官方文档</a>，用户可以通过<code>--tmpfs</code>或<code>--mount type=tmpfs,destination=</code>参数指定要挂载的tmpfs。</p>
+<p><a href="https://github.com/moby/moby/blob/v20.10.14/container/container_unix.go#L421">https://github.com/moby/moby/blob/v20.10.14/container/container_unix.go#L421</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">container</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Container</span>) <span style="color:#a6e22e">TmpfsMounts</span>() ([]<span style="color:#a6e22e">Mount</span>, <span style="color:#66d9ef">error</span>) {
+    <span style="color:#a6e22e">parser</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">volumemounts</span>.<span style="color:#a6e22e">NewParser</span>(<span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">OS</span>)
+    <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">mounts</span> []<span style="color:#a6e22e">Mount</span>
+    <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">dest</span>, <span style="color:#a6e22e">data</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">HostConfig</span>.<span style="color:#a6e22e">Tmpfs</span> {
+        <span style="color:#a6e22e">mounts</span> = append(<span style="color:#a6e22e">mounts</span>, <span style="color:#a6e22e">Mount</span>{
+            <span style="color:#a6e22e">Source</span>:      <span style="color:#e6db74">&#34;tmpfs&#34;</span>,
+            <span style="color:#a6e22e">Destination</span>: <span style="color:#a6e22e">dest</span>,
+            <span style="color:#a6e22e">Data</span>:        <span style="color:#a6e22e">data</span>,
+        })
+    }
+    <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">dest</span>, <span style="color:#a6e22e">mnt</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">MountPoints</span> {
+        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">mnt</span>.<span style="color:#a6e22e">Type</span> <span style="color:#f92672">==</span> <span style="color:#a6e22e">mounttypes</span>.<span style="color:#a6e22e">TypeTmpfs</span> {
+            <span style="color:#a6e22e">data</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">parser</span>.<span style="color:#a6e22e">ConvertTmpfsOptions</span>(<span style="color:#a6e22e">mnt</span>.<span style="color:#a6e22e">Spec</span>.<span style="color:#a6e22e">TmpfsOptions</span>, <span style="color:#a6e22e">mnt</span>.<span style="color:#a6e22e">Spec</span>.<span style="color:#a6e22e">ReadOnly</span>)
+            <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+                <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>, <span style="color:#a6e22e">err</span>
+            }
+            <span style="color:#a6e22e">mounts</span> = append(<span style="color:#a6e22e">mounts</span>, <span style="color:#a6e22e">Mount</span>{
+                <span style="color:#a6e22e">Source</span>:      <span style="color:#e6db74">&#34;tmpfs&#34;</span>,
+                <span style="color:#a6e22e">Destination</span>: <span style="color:#a6e22e">dest</span>,
+                <span style="color:#a6e22e">Data</span>:        <span style="color:#a6e22e">data</span>,
+            })
+        }
+    }
+    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">mounts</span>, <span style="color:#66d9ef">nil</span>
+}
+</code></pre></div><h4 id="4117-添加secret挂载点">4.11.7 添加secret挂载点</h4>
+<p>在4.11.3节中，已完成对secret工作目录的设置，现将secret挂载点添加至mount列表中。</p>
+<p><a href="https://github.com/moby/moby/blob/v20.10.14/daemon/oci_linux.go#L519-L523">https://github.com/moby/moby/blob/v20.10.14/daemon/oci_linux.go#L519-L523</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">WithMounts</span>(<span style="color:#a6e22e">daemon</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Daemon</span>, <span style="color:#a6e22e">c</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">Container</span>) <span style="color:#a6e22e">coci</span>.<span style="color:#a6e22e">SpecOpts</span> {
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">_</span> <span style="color:#a6e22e">coci</span>.<span style="color:#a6e22e">Client</span>, <span style="color:#a6e22e">_</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">containers</span>.<span style="color:#a6e22e">Container</span>, <span style="color:#a6e22e">s</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">coci</span>.<span style="color:#a6e22e">Spec</span>) (<span style="color:#a6e22e">err</span> <span style="color:#66d9ef">error</span>) {
+        <span style="color:#f92672">...</span>
         <span style="color:#a6e22e">secretMounts</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">SecretMounts</span>()
         <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
             <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">err</span>
         }
         <span style="color:#a6e22e">ms</span> = append(<span style="color:#a6e22e">ms</span>, <span style="color:#a6e22e">secretMounts</span><span style="color:#f92672">...</span>)
+        <span style="color:#f92672">...</span>
+    }
+}
+</code></pre></div><hr>
+<p><a href="https://github.com/moby/moby/blob/v20.10.14/container/container_unix.go#L223">https://github.com/moby/moby/blob/v20.10.14/container/container_unix.go#L223</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">container</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Container</span>) <span style="color:#a6e22e">SecretMounts</span>() ([]<span style="color:#a6e22e">Mount</span>, <span style="color:#66d9ef">error</span>) {
+    <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">mounts</span> []<span style="color:#a6e22e">Mount</span>
+    <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">r</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">SecretReferences</span> {
+        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">r</span>.<span style="color:#a6e22e">File</span> <span style="color:#f92672">==</span> <span style="color:#66d9ef">nil</span> {
+            <span style="color:#66d9ef">continue</span>
+        }
+        <span style="color:#a6e22e">src</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">SecretFilePath</span>(<span style="color:#f92672">*</span><span style="color:#a6e22e">r</span>)
+        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>, <span style="color:#a6e22e">err</span>
+        }
+        <span style="color:#a6e22e">mounts</span> = append(<span style="color:#a6e22e">mounts</span>, <span style="color:#a6e22e">Mount</span>{
+            <span style="color:#a6e22e">Source</span>:      <span style="color:#a6e22e">src</span>,
+            <span style="color:#a6e22e">Destination</span>: <span style="color:#a6e22e">getSecretTargetPath</span>(<span style="color:#a6e22e">r</span>),
+            <span style="color:#a6e22e">Writable</span>:    <span style="color:#66d9ef">false</span>,
+        })
+    }
+    <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">r</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">ConfigReferences</span> {
+        <span style="color:#a6e22e">fPath</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">ConfigFilePath</span>(<span style="color:#f92672">*</span><span style="color:#a6e22e">r</span>)
+        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>, <span style="color:#a6e22e">err</span>
+        }
+        <span style="color:#a6e22e">mounts</span> = append(<span style="color:#a6e22e">mounts</span>, <span style="color:#a6e22e">Mount</span>{
+            <span style="color:#a6e22e">Source</span>:      <span style="color:#a6e22e">fPath</span>,
+            <span style="color:#a6e22e">Destination</span>: <span style="color:#a6e22e">getConfigTargetPath</span>(<span style="color:#a6e22e">r</span>),
+            <span style="color:#a6e22e">Writable</span>:    <span style="color:#66d9ef">false</span>,
+        })
+    }
 
+    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">mounts</span>, <span style="color:#66d9ef">nil</span>
+}
+</code></pre></div><hr>
+<p>其中secret,config的目的路径分别为<code>/run/secrets</code>，<code>/</code>。</p>
+<p><a href="https://github.com/moby/moby/blob/v20.10.14/container/container_unix.go#L30-L31">https://github.com/moby/moby/blob/v20.10.14/container/container_unix.go#L30-L31</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">const</span> (
+    <span style="color:#f92672">...</span>
+    <span style="color:#a6e22e">containerConfigMountPath</span> = <span style="color:#e6db74">&#34;/&#34;</span>
+    <span style="color:#a6e22e">containerSecretMountPath</span> = <span style="color:#e6db74">&#34;/run/secrets&#34;</span>
+)
+</code></pre></div><h4 id="4118-合并用户指定的挂载点和默认挂载点">4.11.8 合并用户指定的挂载点和默认挂载点</h4>
+<p>首先对挂载点排序，避免出现子目录先于父级目录被挂载的情况。</p>
+<p><a href="https://github.com/moby/moby/blob/v20.10.14/daemon/oci_linux.go#L525">https://github.com/moby/moby/blob/v20.10.14/daemon/oci_linux.go#L525</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">WithMounts</span>(<span style="color:#a6e22e">daemon</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Daemon</span>, <span style="color:#a6e22e">c</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">Container</span>) <span style="color:#a6e22e">coci</span>.<span style="color:#a6e22e">SpecOpts</span> {
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">_</span> <span style="color:#a6e22e">coci</span>.<span style="color:#a6e22e">Client</span>, <span style="color:#a6e22e">_</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">containers</span>.<span style="color:#a6e22e">Container</span>, <span style="color:#a6e22e">s</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">coci</span>.<span style="color:#a6e22e">Spec</span>) (<span style="color:#a6e22e">err</span> <span style="color:#66d9ef">error</span>) {
+        <span style="color:#f92672">...</span>
         <span style="color:#a6e22e">sort</span>.<span style="color:#a6e22e">Sort</span>(<span style="color:#a6e22e">mounts</span>(<span style="color:#a6e22e">ms</span>))
-
+        <span style="color:#f92672">...</span>
+    }
+}
+</code></pre></div><hr>
+<p>更新已有的oci配置中的mount列表，移除以下挂载点：</p>
+<ul>
+<li>用户指定的相同路径的挂载点</li>
+<li>用户挂载了dev目录，则移除dev目录下所有的挂载点</li>
+<li>如果用户设置IpcMode为空，则移除<code>/dev/shm</code></li>
+</ul>
+<p>另外设置了<code>/dev/shm</code>挂载选项中的size选项。</p>
+<p><a href="https://github.com/moby/moby/blob/v20.10.14/daemon/oci_linux.go#L527-L565">https://github.com/moby/moby/blob/v20.10.14/daemon/oci_linux.go#L527-L565</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">WithMounts</span>(<span style="color:#a6e22e">daemon</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Daemon</span>, <span style="color:#a6e22e">c</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">Container</span>) <span style="color:#a6e22e">coci</span>.<span style="color:#a6e22e">SpecOpts</span> {
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">_</span> <span style="color:#a6e22e">coci</span>.<span style="color:#a6e22e">Client</span>, <span style="color:#a6e22e">_</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">containers</span>.<span style="color:#a6e22e">Container</span>, <span style="color:#a6e22e">s</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">coci</span>.<span style="color:#a6e22e">Spec</span>) (<span style="color:#a6e22e">err</span> <span style="color:#66d9ef">error</span>) {
+        <span style="color:#f92672">...</span>
         <span style="color:#a6e22e">mounts</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">ms</span>
 
         <span style="color:#a6e22e">userMounts</span> <span style="color:#f92672">:=</span> make(<span style="color:#66d9ef">map</span>[<span style="color:#66d9ef">string</span>]<span style="color:#66d9ef">struct</span>{})
@@ -1575,13 +2161,7 @@ func (daemon *Daemon) createSpec(c *container.Container) (retSpec *specs.Spec, e
             <span style="color:#a6e22e">userMounts</span>[<span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">Destination</span>] = <span style="color:#66d9ef">struct</span>{}{}
         }
 
-        <span style="color:#75715e">// Copy all mounts from spec to defaultMounts, except for
-</span><span style="color:#75715e"></span>        <span style="color:#75715e">//  - mounts overridden by a user supplied mount;
-</span><span style="color:#75715e"></span>        <span style="color:#75715e">//  - all mounts under /dev if a user supplied /dev is present;
-</span><span style="color:#75715e"></span>        <span style="color:#75715e">//  - /dev/shm, in case IpcMode is none.
-</span><span style="color:#75715e"></span>        <span style="color:#75715e">// While at it, also
-</span><span style="color:#75715e"></span>        <span style="color:#75715e">//  - set size for /dev/shm from shmsize.
-</span><span style="color:#75715e"></span>        <span style="color:#a6e22e">defaultMounts</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">s</span>.<span style="color:#a6e22e">Mounts</span>[:<span style="color:#ae81ff">0</span>]
+        <span style="color:#a6e22e">defaultMounts</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">s</span>.<span style="color:#a6e22e">Mounts</span>[:<span style="color:#ae81ff">0</span>]
         <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">mountDev</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">userMounts</span>[<span style="color:#e6db74">&#34;/dev&#34;</span>]
         <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">m</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">s</span>.<span style="color:#a6e22e">Mounts</span> {
             <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">ok</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">userMounts</span>[<span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">Destination</span>]; <span style="color:#a6e22e">ok</span> {
@@ -1607,6 +2187,27 @@ func (daemon *Daemon) createSpec(c *container.Container) (retSpec *specs.Spec, e
         }
 
         <span style="color:#a6e22e">s</span>.<span style="color:#a6e22e">Mounts</span> = <span style="color:#a6e22e">defaultMounts</span>
+        <span style="color:#f92672">...</span>
+    }
+}
+</code></pre></div><hr>
+<p>再遍历用户指定的挂载点，合并到oci配置中。</p>
+<p><a href="https://github.com/moby/moby/blob/v20.10.14/daemon/oci_linux.go#L566">https://github.com/moby/moby/blob/v20.10.14/daemon/oci_linux.go#L566</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">WithMounts</span>(<span style="color:#a6e22e">daemon</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Daemon</span>, <span style="color:#a6e22e">c</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">Container</span>) <span style="color:#a6e22e">coci</span>.<span style="color:#a6e22e">SpecOpts</span> {
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">_</span> <span style="color:#a6e22e">coci</span>.<span style="color:#a6e22e">Client</span>, <span style="color:#a6e22e">_</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">containers</span>.<span style="color:#a6e22e">Container</span>, <span style="color:#a6e22e">s</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">coci</span>.<span style="color:#a6e22e">Spec</span>) (<span style="color:#a6e22e">err</span> <span style="color:#66d9ef">error</span>) {
+        <span style="color:#f92672">...</span>
+        <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">m</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">mounts</span> {
+            <span style="color:#f92672">...</span>
+        }
+        <span style="color:#f92672">...</span>
+    }
+}
+</code></pre></div><hr>
+<p>如果挂载源是tmpfs，需要额外添加一些挂载选项。</p>
+<p><a href="https://github.com/moby/moby/blob/v20.10.14/daemon/oci_linux.go#L567-L582">https://github.com/moby/moby/blob/v20.10.14/daemon/oci_linux.go#L567-L582</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">WithMounts</span>(<span style="color:#a6e22e">daemon</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Daemon</span>, <span style="color:#a6e22e">c</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">Container</span>) <span style="color:#a6e22e">coci</span>.<span style="color:#a6e22e">SpecOpts</span> {
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">_</span> <span style="color:#a6e22e">coci</span>.<span style="color:#a6e22e">Client</span>, <span style="color:#a6e22e">_</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">containers</span>.<span style="color:#a6e22e">Container</span>, <span style="color:#a6e22e">s</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">coci</span>.<span style="color:#a6e22e">Spec</span>) (<span style="color:#a6e22e">err</span> <span style="color:#66d9ef">error</span>) {
+        <span style="color:#f92672">...</span>
         <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">m</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">mounts</span> {
             <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">Source</span> <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;tmpfs&#34;</span> {
                 <span style="color:#a6e22e">data</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">Data</span>
@@ -1624,17 +2225,27 @@ func (daemon *Daemon) createSpec(c *container.Container) (retSpec *specs.Spec, e
                 <span style="color:#a6e22e">s</span>.<span style="color:#a6e22e">Mounts</span> = append(<span style="color:#a6e22e">s</span>.<span style="color:#a6e22e">Mounts</span>, <span style="color:#a6e22e">specs</span>.<span style="color:#a6e22e">Mount</span>{<span style="color:#a6e22e">Destination</span>: <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">Destination</span>, <span style="color:#a6e22e">Source</span>: <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">Source</span>, <span style="color:#a6e22e">Type</span>: <span style="color:#e6db74">&#34;tmpfs&#34;</span>, <span style="color:#a6e22e">Options</span>: <span style="color:#a6e22e">merged</span>})
                 <span style="color:#66d9ef">continue</span>
             }
-
+            <span style="color:#f92672">...</span>
+        }
+        <span style="color:#f92672">...</span>
+    }
+}
+</code></pre></div><hr>
+<p>对其他类型挂载源，使用<code>bind mount</code>，并设置rootfs的传播模式。</p>
+<ul>
+<li>如果挂载点为<code>SHARED</code>或<code>RSHARED</code>模式，则将rootfs的传播模式也设置为<code>SHARED</code>。</li>
+<li>如果挂载点为<code>SLAVE</code>或<code>RSLAVE</code>模式，则将rootfs的传播模式设置为<code>RSLAVE</code>。</li>
+</ul>
+<p>如果开启了userns, 还要另外保留一些挂载选项。</p>
+<p><a href="https://github.com/moby/moby/blob/v20.10.14/daemon/oci_linux.go#L584-L660">https://github.com/moby/moby/blob/v20.10.14/daemon/oci_linux.go#L584-L660</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">WithMounts</span>(<span style="color:#a6e22e">daemon</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Daemon</span>, <span style="color:#a6e22e">c</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">Container</span>) <span style="color:#a6e22e">coci</span>.<span style="color:#a6e22e">SpecOpts</span> {
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">_</span> <span style="color:#a6e22e">coci</span>.<span style="color:#a6e22e">Client</span>, <span style="color:#a6e22e">_</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">containers</span>.<span style="color:#a6e22e">Container</span>, <span style="color:#a6e22e">s</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">coci</span>.<span style="color:#a6e22e">Spec</span>) (<span style="color:#a6e22e">err</span> <span style="color:#66d9ef">error</span>) {
+        <span style="color:#f92672">...</span>
+        <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">m</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">mounts</span> {
+            <span style="color:#f92672">...</span>
             <span style="color:#a6e22e">mt</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">specs</span>.<span style="color:#a6e22e">Mount</span>{<span style="color:#a6e22e">Destination</span>: <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">Destination</span>, <span style="color:#a6e22e">Source</span>: <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">Source</span>, <span style="color:#a6e22e">Type</span>: <span style="color:#e6db74">&#34;bind&#34;</span>}
-
-            <span style="color:#75715e">// Determine property of RootPropagation based on volume
-</span><span style="color:#75715e"></span>            <span style="color:#75715e">// properties. If a volume is shared, then keep root propagation
-</span><span style="color:#75715e"></span>            <span style="color:#75715e">// shared. This should work for slave and private volumes too.
-</span><span style="color:#75715e"></span>            <span style="color:#75715e">//
-</span><span style="color:#75715e"></span>            <span style="color:#75715e">// For slave volumes, it can be either [r]shared/[r]slave.
-</span><span style="color:#75715e"></span>            <span style="color:#75715e">//
-</span><span style="color:#75715e"></span>            <span style="color:#75715e">// For private volumes any root propagation value should work.
-</span><span style="color:#75715e"></span>            <span style="color:#a6e22e">pFlag</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">mountPropagationMap</span>[<span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">Propagation</span>]
+            <span style="color:#f92672">...</span>
+            <span style="color:#a6e22e">pFlag</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">mountPropagationMap</span>[<span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">Propagation</span>]
             <span style="color:#66d9ef">switch</span> <span style="color:#a6e22e">pFlag</span> {
             <span style="color:#66d9ef">case</span> <span style="color:#a6e22e">mount</span>.<span style="color:#a6e22e">SHARED</span>, <span style="color:#a6e22e">mount</span>.<span style="color:#a6e22e">RSHARED</span>:
                 <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">ensureShared</span>(<span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">Source</span>); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
@@ -1647,25 +2258,9 @@ func (daemon *Daemon) createSpec(c *container.Container) (retSpec *specs.Spec, e
             <span style="color:#66d9ef">case</span> <span style="color:#a6e22e">mount</span>.<span style="color:#a6e22e">SLAVE</span>, <span style="color:#a6e22e">mount</span>.<span style="color:#a6e22e">RSLAVE</span>:
                 <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">fallback</span> <span style="color:#66d9ef">bool</span>
                 <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">ensureSharedOrSlave</span>(<span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">Source</span>); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
-                    <span style="color:#75715e">// For backwards compatibility purposes, treat mounts from the daemon root
-</span><span style="color:#75715e"></span>                    <span style="color:#75715e">// as special since we automatically add rslave propagation to these mounts
-</span><span style="color:#75715e"></span>                    <span style="color:#75715e">// when the user did not set anything, so we should fallback to the old
-</span><span style="color:#75715e"></span>                    <span style="color:#75715e">// behavior which is to use private propagation which is normally the
-</span><span style="color:#75715e"></span>                    <span style="color:#75715e">// default.
-</span><span style="color:#75715e"></span>                    <span style="color:#66d9ef">if</span> !<span style="color:#a6e22e">strings</span>.<span style="color:#a6e22e">HasPrefix</span>(<span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">Source</span>, <span style="color:#a6e22e">daemon</span>.<span style="color:#a6e22e">root</span>) <span style="color:#f92672">&amp;&amp;</span> !<span style="color:#a6e22e">strings</span>.<span style="color:#a6e22e">HasPrefix</span>(<span style="color:#a6e22e">daemon</span>.<span style="color:#a6e22e">root</span>, <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">Source</span>) {
-                        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">err</span>
-                    }
-
-                    <span style="color:#a6e22e">cm</span>, <span style="color:#a6e22e">ok</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">MountPoints</span>[<span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">Destination</span>]
-                    <span style="color:#66d9ef">if</span> !<span style="color:#a6e22e">ok</span> {
-                        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">err</span>
-                    }
-                    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">cm</span>.<span style="color:#a6e22e">Spec</span>.<span style="color:#a6e22e">BindOptions</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#a6e22e">cm</span>.<span style="color:#a6e22e">Spec</span>.<span style="color:#a6e22e">BindOptions</span>.<span style="color:#a6e22e">Propagation</span> <span style="color:#f92672">!=</span> <span style="color:#e6db74">&#34;&#34;</span> {
-                        <span style="color:#75715e">// This means the user explicitly set a propagation, do not fallback in that case.
-</span><span style="color:#75715e"></span>                        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">err</span>
-                    }
+                    <span style="color:#f92672">...</span>
                     <span style="color:#a6e22e">fallback</span> = <span style="color:#66d9ef">true</span>
-                    <span style="color:#a6e22e">logrus</span>.<span style="color:#a6e22e">WithField</span>(<span style="color:#e6db74">&#34;container&#34;</span>, <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">ID</span>).<span style="color:#a6e22e">WithField</span>(<span style="color:#e6db74">&#34;source&#34;</span>, <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">Source</span>).<span style="color:#a6e22e">Warn</span>(<span style="color:#e6db74">&#34;Falling back to default propagation for bind source in daemon root&#34;</span>)
+                    <span style="color:#f92672">...</span>
                 }
                 <span style="color:#66d9ef">if</span> !<span style="color:#a6e22e">fallback</span> {
                     <span style="color:#a6e22e">rootpg</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">mountPropagationMap</span>[<span style="color:#a6e22e">s</span>.<span style="color:#a6e22e">Linux</span>.<span style="color:#a6e22e">RootfsPropagation</span>]
@@ -1686,13 +2281,8 @@ func (daemon *Daemon) createSpec(c *container.Container) (retSpec *specs.Spec, e
             <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">pFlag</span> <span style="color:#f92672">!=</span> <span style="color:#ae81ff">0</span> {
                 <span style="color:#a6e22e">opts</span> = append(<span style="color:#a6e22e">opts</span>, <span style="color:#a6e22e">mountPropagationReverseMap</span>[<span style="color:#a6e22e">pFlag</span>])
             }
-
-            <span style="color:#75715e">// If we are using user namespaces, then we must make sure that we
-</span><span style="color:#75715e"></span>            <span style="color:#75715e">// don&#39;t drop any of the CL_UNPRIVILEGED &#34;locked&#34; flags of the source
-</span><span style="color:#75715e"></span>            <span style="color:#75715e">// &#34;mount&#34; when we bind-mount. The reason for this is that at the point
-</span><span style="color:#75715e"></span>            <span style="color:#75715e">// when runc sets up the root filesystem, it is already inside a user
-</span><span style="color:#75715e"></span>            <span style="color:#75715e">// namespace, and thus cannot change any flags that are locked.
-</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">daemon</span>.<span style="color:#a6e22e">configStore</span>.<span style="color:#a6e22e">RemappedRoot</span> <span style="color:#f92672">!=</span> <span style="color:#e6db74">&#34;&#34;</span> <span style="color:#f92672">||</span> <span style="color:#a6e22e">sys</span>.<span style="color:#a6e22e">RunningInUserNS</span>() {
+            <span style="color:#f92672">...</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">daemon</span>.<span style="color:#a6e22e">configStore</span>.<span style="color:#a6e22e">RemappedRoot</span> <span style="color:#f92672">!=</span> <span style="color:#e6db74">&#34;&#34;</span> <span style="color:#f92672">||</span> <span style="color:#a6e22e">sys</span>.<span style="color:#a6e22e">RunningInUserNS</span>() {
                 <span style="color:#a6e22e">unprivOpts</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">getUnprivilegedMountFlags</span>(<span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">Source</span>)
                 <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
                     <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">err</span>
@@ -1703,7 +2293,16 @@ func (daemon *Daemon) createSpec(c *container.Container) (retSpec *specs.Spec, e
             <span style="color:#a6e22e">mt</span>.<span style="color:#a6e22e">Options</span> = <span style="color:#a6e22e">opts</span>
             <span style="color:#a6e22e">s</span>.<span style="color:#a6e22e">Mounts</span> = append(<span style="color:#a6e22e">s</span>.<span style="color:#a6e22e">Mounts</span>, <span style="color:#a6e22e">mt</span>)
         }
-
+        <span style="color:#f92672">...</span>
+    }
+}
+</code></pre></div><hr>
+<h4 id="4119-只读挂载选项">4.11.9 只读挂载选项</h4>
+<p>用户可使用<code>docker run --read-only</code>选项，设置容器的rootfs为只读。如果配置了该选项，除了部分挂载点及用户指定的挂载点，docker默认的挂载点都将被设置只读选项。</p>
+<p><a href="https://github.com/moby/moby/blob/v20.10.14/daemon/oci_linux.go#L663-L675">https://github.com/moby/moby/blob/v20.10.14/daemon/oci_linux.go#L663-L675</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">WithMounts</span>(<span style="color:#a6e22e">daemon</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Daemon</span>, <span style="color:#a6e22e">c</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">Container</span>) <span style="color:#a6e22e">coci</span>.<span style="color:#a6e22e">SpecOpts</span> {
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">_</span> <span style="color:#a6e22e">coci</span>.<span style="color:#a6e22e">Client</span>, <span style="color:#a6e22e">_</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">containers</span>.<span style="color:#a6e22e">Container</span>, <span style="color:#a6e22e">s</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">coci</span>.<span style="color:#a6e22e">Spec</span>) (<span style="color:#a6e22e">err</span> <span style="color:#66d9ef">error</span>) {
+        <span style="color:#f92672">...</span>        
         <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">s</span>.<span style="color:#a6e22e">Root</span>.<span style="color:#a6e22e">Readonly</span> {
             <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">i</span>, <span style="color:#a6e22e">m</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">s</span>.<span style="color:#a6e22e">Mounts</span> {
                 <span style="color:#66d9ef">switch</span> <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">Destination</span> {
@@ -1717,7 +2316,16 @@ func (daemon *Daemon) createSpec(c *container.Container) (retSpec *specs.Spec, e
                 }
             }
         }
-
+        <span style="color:#f92672">...</span>
+    }
+}
+</code></pre></div><hr>
+<p>如果用户设置了特权选项<code>--privileged</code>, 则移除对<code>/sys</code>挂载点的只读选项。</p>
+<p>因为<code>/proc</code>和<code>/sys</code>目录下有一些敏感的文件，docker默认通过oci的<code>Linux.ReadonlyPaths</code>和<code>Linux.MaskedPaths</code>配置对相关路径进行了保护。如果开启了特权选项，也一并移除。</p>
+<p><a href="https://github.com/moby/moby/blob/v20.10.14/daemon/oci_linux.go#L677-L686">https://github.com/moby/moby/blob/v20.10.14/daemon/oci_linux.go#L677-L686</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">WithMounts</span>(<span style="color:#a6e22e">daemon</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Daemon</span>, <span style="color:#a6e22e">c</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">Container</span>) <span style="color:#a6e22e">coci</span>.<span style="color:#a6e22e">SpecOpts</span> {
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">_</span> <span style="color:#a6e22e">coci</span>.<span style="color:#a6e22e">Client</span>, <span style="color:#a6e22e">_</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">containers</span>.<span style="color:#a6e22e">Container</span>, <span style="color:#a6e22e">s</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">coci</span>.<span style="color:#a6e22e">Spec</span>) (<span style="color:#a6e22e">err</span> <span style="color:#66d9ef">error</span>) {
+        <span style="color:#f92672">...</span>  
         <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">HostConfig</span>.<span style="color:#a6e22e">Privileged</span> {
             <span style="color:#75715e">// clear readonly for /sys
 </span><span style="color:#75715e"></span>            <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">s</span>.<span style="color:#a6e22e">Mounts</span> {
@@ -1728,10 +2336,16 @@ func (daemon *Daemon) createSpec(c *container.Container) (retSpec *specs.Spec, e
             <span style="color:#a6e22e">s</span>.<span style="color:#a6e22e">Linux</span>.<span style="color:#a6e22e">ReadonlyPaths</span> = <span style="color:#66d9ef">nil</span>
             <span style="color:#a6e22e">s</span>.<span style="color:#a6e22e">Linux</span>.<span style="color:#a6e22e">MaskedPaths</span> = <span style="color:#66d9ef">nil</span>
         }
-
-        <span style="color:#75715e">// TODO: until a kernel/mount solution exists for handling remount in a user namespace,
-</span><span style="color:#75715e"></span>        <span style="color:#75715e">// we must clear the readonly flag for the cgroups mount (@mrunalp concurs)
-</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">uidMap</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">daemon</span>.<span style="color:#a6e22e">idMapping</span>.<span style="color:#a6e22e">UIDs</span>(); <span style="color:#a6e22e">uidMap</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> <span style="color:#f92672">||</span> <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">HostConfig</span>.<span style="color:#a6e22e">Privileged</span> {
+        <span style="color:#f92672">...</span>
+    }
+}
+</code></pre></div><hr>
+<p>如果用户开启了user namespace, 或特权选项，移除cgroup的只读保护。</p>
+<p><a href="https://github.com/moby/moby/blob/v20.10.14/daemon/oci_linux.go#L690-L696">https://github.com/moby/moby/blob/v20.10.14/daemon/oci_linux.go#L690-L696</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">WithMounts</span>(<span style="color:#a6e22e">daemon</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Daemon</span>, <span style="color:#a6e22e">c</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">Container</span>) <span style="color:#a6e22e">coci</span>.<span style="color:#a6e22e">SpecOpts</span> {
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">_</span> <span style="color:#a6e22e">coci</span>.<span style="color:#a6e22e">Client</span>, <span style="color:#a6e22e">_</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">containers</span>.<span style="color:#a6e22e">Container</span>, <span style="color:#a6e22e">s</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">coci</span>.<span style="color:#a6e22e">Spec</span>) (<span style="color:#a6e22e">err</span> <span style="color:#66d9ef">error</span>) {
+        <span style="color:#f92672">...</span>  
+        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">uidMap</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">daemon</span>.<span style="color:#a6e22e">idMapping</span>.<span style="color:#a6e22e">UIDs</span>(); <span style="color:#a6e22e">uidMap</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> <span style="color:#f92672">||</span> <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">HostConfig</span>.<span style="color:#a6e22e">Privileged</span> {
             <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">i</span>, <span style="color:#a6e22e">m</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">s</span>.<span style="color:#a6e22e">Mounts</span> {
                 <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">Type</span> <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;cgroup&#34;</span> {
                     <span style="color:#a6e22e">clearReadOnly</span>(<span style="color:#f92672">&amp;</span><span style="color:#a6e22e">s</span>.<span style="color:#a6e22e">Mounts</span>[<span style="color:#a6e22e">i</span>])
@@ -1743,11 +2357,204 @@ func (daemon *Daemon) createSpec(c *container.Container) (retSpec *specs.Spec, e
 
     }
 }
+</code></pre></div><h2 id="412-设置libnetwork-hook-withlibnetwork">4.12 设置libnetwork hook: WithLibnetwork</h2>
+<p>向runc的prestart hook中添加libnetwork-setkey命令。</p>
+<p><a href="https://github.com/moby/moby/blob/v20.10.14/daemon/oci_linux.go#L64">https://github.com/moby/moby/blob/v20.10.14/daemon/oci_linux.go#L64</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">WithLibnetwork</span>(<span style="color:#a6e22e">daemon</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Daemon</span>, <span style="color:#a6e22e">c</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">Container</span>) <span style="color:#a6e22e">coci</span>.<span style="color:#a6e22e">SpecOpts</span> {
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">_</span> <span style="color:#a6e22e">coci</span>.<span style="color:#a6e22e">Client</span>, <span style="color:#a6e22e">_</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">containers</span>.<span style="color:#a6e22e">Container</span>, <span style="color:#a6e22e">s</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">coci</span>.<span style="color:#a6e22e">Spec</span>) <span style="color:#66d9ef">error</span> {
+        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">s</span>.<span style="color:#a6e22e">Hooks</span> <span style="color:#f92672">==</span> <span style="color:#66d9ef">nil</span> {
+            <span style="color:#a6e22e">s</span>.<span style="color:#a6e22e">Hooks</span> = <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">specs</span>.<span style="color:#a6e22e">Hooks</span>{}
+        }
+        <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">ns</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">s</span>.<span style="color:#a6e22e">Linux</span>.<span style="color:#a6e22e">Namespaces</span> {
+            <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">ns</span>.<span style="color:#a6e22e">Type</span> <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;network&#34;</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#a6e22e">ns</span>.<span style="color:#a6e22e">Path</span> <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;&#34;</span> <span style="color:#f92672">&amp;&amp;</span> !<span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">Config</span>.<span style="color:#a6e22e">NetworkDisabled</span> {
+                <span style="color:#a6e22e">target</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">filepath</span>.<span style="color:#a6e22e">Join</span>(<span style="color:#e6db74">&#34;/proc&#34;</span>, <span style="color:#a6e22e">strconv</span>.<span style="color:#a6e22e">Itoa</span>(<span style="color:#a6e22e">os</span>.<span style="color:#a6e22e">Getpid</span>()), <span style="color:#e6db74">&#34;exe&#34;</span>)
+                <span style="color:#a6e22e">shortNetCtlrID</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">stringid</span>.<span style="color:#a6e22e">TruncateID</span>(<span style="color:#a6e22e">daemon</span>.<span style="color:#a6e22e">netController</span>.<span style="color:#a6e22e">ID</span>())
+                <span style="color:#a6e22e">s</span>.<span style="color:#a6e22e">Hooks</span>.<span style="color:#a6e22e">Prestart</span> = append(<span style="color:#a6e22e">s</span>.<span style="color:#a6e22e">Hooks</span>.<span style="color:#a6e22e">Prestart</span>, <span style="color:#a6e22e">specs</span>.<span style="color:#a6e22e">Hook</span>{
+                    <span style="color:#a6e22e">Path</span>: <span style="color:#a6e22e">target</span>,
+                    <span style="color:#a6e22e">Args</span>: []<span style="color:#66d9ef">string</span>{
+                        <span style="color:#e6db74">&#34;libnetwork-setkey&#34;</span>,
+                        <span style="color:#e6db74">&#34;-exec-root=&#34;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">daemon</span>.<span style="color:#a6e22e">configStore</span>.<span style="color:#a6e22e">GetExecRoot</span>(),
+                        <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">ID</span>,
+                        <span style="color:#a6e22e">shortNetCtlrID</span>,
+                    },
+                })
+            }
+        }
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>
+    }
+}
 </code></pre></div><hr>
-<hr>
-<hr>
-<hr>
+<p>其中libnetwork-setkey是以reexec模式实现的docker子命令，关于该命令实现的源码分析，我们在<a href="">TODO: docker reexec libnetwork-setkey子命令源码分析</a>一文中详细展开。</p>
+<h2 id="413-设置oci配置中的apparmor规则withapparmor">4.13 设置oci配置中的apparmor规则：WithApparmor</h2>
+<p>将容器的apparmor规则传递至oci配置中。</p>
+<p><a href="https://github.com/moby/moby/blob/v20.10.14/daemon/oci_linux.go#L129">https://github.com/moby/moby/blob/v20.10.14/daemon/oci_linux.go#L129</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">WithApparmor</span>(<span style="color:#a6e22e">c</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">Container</span>) <span style="color:#a6e22e">coci</span>.<span style="color:#a6e22e">SpecOpts</span> {
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">_</span> <span style="color:#a6e22e">coci</span>.<span style="color:#a6e22e">Client</span>, <span style="color:#a6e22e">_</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">containers</span>.<span style="color:#a6e22e">Container</span>, <span style="color:#a6e22e">s</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">coci</span>.<span style="color:#a6e22e">Spec</span>) <span style="color:#66d9ef">error</span> {
+        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">apparmor</span>.<span style="color:#a6e22e">IsEnabled</span>() {
+            <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">appArmorProfile</span> <span style="color:#66d9ef">string</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">AppArmorProfile</span> <span style="color:#f92672">!=</span> <span style="color:#e6db74">&#34;&#34;</span> {
+                <span style="color:#a6e22e">appArmorProfile</span> = <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">AppArmorProfile</span>
+            } <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">HostConfig</span>.<span style="color:#a6e22e">Privileged</span> {
+                <span style="color:#a6e22e">appArmorProfile</span> = <span style="color:#a6e22e">unconfinedAppArmorProfile</span>
+            } <span style="color:#66d9ef">else</span> {
+                <span style="color:#a6e22e">appArmorProfile</span> = <span style="color:#a6e22e">defaultAppArmorProfile</span>
+            }
 
+            <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">appArmorProfile</span> <span style="color:#f92672">==</span> <span style="color:#a6e22e">defaultAppArmorProfile</span> {
+                <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">ensureDefaultAppArmorProfile</span>(); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+                    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">err</span>
+                }
+            }
+            <span style="color:#a6e22e">s</span>.<span style="color:#a6e22e">Process</span>.<span style="color:#a6e22e">ApparmorProfile</span> = <span style="color:#a6e22e">appArmorProfile</span>
+        }
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>
+    }
+}
+</code></pre></div><h2 id="414-设置oci配置中的selinux标签withselinux">4.14 设置oci配置中的selinux标签：WithSelinux</h2>
+<p><a href="https://github.com/moby/moby/blob/v20.10.14/daemon/oci_linux.go#L120">https://github.com/moby/moby/blob/v20.10.14/daemon/oci_linux.go#L120</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">WithSelinux</span>(<span style="color:#a6e22e">c</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">Container</span>) <span style="color:#a6e22e">coci</span>.<span style="color:#a6e22e">SpecOpts</span> {
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">_</span> <span style="color:#a6e22e">coci</span>.<span style="color:#a6e22e">Client</span>, <span style="color:#a6e22e">_</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">containers</span>.<span style="color:#a6e22e">Container</span>, <span style="color:#a6e22e">s</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">coci</span>.<span style="color:#a6e22e">Spec</span>) <span style="color:#66d9ef">error</span> {
+        <span style="color:#a6e22e">s</span>.<span style="color:#a6e22e">Process</span>.<span style="color:#a6e22e">SelinuxLabel</span> = <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">GetProcessLabel</span>()
+        <span style="color:#a6e22e">s</span>.<span style="color:#a6e22e">Linux</span>.<span style="color:#a6e22e">MountLabel</span> = <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">MountLabel</span>
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>
+    }
+}
+</code></pre></div><h2 id="415-设置oom优先级-withoomscore">4.15 设置OOM优先级: WithOOMScore</h2>
+<p>为了便于控制，内核引入了<code>/proc/&lt;pid&gt;/oom_adj</code>，以避免系统中的重要进程被杀死，并定义了进程被杀死的顺序。</p>
+<p>docker可以通过<code>--oom-score-adj</code>选项设置该参数。此处，将该配置传递给oci配置。</p>
+<p><a href="https://github.com/moby/moby/blob/v20.10.14/daemon/oci_linux.go#L1031">https://github.com/moby/moby/blob/v20.10.14/daemon/oci_linux.go#L1031</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">daemon</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Daemon</span>) <span style="color:#a6e22e">createSpec</span>(<span style="color:#a6e22e">c</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">Container</span>) (<span style="color:#a6e22e">retSpec</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">specs</span>.<span style="color:#a6e22e">Spec</span>, <span style="color:#a6e22e">err</span> <span style="color:#66d9ef">error</span>) {
+    <span style="color:#f92672">...</span>
+    <span style="color:#a6e22e">opts</span> = append(<span style="color:#a6e22e">opts</span>,
+        <span style="color:#f92672">...</span>
+        <span style="color:#a6e22e">WithOOMScore</span>(<span style="color:#f92672">&amp;</span><span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">HostConfig</span>.<span style="color:#a6e22e">OomScoreAdj</span>),
+    )
+</code></pre></div><p><a href="https://github.com/moby/moby/blob/v20.10.14/daemon/oci_linux.go#L112">https://github.com/moby/moby/blob/v20.10.14/daemon/oci_linux.go#L112</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">WithOOMScore</span>(<span style="color:#a6e22e">score</span> <span style="color:#f92672">*</span><span style="color:#66d9ef">int</span>) <span style="color:#a6e22e">coci</span>.<span style="color:#a6e22e">SpecOpts</span> {
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">_</span> <span style="color:#a6e22e">coci</span>.<span style="color:#a6e22e">Client</span>, <span style="color:#a6e22e">_</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">containers</span>.<span style="color:#a6e22e">Container</span>, <span style="color:#a6e22e">s</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">coci</span>.<span style="color:#a6e22e">Spec</span>) <span style="color:#66d9ef">error</span> {
+        <span style="color:#a6e22e">s</span>.<span style="color:#a6e22e">Process</span>.<span style="color:#a6e22e">OOMScoreAdj</span> = <span style="color:#a6e22e">score</span>
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>
+    }
+}
+</code></pre></div><h2 id="416-nonewprivileges">4.16 NoNewPrivileges</h2>
+<p>如果通过dockerd的<code>--no-new-privileges</code>参数，或容器创建时的<code>--security-opt=no-new-privileges</code>参数，可以使容器内普通进程无法通过suid/sgid，文件capability等方式获得父进程没有的权限。</p>
+<p><a href="https://github.com/moby/moby/blob/v20.10.14/daemon/oci_linux.go#L1033-L1035">https://github.com/moby/moby/blob/v20.10.14/daemon/oci_linux.go#L1033-L1035</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">daemon</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Daemon</span>) <span style="color:#a6e22e">createSpec</span>(<span style="color:#a6e22e">c</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">Container</span>) (<span style="color:#a6e22e">retSpec</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">specs</span>.<span style="color:#a6e22e">Spec</span>, <span style="color:#a6e22e">err</span> <span style="color:#66d9ef">error</span>) {
+    <span style="color:#f92672">...</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">NoNewPrivileges</span> {
+        <span style="color:#a6e22e">opts</span> = append(<span style="color:#a6e22e">opts</span>, <span style="color:#a6e22e">coci</span>.<span style="color:#a6e22e">WithNoNewPrivileges</span>)
+    }
+    <span style="color:#f92672">...</span>
+}
+</code></pre></div><hr>
+<p>此处将该选项传递给oci配置。</p>
+<p><a href="https://github.com/moby/moby/blob/v20.10.14/vendor/github.com/containerd/containerd/oci/spec_opts.go#L416">https://github.com/moby/moby/blob/v20.10.14/vendor/github.com/containerd/containerd/oci/spec_opts.go#L416</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">WithNoNewPrivileges</span>(<span style="color:#a6e22e">_</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">_</span> <span style="color:#a6e22e">Client</span>, <span style="color:#a6e22e">_</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">containers</span>.<span style="color:#a6e22e">Container</span>, <span style="color:#a6e22e">s</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Spec</span>) <span style="color:#66d9ef">error</span> {
+    <span style="color:#a6e22e">setProcess</span>(<span style="color:#a6e22e">s</span>)
+    <span style="color:#a6e22e">s</span>.<span style="color:#a6e22e">Process</span>.<span style="color:#a6e22e">NoNewPrivileges</span> = <span style="color:#66d9ef">true</span>
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>
+}
+</code></pre></div><h2 id="417-设置保护路径">4.17 设置保护路径</h2>
+<p>将受保护的系统路径传递至oci配置。</p>
+<p><a href="https://github.com/moby/moby/blob/v20.10.14/daemon/oci_linux.go#L1038-L1043">https://github.com/moby/moby/blob/v20.10.14/daemon/oci_linux.go#L1038-L1043</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">daemon</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Daemon</span>) <span style="color:#a6e22e">createSpec</span>(<span style="color:#a6e22e">c</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">Container</span>) (<span style="color:#a6e22e">retSpec</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">specs</span>.<span style="color:#a6e22e">Spec</span>, <span style="color:#a6e22e">err</span> <span style="color:#66d9ef">error</span>) {
+    <span style="color:#f92672">...</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">HostConfig</span>.<span style="color:#a6e22e">MaskedPaths</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+        <span style="color:#a6e22e">opts</span> = append(<span style="color:#a6e22e">opts</span>, <span style="color:#a6e22e">coci</span>.<span style="color:#a6e22e">WithMaskedPaths</span>(<span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">HostConfig</span>.<span style="color:#a6e22e">MaskedPaths</span>))
+    }
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">HostConfig</span>.<span style="color:#a6e22e">ReadonlyPaths</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+        <span style="color:#a6e22e">opts</span> = append(<span style="color:#a6e22e">opts</span>, <span style="color:#a6e22e">coci</span>.<span style="color:#a6e22e">WithReadonlyPaths</span>(<span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">HostConfig</span>.<span style="color:#a6e22e">ReadonlyPaths</span>))
+    }
+    <span style="color:#f92672">...</span>
+}
+</code></pre></div><h2 id="418-rootless-cgroup">4.18 rootless cgroup</h2>
+<p>如果dockerd运行在rootless模式, 更新cgroup规则。</p>
+<p>目前，<a href="https://docs.docker.com/engine/security/rootless/#limiting-resources">在rootless模式下，cgroup相关的资源限制选项仅支持cgroup v2和systemd</a>。</p>
+<p><a href="https://github.com/moby/moby/blob/v20.10.14/daemon/oci_linux.go#L1044-L1046">https://github.com/moby/moby/blob/v20.10.14/daemon/oci_linux.go#L1044-L1046</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">daemon</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Daemon</span>) <span style="color:#a6e22e">createSpec</span>(<span style="color:#a6e22e">c</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">Container</span>) (<span style="color:#a6e22e">retSpec</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">specs</span>.<span style="color:#a6e22e">Spec</span>, <span style="color:#a6e22e">err</span> <span style="color:#66d9ef">error</span>) {
+    <span style="color:#f92672">...</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">daemon</span>.<span style="color:#a6e22e">configStore</span>.<span style="color:#a6e22e">Rootless</span> {
+        <span style="color:#a6e22e">opts</span> = append(<span style="color:#a6e22e">opts</span>, <span style="color:#a6e22e">WithRootless</span>(<span style="color:#a6e22e">daemon</span>))
+    }
+    <span style="color:#f92672">...</span>
+}
+</code></pre></div><hr>
+<p>根据rootless运行的用户支持的controller，更新oci中的配置。其中，可用的controller，从文件<code>/sys/fs/cgroup/user.slice/user-$(id -u).slice/user@$(id -u).service/cgroup.controllers</code>中读取，默认仅支持memory, pids。</p>
+<p><a href="https://github.com/moby/moby/blob/v20.10.14/daemon/oci_linux.go#L89">https://github.com/moby/moby/blob/v20.10.14/daemon/oci_linux.go#L89</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">WithRootless</span>(<span style="color:#a6e22e">daemon</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Daemon</span>) <span style="color:#a6e22e">coci</span>.<span style="color:#a6e22e">SpecOpts</span> {
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">_</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">_</span> <span style="color:#a6e22e">coci</span>.<span style="color:#a6e22e">Client</span>, <span style="color:#a6e22e">_</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">containers</span>.<span style="color:#a6e22e">Container</span>, <span style="color:#a6e22e">s</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">coci</span>.<span style="color:#a6e22e">Spec</span>) <span style="color:#66d9ef">error</span> {
+        <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">v2Controllers</span> []<span style="color:#66d9ef">string</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">daemon</span>.<span style="color:#a6e22e">getCgroupDriver</span>() <span style="color:#f92672">==</span> <span style="color:#a6e22e">cgroupSystemdDriver</span> {
+            <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">cdcgroups</span>.<span style="color:#a6e22e">Mode</span>() <span style="color:#f92672">!=</span> <span style="color:#a6e22e">cdcgroups</span>.<span style="color:#a6e22e">Unified</span> {
+                <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">errors</span>.<span style="color:#a6e22e">New</span>(<span style="color:#e6db74">&#34;rootless systemd driver doesn&#39;t support cgroup v1&#34;</span>)
+            }
+            <span style="color:#a6e22e">rootlesskitParentEUID</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">os</span>.<span style="color:#a6e22e">Getenv</span>(<span style="color:#e6db74">&#34;ROOTLESSKIT_PARENT_EUID&#34;</span>)
+            <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">rootlesskitParentEUID</span> <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;&#34;</span> {
+                <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">errors</span>.<span style="color:#a6e22e">New</span>(<span style="color:#e6db74">&#34;$ROOTLESSKIT_PARENT_EUID is not set (requires RootlessKit v0.8.0)&#34;</span>)
+            }
+            <span style="color:#a6e22e">controllersPath</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Sprintf</span>(<span style="color:#e6db74">&#34;/sys/fs/cgroup/user.slice/user-%s.slice/cgroup.controllers&#34;</span>, <span style="color:#a6e22e">rootlesskitParentEUID</span>)
+            <span style="color:#a6e22e">controllersFile</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">ioutil</span>.<span style="color:#a6e22e">ReadFile</span>(<span style="color:#a6e22e">controllersPath</span>)
+            <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+                <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">err</span>
+            }
+            <span style="color:#a6e22e">v2Controllers</span> = <span style="color:#a6e22e">strings</span>.<span style="color:#a6e22e">Fields</span>(string(<span style="color:#a6e22e">controllersFile</span>))
+        }
+        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">specconv</span>.<span style="color:#a6e22e">ToRootless</span>(<span style="color:#a6e22e">s</span>, <span style="color:#a6e22e">v2Controllers</span>)
+    }
+}
+</code></pre></div><hr>
+<p><a href="https://github.com/moby/moby/blob/v20.10.14/rootless/specconv/specconv_linux.go#L17">https://github.com/moby/moby/blob/v20.10.14/rootless/specconv/specconv_linux.go#L17</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">ToRootless</span>(<span style="color:#a6e22e">spec</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">specs</span>.<span style="color:#a6e22e">Spec</span>, <span style="color:#a6e22e">v2Controllers</span> []<span style="color:#66d9ef">string</span>) <span style="color:#66d9ef">error</span> {
+    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">toRootless</span>(<span style="color:#a6e22e">spec</span>, <span style="color:#a6e22e">v2Controllers</span>, <span style="color:#a6e22e">getCurrentOOMScoreAdj</span>())
+}
+</code></pre></div><hr>
+<p>在oci配置中移除不支持的资源限制策略。</p>
+<p><a href="https://github.com/moby/moby/blob/v20.10.14/rootless/specconv/specconv_linux.go#L36">https://github.com/moby/moby/blob/v20.10.14/rootless/specconv/specconv_linux.go#L36</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">toRootless</span>(<span style="color:#a6e22e">spec</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">specs</span>.<span style="color:#a6e22e">Spec</span>, <span style="color:#a6e22e">v2Controllers</span> []<span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">currentOOMScoreAdj</span> <span style="color:#66d9ef">int</span>) <span style="color:#66d9ef">error</span> {
+    <span style="color:#66d9ef">if</span> len(<span style="color:#a6e22e">v2Controllers</span>) <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span> {
+        <span style="color:#75715e">// Remove cgroup settings.
+</span><span style="color:#75715e"></span>        <span style="color:#a6e22e">spec</span>.<span style="color:#a6e22e">Linux</span>.<span style="color:#a6e22e">Resources</span> = <span style="color:#66d9ef">nil</span>
+        <span style="color:#a6e22e">spec</span>.<span style="color:#a6e22e">Linux</span>.<span style="color:#a6e22e">CgroupsPath</span> = <span style="color:#e6db74">&#34;&#34;</span>
+    } <span style="color:#66d9ef">else</span> {
+        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">spec</span>.<span style="color:#a6e22e">Linux</span>.<span style="color:#a6e22e">Resources</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+            <span style="color:#a6e22e">m</span> <span style="color:#f92672">:=</span> make(<span style="color:#66d9ef">map</span>[<span style="color:#66d9ef">string</span>]<span style="color:#66d9ef">struct</span>{})
+            <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">s</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">v2Controllers</span> {
+                <span style="color:#a6e22e">m</span>[<span style="color:#a6e22e">s</span>] = <span style="color:#66d9ef">struct</span>{}{}
+            }
+            <span style="color:#75715e">// Remove devices: https://github.com/containers/crun/issues/255
+</span><span style="color:#75715e"></span>            <span style="color:#a6e22e">spec</span>.<span style="color:#a6e22e">Linux</span>.<span style="color:#a6e22e">Resources</span>.<span style="color:#a6e22e">Devices</span> = <span style="color:#66d9ef">nil</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">ok</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">m</span>[<span style="color:#e6db74">&#34;memory&#34;</span>]; !<span style="color:#a6e22e">ok</span> {
+                <span style="color:#a6e22e">spec</span>.<span style="color:#a6e22e">Linux</span>.<span style="color:#a6e22e">Resources</span>.<span style="color:#a6e22e">Memory</span> = <span style="color:#66d9ef">nil</span>
+            }
+            <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">ok</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">m</span>[<span style="color:#e6db74">&#34;cpu&#34;</span>]; !<span style="color:#a6e22e">ok</span> {
+                <span style="color:#a6e22e">spec</span>.<span style="color:#a6e22e">Linux</span>.<span style="color:#a6e22e">Resources</span>.<span style="color:#a6e22e">CPU</span> = <span style="color:#66d9ef">nil</span>
+            }
+            <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">ok</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">m</span>[<span style="color:#e6db74">&#34;cpuset&#34;</span>]; !<span style="color:#a6e22e">ok</span> {
+                <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">spec</span>.<span style="color:#a6e22e">Linux</span>.<span style="color:#a6e22e">Resources</span>.<span style="color:#a6e22e">CPU</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+                    <span style="color:#a6e22e">spec</span>.<span style="color:#a6e22e">Linux</span>.<span style="color:#a6e22e">Resources</span>.<span style="color:#a6e22e">CPU</span>.<span style="color:#a6e22e">Cpus</span> = <span style="color:#e6db74">&#34;&#34;</span>
+                    <span style="color:#a6e22e">spec</span>.<span style="color:#a6e22e">Linux</span>.<span style="color:#a6e22e">Resources</span>.<span style="color:#a6e22e">CPU</span>.<span style="color:#a6e22e">Mems</span> = <span style="color:#e6db74">&#34;&#34;</span>
+                }
+            }
+            <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">ok</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">m</span>[<span style="color:#e6db74">&#34;pids&#34;</span>]; !<span style="color:#a6e22e">ok</span> {
+                <span style="color:#a6e22e">spec</span>.<span style="color:#a6e22e">Linux</span>.<span style="color:#a6e22e">Resources</span>.<span style="color:#a6e22e">Pids</span> = <span style="color:#66d9ef">nil</span>
+            }
+            <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">ok</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">m</span>[<span style="color:#e6db74">&#34;io&#34;</span>]; !<span style="color:#a6e22e">ok</span> {
+                <span style="color:#a6e22e">spec</span>.<span style="color:#a6e22e">Linux</span>.<span style="color:#a6e22e">Resources</span>.<span style="color:#a6e22e">BlockIO</span> = <span style="color:#66d9ef">nil</span>
+            }
+            <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">ok</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">m</span>[<span style="color:#e6db74">&#34;rdma&#34;</span>]; !<span style="color:#a6e22e">ok</span> {
+                <span style="color:#a6e22e">spec</span>.<span style="color:#a6e22e">Linux</span>.<span style="color:#a6e22e">Resources</span>.<span style="color:#a6e22e">Rdma</span> = <span style="color:#66d9ef">nil</span>
+            }
+            <span style="color:#a6e22e">spec</span>.<span style="color:#a6e22e">Linux</span>.<span style="color:#a6e22e">Resources</span>.<span style="color:#a6e22e">HugepageLimits</span> = <span style="color:#66d9ef">nil</span>
+            <span style="color:#a6e22e">spec</span>.<span style="color:#a6e22e">Linux</span>.<span style="color:#a6e22e">Resources</span>.<span style="color:#a6e22e">Network</span> = <span style="color:#66d9ef">nil</span>
+        }
+    }
+
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">spec</span>.<span style="color:#a6e22e">Process</span>.<span style="color:#a6e22e">OOMScoreAdj</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">spec</span>.<span style="color:#a6e22e">Process</span>.<span style="color:#a6e22e">OOMScoreAdj</span> &lt; <span style="color:#a6e22e">currentOOMScoreAdj</span> {
+        <span style="color:#f92672">*</span><span style="color:#a6e22e">spec</span>.<span style="color:#a6e22e">Process</span>.<span style="color:#a6e22e">OOMScoreAdj</span> = <span style="color:#a6e22e">currentOOMScoreAdj</span>
+    }
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>
+}
+</code></pre></div>
             </div>
         </article>
 
