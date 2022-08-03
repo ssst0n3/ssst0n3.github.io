@@ -7,7 +7,7 @@
 <meta name="author"
     content="">
 <meta name="description"
-    content="VolgaCTF2020Qualifier Crypto Guess writeup 上周末玩了下VolgaCTF 2020 Qualifier(https://ctftime.org/event/933), 只做了几道密码题，因为其他题都没有思路T_T 。整体感觉俄罗斯人的脑洞很大，数学功底很好。其中有一道ElGamal相关的密码题，虽然没感觉在现实中有什么实际用途，但是学到了一些重要的性质。
+    content="tags: crypto,ctf,writeup VolgaCTF2020Qualifier Crypto Guess writeup 上周末玩了下VolgaCTF 2020 Qualifier(https://ctftime.org/event/933), 只做了几道密码题，因为其他题都没有思路T_T 。整体感觉俄罗斯人的脑洞很大，数学功底很好。其中有一道ElGamal相关的密码题，虽然没感觉在现实中有什么实际用途，但是学到了一些重要的性质。
 我的解法比较简单，但是好像是非预期解。赛后，在这篇wp里发现了一个更完美的解法：标准解法的wp(https://www.josephsurin.me/posts/2020-03-30-volgactf-2020-qualifier-writeups#guess) 。我会在第三节记录下我的解法，在第四节简单翻译下标准解法。
 一、题目信息  Guess
 Try to guess all encrypted bits and get your reward!
@@ -47,7 +47,7 @@ This task has been rated by 73 teams. The average rating is 3.99 (5.00 max).
 <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#252627">
 <link rel="shortcut icon" href="/favicon.ico">
 <meta name="theme-color" content="#252627"><meta itemprop="name" content="VolgaCTF2020Qualifier Crypto Guess writeup">
-<meta itemprop="description" content="VolgaCTF2020Qualifier Crypto Guess writeup 上周末玩了下VolgaCTF 2020 Qualifier(https://ctftime.org/event/933), 只做了几道密码题，因为其他题都没有思路T_T 。整体感觉俄罗斯人的脑洞很大，数学功底很好。其中有一道ElGamal相关的密码题，虽然没感觉在现实中有什么实际用途，但是学到了一些重要的性质。
+<meta itemprop="description" content="tags: crypto,ctf,writeup VolgaCTF2020Qualifier Crypto Guess writeup 上周末玩了下VolgaCTF 2020 Qualifier(https://ctftime.org/event/933), 只做了几道密码题，因为其他题都没有思路T_T 。整体感觉俄罗斯人的脑洞很大，数学功底很好。其中有一道ElGamal相关的密码题，虽然没感觉在现实中有什么实际用途，但是学到了一些重要的性质。
 我的解法比较简单，但是好像是非预期解。赛后，在这篇wp里发现了一个更完美的解法：标准解法的wp(https://www.josephsurin.me/posts/2020-03-30-volgactf-2020-qualifier-writeups#guess) 。我会在第三节记录下我的解法，在第四节简单翻译下标准解法。
 一、题目信息  Guess
 Try to guess all encrypted bits and get your reward!
@@ -60,14 +60,14 @@ This task has been rated by 73 teams. The average rating is 3.99 (5.00 max).
 #!/usr/bin/python # -*- coding: utf-8 -*- from __future__ import print_function from Crypto.">
 <meta itemprop="datePublished" content="2020-04-01T05:53:00+00:00" />
 <meta itemprop="dateModified" content="2020-04-01T05:53:00+00:00" />
-<meta itemprop="wordCount" content="927">
+<meta itemprop="wordCount" content="929">
 
 
 
 <meta itemprop="keywords" content="" />
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="VolgaCTF2020Qualifier Crypto Guess writeup"/>
-<meta name="twitter:description" content="VolgaCTF2020Qualifier Crypto Guess writeup 上周末玩了下VolgaCTF 2020 Qualifier(https://ctftime.org/event/933), 只做了几道密码题，因为其他题都没有思路T_T 。整体感觉俄罗斯人的脑洞很大，数学功底很好。其中有一道ElGamal相关的密码题，虽然没感觉在现实中有什么实际用途，但是学到了一些重要的性质。
+<meta name="twitter:description" content="tags: crypto,ctf,writeup VolgaCTF2020Qualifier Crypto Guess writeup 上周末玩了下VolgaCTF 2020 Qualifier(https://ctftime.org/event/933), 只做了几道密码题，因为其他题都没有思路T_T 。整体感觉俄罗斯人的脑洞很大，数学功底很好。其中有一道ElGamal相关的密码题，虽然没感觉在现实中有什么实际用途，但是学到了一些重要的性质。
 我的解法比较简单，但是好像是非预期解。赛后，在这篇wp里发现了一个更完美的解法：标准解法的wp(https://www.josephsurin.me/posts/2020-03-30-volgactf-2020-qualifier-writeups#guess) 。我会在第三节记录下我的解法，在第四节简单翻译下标准解法。
 一、题目信息  Guess
 Try to guess all encrypted bits and get your reward!
@@ -148,7 +148,9 @@ This task has been rated by 73 teams. The average rating is 3.99 (5.00 max).
             
 
             <div class="post-content">
-                <h1 id="volgactf2020qualifier-crypto-guess-writeup">VolgaCTF2020Qualifier Crypto Guess writeup</h1>
+                <hr>
+<h2 id="tags-cryptoctfwriteup">tags: crypto,ctf,writeup</h2>
+<h1 id="volgactf2020qualifier-crypto-guess-writeup">VolgaCTF2020Qualifier Crypto Guess writeup</h1>
 <p>上周末玩了下<a href="https://ctftime.org/event/933">VolgaCTF 2020 Qualifier(https://ctftime.org/event/933)</a>, 只做了几道密码题，因为其他题都没有思路T_T 。整体感觉俄罗斯人的脑洞很大，数学功底很好。其中有一道ElGamal相关的密码题，虽然没感觉在现实中有什么实际用途，但是学到了一些重要的性质。</p>
 <p>我的解法比较简单，但是好像是非预期解。赛后，在这篇wp里发现了一个更完美的解法：<a href="https://www.josephsurin.me/posts/2020-03-30-volgactf-2020-qualifier-writeups#guess">标准解法的wp(https://www.josephsurin.me/posts/2020-03-30-volgactf-2020-qualifier-writeups#guess)</a> 。我会在第三节记录下我的解法，在第四节简单翻译下标准解法。</p>
 <h2 id="一题目信息">一、题目信息</h2>

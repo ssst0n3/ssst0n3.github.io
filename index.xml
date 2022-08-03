@@ -806,7 +806,7 @@ apt-get update gnome-terminal 同时修改一下首选应用程序中的terminal
       <pubDate>Wed, 01 Apr 2020 05:53:00 +0000</pubDate>
       
       <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/CTF/crypto/%E9%9D%9E%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86/%E7%A6%BB%E6%95%A3%E5%AF%B9%E6%95%B0/ElGamal/VolgaCTF2020Qualifier-Crypto-Guess-writeup.html</guid>
-      <description>VolgaCTF2020Qualifier Crypto Guess writeup 上周末玩了下VolgaCTF 2020 Qualifier(https://ctftime.org/event/933), 只做了几道密码题，因为其他题都没有思路T_T 。整体感觉俄罗斯人的脑洞很大，数学功底很好。其中有一道ElGamal相关的密码题，虽然没感觉在现实中有什么实际用途，但是学到了一些重要的性质。
+      <description>tags: crypto,ctf,writeup VolgaCTF2020Qualifier Crypto Guess writeup 上周末玩了下VolgaCTF 2020 Qualifier(https://ctftime.org/event/933), 只做了几道密码题，因为其他题都没有思路T_T 。整体感觉俄罗斯人的脑洞很大，数学功底很好。其中有一道ElGamal相关的密码题，虽然没感觉在现实中有什么实际用途，但是学到了一些重要的性质。
 我的解法比较简单，但是好像是非预期解。赛后，在这篇wp里发现了一个更完美的解法：标准解法的wp(https://www.josephsurin.me/posts/2020-03-30-volgactf-2020-qualifier-writeups#guess) 。我会在第三节记录下我的解法，在第四节简单翻译下标准解法。
 一、题目信息  Guess
 Try to guess all encrypted bits and get your reward!
