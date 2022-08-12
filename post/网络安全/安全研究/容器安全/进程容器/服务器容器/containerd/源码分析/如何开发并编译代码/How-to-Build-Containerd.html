@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author"
+    content="">
+<meta name="description"
+    content="tags: containerd, container How to Build Containerd containerd没有提供编译环境，本文分析如何使用官方的构建环境编译containerd。
+1. Normal 根据官方文档, 一步一步来即可编译containerd。
+1. 安装依赖
+安装golang, btrfs等依赖
+2. 下载代码
+git clone https://github.com/containerd/containerd.git cd containerd git checkout v1.6.7 3. 修改代码
+sed -i &#39;s/app.Name = &amp;quot;containerd&amp;quot;/app.Name = &amp;quot;containerd-st0n3&amp;quot;/g&#39; cmd/containerd/command/main.go 4. 编译
+make 5. binary
+编译好的二进制文件，位于bin目录
+# ./bin/containerd -v containerd-st0n3 github.com/containerd/containerd v1.6.7.m 0197261a30bf81f1ee8e6a4dd2dea0ef95d67ccb.m 2. Build in a container 2.1 Github action release 上文描述的是自行搭建编译环境进行编译的过程，但可能与官方release环境不同，所以我们需要理解官方是在什么环境中编译containerd。
+containerd使用github action自动进行release版本的构建：
+https://github.com/containerd/containerd/runs/7681874106?check_suite_focus=true
+github action的源码核心部分如下：
+https://github.com/containerd/containerd/blob/v1.6.7/.github/workflows/release.yml
+on: push: tags: - &amp;#39;v*&amp;#39; # Push events to matching v*, i." />
+<meta name="keywords" content="" />
+<meta name="robots" content="noodp" />
+<link rel="canonical" href="/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E8%BF%9B%E7%A8%8B%E5%AE%B9%E5%99%A8/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%B9%E5%99%A8/containerd/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/%E5%A6%82%E4%BD%95%E5%BC%80%E5%8F%91%E5%B9%B6%E7%BC%96%E8%AF%91%E4%BB%A3%E7%A0%81/How-to-Build-Containerd.html" />
+
+
+<title>
+    
+    How to Build Containerd :: welcome to st0n3&#39;s blog 
+    
+</title>
+
+
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.2.1/css/flag-icon.min.css" rel="stylesheet"
+    type="text/css">
+
+
+
+<link rel="stylesheet" href="/main.min.de959d61dd13c2cd41136acd491ffb0749779e1afe37b1fed6d5cba0b7e1938d.css">
+
+
+
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#252627">
+<link rel="shortcut icon" href="/favicon.ico">
+<meta name="theme-color" content="#252627"><meta itemprop="name" content="How to Build Containerd">
+<meta itemprop="description" content="tags: containerd, container How to Build Containerd containerd没有提供编译环境，本文分析如何使用官方的构建环境编译containerd。
+1. Normal 根据官方文档, 一步一步来即可编译containerd。
+1. 安装依赖
+安装golang, btrfs等依赖
+2. 下载代码
+git clone https://github.com/containerd/containerd.git cd containerd git checkout v1.6.7 3. 修改代码
+sed -i &#39;s/app.Name = &quot;containerd&quot;/app.Name = &quot;containerd-st0n3&quot;/g&#39; cmd/containerd/command/main.go 4. 编译
+make 5. binary
+编译好的二进制文件，位于bin目录
+# ./bin/containerd -v containerd-st0n3 github.com/containerd/containerd v1.6.7.m 0197261a30bf81f1ee8e6a4dd2dea0ef95d67ccb.m 2. Build in a container 2.1 Github action release 上文描述的是自行搭建编译环境进行编译的过程，但可能与官方release环境不同，所以我们需要理解官方是在什么环境中编译containerd。
+containerd使用github action自动进行release版本的构建：
+https://github.com/containerd/containerd/runs/7681874106?check_suite_focus=true
+github action的源码核心部分如下：
+https://github.com/containerd/containerd/blob/v1.6.7/.github/workflows/release.yml
+on: push: tags: - &#39;v*&#39; # Push events to matching v*, i.">
+<meta itemprop="datePublished" content="2022-08-12T08:53:33+00:00" />
+<meta itemprop="dateModified" content="2022-08-12T08:53:33+00:00" />
+<meta itemprop="wordCount" content="478">
+
+
+
+<meta itemprop="keywords" content="" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="How to Build Containerd"/>
+<meta name="twitter:description" content="tags: containerd, container How to Build Containerd containerd没有提供编译环境，本文分析如何使用官方的构建环境编译containerd。
+1. Normal 根据官方文档, 一步一步来即可编译containerd。
+1. 安装依赖
+安装golang, btrfs等依赖
+2. 下载代码
+git clone https://github.com/containerd/containerd.git cd containerd git checkout v1.6.7 3. 修改代码
+sed -i &#39;s/app.Name = &quot;containerd&quot;/app.Name = &quot;containerd-st0n3&quot;/g&#39; cmd/containerd/command/main.go 4. 编译
+make 5. binary
+编译好的二进制文件，位于bin目录
+# ./bin/containerd -v containerd-st0n3 github.com/containerd/containerd v1.6.7.m 0197261a30bf81f1ee8e6a4dd2dea0ef95d67ccb.m 2. Build in a container 2.1 Github action release 上文描述的是自行搭建编译环境进行编译的过程，但可能与官方release环境不同，所以我们需要理解官方是在什么环境中编译containerd。
+containerd使用github action自动进行release版本的构建：
+https://github.com/containerd/containerd/runs/7681874106?check_suite_focus=true
+github action的源码核心部分如下：
+https://github.com/containerd/containerd/blob/v1.6.7/.github/workflows/release.yml
+on: push: tags: - &#39;v*&#39; # Push events to matching v*, i."/>
+
+
+
+
+<meta property="article:published_time" content="2022-08-12 08:53:33 &#43;0000 UTC" />
+
+
+
+
+
+
+
+    </head>
+
+    <body class="dark-theme">
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text">$ cd /home/st0n3</span>
+            <span class="logo__cursor"></span>
+        
+    </div>
+</a>
+
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="/aboutme.html">About</a></li><li><a href="/post.html">Blog</a></li><li><a href="/hackerbot">Hackerbot</a></li><li><a href="/skill_tree/">SkillTree</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+
+            <span class="theme-toggle"><svg class="theme-toggler" width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M22 41C32.4934 41 41 32.4934 41 22C41 11.5066 32.4934 3 22
+  3C11.5066 3 3 11.5066 3 22C3 32.4934 11.5066 41 22 41ZM7 22C7
+  13.7157 13.7157 7 22 7V37C13.7157 37 7 30.2843 7 22Z"/>
+</svg>
+</span>
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
+                
+    <main class="post">
+
+        <div class="post-info">
+            
+            </p>
+        </div>
+
+        <article>
+            <h2 class="post-title"><a href="/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E8%BF%9B%E7%A8%8B%E5%AE%B9%E5%99%A8/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%B9%E5%99%A8/containerd/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/%E5%A6%82%E4%BD%95%E5%BC%80%E5%8F%91%E5%B9%B6%E7%BC%96%E8%AF%91%E4%BB%A3%E7%A0%81/How-to-Build-Containerd.html">How to Build Containerd</a></h2>
+
+            
+
+            <div class="post-content">
+                <hr>
+<h2 id="tags-containerd-container">tags: containerd, container</h2>
+<h1 id="how-to-build-containerd">How to Build Containerd</h1>
+<p>containerd没有提供编译环境，本文分析如何使用官方的构建环境编译containerd。</p>
+<h2 id="1-normal">1. Normal</h2>
+<p>根据<a href="https://github.com/containerd/containerd/blob/v1.6.7/BUILDING.md">官方文档</a>, 一步一步来即可编译containerd。</p>
+<p><strong>1. 安装依赖</strong></p>
+<p>安装golang, btrfs等依赖</p>
+<p><strong>2. 下载代码</strong></p>
+<pre><code>git clone https://github.com/containerd/containerd.git
+cd containerd
+git checkout v1.6.7
+</code></pre><p><strong>3. 修改代码</strong></p>
+<pre><code>sed -i 's/app.Name = &quot;containerd&quot;/app.Name = &quot;containerd-st0n3&quot;/g' cmd/containerd/command/main.go
+</code></pre><p><strong>4. 编译</strong></p>
+<pre><code>make
+</code></pre><p><strong>5. binary</strong></p>
+<p>编译好的二进制文件，位于bin目录</p>
+<pre><code># ./bin/containerd -v
+containerd-st0n3 github.com/containerd/containerd v1.6.7.m 0197261a30bf81f1ee8e6a4dd2dea0ef95d67ccb.m
+</code></pre><h2 id="2-build-in-a-container">2. Build in a container</h2>
+<h3 id="21-github-action-release">2.1 Github action release</h3>
+<p>上文描述的是自行搭建编译环境进行编译的过程，但可能与官方release环境不同，所以我们需要理解官方是在什么环境中编译containerd。</p>
+<p>containerd使用github action自动进行release版本的构建：</p>
+<p><a href="https://github.com/containerd/containerd/runs/7681874106?check_suite_focus=true">https://github.com/containerd/containerd/runs/7681874106?check_suite_focus=true</a></p>
+<p>github action的源码核心部分如下：</p>
+<p><a href="https://github.com/containerd/containerd/blob/v1.6.7/.github/workflows/release.yml">https://github.com/containerd/containerd/blob/v1.6.7/.github/workflows/release.yml</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#f92672">on</span>:
+  <span style="color:#f92672">push</span>:
+    <span style="color:#f92672">tags</span>:
+      - <span style="color:#e6db74">&#39;v*&#39;</span> <span style="color:#75715e"># Push events to matching v*, i.e. v1.0, v20.15.10</span>
+
+<span style="color:#f92672">name</span>: <span style="color:#ae81ff">Containerd Release</span>
+
+<span style="color:#f92672">jobs</span>:
+  <span style="color:#ae81ff">...</span>
+  <span style="color:#f92672">build</span>:
+    <span style="color:#ae81ff">...</span>
+    <span style="color:#f92672">steps</span>:
+      <span style="color:#ae81ff">...</span>
+      - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Make</span>
+        <span style="color:#f92672">shell</span>: <span style="color:#ae81ff">bash</span>
+        <span style="color:#f92672">run</span>: |<span style="color:#e6db74">
+</span><span style="color:#e6db74">          cache=&#34;--cache-from=type=gha,scope=containerd-release --cache-to=type=gha,scope=containerd-release&#34;
+</span><span style="color:#e6db74">          if [[ &#34;${PLATFORM}&#34; =~ &#34;windows&#34; ]]; then
+</span><span style="color:#e6db74">            # For Windows the cni build script generates a config but shells out to powershell (and also assume it is running on windows) to get a gateway and subnet.
+</span><span style="color:#e6db74">            # The values provided here are taken from packages that we previously generated.
+</span><span style="color:#e6db74">            export GATEWAY=172.21.16.1
+</span><span style="color:#e6db74">            export PREFIX_LEN=12
+</span><span style="color:#e6db74">            BUILD_ARGS=&#34;--build-arg GATEWAY --build-arg PREFIX_LEN&#34;
+</span><span style="color:#e6db74">          fi
+</span><span style="color:#e6db74">          docker buildx build ${cache} --build-arg RELEASE_VER --build-arg GO_VERSION ${BUILD_ARGS} -f .github/workflows/release/Dockerfile --platform=${PLATFORM} -o releases/ .
+</span><span style="color:#e6db74">          echo PLATFORM_CLEAN=${PLATFORM/\//-} &gt;&gt; $GITHUB_ENV
+</span><span style="color:#e6db74">          # Remove symlinks since we don&#39;t want these in the release Artifacts
+</span><span style="color:#e6db74">          find ./releases/ -maxdepth 1 -type l | xargs rm</span>          
+        <span style="color:#f92672">working-directory</span>: <span style="color:#ae81ff">src/github.com/containerd/containerd</span>
+        <span style="color:#f92672">env</span>:
+          <span style="color:#f92672">GO_VERSION</span>: <span style="color:#e6db74">&#39;1.17.13&#39;</span>
+          <span style="color:#f92672">PLATFORM</span>: <span style="color:#ae81ff">${{ matrix.platform }}</span>
+      - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Save Artifacts</span>
+        <span style="color:#f92672">uses</span>: <span style="color:#ae81ff">actions/upload-artifact@v2</span>
+        <span style="color:#f92672">with</span>:
+          <span style="color:#f92672">name</span>: <span style="color:#ae81ff">release-tars-${{env.PLATFORM_CLEAN}}</span>
+          <span style="color:#f92672">path</span>: <span style="color:#ae81ff">src/github.com/containerd/containerd/releases/*.tar.gz*</span>
+
+    <span style="color:#ae81ff">...</span>
+</code></pre></div><p>注意到具体的编译命令为<code>docker buildx build ${cache} --build-arg RELEASE_VER --build-arg GO_VERSION ${BUILD_ARGS} -f .github/workflows/release/Dockerfile --platform=${PLATFORM} -o releases/ .</code>, 其中Dockerfile为<code>.github/workflows/release/Dockerfile</code>。</p>
+<p><a href="https://github.com/containerd/containerd/blob/v1.6.7/.github/workflows/release/Dockerfile">https://github.com/containerd/containerd/blob/v1.6.7/.github/workflows/release/Dockerfile</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-Dockerfile" data-lang="Dockerfile">...<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">FROM</span><span style="color:#e6db74"> ${TARGETOS} AS target</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span>...<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>	--mount<span style="color:#f92672">=</span>type<span style="color:#f92672">=</span>bind,from<span style="color:#f92672">=</span>go,source<span style="color:#f92672">=</span>/usr/local/go,target<span style="color:#f92672">=</span>/usr/local/go <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>	--mount<span style="color:#f92672">=</span>type<span style="color:#f92672">=</span>cache,target<span style="color:#f92672">=</span>/root/.cache/go-build <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>	--mount<span style="color:#f92672">=</span>type<span style="color:#f92672">=</span>cache,target<span style="color:#f92672">=</span>/go/pkg <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>	export CC<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>xx-info<span style="color:#66d9ef">)</span>-gcc <span style="color:#f92672">&amp;&amp;</span> xx-go --wrap <span style="color:#f92672">&amp;&amp;</span> <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>	make release cri-release cri-cni-release <span style="color:#f92672">&amp;&amp;</span> <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>	<span style="color:#66d9ef">for</span> f in <span style="color:#66d9ef">$(</span>find bin -executable -type f<span style="color:#66d9ef">)</span>; <span style="color:#66d9ef">do</span> xx-verify $f; <span style="color:#66d9ef">done</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span>...<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">FROM</span><span style="color:#e6db74"> scratch AS release</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">COPY</span> --from<span style="color:#f92672">=</span>target /go/src/github.com/containerd/containerd/releases/ /<span style="color:#960050;background-color:#1e0010">
+</span></code></pre></div><p>因此，理论上我们可以使用该Dockerfile和对应的参数，自行构造一套编译环境。</p>
+<h3 id="22-self-build">2.2 Self build</h3>
+<pre><code>cat &lt;&lt; EOF &gt; build.sh
+#!/bin/bash
+set -x
+export cache=&quot;--cache-from=type=gha,scope=containerd-release --cache-to=type=gha,scope=containerd-release&quot;
+export RELEASE_VER=&quot;v1.6.7&quot;
+export GO_VERSION=&quot;1.17.13&quot;
+export BUILD_ARGS=&quot;&quot;
+export PLATFORM=&quot;linux/amd64&quot;
+docker buildx build ${cache} --build-arg RELEASE_VER --build-arg GO_VERSION ${BUILD_ARGS} -f .github/workflows/release/Dockerfile --platform=${PLATFORM} -o releases/ .
+EOF
+git add . &amp;&amp; git commit -m &quot;add build.sh&quot;
+./build.sh
+</code></pre><p>编译后位于<code>containerd/release</code>目录。</p>
+<p>注意： Dockerfile中有校验git状态，如果修改了源码，应该在build前commit。</p>
+<p><a href="https://github.com/containerd/containerd/blob/v1.6.7/.github/workflows/release/Dockerfile#L54-L56">https://github.com/containerd/containerd/blob/v1.6.7/.github/workflows/release/Dockerfile#L54-L56</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-Dockerfile" data-lang="Dockerfile">...<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>	export GIT_STATUS_OUTPUT<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>git status --porcelain<span style="color:#66d9ef">)</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>	test -z $GIT_STATUS_OUTPUT <span style="color:#f92672">||</span> <span style="color:#f92672">(</span>echo $GIT_STATUS_OUTPUT <span style="color:#f92672">&amp;&amp;</span> exit 1<span style="color:#f92672">)</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span>...<span style="color:#960050;background-color:#1e0010">
+</span></code></pre></div><h2 id="3-advance">3. Advance</h2>
+<h3 id="31-修改编译命令">3.1 修改编译命令</h3>
+<p>阅读Makefile，可以容易找到具体的编译命令。</p>
+<p>搜索<code>$(GO) build</code>可以找到以下几处涉及具体编译的命令：</p>
+<p><a href="https://github.com/containerd/containerd/blob/v1.6.7/Makefile">https://github.com/containerd/containerd/blob/v1.6.7/Makefile</a></p>
+<pre><code>...
+build: ## build the go packages
+	@echo &quot;$(WHALE) $@&quot;
+	@$(GO) build ${DEBUG_GO_GCFLAGS} ${GO_GCFLAGS} ${GO_BUILD_FLAGS} ${EXTRA_FLAGS} ${GO_LDFLAGS} ${PACKAGES}
+...
+define BUILD_BINARY
+@echo &quot;$(WHALE) $@&quot;
+@$(GO) build ${DEBUG_GO_GCFLAGS} ${GO_GCFLAGS} ${GO_BUILD_FLAGS} -o $@ ${GO_LDFLAGS} ${GO_TAGS}  ./$&lt;
+endef
+
+# Build a binary from a cmd.
+bin/%: cmd/% FORCE
+	$(call BUILD_BINARY)
+
+bin/containerd-shim: cmd/containerd-shim FORCE # set !cgo and omit pie for a static shim build: https://github.com/golang/go/issues/17789#issuecomment-258542220
+	@echo &quot;$(WHALE) $@&quot;
+	@CGO_ENABLED=${SHIM_CGO_ENABLED} $(GO) build ${GO_BUILD_FLAGS} -o $@ ${SHIM_GO_LDFLAGS} ${GO_TAGS} ./cmd/containerd-shim
+
+bin/containerd-shim-runc-v1: cmd/containerd-shim-runc-v1 FORCE # set !cgo and omit pie for a static shim build: https://github.com/golang/go/issues/17789#issuecomment-258542220
+	@echo &quot;$(WHALE) $@&quot;
+	@CGO_ENABLED=${SHIM_CGO_ENABLED} $(GO) build ${GO_BUILD_FLAGS} -o $@ ${SHIM_GO_LDFLAGS} ${GO_TAGS} ./cmd/containerd-shim-runc-v1
+
+bin/containerd-shim-runc-v2: cmd/containerd-shim-runc-v2 FORCE # set !cgo and omit pie for a static shim build: https://github.com/golang/go/issues/17789#issuecomment-258542220
+	@echo &quot;$(WHALE) $@&quot;
+	@CGO_ENABLED=${SHIM_CGO_ENABLED} $(GO) build ${GO_BUILD_FLAGS} -o $@ ${SHIM_GO_LDFLAGS} ${GO_TAGS} ./cmd/containerd-shim-runc-v2
+...
+</code></pre><p>修改这些命令，即可自定义编译命令。</p>
+
+            </div>
+        </article>
+
+        <hr />
+
+        <div class="post-info">
+  			</div>
+
+        
+    </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>&copy; 2022</span>
+            
+            <span></span>
+            <span> <a href="/posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a></span>
+        </div>
+    </div>
+    <div class="footer__inner">
+        <div class="footer__content">
+
+        </div>
+    </div>
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>Powered by <a href="http://gohugo.io">Hugo</a></span>
+            <span>Made with &#10084; by <a href="https://github.com/st0n3">st0n3</a></span>
+            <span>Based on <a href="https://github.com/rhazdon">rhazdon</a></span>
+        </div>
+    </div>
+
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      extensions: ["tex2jax.js"],
+      
+      jax: ["input/TeX", "output/CommonHTML"],
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+        displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+        processEscapes: true
+      },
+      "HTML-CSS": { fonts: ["TeX"] },
+      displayAlign: "left"
+    });
+  </script>
+
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_CHTML"></script>
+
+
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+
+<script type="text/javascript" src="/bundle.min.4c3fb12a087ceed4a52cb5d57068a9795c7069617a01ca70f788052ad66e1791779e6c72686e1dc0ca13dc03b0203204b6566bb0dd1ee80de2b7ff4d8fe53db2.js" integrity="sha512-TD&#43;xKgh87tSlLLXVcGipeVxwaWF6Acpw94gFKtZuF5F3nmxyaG4dwMoT3AOwIDIEtlZrsN0e6A3it/9Nj&#43;U9sg=="></script>
+
+
+
+    </body>
+</html>
