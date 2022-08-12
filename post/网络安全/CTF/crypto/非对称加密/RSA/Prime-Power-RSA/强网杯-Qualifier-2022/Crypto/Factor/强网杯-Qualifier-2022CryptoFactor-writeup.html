@@ -301,7 +301,7 @@ c12 <span style="color:#f92672">=</span> powmod(m2, e12, n12)
 <blockquote>
 <p><strong>Theorem 2 (Legendre).</strong> Let ξ be a positive real number. Suppose gcd(a, b) = 1 and $ξ − \frac{a}{b} &lt; \frac{1}{2b^2}$. Then $\frac{a}{b}$ is one of the convergents of the continued fraction expansion of ξ.</p>
 </blockquote>
-<p>作者已经证明(本文略)， $|\frac{N_2}{N_1}-\frac{q_2}{q_1}|$满足定理2条件。因此，我们只要对$\frac{N_2}{N_1}$使用连分数展开，即可能得到$q_1$, $q_2$。一直展开，直到可被N整除即可。</p>
+<p>作者已经证明(本文略)， $|\frac{N_2}{N_1}-\frac{q_2}{q_1}|$满足定理2条件。因此，我们只要对$\frac{N_2}{N_1}$使用连分数展开，一直展开，直到可被N整除即可能得到$q_1$, $q_2$。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> sage.all <span style="color:#f92672">import</span> continued_fraction
 
 <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">solve1</span>():

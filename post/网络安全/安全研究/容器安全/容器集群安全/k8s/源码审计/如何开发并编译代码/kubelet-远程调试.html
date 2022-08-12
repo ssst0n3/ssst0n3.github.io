@@ -42,7 +42,7 @@
 # Note: This dropin only works with kubeadm and kubelet v1.11&#43; [Service] Environment=&quot;KUBELET_KUBECONFIG_ARGS=--bootstrap-kubeconfig=/etc/kubernetes/bootstrap-kubelet.conf --kubeconfig=/etc/kubernetes/kubelet.conf&quot; Environment=&quot;KUBELET_CONFIG_ARGS=--config=/var/lib/kubelet/config.yaml&quot; # This is a file that &quot;kubeadm init&quot; and &quot;kubeadm join&quot; generates at runtime, populating the KUBELET_KUBEADM_ARGS variable dynamically EnvironmentFile=-/var/lib/kubelet/kubeadm-flags.env # This is a file that the user can use for overrides of the kubelet args as a last resort. Preferably, the user should use # the .">
 <meta itemprop="datePublished" content="2022-03-30T07:47:41+00:00" />
 <meta itemprop="dateModified" content="2022-03-30T07:47:41+00:00" />
-<meta itemprop="wordCount" content="489">
+<meta itemprop="wordCount" content="552">
 
 
 
@@ -264,6 +264,26 @@ index d56e3f3126..3e23865c81 100644
 hack/make.sh binary
 </code></pre><h4 id="调试-2">调试</h4>
 <pre><code>/root/go/bin/dlv --listen=:2343 --headless=true --api-version=2 --accept-multiclient exec /usr/bin/dockerd.debug -- -D -H unix:///var/run/docker.sock --containerd=/run/containerd/containerd.sock
+</code></pre><h3 id="54-containerd">5.4 containerd</h3>
+<h4 id="编译-3">编译</h4>
+<pre><code>make GODEBUG=1 bin/containerd
+</code></pre><p>或修改Makefile后<code>make bin/containerd</code></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-diff" data-lang="diff">root@st0n3:~/containerd# git diff
+diff --git a/Makefile b/Makefile
+index 266aef335..b56ef1751 100644
+<span style="color:#f92672">--- a/Makefile
+</span><span style="color:#f92672"></span><span style="color:#a6e22e">+++ b/Makefile
+</span><span style="color:#a6e22e"></span><span style="color:#75715e">@@ -231,7 +231,7 @@ FORCE:
+</span><span style="color:#75715e"></span> 
+ define BUILD_BINARY
+ @echo &#34;$(WHALE) $@&#34;
+<span style="color:#f92672">-@$(GO) build ${DEBUG_GO_GCFLAGS} ${GO_GCFLAGS} ${GO_BUILD_FLAGS} -o $@ ${GO_LDFLAGS} ${GO_TAGS}  ./$&lt;
+</span><span style="color:#f92672"></span><span style="color:#a6e22e">+@$(GO) build -gcflags=&#34;all=-N -l&#34; ${DEBUG_GO_GCFLAGS} ${GO_GCFLAGS} ${GO_BUILD_FLAGS} -o $@ ${GO_LDFLAGS} ${GO_TAGS}  ./$&lt;
+</span><span style="color:#a6e22e"></span> endef
+ 
+ # Build a binary from a cmd.
+</code></pre></div><h4 id="调试-3">调试</h4>
+<pre><code>
 </code></pre>
             </div>
         </article>
