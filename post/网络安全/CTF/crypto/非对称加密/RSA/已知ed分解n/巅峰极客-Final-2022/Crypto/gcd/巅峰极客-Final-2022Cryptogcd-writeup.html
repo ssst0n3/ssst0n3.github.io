@@ -15,7 +15,7 @@ from Crypto.Util.number import * import libnum import flag m = bytes_to_long(fla
 因为本题的已知条件相较于常规RSA，仅多出关键条件x = inverse(n,(p-1)*(q-1))，可以想到应该是要据此分解n。
 至此，逐渐有了正确的方向。
 将$xn\equiv 1 mod(\phi(n_0))$当作一个典型的RSA模型，已知RSA的公钥&amp;rsquo;n&#39;,私钥&amp;rsquo;x&#39;，可以分解n0吗？
-搜索找到相关资料，知道根据私钥分解n：" />
+搜索找到相关资料，知道可以根据私钥分解n：" />
 <meta name="keywords" content="" />
 <meta name="robots" content="noodp" />
 <link rel="canonical" href="/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/CTF/crypto/%E9%9D%9E%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86/RSA/%E5%B7%B2%E7%9F%A5ed%E5%88%86%E8%A7%A3n/%E5%B7%85%E5%B3%B0%E6%9E%81%E5%AE%A2-Final-2022/Crypto/gcd/%E5%B7%85%E5%B3%B0%E6%9E%81%E5%AE%A2-Final-2022Cryptogcd-writeup.html" />
@@ -53,10 +53,10 @@ from Crypto.Util.number import * import libnum import flag m = bytes_to_long(fla
 因为本题的已知条件相较于常规RSA，仅多出关键条件x = inverse(n,(p-1)*(q-1))，可以想到应该是要据此分解n。
 至此，逐渐有了正确的方向。
 将$xn\equiv 1 mod(\phi(n_0))$当作一个典型的RSA模型，已知RSA的公钥&rsquo;n&#39;,私钥&rsquo;x&#39;，可以分解n0吗？
-搜索找到相关资料，知道根据私钥分解n：">
+搜索找到相关资料，知道可以根据私钥分解n：">
 <meta itemprop="datePublished" content="2022-08-24T13:51:02+00:00" />
 <meta itemprop="dateModified" content="2022-08-24T13:51:02+00:00" />
-<meta itemprop="wordCount" content="309">
+<meta itemprop="wordCount" content="363">
 
 
 
@@ -71,7 +71,7 @@ from Crypto.Util.number import * import libnum import flag m = bytes_to_long(fla
 因为本题的已知条件相较于常规RSA，仅多出关键条件x = inverse(n,(p-1)*(q-1))，可以想到应该是要据此分解n。
 至此，逐渐有了正确的方向。
 将$xn\equiv 1 mod(\phi(n_0))$当作一个典型的RSA模型，已知RSA的公钥&rsquo;n&#39;,私钥&rsquo;x&#39;，可以分解n0吗？
-搜索找到相关资料，知道根据私钥分解n："/>
+搜索找到相关资料，知道可以根据私钥分解n："/>
 
 
 
@@ -174,12 +174,12 @@ c <span style="color:#f92672">=</span> pow(m,e,n)
 <p>因为本题的已知条件相较于常规RSA，仅多出关键条件<code>x = inverse(n,(p-1)*(q-1))</code>，可以想到应该是要据此分解n。</p>
 <p>至此，逐渐有了正确的方向。</p>
 <p>将$xn\equiv 1 mod(\phi(n_0))$当作一个典型的RSA模型，已知RSA的公钥&rsquo;n',私钥&rsquo;x'，可以分解n0吗？</p>
-<p>搜索找到相关资料，知道根据私钥分解n：</p>
+<p>搜索找到相关资料，知道可以根据私钥分解n：</p>
 <ul>
 <li><a href="https://ctf-wiki.org/en/crypto/asymmetric/rsa/d_attacks/rsa_d_attack/#d_1">ctfwiki: d 泄露攻击</a></li>
 <li><a href="https://www.di-mgt.com.au/rsa_factorize_n.html">RSA: how to factorize N given d</a></li>
 </ul>
-<p>ctfwiki中给出的两个工具似乎不能直接使用，因为我们不知道模n0的值。看来需要自己实现，这里简单复述一下，根据d分解n的证明：</p>
+<p>ctfwiki中给出的两个工具似乎不能直接使用，因为我们不知道模$n_0$的值。看来需要自己理解并修改算法，这里简单复述一下根据d分解n的证明：</p>
 <p>$$
 \begin{align}
 &amp; de\equiv 1 \mod n
@@ -189,7 +189,7 @@ c <span style="color:#f92672">=</span> pow(m,e,n)
 \newline &amp;
 \newline &amp; g^{k}\equiv1\mod n,  ( 1\lt g\lt n, gcd(g,n)=1 )
 \newline &amp; 则g^{k/2}是上式模n上的平方根，有4组解：
-\newline &amp; g^{k/2}\equiv \pm1 或\pm x\mod n, (x\equiv 1\mod p或x\equiv 1\mod q)
+\newline &amp; g^{k/2}\equiv \pm1 或\pm x\mod n, (x\equiv 1\mod p且x\equiv -1\mod q)
 \newline &amp;
 \newline &amp; 通过\pm x, 可以对n进行分解：
 \newline &amp; p=gcd(x-1, n)
@@ -197,15 +197,41 @@ c <span style="color:#f92672">=</span> pow(m,e,n)
 \end{align}
 $$</p>
 <p>该证明出自 <a href="https://www.ams.org/notices/199902/boneh.pdf">Twenty Years of Attacks on the RSA Cryptosystem</a></p>
-<h2 id="solver">solver</h2>
+<p>但本题的$nx\equiv 1\mod n_0$中，模为$n_0$, 而我们只知道n，那么本题中可以使用n作为模吗？即$g^k\equiv1\mod n$成立吗？不成立的，证明如下：</p>
+<p>$$
+\begin{align}
+&amp; g^k=g^{\phi(n_0)k_0}\equiv 1 \mod pq
+\newline \Rightarrow &amp; g^{\phi(n_0)}\equiv1\mod pq
+\newline \Rightarrow &amp; g^{\phi(n_0)}=k_1pq+1
+\newline \Rightarrow &amp; g^k=({g^{\phi(n_0)}})^{k_0}=(k_1pq+1)^{k_0}
+\newline \Rightarrow &amp; 当k_0=1时, g^k=k_1pq+1\mod p^2
+\newline &amp; 当k_0\ge2时，g^k=(k_1pq+1)^{k_0}\equiv k_2pq+1\mod p^2
+\newline \Rightarrow &amp; g^k-1\equiv k_2pq\mod p^2
+\newline &amp; 又 g^k-1\equiv0\mod q
+\newline \Rightarrow &amp; g^k-1\equiv k_2pq\mod p^2q
+\newline &amp; 故 g^k\equiv 1 \mod n 不成立，除非k_2\equiv0\mod p
+\end{align}
+$$</p>
+<p>尽管我们无法套用已知的算法，但在这个过程中，可以发现：</p>
+<p>$$
+\begin{align}
+&amp; gcd(g^k-1, p^2q)
+\newline =&amp; gcd(k_2pq, p^2q)
+\newline =&amp; pq
+\end{align}
+$$</p>
+<p>要求gcd(k2,p)=1，但这通常是满足的</p>
+<h2 id="3-solver">3. solver</h2>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">e <span style="color:#f92672">=</span> <span style="color:#ae81ff">65537</span>
 n <span style="color:#f92672">=</span> <span style="color:#ae81ff">1715097516831775561161353747739509313962850384763754284193603064705990003183954750857689649540587082555847904377918426763475079170697690469267290454724999354302036981034615698694153403754870938739225201770934147845874793740053505575413463153429315475539039712818850905666950096326806695688446947957198050957270336443016980023115464136303403780696015358461369838964806435293267645492940773964907954737849962270208167145137818071024789445448292917016422004351584109968952746852305729861258178402122017513103311904147173869605944992973485253275501741635308107788593258463591060922145241960065862813218690280146883588390356662245698217956617720339878472430817614915509896516775918109916920083183701011823993137753987826242193055167215287839864164955881557719443664876504155709359476375455266912247205663953373944852046907623883953483708248467223346798885142046228485310724692353541792975390854356153906879056788972704718688261213</span>
 x <span style="color:#f92672">=</span> <span style="color:#ae81ff">13693034247131001247611357013365838905472128629161269384100755984286945944986882779020879733934334461215591081830359749241927901759168319107452036275703768755532293338513836146556306490425526394420440685291299327486258632666082657664827474947846307949205548526817689180357262646108048851554962291154624349603853599623877095789135051759890435127891210971940795915429197420232561510826760487552089621705187244655827668509013761027910519038664267576214742561936826964572261315984043602119812357324667105678247267841445497640859880436819217418374184256023378843611198818733281625017307272013394628328908242726204785568269</span>
 c <span style="color:#f92672">=</span> <span style="color:#ae81ff">1207106262178445359018459948589897274651891185968586806427714234447059397099330669443037189913958678506147447588787686432870791586266645067569198511010947847769438531195366288233395081813524859121328300315116211130908169351354477893647936383056584771268247471788727296968981371535384241445434057942795625350351461517179136190258136244456887118978348223420158887403238429201791427682781494296473806409015961385580794909106746874670027369932286414096790928966277930586468864071103687837936910843559150279603968747213779555572156135983177121194768041838538456267670795923361920648635769732101772513407467158904982779342496410211785417729464008786654808126619152228029357660596380038858050797654917902576424059433048290426186067840363899227577713800670585547473870112798624948349947633855963137174688403113603549470708467306886181387445601800049442519922530086418265660642841544022198981442640591637598035257382429976435264690303</span>
 
-
-
 <span style="color:#e6db74">&#39;&#39;&#39;
+</span><span style="color:#e6db74">factor n with e*d
+</span><span style="color:#e6db74">
+</span><span style="color:#e6db74">actually not be applicable for this challenge
+</span><span style="color:#e6db74">
 </span><span style="color:#e6db74">n: module
 </span><span style="color:#e6db74">k: e*d-1
 </span><span style="color:#e6db74">&#39;&#39;&#39;</span>
@@ -217,33 +243,19 @@ c <span style="color:#f92672">=</span> <span style="color:#ae81ff">1207106262178
                 x <span style="color:#f92672">=</span> pow(g, t, n)
                 y <span style="color:#f92672">=</span> gcd(x<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>, n)
                 <span style="color:#66d9ef">if</span> x<span style="color:#f92672">&gt;</span><span style="color:#ae81ff">1</span> <span style="color:#f92672">and</span> y<span style="color:#f92672">&gt;</span><span style="color:#ae81ff">1</span>:
-                    <span style="color:#66d9ef">return</span>
+                    <span style="color:#66d9ef">return</span> y
             <span style="color:#66d9ef">else</span>:
                 <span style="color:#66d9ef">break</span>
-
+            t <span style="color:#f92672">=</span> t <span style="color:#f92672">//</span> <span style="color:#ae81ff">2</span>
+                
 k<span style="color:#f92672">=</span>n<span style="color:#f92672">*</span>x<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>
-factor <span style="color:#f92672">=</span> Integer(factor_n_with_ed(n, k))
+<span style="color:#75715e"># factor = Integer(factor_n_with_ed(n, k))</span>
+pq <span style="color:#f92672">=</span> Integer(gcd(pow(<span style="color:#ae81ff">2</span>,k,n)<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>, n))
 
-<span style="color:#66d9ef">assert</span> n <span style="color:#f92672">%</span> y <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>
+<span style="color:#66d9ef">assert</span> n <span style="color:#f92672">%</span> pq <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>
 
-<span style="color:#75715e"># y = p*p</span>
-<span style="color:#66d9ef">if</span> is_square(y):
-    p <span style="color:#f92672">=</span> y<span style="color:#f92672">.</span>sqrt()
-    q <span style="color:#f92672">=</span> n <span style="color:#f92672">//</span> y
-<span style="color:#66d9ef">elif</span> is_prime(y):
-    r <span style="color:#f92672">=</span> n<span style="color:#f92672">//</span>y
-    <span style="color:#75715e"># y = q</span>
-    <span style="color:#66d9ef">if</span> is_square(r):
-        p <span style="color:#f92672">=</span> r<span style="color:#f92672">.</span>sqrt()
-        q <span style="color:#f92672">=</span> y
-    <span style="color:#75715e"># y = p</span>
-    <span style="color:#66d9ef">else</span>:
-        p <span style="color:#f92672">=</span> y
-        q <span style="color:#f92672">=</span> r <span style="color:#f92672">//</span> y
-<span style="color:#75715e"># y = p*q</span>
-<span style="color:#66d9ef">else</span>:
-    p <span style="color:#f92672">=</span> n<span style="color:#f92672">//</span>y
-    q <span style="color:#f92672">=</span> y<span style="color:#f92672">//</span>p
+p <span style="color:#f92672">=</span> n<span style="color:#f92672">//</span>pq
+q <span style="color:#f92672">=</span> pq<span style="color:#f92672">//</span>p
 
 <span style="color:#66d9ef">assert</span> is_prime(p) <span style="color:#f92672">and</span> n<span style="color:#f92672">%</span>p <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>
 <span style="color:#66d9ef">assert</span> is_prime(q) <span style="color:#f92672">and</span> n<span style="color:#f92672">%</span>q <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>
@@ -257,7 +269,7 @@ m<span style="color:#f92672">=</span>pow(c, d, n)
 flag<span style="color:#f92672">=</span>long_to_bytes(int(m))
 <span style="color:#75715e"># flag{bs903sk_fbnw34f8_cwn3efh}</span>
 flag
-</code></pre></div><h2 id="3-总结">3. 总结</h2>
+</code></pre></div><h2 id="4-总结">4. 总结</h2>
 <p>题目本身是比较简单的，如果单纯给出$n,e,d$，我肯定能快速解决。但是将e,d形式转变为$n=p^2q，xn\equiv 1\mod \phi(n)$，我就被迷惑了。</p>
 <p>总结来说，还是密码学题目做得少，手生。</p>
 

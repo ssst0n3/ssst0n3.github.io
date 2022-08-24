@@ -21,7 +21,7 @@ from Crypto.Util.number import * import libnum import flag m = bytes_to_long(fla
 因为本题的已知条件相较于常规RSA，仅多出关键条件x = inverse(n,(p-1)*(q-1))，可以想到应该是要据此分解n。
 至此，逐渐有了正确的方向。
 将$xn\equiv 1 mod(\phi(n_0))$当作一个典型的RSA模型，已知RSA的公钥&amp;rsquo;n&#39;,私钥&amp;rsquo;x&#39;，可以分解n0吗？
-搜索找到相关资料，知道根据私钥分解n：</description>
+搜索找到相关资料，知道可以根据私钥分解n：</description>
     </item>
     
     <item>
