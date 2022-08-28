@@ -42,7 +42,7 @@ from Crypto.Util.number import * from random import randrange # from grassfield 
 from Crypto.Util.number import * from random import randrange # from grassfield import flag flag=b&#34;ffffffff&#34; p = getPrime(16) print(p) k = [randrange(1,p) for i in range(5)] print(k) for i in range(len(flag)): grasshopper = flag[i] for j in range(5): k[j] = grasshopper = grasshopper * k[j] % p print(&#39;Grasshopper#&#39;&#43;str(i).zfill(2)&#43;&#39;:&#39;&#43;hex(grasshopper)[2:].zfill(4))  点击查看密文 Grasshopper#00:2066 Grasshopper#01:a222 Grasshopper#02:cbb1 Grasshopper#03:dbb4 Grasshopper#04:deb4 Grasshopper#05:b1c5 Grasshopper#06:33a4 Grasshopper#07:c051 Grasshopper#08:3b79 Grasshopper#09:6bf8 Grasshopper#10:2131 Grasshopper#11:2c40 Grasshopper#12:91ba Grasshopper#13:7b44 Grasshopper#14:5f25 Grasshopper#15:0208 Grasshopper#16:7edb Grasshopper#17:62b5 Grasshopper#18:cec5 Grasshopper#19:5ab3 Grasshopper#20:3c46 Grasshopper#21:c272 Grasshopper#22:714b Grasshopper#23:9e0b Grasshopper#24:48ee Grasshopper#25:44cc Grasshopper#26:05a0 Grasshopper#27:3da3 Grasshopper#28:11b1 Grasshopper#29:259f Grasshopper#30:899d Grasshopper#31:a130 Grasshopper#32:e58f Grasshopper#33:23f3 Grasshopper#34:5829 Grasshopper#35:6beb Grasshopper#36:3681 Grasshopper#37:0054 Grasshopper#38:a189 Grasshopper#39:2765 Grasshopper#40:c63d Grasshopper#41:bc68">
 <meta itemprop="datePublished" content="2022-08-28T11:40:56+00:00" />
 <meta itemprop="dateModified" content="2022-08-28T11:40:56+00:00" />
-<meta itemprop="wordCount" content="860">
+<meta itemprop="wordCount" content="884">
 
 
 
@@ -186,9 +186,9 @@ Grasshopper#41:bc68</p>
 <p>只要能看懂题目，就不难解题。关键在于每一轮的k都会变化，加密过程转换成数学公式为：</p>
 <p>$$
 \begin{align}
-&amp; k_i^0 = m_i*k_{i-1}^0
-\newline &amp; k_i^j = k_{i-1}^j*k_i^j
-\newline &amp; c_i = k_i^4
+&amp; k_i^0 = m_i*k_{i-1}^0 \notag
+\newline &amp; k_i^j = k_{i-1}^j*k_i^j \notag
+\newline &amp; c_i = k_i^4 \notag
 \end{align}
 $$</p>
 <h2 id="方法一">方法一</h2>
@@ -221,11 +221,11 @@ equations <span style="color:#f92672">=</span> generate_equations(m, k)
 show_equations(equations, c)
 </code></pre></div><p>$$
 \begin{align}
-&amp; k_{0} k_{1} k_{2} k_{3} k_{4} m_{0} - c_{0}
-\newline &amp; k_{0}^{5} k_{1}^{4} k_{2}^{3} k_{3}^{2} k_{4} m_{0}^{5} m_{1} - c_{1}
-\newline &amp; k_{0}^{15} k_{1}^{10} k_{2}^{6} k_{3}^{3} k_{4} m_{0}^{15} m_{1}^{5} m_{2} - c_{2}
-\newline &amp; k_{0}^{35} k_{1}^{20} k_{2}^{10} k_{3}^{4} k_{4} m_{0}^{35} m_{1}^{15} m_{2}^{5} m_{3} - c_{3}
-\newline &amp; k_{0}^{70} k_{1}^{35} k_{2}^{15} k_{3}^{5} k_{4} m_{0}^{70} m_{1}^{35} m_{2}^{15} m_{3}^{5} m_{4} - c_{4}
+&amp; k_{0} k_{1} k_{2} k_{3} k_{4} m_{0} - c_{0} \notag
+\newline &amp; k_{0}^{5} k_{1}^{4} k_{2}^{3} k_{3}^{2} k_{4} m_{0}^{5} m_{1} - c_{1} \notag
+\newline &amp; k_{0}^{15} k_{1}^{10} k_{2}^{6} k_{3}^{3} k_{4} m_{0}^{15} m_{1}^{5} m_{2} - c_{2} \notag
+\newline &amp; k_{0}^{35} k_{1}^{20} k_{2}^{10} k_{3}^{4} k_{4} m_{0}^{35} m_{1}^{15} m_{2}^{5} m_{3} - c_{3} \notag
+\newline &amp; k_{0}^{70} k_{1}^{35} k_{2}^{15} k_{3}^{5} k_{4} m_{0}^{70} m_{1}^{35} m_{2}^{15} m_{3}^{5} m_{4} - c_{4} \notag
 \end{align}
 $$</p>
 <p>5个未知数，5个同余方程，可解。但我不会自动解，考虑手动消元。</p>
@@ -238,10 +238,10 @@ $$</p>
 temp_k4_elimination(equations, c)
 </code></pre></div><p>$$
 \begin{align}
-&amp; \frac{k_{0}^{4} k_{1}^{3} k_{2}^{2} k_{3} m_{0}^{4} m_{1} c_{0} - c_{1}}{c_{0}}
-\newline &amp; \frac{k_{0}^{10} k_{1}^{6} k_{2}^{3} k_{3} m_{0}^{10} m_{1}^{4} m_{2} c_{1} - c_{2}}{c_{1}}
-\newline &amp; \frac{k_{0}^{20} k_{1}^{10} k_{2}^{4} k_{3} m_{0}^{20} m_{1}^{10} m_{2}^{4} m_{3} c_{2} - c_{3}}{c_{2}}
-\newline &amp; \frac{k_{0}^{35} k_{1}^{15} k_{2}^{5} k_{3} m_{0}^{35} m_{1}^{20} m_{2}^{10} m_{3}^{4} m_{4} c_{3} - c_{4}}{c_{3}}
+&amp; \frac{k_{0}^{4} k_{1}^{3} k_{2}^{2} k_{3} m_{0}^{4} m_{1} c_{0} - c_{1}}{c_{0}} \notag
+\newline &amp; \frac{k_{0}^{10} k_{1}^{6} k_{2}^{3} k_{3} m_{0}^{10} m_{1}^{4} m_{2} c_{1} - c_{2}}{c_{1}} \notag
+\newline &amp; \frac{k_{0}^{20} k_{1}^{10} k_{2}^{4} k_{3} m_{0}^{20} m_{1}^{10} m_{2}^{4} m_{3} c_{2} - c_{3}}{c_{2}} \notag
+\newline &amp; \frac{k_{0}^{35} k_{1}^{15} k_{2}^{5} k_{3} m_{0}^{35} m_{1}^{20} m_{2}^{10} m_{3}^{4} m_{4} c_{3} - c_{4}}{c_{3}} \notag
 \end{align}
 $$</p>
 <p>观察发现$k_3$的幂都是1, 同理，重复上述动作，可逐个消元，将方程组化简。</p>
@@ -259,11 +259,11 @@ $$</p>
 simplified_equations <span style="color:#f92672">=</span> simplify_equations(equations, c)
 </code></pre></div><p>$$
 \begin{align}
-&amp; k_{0} k_{1} k_{2} k_{3} k_{4} m_{0} - c_{0}
-\newline &amp; \frac{k_{0}^{4} k_{1}^{3} k_{2}^{2} k_{3} m_{0}^{4} m_{1} c_{0} - c_{1}}{c_{0}}
-\newline &amp; \frac{k_{0}^{6} k_{1}^{3} k_{2} m_{0}^{6} m_{1}^{3} m_{2} c_{1}^{2} - c_{0} c_{2}}{c_{1}^{2}}
-\newline &amp; \frac{k_{0}^{4} k_{1} m_{0}^{4} m_{1}^{3} m_{2}^{2} m_{3} c_{0} c_{2}^{3} - c_{1}^{3} c_{3}}{c_{0} c_{2}^{3}}
-\newline &amp; \frac{k_{0} m_{0} m_{1} m_{2} m_{3} m_{4} c_{1}^{4} c_{3}^{4} - c_{0} c_{2}^{6} c_{4}}{c_{1}^{4} c_{3}^{4}}
+&amp; k_{0} k_{1} k_{2} k_{3} k_{4} m_{0} - c_{0} \notag
+\newline &amp; \frac{k_{0}^{4} k_{1}^{3} k_{2}^{2} k_{3} m_{0}^{4} m_{1} c_{0} - c_{1}}{c_{0}} \notag
+\newline &amp; \frac{k_{0}^{6} k_{1}^{3} k_{2} m_{0}^{6} m_{1}^{3} m_{2} c_{1}^{2} - c_{0} c_{2}}{c_{1}^{2}} \notag
+\newline &amp; \frac{k_{0}^{4} k_{1} m_{0}^{4} m_{1}^{3} m_{2}^{2} m_{3} c_{0} c_{2}^{3} - c_{1}^{3} c_{3}}{c_{0} c_{2}^{3}} \notag
+\newline &amp; \frac{k_{0} m_{0} m_{1} m_{2} m_{3} m_{4} c_{1}^{4} c_{3}^{4} - c_{0} c_{2}^{6} c_{4}}{c_{1}^{4} c_{3}^{4}} \notag
 \end{align}
 $$</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">solve_equations</span>(equations, kwargs, k):
@@ -384,17 +384,17 @@ p: 59441
 <p>即，记第i轮的$k_j$为$k^j_i$，密文为$c_i$，有：</p>
 <p>$$
 \begin{align}
-&amp; c_i = k_i^4
-\newline &amp; k_i^j \equiv k_i^{j-1} k_{i-1}^j \mod p
-\newline \Rightarrow &amp; k_i^{j-1}\equiv k_i^j*{k_{i-1}^j}^{-1} \mod p
-\end{align}
+&amp; c_i = k_i^4 \notag
+\newline &amp; k_i^j \equiv k_i^{j-1} k_{i-1}^j \mod p \notag
+\newline \Rightarrow &amp; k_i^{j-1}\equiv k_i^j*{k_{i-1}^j}^{-1} \mod p \notag
+\end{align} \notag
 $$</p>
 <p>已知$k_i^4$，则可以求得$k_i^3$，同理可求得$k_i^0$。</p>
 <p>另有:
 $$
-\begin{align}
-&amp; k_i^0\equiv k_{i-1}^0*m_i\mod p
-\newline \Rightarrow &amp; m_i \equiv k_i^0*{k_{i-1}^0}^{-1}\mod p
+\begin{align} \notag
+&amp; k_i^0\equiv k_{i-1}^0*m_i\mod p \notag
+\newline \Rightarrow &amp; m_i \equiv k_i^0*{k_{i-1}^0}^{-1}\mod p \notag
 \end{align}
 $$</p>
 <p>因为p是16位的素数，已知flag格式为<code>flag{*}</code>，则可以爆破p，解密出明文，根据明文格式判断是否为正确的flag。</p>
