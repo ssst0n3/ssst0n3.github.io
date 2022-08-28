@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author"
+    content="">
+<meta name="description"
+    content="网鼎杯-Qualifier-2022/青龙组/Crypto/crypto405 writeup 1. challenge 下载附件得到源码和密文
+from Crypto.Util.number import * from random import randrange # from grassfield import flag flag=b&amp;#34;ffffffff&amp;#34; p = getPrime(16) print(p) k = [randrange(1,p) for i in range(5)] print(k) for i in range(len(flag)): grasshopper = flag[i] for j in range(5): k[j] = grasshopper = grasshopper * k[j] % p print(&amp;#39;Grasshopper#&amp;#39;&#43;str(i).zfill(2)&#43;&amp;#39;:&amp;#39;&#43;hex(grasshopper)[2:].zfill(4))  点击查看密文 Grasshopper#00:2066 Grasshopper#01:a222 Grasshopper#02:cbb1 Grasshopper#03:dbb4 Grasshopper#04:deb4 Grasshopper#05:b1c5 Grasshopper#06:33a4 Grasshopper#07:c051 Grasshopper#08:3b79 Grasshopper#09:6bf8 Grasshopper#10:2131 Grasshopper#11:2c40 Grasshopper#12:91ba Grasshopper#13:7b44 Grasshopper#14:5f25 Grasshopper#15:0208 Grasshopper#16:7edb Grasshopper#17:62b5 Grasshopper#18:cec5 Grasshopper#19:5ab3 Grasshopper#20:3c46 Grasshopper#21:c272 Grasshopper#22:714b Grasshopper#23:9e0b Grasshopper#24:48ee Grasshopper#25:44cc Grasshopper#26:05a0 Grasshopper#27:3da3 Grasshopper#28:11b1 Grasshopper#29:259f Grasshopper#30:899d Grasshopper#31:a130 Grasshopper#32:e58f Grasshopper#33:23f3 Grasshopper#34:5829 Grasshopper#35:6beb Grasshopper#36:3681 Grasshopper#37:0054 Grasshopper#38:a189 Grasshopper#39:2765 Grasshopper#40:c63d Grasshopper#41:bc68" />
+<meta name="keywords" content="" />
+<meta name="robots" content="noodp" />
+<link rel="canonical" href="/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/CTF/crypto/%E6%95%B0%E8%AE%BA/%E7%BD%91%E9%BC%8E%E6%9D%AF-Qualifier-2022%E9%9D%92%E9%BE%99%E7%BB%84Cryptocrypto405-writeup.html" />
+
+
+<title>
+    
+    网鼎杯-Qualifier-2022/青龙组/Crypto/crypto405 writeup :: welcome to st0n3&#39;s blog 
+    
+</title>
+
+
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.2.1/css/flag-icon.min.css" rel="stylesheet"
+    type="text/css">
+
+
+
+<link rel="stylesheet" href="/main.min.de959d61dd13c2cd41136acd491ffb0749779e1afe37b1fed6d5cba0b7e1938d.css">
+
+
+
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#252627">
+<link rel="shortcut icon" href="/favicon.ico">
+<meta name="theme-color" content="#252627"><meta itemprop="name" content="网鼎杯-Qualifier-2022/青龙组/Crypto/crypto405 writeup">
+<meta itemprop="description" content="网鼎杯-Qualifier-2022/青龙组/Crypto/crypto405 writeup 1. challenge 下载附件得到源码和密文
+from Crypto.Util.number import * from random import randrange # from grassfield import flag flag=b&#34;ffffffff&#34; p = getPrime(16) print(p) k = [randrange(1,p) for i in range(5)] print(k) for i in range(len(flag)): grasshopper = flag[i] for j in range(5): k[j] = grasshopper = grasshopper * k[j] % p print(&#39;Grasshopper#&#39;&#43;str(i).zfill(2)&#43;&#39;:&#39;&#43;hex(grasshopper)[2:].zfill(4))  点击查看密文 Grasshopper#00:2066 Grasshopper#01:a222 Grasshopper#02:cbb1 Grasshopper#03:dbb4 Grasshopper#04:deb4 Grasshopper#05:b1c5 Grasshopper#06:33a4 Grasshopper#07:c051 Grasshopper#08:3b79 Grasshopper#09:6bf8 Grasshopper#10:2131 Grasshopper#11:2c40 Grasshopper#12:91ba Grasshopper#13:7b44 Grasshopper#14:5f25 Grasshopper#15:0208 Grasshopper#16:7edb Grasshopper#17:62b5 Grasshopper#18:cec5 Grasshopper#19:5ab3 Grasshopper#20:3c46 Grasshopper#21:c272 Grasshopper#22:714b Grasshopper#23:9e0b Grasshopper#24:48ee Grasshopper#25:44cc Grasshopper#26:05a0 Grasshopper#27:3da3 Grasshopper#28:11b1 Grasshopper#29:259f Grasshopper#30:899d Grasshopper#31:a130 Grasshopper#32:e58f Grasshopper#33:23f3 Grasshopper#34:5829 Grasshopper#35:6beb Grasshopper#36:3681 Grasshopper#37:0054 Grasshopper#38:a189 Grasshopper#39:2765 Grasshopper#40:c63d Grasshopper#41:bc68">
+<meta itemprop="datePublished" content="2022-08-28T11:40:56+00:00" />
+<meta itemprop="dateModified" content="2022-08-28T11:40:56+00:00" />
+<meta itemprop="wordCount" content="860">
+
+
+
+<meta itemprop="keywords" content="" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="网鼎杯-Qualifier-2022/青龙组/Crypto/crypto405 writeup"/>
+<meta name="twitter:description" content="网鼎杯-Qualifier-2022/青龙组/Crypto/crypto405 writeup 1. challenge 下载附件得到源码和密文
+from Crypto.Util.number import * from random import randrange # from grassfield import flag flag=b&#34;ffffffff&#34; p = getPrime(16) print(p) k = [randrange(1,p) for i in range(5)] print(k) for i in range(len(flag)): grasshopper = flag[i] for j in range(5): k[j] = grasshopper = grasshopper * k[j] % p print(&#39;Grasshopper#&#39;&#43;str(i).zfill(2)&#43;&#39;:&#39;&#43;hex(grasshopper)[2:].zfill(4))  点击查看密文 Grasshopper#00:2066 Grasshopper#01:a222 Grasshopper#02:cbb1 Grasshopper#03:dbb4 Grasshopper#04:deb4 Grasshopper#05:b1c5 Grasshopper#06:33a4 Grasshopper#07:c051 Grasshopper#08:3b79 Grasshopper#09:6bf8 Grasshopper#10:2131 Grasshopper#11:2c40 Grasshopper#12:91ba Grasshopper#13:7b44 Grasshopper#14:5f25 Grasshopper#15:0208 Grasshopper#16:7edb Grasshopper#17:62b5 Grasshopper#18:cec5 Grasshopper#19:5ab3 Grasshopper#20:3c46 Grasshopper#21:c272 Grasshopper#22:714b Grasshopper#23:9e0b Grasshopper#24:48ee Grasshopper#25:44cc Grasshopper#26:05a0 Grasshopper#27:3da3 Grasshopper#28:11b1 Grasshopper#29:259f Grasshopper#30:899d Grasshopper#31:a130 Grasshopper#32:e58f Grasshopper#33:23f3 Grasshopper#34:5829 Grasshopper#35:6beb Grasshopper#36:3681 Grasshopper#37:0054 Grasshopper#38:a189 Grasshopper#39:2765 Grasshopper#40:c63d Grasshopper#41:bc68"/>
+
+
+
+
+<meta property="article:published_time" content="2022-08-28 11:40:56 &#43;0000 UTC" />
+
+
+
+
+
+
+
+    </head>
+
+    <body class="dark-theme">
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text">$ cd /home/st0n3</span>
+            <span class="logo__cursor"></span>
+        
+    </div>
+</a>
+
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="/aboutme.html">About</a></li><li><a href="/post.html">Blog</a></li><li><a href="/hackerbot">Hackerbot</a></li><li><a href="/skill_tree/">SkillTree</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+
+            <span class="theme-toggle"><svg class="theme-toggler" width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M22 41C32.4934 41 41 32.4934 41 22C41 11.5066 32.4934 3 22
+  3C11.5066 3 3 11.5066 3 22C3 32.4934 11.5066 41 22 41ZM7 22C7
+  13.7157 13.7157 7 22 7V37C13.7157 37 7 30.2843 7 22Z"/>
+</svg>
+</span>
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
+                
+    <main class="post">
+
+        <div class="post-info">
+            
+            </p>
+        </div>
+
+        <article>
+            <h2 class="post-title"><a href="/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/CTF/crypto/%E6%95%B0%E8%AE%BA/%E7%BD%91%E9%BC%8E%E6%9D%AF-Qualifier-2022%E9%9D%92%E9%BE%99%E7%BB%84Cryptocrypto405-writeup.html">网鼎杯-Qualifier-2022/青龙组/Crypto/crypto405 writeup</a></h2>
+
+            
+
+            <div class="post-content">
+                <h1 id="网鼎杯-qualifier-2022青龙组cryptocrypto405-writeup">网鼎杯-Qualifier-2022/青龙组/Crypto/crypto405 writeup</h1>
+<h2 id="1-challenge">1. challenge</h2>
+<p>下载附件得到源码和密文</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> Crypto.Util.number <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
+<span style="color:#f92672">from</span> random <span style="color:#f92672">import</span> randrange
+<span style="color:#75715e"># from grassfield import flag</span>
+flag<span style="color:#f92672">=</span><span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;ffffffff&#34;</span>
+p <span style="color:#f92672">=</span> getPrime(<span style="color:#ae81ff">16</span>)
+<span style="color:#66d9ef">print</span>(p)
+k <span style="color:#f92672">=</span> [randrange(<span style="color:#ae81ff">1</span>,p) <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">5</span>)]
+<span style="color:#66d9ef">print</span>(k)
+<span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(len(flag)):
+    grasshopper <span style="color:#f92672">=</span> flag[i]
+    <span style="color:#66d9ef">for</span> j <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">5</span>):
+        k[j] <span style="color:#f92672">=</span> grasshopper <span style="color:#f92672">=</span> grasshopper <span style="color:#f92672">*</span> k[j] <span style="color:#f92672">%</span> p
+    <span style="color:#66d9ef">print</span>(<span style="color:#e6db74">&#39;Grasshopper#&#39;</span><span style="color:#f92672">+</span>str(i)<span style="color:#f92672">.</span>zfill(<span style="color:#ae81ff">2</span>)<span style="color:#f92672">+</span><span style="color:#e6db74">&#39;:&#39;</span><span style="color:#f92672">+</span>hex(grasshopper)[<span style="color:#ae81ff">2</span>:]<span style="color:#f92672">.</span>zfill(<span style="color:#ae81ff">4</span>))
+</code></pre></div><details>
+<summary>点击查看密文</summary>
+<p>Grasshopper#00:2066
+Grasshopper#01:a222
+Grasshopper#02:cbb1
+Grasshopper#03:dbb4
+Grasshopper#04:deb4
+Grasshopper#05:b1c5
+Grasshopper#06:33a4
+Grasshopper#07:c051
+Grasshopper#08:3b79
+Grasshopper#09:6bf8
+Grasshopper#10:2131
+Grasshopper#11:2c40
+Grasshopper#12:91ba
+Grasshopper#13:7b44
+Grasshopper#14:5f25
+Grasshopper#15:0208
+Grasshopper#16:7edb
+Grasshopper#17:62b5
+Grasshopper#18:cec5
+Grasshopper#19:5ab3
+Grasshopper#20:3c46
+Grasshopper#21:c272
+Grasshopper#22:714b
+Grasshopper#23:9e0b
+Grasshopper#24:48ee
+Grasshopper#25:44cc
+Grasshopper#26:05a0
+Grasshopper#27:3da3
+Grasshopper#28:11b1
+Grasshopper#29:259f
+Grasshopper#30:899d
+Grasshopper#31:a130
+Grasshopper#32:e58f
+Grasshopper#33:23f3
+Grasshopper#34:5829
+Grasshopper#35:6beb
+Grasshopper#36:3681
+Grasshopper#37:0054
+Grasshopper#38:a189
+Grasshopper#39:2765
+Grasshopper#40:c63d
+Grasshopper#41:bc68</p>
+</details>
+<h2 id="分析">分析</h2>
+<p>只要能看懂题目，就不难解题。关键在于每一轮的k都会变化，加密过程转换成数学公式为：</p>
+<p>$$
+\begin{align}
+&amp; k_i^0 = m_i*k_{i-1}^0
+\newline &amp; k_i^j = k_{i-1}^j*k_i^j
+\newline &amp; c_i = k_i^4
+\end{align}
+$$</p>
+<h2 id="方法一">方法一</h2>
+<p>阅读代码可知，每一轮的k，都与上一轮的k相关。又已知flag格式为<code>flag{*}</code>，即已知明文前五位，可以列出5个模p的方程式：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> Crypto.Util.number <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">generate_equations</span>(m, k):
+    k <span style="color:#f92672">=</span> k<span style="color:#f92672">.</span>copy()
+    equations <span style="color:#f92672">=</span> []
+    <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">5</span>):
+        grasshopper <span style="color:#f92672">=</span> m[i]
+        <span style="color:#66d9ef">for</span> j <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">5</span>):
+            k[j] <span style="color:#f92672">=</span> grasshopper <span style="color:#f92672">=</span> grasshopper <span style="color:#f92672">*</span> k[j]
+        equations<span style="color:#f92672">.</span>append(grasshopper)
+    <span style="color:#66d9ef">return</span> equations
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">show_equations</span>(equations, c):
+    <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(len(equations)):
+        show(equations[i]<span style="color:#f92672">-</span>c[i])
+        
+p <span style="color:#f92672">=</span> <span style="color:#ae81ff">2</span><span style="color:#f92672">^</span><span style="color:#ae81ff">16</span><span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>
+p <span style="color:#f92672">=</span> previous_prime(p)
+R<span style="color:#f92672">.&lt;</span>k0,k1,k2,k3,k4,m0,m1,m2,m3,m4,c0,c1,c2,c3,c4<span style="color:#f92672">&gt;</span> <span style="color:#f92672">=</span> GF(p)[]
+
+m <span style="color:#f92672">=</span> [m0,m1,m2,m3,m4]
+k <span style="color:#f92672">=</span> [k0,k1,k2,k3,k4]
+c <span style="color:#f92672">=</span> [c0,c1,c2,c3,c4]
+
+equations <span style="color:#f92672">=</span> generate_equations(m, k)
+show_equations(equations, c)
+</code></pre></div><p>$$
+\begin{align}
+&amp; k_{0} k_{1} k_{2} k_{3} k_{4} m_{0} - c_{0}
+\newline &amp; k_{0}^{5} k_{1}^{4} k_{2}^{3} k_{3}^{2} k_{4} m_{0}^{5} m_{1} - c_{1}
+\newline &amp; k_{0}^{15} k_{1}^{10} k_{2}^{6} k_{3}^{3} k_{4} m_{0}^{15} m_{1}^{5} m_{2} - c_{2}
+\newline &amp; k_{0}^{35} k_{1}^{20} k_{2}^{10} k_{3}^{4} k_{4} m_{0}^{35} m_{1}^{15} m_{2}^{5} m_{3} - c_{3}
+\newline &amp; k_{0}^{70} k_{1}^{35} k_{2}^{15} k_{3}^{5} k_{4} m_{0}^{70} m_{1}^{35} m_{2}^{15} m_{3}^{5} m_{4} - c_{4}
+\end{align}
+$$</p>
+<p>5个未知数，5个同余方程，可解。但我不会自动解，考虑手动消元。</p>
+<p>观察发现$k_4$的幂都是1, 每个方程式除以前式，可得到关于$k_0,k_1,k_2,k_3$的4个同余方程式：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">temp_k4_elimination</span>(equations, c):
+    equations <span style="color:#f92672">=</span> [equations[i<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>]<span style="color:#f92672">/</span>equations[i] <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">4</span>)]
+    c <span style="color:#f92672">=</span> [c[i<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>]<span style="color:#f92672">/</span>c[i] <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">4</span>)]
+    show_equations(equations, c) 
+
+temp_k4_elimination(equations, c)
+</code></pre></div><p>$$
+\begin{align}
+&amp; \frac{k_{0}^{4} k_{1}^{3} k_{2}^{2} k_{3} m_{0}^{4} m_{1} c_{0} - c_{1}}{c_{0}}
+\newline &amp; \frac{k_{0}^{10} k_{1}^{6} k_{2}^{3} k_{3} m_{0}^{10} m_{1}^{4} m_{2} c_{1} - c_{2}}{c_{1}}
+\newline &amp; \frac{k_{0}^{20} k_{1}^{10} k_{2}^{4} k_{3} m_{0}^{20} m_{1}^{10} m_{2}^{4} m_{3} c_{2} - c_{3}}{c_{2}}
+\newline &amp; \frac{k_{0}^{35} k_{1}^{15} k_{2}^{5} k_{3} m_{0}^{35} m_{1}^{20} m_{2}^{10} m_{3}^{4} m_{4} c_{3} - c_{4}}{c_{3}}
+\end{align}
+$$</p>
+<p>观察发现$k_3$的幂都是1, 同理，重复上述动作，可逐个消元，将方程组化简。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">simplify_equations</span>(equations, c):
+    c <span style="color:#f92672">=</span> c<span style="color:#f92672">.</span>copy()
+    simplified_equations <span style="color:#f92672">=</span> [equations[<span style="color:#ae81ff">0</span>]<span style="color:#f92672">-</span>c[<span style="color:#ae81ff">0</span>]]
+    <span style="color:#66d9ef">for</span> _ <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">4</span>):
+        equations <span style="color:#f92672">=</span>[equations[i<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>]<span style="color:#f92672">/</span>equations[i] <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(len(equations)<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>)]
+        c <span style="color:#f92672">=</span> [c[i<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>]<span style="color:#f92672">/</span>c[i] <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(len(c)<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>)]
+        simplified_equations<span style="color:#f92672">.</span>append(equations[<span style="color:#ae81ff">0</span>]<span style="color:#f92672">-</span>c[<span style="color:#ae81ff">0</span>])
+    <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(len(simplified_equations)):
+        show(simplified_equations[i])
+    <span style="color:#66d9ef">return</span> simplified_equations
+
+simplified_equations <span style="color:#f92672">=</span> simplify_equations(equations, c)
+</code></pre></div><p>$$
+\begin{align}
+&amp; k_{0} k_{1} k_{2} k_{3} k_{4} m_{0} - c_{0}
+\newline &amp; \frac{k_{0}^{4} k_{1}^{3} k_{2}^{2} k_{3} m_{0}^{4} m_{1} c_{0} - c_{1}}{c_{0}}
+\newline &amp; \frac{k_{0}^{6} k_{1}^{3} k_{2} m_{0}^{6} m_{1}^{3} m_{2} c_{1}^{2} - c_{0} c_{2}}{c_{1}^{2}}
+\newline &amp; \frac{k_{0}^{4} k_{1} m_{0}^{4} m_{1}^{3} m_{2}^{2} m_{3} c_{0} c_{2}^{3} - c_{1}^{3} c_{3}}{c_{0} c_{2}^{3}}
+\newline &amp; \frac{k_{0} m_{0} m_{1} m_{2} m_{3} m_{4} c_{1}^{4} c_{3}^{4} - c_{0} c_{2}^{6} c_{4}}{c_{1}^{4} c_{3}^{4}}
+\end{align}
+$$</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">solve_equations</span>(equations, kwargs, k):
+    k <span style="color:#f92672">=</span> k<span style="color:#f92672">.</span>copy()
+    <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">5</span>):
+        equation <span style="color:#f92672">=</span> equations[<span style="color:#ae81ff">5</span><span style="color:#f92672">-</span>i<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>]
+        <span style="color:#66d9ef">for</span> j <span style="color:#f92672">in</span> range(i<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>):
+            kwargs[f<span style="color:#e6db74">&#39;k{j}&#39;</span>] <span style="color:#f92672">=</span> k[j]
+        k[i] <span style="color:#f92672">=</span> int(equation(<span style="color:#f92672">**</span>kwargs)<span style="color:#f92672">.</span>univariate_polynomial()<span style="color:#f92672">.</span>roots()[<span style="color:#ae81ff">0</span>][<span style="color:#ae81ff">0</span>])
+<span style="color:#75715e">#         print(f&#34;k[{i}]=&#34;, k[i])</span>
+    <span style="color:#66d9ef">return</span> k
+
+output <span style="color:#f92672">=</span> [<span style="color:#ae81ff">0x2066</span>,<span style="color:#ae81ff">0xa222</span>,<span style="color:#ae81ff">0xcbb1</span>,<span style="color:#ae81ff">0xdbb4</span>,<span style="color:#ae81ff">0xdeb4</span>,<span style="color:#ae81ff">0xb1c5</span>,<span style="color:#ae81ff">0x33a4</span>,<span style="color:#ae81ff">0xc051</span>,<span style="color:#ae81ff">0x3b79</span>,<span style="color:#ae81ff">0x6bf8</span>,<span style="color:#ae81ff">0x2131</span>,<span style="color:#ae81ff">0x2c40</span>,<span style="color:#ae81ff">0x91ba</span>,<span style="color:#ae81ff">0x7b44</span>,<span style="color:#ae81ff">0x5f25</span>,<span style="color:#ae81ff">0x0208</span>,<span style="color:#ae81ff">0x7edb</span>,<span style="color:#ae81ff">0x62b5</span>,<span style="color:#ae81ff">0xcec5</span>,<span style="color:#ae81ff">0x5ab3</span>,<span style="color:#ae81ff">0x3c46</span>,<span style="color:#ae81ff">0xc272</span>,<span style="color:#ae81ff">0x714b</span>,<span style="color:#ae81ff">0x9e0b</span>,<span style="color:#ae81ff">0x48ee</span>,<span style="color:#ae81ff">0x44cc</span>,<span style="color:#ae81ff">0x05a0</span>,<span style="color:#ae81ff">0x3da3</span>,<span style="color:#ae81ff">0x11b1</span>,<span style="color:#ae81ff">0x259f</span>,<span style="color:#ae81ff">0x899d</span>,<span style="color:#ae81ff">0xa130</span>,<span style="color:#ae81ff">0xe58f</span>,<span style="color:#ae81ff">0x23f3</span>,<span style="color:#ae81ff">0x5829</span>,<span style="color:#ae81ff">0x6beb</span>,<span style="color:#ae81ff">0x3681</span>,<span style="color:#ae81ff">0x0054</span>,<span style="color:#ae81ff">0xa189</span>,<span style="color:#ae81ff">0x2765</span>,<span style="color:#ae81ff">0xc63d</span>,<span style="color:#ae81ff">0xbc68</span>,]
+known_plain <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;flag{&#39;</span>
+known_m <span style="color:#f92672">=</span> [ord(i) <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> known_plain]
+kwargs <span style="color:#f92672">=</span> {}
+<span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">5</span>):
+    kwargs[f<span style="color:#e6db74">&#39;m{i}&#39;</span>] <span style="color:#f92672">=</span> known_m[i]
+    kwargs[f<span style="color:#e6db74">&#39;c{i}&#39;</span>] <span style="color:#f92672">=</span> output[i]
+    kwargs[f<span style="color:#e6db74">&#39;k{i}&#39;</span>] <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>
+
+k_init <span style="color:#f92672">=</span> solve_equations(simplified_equations, kwargs, k)
+</code></pre></div><p>求出k，则可解出明文，$m_ik_0k_1k_2k_3k_4\equiv c_i\mod p \Rightarrow m_i\equiv c_i*{k_0k_1k_2k_3k_4}^{-1}\mod p$</p>
+<p>完整exp如下：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> tqdm <span style="color:#f92672">import</span> tqdm
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">generate_equations</span>(m, k):
+    k <span style="color:#f92672">=</span> k<span style="color:#f92672">.</span>copy()
+    equations <span style="color:#f92672">=</span> []
+    <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">5</span>):
+        grasshopper <span style="color:#f92672">=</span> m[i]
+        <span style="color:#66d9ef">for</span> j <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">5</span>):
+            k[j] <span style="color:#f92672">=</span> grasshopper <span style="color:#f92672">=</span> grasshopper <span style="color:#f92672">*</span> k[j]
+        equations<span style="color:#f92672">.</span>append(grasshopper)
+    <span style="color:#66d9ef">return</span> equations
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">simplify_equations</span>(equations, c):
+    c <span style="color:#f92672">=</span> c<span style="color:#f92672">.</span>copy()
+    simplified_equations <span style="color:#f92672">=</span> [equations[<span style="color:#ae81ff">0</span>]<span style="color:#f92672">-</span>c[<span style="color:#ae81ff">0</span>]]
+    <span style="color:#66d9ef">for</span> _ <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">4</span>):
+        equations <span style="color:#f92672">=</span>[equations[i<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>]<span style="color:#f92672">/</span>equations[i] <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(len(equations)<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>)]
+        c <span style="color:#f92672">=</span> [c[i<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>]<span style="color:#f92672">/</span>c[i] <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(len(c)<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>)]
+        simplified_equations<span style="color:#f92672">.</span>append(equations[<span style="color:#ae81ff">0</span>]<span style="color:#f92672">-</span>c[<span style="color:#ae81ff">0</span>])
+    <span style="color:#66d9ef">return</span> simplified_equations
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">solve_equations</span>(equations, kwargs, k):
+    k <span style="color:#f92672">=</span> k<span style="color:#f92672">.</span>copy()
+    <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">5</span>):
+        equation <span style="color:#f92672">=</span> equations[<span style="color:#ae81ff">5</span><span style="color:#f92672">-</span>i<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>]
+        <span style="color:#66d9ef">for</span> j <span style="color:#f92672">in</span> range(i<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>):
+            kwargs[f<span style="color:#e6db74">&#39;k{j}&#39;</span>] <span style="color:#f92672">=</span> k[j]
+        k[i] <span style="color:#f92672">=</span> int(equation(<span style="color:#f92672">**</span>kwargs)<span style="color:#f92672">.</span>univariate_polynomial()<span style="color:#f92672">.</span>roots()[<span style="color:#ae81ff">0</span>][<span style="color:#ae81ff">0</span>])
+<span style="color:#75715e">#         print(f&#34;k[{i}]=&#34;, k[i])</span>
+    <span style="color:#66d9ef">return</span> k
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">update_k</span>(m, k):
+    grasshopper <span style="color:#f92672">=</span> m
+    <span style="color:#66d9ef">for</span> j <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">5</span>):
+        k[j] <span style="color:#f92672">=</span> grasshopper <span style="color:#f92672">=</span> grasshopper <span style="color:#f92672">*</span> k[j] <span style="color:#f92672">%</span>p
+    <span style="color:#66d9ef">return</span> k
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">decrypt</span>(k):
+    m <span style="color:#f92672">=</span> known_m<span style="color:#f92672">.</span>copy()
+    <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">5</span>, len(output)):
+        mi <span style="color:#f92672">=</span> output[i]<span style="color:#f92672">*</span>inverse_mod(k[<span style="color:#ae81ff">0</span>]<span style="color:#f92672">*</span>k[<span style="color:#ae81ff">1</span>]<span style="color:#f92672">*</span>k[<span style="color:#ae81ff">2</span>]<span style="color:#f92672">*</span>k[<span style="color:#ae81ff">3</span>]<span style="color:#f92672">*</span>k[<span style="color:#ae81ff">4</span>], p)<span style="color:#f92672">%</span>p
+        <span style="color:#66d9ef">if</span> mi <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">128</span>:
+            <span style="color:#66d9ef">break</span>
+        m<span style="color:#f92672">.</span>append(mi)
+        k <span style="color:#f92672">=</span> update_k(mi, k)
+    <span style="color:#66d9ef">return</span> m
+
+known_plain <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;flag{&#39;</span>
+known_m <span style="color:#f92672">=</span> [ord(i) <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> known_plain]
+output <span style="color:#f92672">=</span> [<span style="color:#ae81ff">0x2066</span>,<span style="color:#ae81ff">0xa222</span>,<span style="color:#ae81ff">0xcbb1</span>,<span style="color:#ae81ff">0xdbb4</span>,<span style="color:#ae81ff">0xdeb4</span>,<span style="color:#ae81ff">0xb1c5</span>,<span style="color:#ae81ff">0x33a4</span>,<span style="color:#ae81ff">0xc051</span>,<span style="color:#ae81ff">0x3b79</span>,<span style="color:#ae81ff">0x6bf8</span>,<span style="color:#ae81ff">0x2131</span>,<span style="color:#ae81ff">0x2c40</span>,<span style="color:#ae81ff">0x91ba</span>,<span style="color:#ae81ff">0x7b44</span>,<span style="color:#ae81ff">0x5f25</span>,<span style="color:#ae81ff">0x0208</span>,<span style="color:#ae81ff">0x7edb</span>,<span style="color:#ae81ff">0x62b5</span>,<span style="color:#ae81ff">0xcec5</span>,<span style="color:#ae81ff">0x5ab3</span>,<span style="color:#ae81ff">0x3c46</span>,<span style="color:#ae81ff">0xc272</span>,<span style="color:#ae81ff">0x714b</span>,<span style="color:#ae81ff">0x9e0b</span>,<span style="color:#ae81ff">0x48ee</span>,<span style="color:#ae81ff">0x44cc</span>,<span style="color:#ae81ff">0x05a0</span>,<span style="color:#ae81ff">0x3da3</span>,<span style="color:#ae81ff">0x11b1</span>,<span style="color:#ae81ff">0x259f</span>,<span style="color:#ae81ff">0x899d</span>,<span style="color:#ae81ff">0xa130</span>,<span style="color:#ae81ff">0xe58f</span>,<span style="color:#ae81ff">0x23f3</span>,<span style="color:#ae81ff">0x5829</span>,<span style="color:#ae81ff">0x6beb</span>,<span style="color:#ae81ff">0x3681</span>,<span style="color:#ae81ff">0x0054</span>,<span style="color:#ae81ff">0xa189</span>,<span style="color:#ae81ff">0x2765</span>,<span style="color:#ae81ff">0xc63d</span>,<span style="color:#ae81ff">0xbc68</span>,]
+c <span style="color:#f92672">=</span> output[:<span style="color:#ae81ff">5</span>]
+
+p <span style="color:#f92672">=</span> <span style="color:#ae81ff">2</span><span style="color:#f92672">^</span><span style="color:#ae81ff">16</span><span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>
+pbar <span style="color:#f92672">=</span> tqdm(total<span style="color:#f92672">=</span>int(prime_pi(<span style="color:#ae81ff">2</span><span style="color:#f92672">^</span><span style="color:#ae81ff">16</span>)<span style="color:#f92672">-</span>prime_pi(<span style="color:#ae81ff">2</span><span style="color:#f92672">^</span><span style="color:#ae81ff">15</span>)))
+<span style="color:#66d9ef">while</span> p<span style="color:#f92672">.</span>nbits()<span style="color:#f92672">&lt;=</span><span style="color:#ae81ff">16</span>:
+    pbar<span style="color:#f92672">.</span>update()
+    p <span style="color:#f92672">=</span> previous_prime(p)
+    R<span style="color:#f92672">.&lt;</span>k0,k1,k2,k3,k4,m0,m1,m2,m3,m4,c0,c1,c2,c3,c4<span style="color:#f92672">&gt;</span> <span style="color:#f92672">=</span> GF(p)[]
+    k <span style="color:#f92672">=</span> [k0,k1,k2,k3,k4]
+
+    equations <span style="color:#f92672">=</span> generate_equations(known_m, k)
+    simplified_equations <span style="color:#f92672">=</span> simplify_equations(equations, c)
+    
+    kwargs <span style="color:#f92672">=</span> {}
+    <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">5</span>):
+        kwargs[f<span style="color:#e6db74">&#39;k{i}&#39;</span>] <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>
+
+    k_init <span style="color:#f92672">=</span> solve_equations(simplified_equations, kwargs, k)    
+    k_iterate <span style="color:#f92672">=</span> k_init<span style="color:#f92672">.</span>copy()
+    <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> known_m:
+        k_iterate <span style="color:#f92672">=</span> update_k(i, k_iterate)
+
+    m <span style="color:#f92672">=</span> decrypt(k_iterate)
+    <span style="color:#66d9ef">if</span> len(m)<span style="color:#f92672">==</span><span style="color:#ae81ff">42</span>:
+        flag <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;&#34;</span><span style="color:#f92672">.</span>join([chr(i) <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> m])
+        <span style="color:#66d9ef">print</span>(flag)
+        <span style="color:#66d9ef">print</span>(<span style="color:#e6db74">&#34;k:&#34;</span>, k_init)
+        <span style="color:#66d9ef">print</span>(<span style="color:#e6db74">&#34;p:&#34;</span>, p)
+        <span style="color:#66d9ef">break</span>
+
+pbar<span style="color:#f92672">.</span>close()
+</code></pre></div><pre><code> 18% 534/3030 [00:02&lt;00:10, 231.04it/s]
+
+flag{749d39d4-78db-4c55-b4ff-bca873d0f18e}
+k: [28358, 39970, 28105, 42009, 46211]
+p: 59441
+</code></pre>
+<h2 id="方法二">方法二</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(len(flag)):
+    grasshopper <span style="color:#f92672">=</span> flag[i]
+    <span style="color:#66d9ef">for</span> j <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">5</span>):
+        k[j] <span style="color:#f92672">=</span> grasshopper <span style="color:#f92672">=</span> grasshopper <span style="color:#f92672">*</span> k[j] <span style="color:#f92672">%</span> p
+</code></pre></div><p>根据代码知道，每一轮的密文，就是每一轮的$k_4$。每一轮的$k_4$为该轮的$k_3$乘以上一轮的$k_4$。</p>
+<p>即，记第i轮的$k_j$为$k^j_i$，密文为$c_i$，有：</p>
+<p>$$
+\begin{align}
+&amp; c_i = k_i^4
+\newline &amp; k_i^j \equiv k_i^{j-1} k_{i-1}^j \mod p
+\newline \Rightarrow &amp; k_i^{j-1}\equiv k_i^j*{k_{i-1}^j}^{-1} \mod p
+\end{align}
+$$</p>
+<p>已知$k_i^4$，则可以求得$k_i^3$，同理可求得$k_i^0$。</p>
+<p>另有:
+$$
+\begin{align}
+&amp; k_i^0\equiv k_{i-1}^0*m_i\mod p
+\newline \Rightarrow &amp; m_i \equiv k_i^0*{k_{i-1}^0}^{-1}\mod p
+\end{align}
+$$</p>
+<p>因为p是16位的素数，已知flag格式为<code>flag{*}</code>，则可以爆破p，解密出明文，根据明文格式判断是否为正确的flag。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> tqdm <span style="color:#f92672">import</span> tqdm
+output <span style="color:#f92672">=</span> [<span style="color:#ae81ff">0x2066</span>,<span style="color:#ae81ff">0xa222</span>,<span style="color:#ae81ff">0xcbb1</span>,<span style="color:#ae81ff">0xdbb4</span>,<span style="color:#ae81ff">0xdeb4</span>,<span style="color:#ae81ff">0xb1c5</span>,<span style="color:#ae81ff">0x33a4</span>,<span style="color:#ae81ff">0xc051</span>,<span style="color:#ae81ff">0x3b79</span>,<span style="color:#ae81ff">0x6bf8</span>,<span style="color:#ae81ff">0x2131</span>,<span style="color:#ae81ff">0x2c40</span>,<span style="color:#ae81ff">0x91ba</span>,<span style="color:#ae81ff">0x7b44</span>,<span style="color:#ae81ff">0x5f25</span>,<span style="color:#ae81ff">0x0208</span>,<span style="color:#ae81ff">0x7edb</span>,<span style="color:#ae81ff">0x62b5</span>,<span style="color:#ae81ff">0xcec5</span>,<span style="color:#ae81ff">0x5ab3</span>,<span style="color:#ae81ff">0x3c46</span>,<span style="color:#ae81ff">0xc272</span>,<span style="color:#ae81ff">0x714b</span>,<span style="color:#ae81ff">0x9e0b</span>,<span style="color:#ae81ff">0x48ee</span>,<span style="color:#ae81ff">0x44cc</span>,<span style="color:#ae81ff">0x05a0</span>,<span style="color:#ae81ff">0x3da3</span>,<span style="color:#ae81ff">0x11b1</span>,<span style="color:#ae81ff">0x259f</span>,<span style="color:#ae81ff">0x899d</span>,<span style="color:#ae81ff">0xa130</span>,<span style="color:#ae81ff">0xe58f</span>,<span style="color:#ae81ff">0x23f3</span>,<span style="color:#ae81ff">0x5829</span>,<span style="color:#ae81ff">0x6beb</span>,<span style="color:#ae81ff">0x3681</span>,<span style="color:#ae81ff">0x0054</span>,<span style="color:#ae81ff">0xa189</span>,<span style="color:#ae81ff">0x2765</span>,<span style="color:#ae81ff">0xc63d</span>,<span style="color:#ae81ff">0xbc68</span>]
+
+p <span style="color:#f92672">=</span> <span style="color:#ae81ff">2</span><span style="color:#f92672">^</span><span style="color:#ae81ff">15</span><span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>
+pbar <span style="color:#f92672">=</span> tqdm(total<span style="color:#f92672">=</span>int(prime_pi(<span style="color:#ae81ff">2</span><span style="color:#f92672">^</span><span style="color:#ae81ff">16</span>)<span style="color:#f92672">-</span>prime_pi(<span style="color:#ae81ff">2</span><span style="color:#f92672">^</span><span style="color:#ae81ff">15</span>)))
+
+<span style="color:#66d9ef">while</span> p<span style="color:#f92672">.</span>nbits()<span style="color:#f92672">&lt;=</span><span style="color:#ae81ff">16</span>:
+    pbar<span style="color:#f92672">.</span>update()
+    p <span style="color:#f92672">=</span> next_prime(p)
+    k <span style="color:#f92672">=</span> output<span style="color:#f92672">.</span>copy()
+    <span style="color:#66d9ef">for</span> _ <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">5</span>):
+        <span style="color:#66d9ef">if</span> p <span style="color:#f92672">in</span> k:
+            <span style="color:#66d9ef">break</span>
+        k <span style="color:#f92672">=</span> [k[i]<span style="color:#f92672">*</span>inverse_mod(k[i<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>], p)<span style="color:#f92672">%</span>p <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">1</span>, len(k))]
+
+    <span style="color:#66d9ef">if</span> k[<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>] <span style="color:#f92672">==</span> ord(<span style="color:#e6db74">&#39;}&#39;</span>):
+        flag <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;flag{&#34;</span><span style="color:#f92672">+</span><span style="color:#e6db74">&#34;&#34;</span><span style="color:#f92672">.</span>join([chr(i) <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> k])
+        <span style="color:#66d9ef">print</span>(flag)
+        <span style="color:#66d9ef">break</span>
+pbar<span style="color:#f92672">.</span>close()
+</code></pre></div><pre><code> 77% 2322/3030 [00:00&lt;00:00, 3877.36it/s]
+
+flag{749d39d4-78db-4c55-b4ff-bca873d0f18e}
+</code></pre>
+
+            </div>
+        </article>
+
+        <hr />
+
+        <div class="post-info">
+  			</div>
+
+        
+    </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>&copy; 2022</span>
+            
+            <span></span>
+            <span> <a href="/posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a></span>
+        </div>
+    </div>
+    <div class="footer__inner">
+        <div class="footer__content">
+
+        </div>
+    </div>
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>Powered by <a href="http://gohugo.io">Hugo</a></span>
+            <span>Made with &#10084; by <a href="https://github.com/st0n3">st0n3</a></span>
+            <span>Based on <a href="https://github.com/rhazdon">rhazdon</a></span>
+        </div>
+    </div>
+
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      extensions: ["tex2jax.js"],
+      
+      jax: ["input/TeX", "output/CommonHTML"],
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+        displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+        processEscapes: true
+      },
+      "HTML-CSS": { fonts: ["TeX"] },
+      displayAlign: "left"
+    });
+  </script>
+
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_CHTML"></script>
+
+
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+
+<script type="text/javascript" src="/bundle.min.4c3fb12a087ceed4a52cb5d57068a9795c7069617a01ca70f788052ad66e1791779e6c72686e1dc0ca13dc03b0203204b6566bb0dd1ee80de2b7ff4d8fe53db2.js" integrity="sha512-TD&#43;xKgh87tSlLLXVcGipeVxwaWF6Acpw94gFKtZuF5F3nmxyaG4dwMoT3AOwIDIEtlZrsN0e6A3it/9Nj&#43;U9sg=="></script>
+
+
+
+    </body>
+</html>
