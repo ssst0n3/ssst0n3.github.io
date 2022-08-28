@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author"
+    content="">
+<meta name="description"
+    content="网鼎杯-Qualifier-2022/白虎组/Crypto/? writeup 题目名字不知道
+challenge from Crypto.Util.number import getPrime import hashlib e = 2022 m = getPrime(512) m1 = getPrime(512) m2 = getPrime(512) flag = m&#43;m1&#43;m2 flag = hashlib.md5(str(flag).encode(&amp;#39;utf-8&amp;#39;)).hexdigest() c1 = pow(m&#43;m1, e, m*m1) c2 = pow(m&#43;m2, e, m*m2) c3 = pow(m1&#43;m2, e, m1*m2) x = pow(m1&#43;2022, m, m*m1) y = pow(m2&#43;2022, m, m*m2) z = pow(m&#43;2022, m1, m*m1) print(&amp;#34;c1 = &amp;#34;, c1) print(&amp;#34;c2 = &amp;#34;, c2) print(&amp;#34;c3 = &amp;#34;, c3) print(&amp;#34;x = &amp;#34;, x) print(&amp;#34;y = &amp;#34;, y) print(&amp;#34;z = &amp;#34;, z) 分析 $$ \begin{align} &amp;amp; (m&#43;m_1)^e \equiv c_1 \mod mm_1 \newline &amp;amp; (m&#43;m_2)^e \equiv c_2 \mod mm_2 \newline &amp;amp; (m_1&#43;m_2)^e \equiv c_3 \mod m_1m_2 \newline &amp;amp; (m_1&#43;e)^m \equiv x \mod mm_1 \newline &amp;amp; (m_2&#43;e)^m \equiv y \mod mm_2 \newline &amp;amp; (m&#43;e)^{m_1} \equiv z \mod mm_1 \end{align} $$" />
+<meta name="keywords" content="" />
+<meta name="robots" content="noodp" />
+<link rel="canonical" href="/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/CTF/crypto/%E6%95%B0%E8%AE%BA/%E7%BD%91%E9%BC%8E%E6%9D%AF-Qualifier-2022%E7%99%BD%E8%99%8E%E7%BB%84Crypto-writeup.html" />
+
+
+<title>
+    
+    网鼎杯-Qualifier-2022/白虎组/Crypto/? writeup :: welcome to st0n3&#39;s blog 
+    
+</title>
+
+
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.2.1/css/flag-icon.min.css" rel="stylesheet"
+    type="text/css">
+
+
+
+<link rel="stylesheet" href="/main.min.de959d61dd13c2cd41136acd491ffb0749779e1afe37b1fed6d5cba0b7e1938d.css">
+
+
+
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#252627">
+<link rel="shortcut icon" href="/favicon.ico">
+<meta name="theme-color" content="#252627"><meta itemprop="name" content="网鼎杯-Qualifier-2022/白虎组/Crypto/? writeup">
+<meta itemprop="description" content="网鼎杯-Qualifier-2022/白虎组/Crypto/? writeup 题目名字不知道
+challenge from Crypto.Util.number import getPrime import hashlib e = 2022 m = getPrime(512) m1 = getPrime(512) m2 = getPrime(512) flag = m&#43;m1&#43;m2 flag = hashlib.md5(str(flag).encode(&#39;utf-8&#39;)).hexdigest() c1 = pow(m&#43;m1, e, m*m1) c2 = pow(m&#43;m2, e, m*m2) c3 = pow(m1&#43;m2, e, m1*m2) x = pow(m1&#43;2022, m, m*m1) y = pow(m2&#43;2022, m, m*m2) z = pow(m&#43;2022, m1, m*m1) print(&#34;c1 = &#34;, c1) print(&#34;c2 = &#34;, c2) print(&#34;c3 = &#34;, c3) print(&#34;x = &#34;, x) print(&#34;y = &#34;, y) print(&#34;z = &#34;, z) 分析 $$ \begin{align} &amp; (m&#43;m_1)^e \equiv c_1 \mod mm_1 \newline &amp; (m&#43;m_2)^e \equiv c_2 \mod mm_2 \newline &amp; (m_1&#43;m_2)^e \equiv c_3 \mod m_1m_2 \newline &amp; (m_1&#43;e)^m \equiv x \mod mm_1 \newline &amp; (m_2&#43;e)^m \equiv y \mod mm_2 \newline &amp; (m&#43;e)^{m_1} \equiv z \mod mm_1 \end{align} $$">
+<meta itemprop="datePublished" content="2022-08-28T14:50:31+00:00" />
+<meta itemprop="dateModified" content="2022-08-28T14:50:31+00:00" />
+<meta itemprop="wordCount" content="378">
+
+
+
+<meta itemprop="keywords" content="" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="网鼎杯-Qualifier-2022/白虎组/Crypto/? writeup"/>
+<meta name="twitter:description" content="网鼎杯-Qualifier-2022/白虎组/Crypto/? writeup 题目名字不知道
+challenge from Crypto.Util.number import getPrime import hashlib e = 2022 m = getPrime(512) m1 = getPrime(512) m2 = getPrime(512) flag = m&#43;m1&#43;m2 flag = hashlib.md5(str(flag).encode(&#39;utf-8&#39;)).hexdigest() c1 = pow(m&#43;m1, e, m*m1) c2 = pow(m&#43;m2, e, m*m2) c3 = pow(m1&#43;m2, e, m1*m2) x = pow(m1&#43;2022, m, m*m1) y = pow(m2&#43;2022, m, m*m2) z = pow(m&#43;2022, m1, m*m1) print(&#34;c1 = &#34;, c1) print(&#34;c2 = &#34;, c2) print(&#34;c3 = &#34;, c3) print(&#34;x = &#34;, x) print(&#34;y = &#34;, y) print(&#34;z = &#34;, z) 分析 $$ \begin{align} &amp; (m&#43;m_1)^e \equiv c_1 \mod mm_1 \newline &amp; (m&#43;m_2)^e \equiv c_2 \mod mm_2 \newline &amp; (m_1&#43;m_2)^e \equiv c_3 \mod m_1m_2 \newline &amp; (m_1&#43;e)^m \equiv x \mod mm_1 \newline &amp; (m_2&#43;e)^m \equiv y \mod mm_2 \newline &amp; (m&#43;e)^{m_1} \equiv z \mod mm_1 \end{align} $$"/>
+
+
+
+
+<meta property="article:published_time" content="2022-08-28 14:50:31 &#43;0000 UTC" />
+
+
+
+
+
+
+
+    </head>
+
+    <body class="dark-theme">
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text">$ cd /home/st0n3</span>
+            <span class="logo__cursor"></span>
+        
+    </div>
+</a>
+
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="/aboutme.html">About</a></li><li><a href="/post.html">Blog</a></li><li><a href="/hackerbot">Hackerbot</a></li><li><a href="/skill_tree/">SkillTree</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+
+            <span class="theme-toggle"><svg class="theme-toggler" width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M22 41C32.4934 41 41 32.4934 41 22C41 11.5066 32.4934 3 22
+  3C11.5066 3 3 11.5066 3 22C3 32.4934 11.5066 41 22 41ZM7 22C7
+  13.7157 13.7157 7 22 7V37C13.7157 37 7 30.2843 7 22Z"/>
+</svg>
+</span>
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
+                
+    <main class="post">
+
+        <div class="post-info">
+            
+            </p>
+        </div>
+
+        <article>
+            <h2 class="post-title"><a href="/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/CTF/crypto/%E6%95%B0%E8%AE%BA/%E7%BD%91%E9%BC%8E%E6%9D%AF-Qualifier-2022%E7%99%BD%E8%99%8E%E7%BB%84Crypto-writeup.html">网鼎杯-Qualifier-2022/白虎组/Crypto/? writeup</a></h2>
+
+            
+
+            <div class="post-content">
+                <h1 id="网鼎杯-qualifier-2022白虎组crypto-writeup">网鼎杯-Qualifier-2022/白虎组/Crypto/? writeup</h1>
+<p>题目名字不知道</p>
+<h2 id="challenge">challenge</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> Crypto.Util.number <span style="color:#f92672">import</span> getPrime
+<span style="color:#f92672">import</span> hashlib
+
+e <span style="color:#f92672">=</span> <span style="color:#ae81ff">2022</span>
+m <span style="color:#f92672">=</span> getPrime(<span style="color:#ae81ff">512</span>)
+m1 <span style="color:#f92672">=</span> getPrime(<span style="color:#ae81ff">512</span>)
+m2 <span style="color:#f92672">=</span> getPrime(<span style="color:#ae81ff">512</span>)
+flag <span style="color:#f92672">=</span> m<span style="color:#f92672">+</span>m1<span style="color:#f92672">+</span>m2
+flag <span style="color:#f92672">=</span> hashlib<span style="color:#f92672">.</span>md5(str(flag)<span style="color:#f92672">.</span>encode(<span style="color:#e6db74">&#39;utf-8&#39;</span>))<span style="color:#f92672">.</span>hexdigest()
+
+c1 <span style="color:#f92672">=</span> pow(m<span style="color:#f92672">+</span>m1, e, m<span style="color:#f92672">*</span>m1)
+c2 <span style="color:#f92672">=</span> pow(m<span style="color:#f92672">+</span>m2, e, m<span style="color:#f92672">*</span>m2)
+c3 <span style="color:#f92672">=</span> pow(m1<span style="color:#f92672">+</span>m2, e, m1<span style="color:#f92672">*</span>m2)
+
+x <span style="color:#f92672">=</span> pow(m1<span style="color:#f92672">+</span><span style="color:#ae81ff">2022</span>, m, m<span style="color:#f92672">*</span>m1)
+y <span style="color:#f92672">=</span> pow(m2<span style="color:#f92672">+</span><span style="color:#ae81ff">2022</span>, m, m<span style="color:#f92672">*</span>m2)
+z <span style="color:#f92672">=</span> pow(m<span style="color:#f92672">+</span><span style="color:#ae81ff">2022</span>, m1, m<span style="color:#f92672">*</span>m1)
+
+<span style="color:#66d9ef">print</span>(<span style="color:#e6db74">&#34;c1 = &#34;</span>, c1)
+<span style="color:#66d9ef">print</span>(<span style="color:#e6db74">&#34;c2 = &#34;</span>, c2)
+<span style="color:#66d9ef">print</span>(<span style="color:#e6db74">&#34;c3 = &#34;</span>, c3)
+<span style="color:#66d9ef">print</span>(<span style="color:#e6db74">&#34;x = &#34;</span>, x)
+<span style="color:#66d9ef">print</span>(<span style="color:#e6db74">&#34;y = &#34;</span>, y)
+<span style="color:#66d9ef">print</span>(<span style="color:#e6db74">&#34;z = &#34;</span>, z)
+</code></pre></div><h2 id="分析">分析</h2>
+<p>$$
+\begin{align}
+&amp; (m+m_1)^e \equiv c_1 \mod mm_1
+\newline &amp; (m+m_2)^e \equiv c_2 \mod mm_2
+\newline &amp; (m_1+m_2)^e \equiv c_3 \mod m_1m_2
+\newline &amp; (m_1+e)^m \equiv x \mod mm_1
+\newline &amp; (m_2+e)^m \equiv y \mod mm_2
+\newline &amp; (m+e)^{m_1} \equiv z \mod mm_1
+\end{align}
+$$</p>
+<p>根据数论的性质，可以推出很多式子：</p>
+<p>$$
+\begin{align}
+&amp; m_1^e \equiv c_1 \mod m\tag{1}
+\newline &amp; m^e \equiv c_1 \mod m_1\tag{2}
+\newline
+\newline &amp; m_2^e \equiv c_2 \mod m\tag{3}
+\newline &amp; m^e \equiv c_2 \mod m_2\tag{4}
+\newline
+\newline &amp; m_1^e \equiv c_3 \mod m_2\tag{5}
+\newline &amp; m_2^e \equiv c_3 \mod m_1\tag{6}
+\newline
+\newline &amp; m_1+e \equiv x \mod m\tag{7}
+\newline &amp; e^m \equiv x \mod m_1\tag{8}
+\newline
+\newline &amp; m_2+e \equiv y \mod m\tag{9}
+\newline &amp; e^m \equiv y \mod m_2\tag{10}
+\newline
+\newline &amp; m+e \equiv y \mod m_1\tag{11}
+\newline &amp; e^{m_1} \equiv y \mod m\tag{12}
+\newline
+\newline 由(7): &amp;
+\newline &amp; m_1\equiv x-e \mod m
+\newline 又由(1): &amp;
+\newline &amp; (x-e)^e \equiv c_1 \mod m
+\newline \Rightarrow &amp; (x-e)^e-c_1 = k_1m
+\newline 同理，由(3), (9): &amp;
+\newline &amp; (y-e)^e-c_2 = k_2m
+\newline \Rightarrow &amp; m = gcd((x-e)^e-c_1, (y-e)^e-c_2)
+\end{align}
+$$</p>
+<h2 id="3-solver">3. Solver</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> Crypto.Util.number <span style="color:#f92672">import</span> getPrime
+<span style="color:#75715e"># import hashlib</span>
+
+e <span style="color:#f92672">=</span> <span style="color:#ae81ff">2022</span>
+m <span style="color:#f92672">=</span> getPrime(<span style="color:#ae81ff">512</span>)
+m1 <span style="color:#f92672">=</span> getPrime(<span style="color:#ae81ff">512</span>)
+m2 <span style="color:#f92672">=</span> getPrime(<span style="color:#ae81ff">512</span>)
+<span style="color:#75715e"># flag = m+m1+m2</span>
+<span style="color:#75715e"># flag = hashlib.md5(str(flag).encode(&#39;utf-8&#39;)).hexdigest()</span>
+
+c1 <span style="color:#f92672">=</span> pow(m<span style="color:#f92672">+</span>m1, e, m<span style="color:#f92672">*</span>m1)
+c2 <span style="color:#f92672">=</span> pow(m<span style="color:#f92672">+</span>m2, e, m<span style="color:#f92672">*</span>m2)
+c3 <span style="color:#f92672">=</span> pow(m1<span style="color:#f92672">+</span>m2, e, m1<span style="color:#f92672">*</span>m2)
+
+x <span style="color:#f92672">=</span> pow(m1<span style="color:#f92672">+</span><span style="color:#ae81ff">2022</span>, m, m<span style="color:#f92672">*</span>m1)
+y <span style="color:#f92672">=</span> pow(m2<span style="color:#f92672">+</span><span style="color:#ae81ff">2022</span>, m, m<span style="color:#f92672">*</span>m2)
+z <span style="color:#f92672">=</span> pow(m<span style="color:#f92672">+</span><span style="color:#ae81ff">2022</span>, m1, m<span style="color:#f92672">*</span>m1)
+
+m3 <span style="color:#f92672">=</span> gcd(Integer(pow(x<span style="color:#f92672">-</span>e, e)<span style="color:#f92672">-</span>c1), Integer(pow(y<span style="color:#f92672">-</span>e, e)<span style="color:#f92672">-</span>c2))
+<span style="color:#66d9ef">while</span> <span style="color:#f92672">not</span> is_prime(m3):
+    m3<span style="color:#f92672">=</span>max(m3<span style="color:#f92672">.</span>factor())[<span style="color:#ae81ff">0</span>]
+<span style="color:#66d9ef">print</span>(<span style="color:#e6db74">&#34;m=&#34;</span>, m3)
+    
+m4 <span style="color:#f92672">=</span> Integer((x<span style="color:#f92672">-</span>e)<span style="color:#f92672">%</span>m3)
+<span style="color:#66d9ef">if</span> m4<span style="color:#f92672">.</span>nbits() <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">512</span>:
+    m4 <span style="color:#f92672">+=</span> m3
+<span style="color:#66d9ef">print</span>(<span style="color:#e6db74">&#34;m2=&#34;</span>, m4)
+
+m5 <span style="color:#f92672">=</span> Integer((y<span style="color:#f92672">-</span>e)<span style="color:#f92672">%</span>m3)
+<span style="color:#66d9ef">if</span> m5<span style="color:#f92672">.</span>nbits() <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">512</span>:
+    m5 <span style="color:#f92672">+=</span> m3
+<span style="color:#66d9ef">print</span>(<span style="color:#e6db74">&#34;m5=&#34;</span>, m5)
+
+<span style="color:#66d9ef">assert</span> m3 <span style="color:#f92672">==</span> m
+<span style="color:#66d9ef">assert</span> m4 <span style="color:#f92672">==</span> m1
+<span style="color:#66d9ef">assert</span> m5 <span style="color:#f92672">==</span> m2
+<span style="color:#66d9ef">print</span>(<span style="color:#e6db74">&#34;ok&#34;</span>)
+</code></pre></div><pre><code>m= 7118720259706239740305137951911732402969987929524547444851950877506312984069352034009095275081680311758669878793244045227889362955734722453100841143548033
+m2= 7108430137084219836773217660392603820991459506843363980563501987103264045379764167844893288579200970211583422408191541717109914729741191349555605737532891
+m5= 10314184155653100949586733371377643592337306207790750904674051212420413332553293415287164275431131107876785228642595517356004403525571470519812972911339059
+ok
+</code></pre>
+
+            </div>
+        </article>
+
+        <hr />
+
+        <div class="post-info">
+  			</div>
+
+        
+    </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>&copy; 2022</span>
+            
+            <span></span>
+            <span> <a href="/posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a></span>
+        </div>
+    </div>
+    <div class="footer__inner">
+        <div class="footer__content">
+
+        </div>
+    </div>
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>Powered by <a href="http://gohugo.io">Hugo</a></span>
+            <span>Made with &#10084; by <a href="https://github.com/st0n3">st0n3</a></span>
+            <span>Based on <a href="https://github.com/rhazdon">rhazdon</a></span>
+        </div>
+    </div>
+
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      extensions: ["tex2jax.js"],
+      
+      jax: ["input/TeX", "output/CommonHTML"],
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+        displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+        processEscapes: true
+      },
+      "HTML-CSS": { fonts: ["TeX"] },
+      displayAlign: "left"
+    });
+  </script>
+
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_CHTML"></script>
+
+
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+
+<script type="text/javascript" src="/bundle.min.4c3fb12a087ceed4a52cb5d57068a9795c7069617a01ca70f788052ad66e1791779e6c72686e1dc0ca13dc03b0203204b6566bb0dd1ee80de2b7ff4d8fe53db2.js" integrity="sha512-TD&#43;xKgh87tSlLLXVcGipeVxwaWF6Acpw94gFKtZuF5F3nmxyaG4dwMoT3AOwIDIEtlZrsN0e6A3it/9Nj&#43;U9sg=="></script>
+
+
+
+    </body>
+</html>
