@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author"
+    content="">
+<meta name="description"
+    content="网鼎杯-Qualifier-2022/玄武组/Crypto/crypto557(new_stream) Writeup 1. challenge  附件下载：https://pan.baidu.com/share/init?surl=Rar0fxHzpDiL4bK8AP2Zbw 提取码：GAME
+ new_stream.py
+from Crypto.Util.number import * import random from secret import flag f = open(&amp;quot;output.txt&amp;quot;,&amp;quot;w&amp;quot;) for i in range(18): p = getPrime(256) x = random.randint(2, p-1) tmp = bytes_to_long(flag) enc = [] for j in range(size(tmp)): r = random.randint(2, p-1) if tmp%2: enc &#43;= [pow(x, r, p)] else: enc &#43;= [r] tmp //= 2 f.write(&amp;quot;p = &amp;quot; &#43; str(p) &#43; &amp;quot;\n&amp;quot;) f.write(&amp;quot;enc = &amp;quot; &#43; str(enc) &#43; &amp;quot;\n&amp;quot;) output." />
+<meta name="keywords" content="" />
+<meta name="robots" content="noodp" />
+<link rel="canonical" href="/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/CTF/crypto/%E6%95%B0%E8%AE%BA/%E7%BD%91%E9%BC%8E%E6%9D%AF-Qualifier-2022%E7%8E%84%E6%AD%A6%E7%BB%84Cryptocrypto557new_stream-Writeup.html" />
+
+
+<title>
+    
+    网鼎杯-Qualifier-2022/玄武组/Crypto/crypto557(new_stream) Writeup :: welcome to st0n3&#39;s blog 
+    
+</title>
+
+
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.2.1/css/flag-icon.min.css" rel="stylesheet"
+    type="text/css">
+
+
+
+<link rel="stylesheet" href="/main.min.de959d61dd13c2cd41136acd491ffb0749779e1afe37b1fed6d5cba0b7e1938d.css">
+
+
+
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#252627">
+<link rel="shortcut icon" href="/favicon.ico">
+<meta name="theme-color" content="#252627"><meta itemprop="name" content="网鼎杯-Qualifier-2022/玄武组/Crypto/crypto557(new_stream) Writeup">
+<meta itemprop="description" content="网鼎杯-Qualifier-2022/玄武组/Crypto/crypto557(new_stream) Writeup 1. challenge  附件下载：https://pan.baidu.com/share/init?surl=Rar0fxHzpDiL4bK8AP2Zbw 提取码：GAME
+ new_stream.py
+from Crypto.Util.number import * import random from secret import flag f = open(&quot;output.txt&quot;,&quot;w&quot;) for i in range(18): p = getPrime(256) x = random.randint(2, p-1) tmp = bytes_to_long(flag) enc = [] for j in range(size(tmp)): r = random.randint(2, p-1) if tmp%2: enc &#43;= [pow(x, r, p)] else: enc &#43;= [r] tmp //= 2 f.write(&quot;p = &quot; &#43; str(p) &#43; &quot;\n&quot;) f.write(&quot;enc = &quot; &#43; str(enc) &#43; &quot;\n&quot;) output.">
+<meta itemprop="datePublished" content="2022-08-31T11:34:45+00:00" />
+<meta itemprop="dateModified" content="2022-08-31T11:34:45+00:00" />
+<meta itemprop="wordCount" content="576">
+
+
+
+<meta itemprop="keywords" content="" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="网鼎杯-Qualifier-2022/玄武组/Crypto/crypto557(new_stream) Writeup"/>
+<meta name="twitter:description" content="网鼎杯-Qualifier-2022/玄武组/Crypto/crypto557(new_stream) Writeup 1. challenge  附件下载：https://pan.baidu.com/share/init?surl=Rar0fxHzpDiL4bK8AP2Zbw 提取码：GAME
+ new_stream.py
+from Crypto.Util.number import * import random from secret import flag f = open(&quot;output.txt&quot;,&quot;w&quot;) for i in range(18): p = getPrime(256) x = random.randint(2, p-1) tmp = bytes_to_long(flag) enc = [] for j in range(size(tmp)): r = random.randint(2, p-1) if tmp%2: enc &#43;= [pow(x, r, p)] else: enc &#43;= [r] tmp //= 2 f.write(&quot;p = &quot; &#43; str(p) &#43; &quot;\n&quot;) f.write(&quot;enc = &quot; &#43; str(enc) &#43; &quot;\n&quot;) output."/>
+
+
+
+
+<meta property="article:published_time" content="2022-08-31 11:34:45 &#43;0000 UTC" />
+
+
+
+
+
+
+
+    </head>
+
+    <body class="dark-theme">
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text">$ cd /home/st0n3</span>
+            <span class="logo__cursor"></span>
+        
+    </div>
+</a>
+
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="/aboutme.html">About</a></li><li><a href="/post.html">Blog</a></li><li><a href="/hackerbot">Hackerbot</a></li><li><a href="/skill_tree/">SkillTree</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+
+            <span class="theme-toggle"><svg class="theme-toggler" width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M22 41C32.4934 41 41 32.4934 41 22C41 11.5066 32.4934 3 22
+  3C11.5066 3 3 11.5066 3 22C3 32.4934 11.5066 41 22 41ZM7 22C7
+  13.7157 13.7157 7 22 7V37C13.7157 37 7 30.2843 7 22Z"/>
+</svg>
+</span>
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
+                
+    <main class="post">
+
+        <div class="post-info">
+            
+            </p>
+        </div>
+
+        <article>
+            <h2 class="post-title"><a href="/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/CTF/crypto/%E6%95%B0%E8%AE%BA/%E7%BD%91%E9%BC%8E%E6%9D%AF-Qualifier-2022%E7%8E%84%E6%AD%A6%E7%BB%84Cryptocrypto557new_stream-Writeup.html">网鼎杯-Qualifier-2022/玄武组/Crypto/crypto557(new_stream) Writeup</a></h2>
+
+            
+
+            <div class="post-content">
+                <h1 id="网鼎杯-qualifier-2022玄武组cryptocrypto557new_stream-writeup">网鼎杯-Qualifier-2022/玄武组/Crypto/crypto557(new_stream) Writeup</h1>
+<h2 id="1-challenge">1. challenge</h2>
+<blockquote>
+<p>附件下载：https://pan.baidu.com/share/init?surl=Rar0fxHzpDiL4bK8AP2Zbw
+提取码：GAME</p>
+</blockquote>
+<p>new_stream.py</p>
+<pre><code>from Crypto.Util.number import *
+import random
+from secret import flag
+f = open(&quot;output.txt&quot;,&quot;w&quot;)
+
+for i in range(18):
+    p = getPrime(256)
+    x = random.randint(2, p-1)
+    tmp = bytes_to_long(flag)
+    enc = []
+    for j in range(size(tmp)):
+        r = random.randint(2, p-1)
+        if tmp%2:
+            enc += [pow(x, r, p)]
+        else:
+            enc += [r]
+        tmp //= 2
+    
+    f.write(&quot;p = &quot; + str(p) + &quot;\n&quot;)
+    f.write(&quot;enc = &quot; + str(enc) + &quot;\n&quot;)
+</code></pre><p>output.txt 太长了，本文就不贴出来了。</p>
+<h2 id="2-分析">2. 分析</h2>
+<p>阅读代码，进行了18轮加密。</p>
+<p>每一轮都重新生成随机数$x_i$，对flag的每一bit $m_{j}$，生成随机数$r_{ij}$进行加密：
+$$
+c_{ij}=\left{
+\begin{aligned}
+&amp; x_i^{r_{ij}} \mod p, &amp; m[j]%2==1 \<br>
+&amp; r_{ij}, &amp; m[j]%2 == 0
+\end{aligned}
+\right.
+$$</p>
+<p>我首先尝试了一下能否对每一轮的 $x_i^{r_{ij}} \mod p$，根据多组(m, c)还原出x，尝试无果。</p>
+<p>大概是还原不出来$x_i$了，于是考虑能否根据数论的一些性质，将$x_i^{r_{ij}} \mod p$和$r_{ij}$区分开来。</p>
+<p>因为之前做过一道二次剩余相关的题目<a href="https://ssst0n3.github.io/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/CTF/crypto/%E9%9D%9E%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86/%E7%A6%BB%E6%95%A3%E5%AF%B9%E6%95%B0/ElGamal/VolgaCTF2020Qualifier-Crypto-Guess-writeup.html">VolgaCTF2020Qualifier Crypto Guess writeup</a>，所以我尝试了二次剩余：</p>
+<p>在GF(p)上，有(p-1)/2个二次剩余。</p>
+<p>所以$x_i$ 有一半的可能满足：
+$$
+x_i^{\frac{p-1}{2}} \equiv 1 \mod p \<br>
+\Rightarrow (x_i^{\frac{p-1}{2}})^{r_{ij}} \equiv 1 \mod p \<br>
+\Rightarrow c_{ij}^{r_{ij}} \equiv 1 \mod p
+$$</p>
+<p>即，如果某一轮的$x_i$是p的二次剩余，则该轮使用模幂加密的密文都是p的二次剩余。而，对任意随机数$r_{ij}$是不满足该特点的。</p>
+<p>根据这一特点，因为我们有18组数据，可以分析出flag每一位二进制bit的奇偶性的统计学规律。</p>
+<p>我们可以生成一些数据验证一下。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">import</span> random
+
+p <span style="color:#f92672">=</span> random_prime(<span style="color:#ae81ff">2L</span><span style="color:#f92672">**</span><span style="color:#ae81ff">256</span>,<span style="color:#ae81ff">2L</span><span style="color:#f92672">**</span><span style="color:#ae81ff">255</span>)
+x1 <span style="color:#f92672">=</span> random<span style="color:#f92672">.</span>randint(<span style="color:#ae81ff">2</span>, p<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>)
+<span style="color:#66d9ef">print</span>(f<span style="color:#e6db74">&#34;x  is quadratic residue?: {pow(x1,(p-1)//2,p)==1}&#34;</span>)
+
+r <span style="color:#f92672">=</span> []
+<span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">18</span>):
+    r<span style="color:#f92672">.</span>append(random<span style="color:#f92672">.</span>randint(<span style="color:#ae81ff">2</span>, p<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>))    
+c <span style="color:#f92672">=</span> []
+<span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">18</span>):
+    c<span style="color:#f92672">.</span>append(pow(x1, r[i], p))
+
+<span style="color:#66d9ef">print</span>(<span style="color:#e6db74">&#34;---------&#34;</span>)
+<span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(len(c)):
+    <span style="color:#66d9ef">print</span>(f<span style="color:#e6db74">&#34;ci is quadratic residue?: {pow(c[i], (p-1)//2, p)==1}&#34;</span>)
+<span style="color:#66d9ef">print</span>(<span style="color:#e6db74">&#34;---------&#34;</span>)
+<span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(len(c)<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>):
+    <span style="color:#66d9ef">print</span>(f<span style="color:#e6db74">&#34;ri is quadratic residue?: {pow(r[i], (p-1)//2, p)==1}&#34;</span>)
+</code></pre></div><pre><code>x  is quadratic residue?: True
+---------
+ci is quadratic residue?: True
+ci is quadratic residue?: True
+ci is quadratic residue?: True
+ci is quadratic residue?: True
+ci is quadratic residue?: True
+ci is quadratic residue?: True
+ci is quadratic residue?: True
+ci is quadratic residue?: True
+ci is quadratic residue?: True
+ci is quadratic residue?: True
+ci is quadratic residue?: True
+ci is quadratic residue?: True
+ci is quadratic residue?: True
+ci is quadratic residue?: True
+ci is quadratic residue?: True
+ci is quadratic residue?: True
+ci is quadratic residue?: True
+ci is quadratic residue?: True
+---------
+ri is quadratic residue?: False
+ri is quadratic residue?: False
+ri is quadratic residue?: True
+ri is quadratic residue?: True
+ri is quadratic residue?: False
+ri is quadratic residue?: True
+ri is quadratic residue?: False
+ri is quadratic residue?: False
+ri is quadratic residue?: False
+ri is quadratic residue?: True
+ri is quadratic residue?: False
+ri is quadratic residue?: False
+ri is quadratic residue?: False
+ri is quadratic residue?: True
+ri is quadratic residue?: False
+ri is quadratic residue?: True
+ri is quadratic residue?: True
+</code></pre>
+<p>首先我想要确定哪些轮次的x是p的二次剩余，因为x为非二次剩余的轮次，明文的奇偶性没有统计学规律。</p>
+<p>统计每一轮密文是二次剩余的概率</p>
+<ul>
+<li>对于x是p的二次剩余的轮次，概率应约等于$p(bin(m[i])==1)*1/2+p(bin(m[i])==0)\approx 3/4 $</li>
+<li>对于x不是p的二次剩余的轮次，概率应约等于$p(bin(m[i])==1)*1/2+p(bin(m[i])==0)*1/2 \approx 1/2$</li>
+</ul>
+<p>因而可以得知x是p的二次剩余的轮次。</p>
+<p>对于这些轮次，对x是p的二次剩余的轮次，统计每一位密文在这些轮次上是二次剩余的概率，明文的奇偶性有明显的统计学规律：</p>
+<ul>
+<li>明文的二进制bit为奇数，密文必然是p的二次剩余</li>
+<li>明文的二进制bit为偶数，密文有1/2的概率是二次剩余</li>
+</ul>
+<h2 id="3-exp">3. exp</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">import</span> json
+<span style="color:#f92672">from</span> Crypto.Util.number <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">load</span>():
+    cipher <span style="color:#f92672">=</span> []
+    p <span style="color:#f92672">=</span> [] 
+    lines <span style="color:#f92672">=</span> open(<span style="color:#e6db74">&#34;output.txt&#34;</span>, <span style="color:#e6db74">&#34;rb&#34;</span>)<span style="color:#f92672">.</span>readlines()
+    <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">0</span>, len(lines), <span style="color:#ae81ff">2</span>):
+        p<span style="color:#f92672">.</span>append(Integer(lines[i]<span style="color:#f92672">.</span>strip(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;p = &#34;</span>)<span style="color:#f92672">.</span>strip(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>)))
+        cipher<span style="color:#f92672">.</span>append(json<span style="color:#f92672">.</span>loads(lines[i<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>]<span style="color:#f92672">.</span>strip(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;enc = &#34;</span>)<span style="color:#f92672">.</span>strip(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>)))
+    <span style="color:#66d9ef">return</span> cipher, p
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">quadratic_residue_round</span>(cipher, p):
+    count <span style="color:#f92672">=</span> []
+    <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">18</span>):
+        c <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+        <span style="color:#66d9ef">for</span> j <span style="color:#f92672">in</span> range(len(cipher[<span style="color:#ae81ff">0</span>])):
+            <span style="color:#66d9ef">if</span> pow(cipher[i][j], (p[i]<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>)<span style="color:#f92672">//</span><span style="color:#ae81ff">2</span>, p[i])<span style="color:#f92672">==</span><span style="color:#ae81ff">1</span>:
+                c <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
+        count<span style="color:#f92672">.</span>append(c)
+    <span style="color:#66d9ef">print</span>(f<span style="color:#e6db74">&#34;quadratic_residue count of : {count}&#34;</span>)
+
+    <span style="color:#75715e"># the round that x is quadratic residue</span>
+    q_round <span style="color:#f92672">=</span> []
+    <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">18</span>):
+        <span style="color:#66d9ef">if</span> count[i] <span style="color:#f92672">&gt;</span> len(cipher[<span style="color:#ae81ff">0</span>])<span style="color:#f92672">*</span><span style="color:#ae81ff">2</span><span style="color:#f92672">//</span><span style="color:#ae81ff">3</span>:
+            q_round<span style="color:#f92672">.</span>append(i)
+    <span style="color:#66d9ef">print</span>(f<span style="color:#e6db74">&#34;these rounds has quadratic residue x: {q_round}&#34;</span>)
+    <span style="color:#66d9ef">return</span> q_round
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">guess_flag</span>(cipher, p, q_round):
+    binary <span style="color:#f92672">=</span> []
+    <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(len(cipher[<span style="color:#ae81ff">0</span>])):
+        odd <span style="color:#f92672">=</span> True
+        <span style="color:#66d9ef">for</span> j <span style="color:#f92672">in</span> q_round:
+            <span style="color:#66d9ef">if</span> pow(cipher[j][i], (p[j]<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>)<span style="color:#f92672">//</span><span style="color:#ae81ff">2</span>, p[j])<span style="color:#f92672">!=</span><span style="color:#ae81ff">1</span>:
+                odd <span style="color:#f92672">=</span> False
+                <span style="color:#66d9ef">break</span>
+        <span style="color:#66d9ef">if</span> odd:
+            binary<span style="color:#f92672">.</span>insert(<span style="color:#ae81ff">0</span>, <span style="color:#e6db74">&#39;1&#39;</span>)
+        <span style="color:#66d9ef">else</span>:
+            binary<span style="color:#f92672">.</span>insert(<span style="color:#ae81ff">0</span>, <span style="color:#e6db74">&#39;0&#39;</span>)
+    <span style="color:#66d9ef">return</span> binary
+
+cipher, p <span style="color:#f92672">=</span> load()
+q_round <span style="color:#f92672">=</span> quadratic_residue_round(cipher, p)
+binary <span style="color:#f92672">=</span> guess_flag(cipher, p, q_round)
+flag<span style="color:#f92672">=</span>long_to_bytes(int(<span style="color:#e6db74">&#34;&#34;</span><span style="color:#f92672">.</span>join(binary), <span style="color:#ae81ff">2</span>))
+<span style="color:#66d9ef">print</span>(flag)
+</code></pre></div><pre><code>quadratic_residue count of : [247, 244, 236, 252, 180, 254, 256, 168, 247, 247, 174, 243, 242, 253, 167, 159, 256, 242]
+these rounds has quadratic residue x: [0, 1, 2, 3, 5, 6, 8, 9, 11, 12, 13, 16, 17]
+b'flag{c8b10fb7-95f8-47a2-bfb3-b9489ad39711}'
+</code></pre>
+
+            </div>
+        </article>
+
+        <hr />
+
+        <div class="post-info">
+  			</div>
+
+        
+    </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>&copy; 2022</span>
+            
+            <span></span>
+            <span> <a href="/posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a></span>
+        </div>
+    </div>
+    <div class="footer__inner">
+        <div class="footer__content">
+
+        </div>
+    </div>
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>Powered by <a href="http://gohugo.io">Hugo</a></span>
+            <span>Made with &#10084; by <a href="https://github.com/st0n3">st0n3</a></span>
+            <span>Based on <a href="https://github.com/rhazdon">rhazdon</a></span>
+        </div>
+    </div>
+
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      extensions: ["tex2jax.js"],
+      
+      jax: ["input/TeX", "output/CommonHTML"],
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+        displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+        processEscapes: true
+      },
+      "HTML-CSS": { fonts: ["TeX"] },
+      displayAlign: "left"
+    });
+  </script>
+
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_CHTML"></script>
+
+
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+
+<script type="text/javascript" src="/bundle.min.4c3fb12a087ceed4a52cb5d57068a9795c7069617a01ca70f788052ad66e1791779e6c72686e1dc0ca13dc03b0203204b6566bb0dd1ee80de2b7ff4d8fe53db2.js" integrity="sha512-TD&#43;xKgh87tSlLLXVcGipeVxwaWF6Acpw94gFKtZuF5F3nmxyaG4dwMoT3AOwIDIEtlZrsN0e6A3it/9Nj&#43;U9sg=="></script>
+
+
+
+    </body>
+</html>
