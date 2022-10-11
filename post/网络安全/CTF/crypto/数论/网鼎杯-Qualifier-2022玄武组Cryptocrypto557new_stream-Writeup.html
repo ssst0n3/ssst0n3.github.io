@@ -44,7 +44,7 @@ from Crypto.Util.number import * import random from secret import flag f = open(
 from Crypto.Util.number import * import random from secret import flag f = open(&quot;output.txt&quot;,&quot;w&quot;) for i in range(18): p = getPrime(256) x = random.randint(2, p-1) tmp = bytes_to_long(flag) enc = [] for j in range(size(tmp)): r = random.randint(2, p-1) if tmp%2: enc &#43;= [pow(x, r, p)] else: enc &#43;= [r] tmp //= 2 f.write(&quot;p = &quot; &#43; str(p) &#43; &quot;\n&quot;) f.write(&quot;enc = &quot; &#43; str(enc) &#43; &quot;\n&quot;) output.">
 <meta itemprop="datePublished" content="2022-08-31T11:34:45+00:00" />
 <meta itemprop="dateModified" content="2022-08-31T11:34:45+00:00" />
-<meta itemprop="wordCount" content="576">
+<meta itemprop="wordCount" content="581">
 
 
 
@@ -300,6 +300,12 @@ flag<span style="color:#f92672">=</span>long_to_bytes(int(<span style="color:#e6
 these rounds has quadratic residue x: [0, 1, 2, 3, 5, 6, 8, 9, 11, 12, 13, 16, 17]
 b'flag{c8b10fb7-95f8-47a2-bfb3-b9489ad39711}'
 </code></pre>
+<p><small>本文同步发表于</p>
+<ul>
+<li>博客: <a href="https://ssst0n3.github.io/">https://ssst0n3.github.io/</a></li>
+<li>公众号: 石头的安全料理屋
+</small></li>
+</ul>
 
             </div>
         </article>

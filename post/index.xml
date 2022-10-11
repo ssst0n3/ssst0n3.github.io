@@ -6,7 +6,17 @@
     <description>Recent content in Post on welcome to st0n3&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 31 Aug 2022 11:34:45 +0000</lastBuildDate><atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 11 Oct 2022 07:36:02 +0000</lastBuildDate><atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>强网杯-Qualifier-2022/强网先锋/ASR writeup</title>
+      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/CTF/crypto/%E9%9D%9E%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86/RSA/%E5%88%86%E8%A7%A3n/%E5%BC%BA%E7%BD%91%E6%9D%AF-Qualifier-2022%E5%BC%BA%E7%BD%91%E5%85%88%E9%94%8BASR-writeup.html</link>
+      <pubDate>Tue, 11 Oct 2022 07:36:02 +0000</pubDate>
+      
+      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/CTF/crypto/%E9%9D%9E%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86/RSA/%E5%88%86%E8%A7%A3n/%E5%BC%BA%E7%BD%91%E6%9D%AF-Qualifier-2022%E5%BC%BA%E7%BD%91%E5%85%88%E9%94%8BASR-writeup.html</guid>
+      <description>强网杯-Qualifier-2022/强网先锋/ASR writeup 1. challenge from Crypto.Util.number import getPrime from secret import falg pad = lambda s:s + bytes([(len(s)-1)%16+1]*((len(s)-1)%16+1)) n = getPrime(128)**2 * getPrime(128)**2 * getPrime(128)**2 * getPrime(128)**2 e = 3 flag = pad(flag) print(flag) assert(len(flag) &amp;gt;= 48) m = int.from_bytes(flag,&amp;#39;big&amp;#39;) c = pow(m,e,n) print(f&amp;#39;n = {n}&amp;#39;) print(f&amp;#39;e = {e}&amp;#39;) print(f&amp;#39;c = {c}&amp;#39;) &amp;#39;&amp;#39;&amp;#39; n = 8250871280281573979365095715711359115372504458973444367083195431861307534563246537364248104106494598081988216584432003199198805753721448450911308558041115465900179230798939615583517756265557814710419157462721793864532239042758808298575522666358352726060578194045804198551989679722201244547561044646931280001 e = 3 c = 945272793717722090962030960824180726576357481511799904903841312265308706852971155205003971821843069272938250385935597609059700446530436381124650731751982419593070224310399320617914955227288662661442416421725698368791013785074809691867988444306279231013360024747585261790352627234450209996422862329513284149 &amp;#39;&amp;#39;&amp;#39; 2. 分析 n是一个平方数，平方根是4个128bit素数的乘积，应该可以通过ecm分解。
+e = 3 c = 945272793717722090962030960824180726576357481511799904903841312265308706852971155205003971821843069272938250385935597609059700446530436381124650731751982419593070224310399320617914955227288662661442416421725698368791013785074809691867988444306279231013360024747585261790352627234450209996422862329513284149 n = 8250871280281573979365095715711359115372504458973444367083195431861307534563246537364248104106494598081988216584432003199198805753721448450911308558041115465900179230798939615583517756265557814710419157462721793864532239042758808298575522666358352726060578194045804198551989679722201244547561044646931280001 pqrs = 2872432989693854281918578458293603200587306199407874717707522587993136874097838265650829958344702997782980206004276973399784460125581362617464018665640001 assert pqrs*pqrs == n 使用yafu在一台8U的云主机上可以分解n。</description>
+    </item>
+    
     <item>
       <title>网鼎杯-Qualifier-2022/玄武组/Crypto/crypto557(new_stream) Writeup</title>
       <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/CTF/crypto/%E6%95%B0%E8%AE%BA/%E7%BD%91%E9%BC%8E%E6%9D%AF-Qualifier-2022%E7%8E%84%E6%AD%A6%E7%BB%84Cryptocrypto557new_stream-Writeup.html</link>
@@ -750,10 +760,10 @@ TL;DR  开局全端口扫描 识别兔子洞 随手截图真的很重要  每个
     
     <item>
       <title>一个好用的乘法逆元扩展结论</title>
-      <link>/post/%E7%A6%BB%E6%95%A3%E6%95%B0%E5%AD%A6/%E4%B8%80%E4%B8%AA%E5%A5%BD%E7%94%A8%E7%9A%84%E4%B9%98%E6%B3%95%E9%80%86%E5%85%83%E6%89%A9%E5%B1%95%E7%BB%93%E8%AE%BA.html</link>
+      <link>/post/%E6%95%B0%E5%AD%A6/%E7%A6%BB%E6%95%A3%E6%95%B0%E5%AD%A6/%E4%B8%80%E4%B8%AA%E5%A5%BD%E7%94%A8%E7%9A%84%E4%B9%98%E6%B3%95%E9%80%86%E5%85%83%E6%89%A9%E5%B1%95%E7%BB%93%E8%AE%BA.html</link>
       <pubDate>Wed, 28 Oct 2020 04:08:34 +0000</pubDate>
       
-      <guid>/post/%E7%A6%BB%E6%95%A3%E6%95%B0%E5%AD%A6/%E4%B8%80%E4%B8%AA%E5%A5%BD%E7%94%A8%E7%9A%84%E4%B9%98%E6%B3%95%E9%80%86%E5%85%83%E6%89%A9%E5%B1%95%E7%BB%93%E8%AE%BA.html</guid>
+      <guid>/post/%E6%95%B0%E5%AD%A6/%E7%A6%BB%E6%95%A3%E6%95%B0%E5%AD%A6/%E4%B8%80%E4%B8%AA%E5%A5%BD%E7%94%A8%E7%9A%84%E4%B9%98%E6%B3%95%E9%80%86%E5%85%83%E6%89%A9%E5%B1%95%E7%BB%93%E8%AE%BA.html</guid>
       <description>tags: ctf,writeup,crypto 一个好用的乘法逆元扩展结论 比赛中遇到的一个好用的定理，不知道有没有名字，记录一下
 $$ \begin{align} &amp;amp; p^{-1} \cdot p \equiv 1 \mod q \newline &amp;amp; q^{-1} \cdot q \equiv 1 \mod p \newline &amp;amp; \Longleftrightarrow \newline &amp;amp; p^{-1}\cdot p+q^{-1}\cdot q \equiv 1 \mod p\cdot q \end{align} $$
 1. 证明 (1) $$ \begin{align} &amp;amp; 1 \equiv p^{-1} \cdot p \mod q \

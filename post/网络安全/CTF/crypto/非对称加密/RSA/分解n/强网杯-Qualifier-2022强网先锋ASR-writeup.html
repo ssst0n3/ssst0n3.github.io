@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author"
+    content="">
+<meta name="description"
+    content="强网杯-Qualifier-2022/强网先锋/ASR writeup 1. challenge from Crypto.Util.number import getPrime from secret import falg pad = lambda s:s &#43; bytes([(len(s)-1)%16&#43;1]*((len(s)-1)%16&#43;1)) n = getPrime(128)**2 * getPrime(128)**2 * getPrime(128)**2 * getPrime(128)**2 e = 3 flag = pad(flag) print(flag) assert(len(flag) &amp;gt;= 48) m = int.from_bytes(flag,&amp;#39;big&amp;#39;) c = pow(m,e,n) print(f&amp;#39;n = {n}&amp;#39;) print(f&amp;#39;e = {e}&amp;#39;) print(f&amp;#39;c = {c}&amp;#39;) &amp;#39;&amp;#39;&amp;#39; n = 8250871280281573979365095715711359115372504458973444367083195431861307534563246537364248104106494598081988216584432003199198805753721448450911308558041115465900179230798939615583517756265557814710419157462721793864532239042758808298575522666358352726060578194045804198551989679722201244547561044646931280001 e = 3 c = 945272793717722090962030960824180726576357481511799904903841312265308706852971155205003971821843069272938250385935597609059700446530436381124650731751982419593070224310399320617914955227288662661442416421725698368791013785074809691867988444306279231013360024747585261790352627234450209996422862329513284149 &amp;#39;&amp;#39;&amp;#39; 2. 分析 n是一个平方数，平方根是4个128bit素数的乘积，应该可以通过ecm分解。
+e = 3 c = 945272793717722090962030960824180726576357481511799904903841312265308706852971155205003971821843069272938250385935597609059700446530436381124650731751982419593070224310399320617914955227288662661442416421725698368791013785074809691867988444306279231013360024747585261790352627234450209996422862329513284149 n = 8250871280281573979365095715711359115372504458973444367083195431861307534563246537364248104106494598081988216584432003199198805753721448450911308558041115465900179230798939615583517756265557814710419157462721793864532239042758808298575522666358352726060578194045804198551989679722201244547561044646931280001 pqrs = 2872432989693854281918578458293603200587306199407874717707522587993136874097838265650829958344702997782980206004276973399784460125581362617464018665640001 assert pqrs*pqrs == n 使用yafu在一台8U的云主机上可以分解n。" />
+<meta name="keywords" content="" />
+<meta name="robots" content="noodp" />
+<link rel="canonical" href="/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/CTF/crypto/%E9%9D%9E%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86/RSA/%E5%88%86%E8%A7%A3n/%E5%BC%BA%E7%BD%91%E6%9D%AF-Qualifier-2022%E5%BC%BA%E7%BD%91%E5%85%88%E9%94%8BASR-writeup.html" />
+
+
+<title>
+    
+    强网杯-Qualifier-2022/强网先锋/ASR writeup :: welcome to st0n3&#39;s blog 
+    
+</title>
+
+
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.2.1/css/flag-icon.min.css" rel="stylesheet"
+    type="text/css">
+
+
+
+<link rel="stylesheet" href="/main.min.de959d61dd13c2cd41136acd491ffb0749779e1afe37b1fed6d5cba0b7e1938d.css">
+
+
+
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#252627">
+<link rel="shortcut icon" href="/favicon.ico">
+<meta name="theme-color" content="#252627"><meta itemprop="name" content="强网杯-Qualifier-2022/强网先锋/ASR writeup">
+<meta itemprop="description" content="强网杯-Qualifier-2022/强网先锋/ASR writeup 1. challenge from Crypto.Util.number import getPrime from secret import falg pad = lambda s:s &#43; bytes([(len(s)-1)%16&#43;1]*((len(s)-1)%16&#43;1)) n = getPrime(128)**2 * getPrime(128)**2 * getPrime(128)**2 * getPrime(128)**2 e = 3 flag = pad(flag) print(flag) assert(len(flag) &gt;= 48) m = int.from_bytes(flag,&#39;big&#39;) c = pow(m,e,n) print(f&#39;n = {n}&#39;) print(f&#39;e = {e}&#39;) print(f&#39;c = {c}&#39;) &#39;&#39;&#39; n = 8250871280281573979365095715711359115372504458973444367083195431861307534563246537364248104106494598081988216584432003199198805753721448450911308558041115465900179230798939615583517756265557814710419157462721793864532239042758808298575522666358352726060578194045804198551989679722201244547561044646931280001 e = 3 c = 945272793717722090962030960824180726576357481511799904903841312265308706852971155205003971821843069272938250385935597609059700446530436381124650731751982419593070224310399320617914955227288662661442416421725698368791013785074809691867988444306279231013360024747585261790352627234450209996422862329513284149 &#39;&#39;&#39; 2. 分析 n是一个平方数，平方根是4个128bit素数的乘积，应该可以通过ecm分解。
+e = 3 c = 945272793717722090962030960824180726576357481511799904903841312265308706852971155205003971821843069272938250385935597609059700446530436381124650731751982419593070224310399320617914955227288662661442416421725698368791013785074809691867988444306279231013360024747585261790352627234450209996422862329513284149 n = 8250871280281573979365095715711359115372504458973444367083195431861307534563246537364248104106494598081988216584432003199198805753721448450911308558041115465900179230798939615583517756265557814710419157462721793864532239042758808298575522666358352726060578194045804198551989679722201244547561044646931280001 pqrs = 2872432989693854281918578458293603200587306199407874717707522587993136874097838265650829958344702997782980206004276973399784460125581362617464018665640001 assert pqrs*pqrs == n 使用yafu在一台8U的云主机上可以分解n。">
+<meta itemprop="datePublished" content="2022-10-11T07:36:02+00:00" />
+<meta itemprop="dateModified" content="2022-10-11T07:36:02+00:00" />
+<meta itemprop="wordCount" content="261">
+
+
+
+<meta itemprop="keywords" content="" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="强网杯-Qualifier-2022/强网先锋/ASR writeup"/>
+<meta name="twitter:description" content="强网杯-Qualifier-2022/强网先锋/ASR writeup 1. challenge from Crypto.Util.number import getPrime from secret import falg pad = lambda s:s &#43; bytes([(len(s)-1)%16&#43;1]*((len(s)-1)%16&#43;1)) n = getPrime(128)**2 * getPrime(128)**2 * getPrime(128)**2 * getPrime(128)**2 e = 3 flag = pad(flag) print(flag) assert(len(flag) &gt;= 48) m = int.from_bytes(flag,&#39;big&#39;) c = pow(m,e,n) print(f&#39;n = {n}&#39;) print(f&#39;e = {e}&#39;) print(f&#39;c = {c}&#39;) &#39;&#39;&#39; n = 8250871280281573979365095715711359115372504458973444367083195431861307534563246537364248104106494598081988216584432003199198805753721448450911308558041115465900179230798939615583517756265557814710419157462721793864532239042758808298575522666358352726060578194045804198551989679722201244547561044646931280001 e = 3 c = 945272793717722090962030960824180726576357481511799904903841312265308706852971155205003971821843069272938250385935597609059700446530436381124650731751982419593070224310399320617914955227288662661442416421725698368791013785074809691867988444306279231013360024747585261790352627234450209996422862329513284149 &#39;&#39;&#39; 2. 分析 n是一个平方数，平方根是4个128bit素数的乘积，应该可以通过ecm分解。
+e = 3 c = 945272793717722090962030960824180726576357481511799904903841312265308706852971155205003971821843069272938250385935597609059700446530436381124650731751982419593070224310399320617914955227288662661442416421725698368791013785074809691867988444306279231013360024747585261790352627234450209996422862329513284149 n = 8250871280281573979365095715711359115372504458973444367083195431861307534563246537364248104106494598081988216584432003199198805753721448450911308558041115465900179230798939615583517756265557814710419157462721793864532239042758808298575522666358352726060578194045804198551989679722201244547561044646931280001 pqrs = 2872432989693854281918578458293603200587306199407874717707522587993136874097838265650829958344702997782980206004276973399784460125581362617464018665640001 assert pqrs*pqrs == n 使用yafu在一台8U的云主机上可以分解n。"/>
+
+
+
+
+<meta property="article:published_time" content="2022-10-11 07:36:02 &#43;0000 UTC" />
+
+
+
+
+
+
+
+    </head>
+
+    <body class="dark-theme">
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text">$ cd /home/st0n3</span>
+            <span class="logo__cursor"></span>
+        
+    </div>
+</a>
+
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="/aboutme.html">About</a></li><li><a href="/post.html">Blog</a></li><li><a href="/hackerbot">Hackerbot</a></li><li><a href="/skill_tree/">SkillTree</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+
+            <span class="theme-toggle"><svg class="theme-toggler" width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M22 41C32.4934 41 41 32.4934 41 22C41 11.5066 32.4934 3 22
+  3C11.5066 3 3 11.5066 3 22C3 32.4934 11.5066 41 22 41ZM7 22C7
+  13.7157 13.7157 7 22 7V37C13.7157 37 7 30.2843 7 22Z"/>
+</svg>
+</span>
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
+                
+    <main class="post">
+
+        <div class="post-info">
+            
+            </p>
+        </div>
+
+        <article>
+            <h2 class="post-title"><a href="/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/CTF/crypto/%E9%9D%9E%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86/RSA/%E5%88%86%E8%A7%A3n/%E5%BC%BA%E7%BD%91%E6%9D%AF-Qualifier-2022%E5%BC%BA%E7%BD%91%E5%85%88%E9%94%8BASR-writeup.html">强网杯-Qualifier-2022/强网先锋/ASR writeup</a></h2>
+
+            
+
+            <div class="post-content">
+                <h1 id="强网杯-qualifier-2022强网先锋asr-writeup">强网杯-Qualifier-2022/强网先锋/ASR writeup</h1>
+<h2 id="1-challenge">1. challenge</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> Crypto.Util.number <span style="color:#f92672">import</span> getPrime
+<span style="color:#f92672">from</span> secret <span style="color:#f92672">import</span> falg
+pad <span style="color:#f92672">=</span> <span style="color:#66d9ef">lambda</span> s:s <span style="color:#f92672">+</span> bytes([(len(s)<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>)<span style="color:#f92672">%</span><span style="color:#ae81ff">16</span><span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>]<span style="color:#f92672">*</span>((len(s)<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>)<span style="color:#f92672">%</span><span style="color:#ae81ff">16</span><span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>))
+
+n <span style="color:#f92672">=</span> getPrime(<span style="color:#ae81ff">128</span>)<span style="color:#f92672">**</span><span style="color:#ae81ff">2</span> <span style="color:#f92672">*</span> getPrime(<span style="color:#ae81ff">128</span>)<span style="color:#f92672">**</span><span style="color:#ae81ff">2</span> <span style="color:#f92672">*</span> getPrime(<span style="color:#ae81ff">128</span>)<span style="color:#f92672">**</span><span style="color:#ae81ff">2</span> <span style="color:#f92672">*</span> getPrime(<span style="color:#ae81ff">128</span>)<span style="color:#f92672">**</span><span style="color:#ae81ff">2</span>
+e <span style="color:#f92672">=</span> <span style="color:#ae81ff">3</span>
+
+flag <span style="color:#f92672">=</span> pad(flag)
+<span style="color:#66d9ef">print</span>(flag)
+<span style="color:#66d9ef">assert</span>(len(flag) <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">48</span>)
+m <span style="color:#f92672">=</span> int<span style="color:#f92672">.</span>from_bytes(flag,<span style="color:#e6db74">&#39;big&#39;</span>)
+c <span style="color:#f92672">=</span> pow(m,e,n)
+
+<span style="color:#66d9ef">print</span>(f<span style="color:#e6db74">&#39;n = {n}&#39;</span>)
+<span style="color:#66d9ef">print</span>(f<span style="color:#e6db74">&#39;e = {e}&#39;</span>)
+<span style="color:#66d9ef">print</span>(f<span style="color:#e6db74">&#39;c = {c}&#39;</span>)
+
+<span style="color:#e6db74">&#39;&#39;&#39;
+</span><span style="color:#e6db74">n = 8250871280281573979365095715711359115372504458973444367083195431861307534563246537364248104106494598081988216584432003199198805753721448450911308558041115465900179230798939615583517756265557814710419157462721793864532239042758808298575522666358352726060578194045804198551989679722201244547561044646931280001
+</span><span style="color:#e6db74">e = 3
+</span><span style="color:#e6db74">c = 945272793717722090962030960824180726576357481511799904903841312265308706852971155205003971821843069272938250385935597609059700446530436381124650731751982419593070224310399320617914955227288662661442416421725698368791013785074809691867988444306279231013360024747585261790352627234450209996422862329513284149
+</span><span style="color:#e6db74">&#39;&#39;&#39;</span>
+</code></pre></div><h2 id="2-分析">2. 分析</h2>
+<p>n是一个平方数，平方根是4个128bit素数的乘积，应该可以通过ecm分解。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">e <span style="color:#f92672">=</span> <span style="color:#ae81ff">3</span>
+c <span style="color:#f92672">=</span> <span style="color:#ae81ff">945272793717722090962030960824180726576357481511799904903841312265308706852971155205003971821843069272938250385935597609059700446530436381124650731751982419593070224310399320617914955227288662661442416421725698368791013785074809691867988444306279231013360024747585261790352627234450209996422862329513284149</span>
+n <span style="color:#f92672">=</span> <span style="color:#ae81ff">8250871280281573979365095715711359115372504458973444367083195431861307534563246537364248104106494598081988216584432003199198805753721448450911308558041115465900179230798939615583517756265557814710419157462721793864532239042758808298575522666358352726060578194045804198551989679722201244547561044646931280001</span>
+pqrs <span style="color:#f92672">=</span> <span style="color:#ae81ff">2872432989693854281918578458293603200587306199407874717707522587993136874097838265650829958344702997782980206004276973399784460125581362617464018665640001</span>
+<span style="color:#66d9ef">assert</span> pqrs<span style="color:#f92672">*</span>pqrs <span style="color:#f92672">==</span> n
+</code></pre></div><p>使用yafu在一台8U的云主机上可以分解n。</p>
+<pre><code>docker run -ti ssst0n3/yafu:2.10
+# yafu -threads 128
+...
+Total factoring time = 977.9845 seconds
+
+
+***factors found***
+
+P39 = 218566259296037866647273372633238739089
+P39 = 225933944608558304529179430753170813347
+P39 = 223213222467584072959434495118689164399
+P39 = 260594583349478633632570848336184053653
+
+ans = 1
+</code></pre><p>接下来可以考虑求得d。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">p <span style="color:#f92672">=</span> <span style="color:#ae81ff">225933944608558304529179430753170813347</span>
+<span style="color:#66d9ef">assert</span>(p<span style="color:#f92672">.</span>is_prime())
+<span style="color:#66d9ef">assert</span>(n<span style="color:#f92672">%</span>p<span style="color:#f92672">==</span><span style="color:#ae81ff">0</span>)
+q <span style="color:#f92672">=</span> <span style="color:#ae81ff">260594583349478633632570848336184053653</span>
+<span style="color:#66d9ef">assert</span>(q<span style="color:#f92672">.</span>is_prime())
+<span style="color:#66d9ef">assert</span>(n<span style="color:#f92672">%</span>q<span style="color:#f92672">==</span><span style="color:#ae81ff">0</span>)
+r <span style="color:#f92672">=</span> <span style="color:#ae81ff">223213222467584072959434495118689164399</span>
+<span style="color:#66d9ef">assert</span>(r<span style="color:#f92672">.</span>is_prime())
+<span style="color:#66d9ef">assert</span>(n<span style="color:#f92672">%</span>r<span style="color:#f92672">==</span><span style="color:#ae81ff">0</span>)
+s <span style="color:#f92672">=</span> <span style="color:#ae81ff">218566259296037866647273372633238739089</span>
+<span style="color:#66d9ef">assert</span>(s<span style="color:#f92672">.</span>is_prime())
+<span style="color:#66d9ef">assert</span>(n<span style="color:#f92672">%</span>s<span style="color:#f92672">==</span><span style="color:#ae81ff">0</span>)
+
+phi <span style="color:#f92672">=</span> p<span style="color:#f92672">*</span>(p<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>)<span style="color:#f92672">*</span>q<span style="color:#f92672">*</span>(q<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>)<span style="color:#f92672">*</span>r<span style="color:#f92672">*</span>(r<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>)<span style="color:#f92672">*</span>s<span style="color:#f92672">*</span>(s<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>)
+<span style="color:#66d9ef">print</span>(gcd(e, phi))
+<span style="color:#75715e"># d = inverse_mod(e, phi)</span>
+</code></pre></div><pre><code>3
+</code></pre>
+<p>但本题中e和phi不互素。</p>
+<p>因为e较小，可以在对每个素数的模域上，解出$c^{\frac{1}{3}}$, 每组会有至多3个解，共4组。</p>
+<p>对每个解要与素因子进行CRT还原出原始解。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> itertools <span style="color:#f92672">import</span> product
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">euler_totient</span>(factors):
+    <span style="color:#66d9ef">return</span> reduce(<span style="color:#66d9ef">lambda</span> t, p: t <span style="color:#f92672">*</span> (p <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>), factors, <span style="color:#ae81ff">1</span>)
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">e_phi_not_coprime</span>(primes, e, c):
+    <span style="color:#e6db74">&#34;&#34;&#34;
+</span><span style="color:#e6db74">    for gcd(e, phi) != 1 and it&#39;s small
+</span><span style="color:#e6db74">    &#34;&#34;&#34;</span>
+    phi <span style="color:#f92672">=</span> euler_totient(primes)
+    gcd_e_phi <span style="color:#f92672">=</span> gcd(phi, e)
+    small_roots <span style="color:#f92672">=</span> []
+    <span style="color:#66d9ef">for</span> prime <span style="color:#f92672">in</span> primes:
+        P<span style="color:#f92672">.&lt;</span>a<span style="color:#f92672">&gt;</span> <span style="color:#f92672">=</span> PolynomialRing(Zmod(prime),implementation<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;NTL&#39;</span>)
+        f <span style="color:#f92672">=</span> a<span style="color:#f92672">^</span>gcd_e_phi<span style="color:#f92672">-</span>c
+        roots <span style="color:#f92672">=</span> f<span style="color:#f92672">.</span>monic()<span style="color:#f92672">.</span>roots()
+        <span style="color:#75715e"># print(roots)</span>
+        <span style="color:#66d9ef">for</span> root <span style="color:#f92672">in</span> roots:
+            <span style="color:#66d9ef">assert</span> len(root) <span style="color:#f92672">==</span> <span style="color:#ae81ff">2</span>
+            <span style="color:#66d9ef">assert</span> root[<span style="color:#ae81ff">1</span>] <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span>
+        small_roots<span style="color:#f92672">.</span>append([Integer(root[<span style="color:#ae81ff">0</span>]) <span style="color:#66d9ef">for</span> root <span style="color:#f92672">in</span> roots])
+
+    roots <span style="color:#f92672">=</span> []
+    <span style="color:#66d9ef">for</span> iter_roots <span style="color:#f92672">in</span> product(<span style="color:#f92672">*</span>small_roots):
+        roots<span style="color:#f92672">.</span>append(CRT_list(list(iter_roots), primes))
+    <span style="color:#66d9ef">return</span> roots
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">solve</span>():
+    primes <span style="color:#f92672">=</span> [p,q,r,s]
+    roots <span style="color:#f92672">=</span> e_phi_not_coprime(primes, e, c)
+    <span style="color:#66d9ef">for</span> root <span style="color:#f92672">in</span> roots:
+        flag <span style="color:#f92672">=</span> int(root)<span style="color:#f92672">.</span>to_bytes(<span style="color:#ae81ff">64</span>, <span style="color:#e6db74">&#39;big&#39;</span>)
+        <span style="color:#66d9ef">if</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;flag&#34;</span> <span style="color:#f92672">in</span> flag:
+            <span style="color:#66d9ef">print</span>(flag)
+            <span style="color:#66d9ef">break</span>
+
+solve()
+</code></pre></div><pre><code>b'\x00\x00\x00\x00flag{Fear_can_hold_you_prisoner_Hope_can_set_you_free}\x06\x06\x06\x06\x06\x06'
+</code></pre>
+
+            </div>
+        </article>
+
+        <hr />
+
+        <div class="post-info">
+  			</div>
+
+        
+    </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>&copy; 2022</span>
+            
+            <span></span>
+            <span> <a href="/posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a></span>
+        </div>
+    </div>
+    <div class="footer__inner">
+        <div class="footer__content">
+
+        </div>
+    </div>
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>Powered by <a href="http://gohugo.io">Hugo</a></span>
+            <span>Made with &#10084; by <a href="https://github.com/st0n3">st0n3</a></span>
+            <span>Based on <a href="https://github.com/rhazdon">rhazdon</a></span>
+        </div>
+    </div>
+
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      extensions: ["tex2jax.js"],
+      
+      jax: ["input/TeX", "output/CommonHTML"],
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+        displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+        processEscapes: true
+      },
+      "HTML-CSS": { fonts: ["TeX"] },
+      displayAlign: "left"
+    });
+  </script>
+
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_CHTML"></script>
+
+
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+
+<script type="text/javascript" src="/bundle.min.4c3fb12a087ceed4a52cb5d57068a9795c7069617a01ca70f788052ad66e1791779e6c72686e1dc0ca13dc03b0203204b6566bb0dd1ee80de2b7ff4d8fe53db2.js" integrity="sha512-TD&#43;xKgh87tSlLLXVcGipeVxwaWF6Acpw94gFKtZuF5F3nmxyaG4dwMoT3AOwIDIEtlZrsN0e6A3it/9Nj&#43;U9sg=="></script>
+
+
+
+    </body>
+</html>
