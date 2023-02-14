@@ -8,7 +8,7 @@
     content="">
 <meta name="description"
     content="tags: containerd, container How to Build Containerd containerd没有提供编译环境，本文分析如何使用官方的构建环境编译containerd。
-1. Normal 根据官方文档, 一步一步来即可编译containerd。
+1. Standard 根据官方文档, 一步一步来即可编译containerd。
 1. 安装依赖
 安装golang, btrfs等依赖
 2. 下载代码
@@ -52,7 +52,7 @@ on: push: tags: - &amp;#39;v*&amp;#39; # Push events to matching v*, i." />
 <link rel="shortcut icon" href="/favicon.ico">
 <meta name="theme-color" content="#252627"><meta itemprop="name" content="How to Build Containerd">
 <meta itemprop="description" content="tags: containerd, container How to Build Containerd containerd没有提供编译环境，本文分析如何使用官方的构建环境编译containerd。
-1. Normal 根据官方文档, 一步一步来即可编译containerd。
+1. Standard 根据官方文档, 一步一步来即可编译containerd。
 1. 安装依赖
 安装golang, btrfs等依赖
 2. 下载代码
@@ -68,7 +68,7 @@ https://github.com/containerd/containerd/blob/v1.6.7/.github/workflows/release.y
 on: push: tags: - &#39;v*&#39; # Push events to matching v*, i.">
 <meta itemprop="datePublished" content="2022-08-12T08:53:33+00:00" />
 <meta itemprop="dateModified" content="2022-08-12T08:53:33+00:00" />
-<meta itemprop="wordCount" content="478">
+<meta itemprop="wordCount" content="477">
 
 
 
@@ -76,7 +76,7 @@ on: push: tags: - &#39;v*&#39; # Push events to matching v*, i.">
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="How to Build Containerd"/>
 <meta name="twitter:description" content="tags: containerd, container How to Build Containerd containerd没有提供编译环境，本文分析如何使用官方的构建环境编译containerd。
-1. Normal 根据官方文档, 一步一步来即可编译containerd。
+1. Standard 根据官方文档, 一步一步来即可编译containerd。
 1. 安装依赖
 安装golang, btrfs等依赖
 2. 下载代码
@@ -164,7 +164,7 @@ on: push: tags: - &#39;v*&#39; # Push events to matching v*, i."/>
 <h2 id="tags-containerd-container">tags: containerd, container</h2>
 <h1 id="how-to-build-containerd">How to Build Containerd</h1>
 <p>containerd没有提供编译环境，本文分析如何使用官方的构建环境编译containerd。</p>
-<h2 id="1-normal">1. Normal</h2>
+<h2 id="1-standard">1. Standard</h2>
 <p>根据<a href="https://github.com/containerd/containerd/blob/v1.6.7/BUILDING.md">官方文档</a>, 一步一步来即可编译containerd。</p>
 <p><strong>1. 安装依赖</strong></p>
 <p>安装golang, btrfs等依赖</p>
@@ -242,7 +242,7 @@ containerd-st0n3 github.com/containerd/containerd v1.6.7.m 0197261a30bf81f1ee8e6
 </span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">FROM</span><span style="color:#e6db74"> scratch AS release</span><span style="color:#960050;background-color:#1e0010">
 </span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">COPY</span> --from<span style="color:#f92672">=</span>target /go/src/github.com/containerd/containerd/releases/ /<span style="color:#960050;background-color:#1e0010">
 </span></code></pre></div><p>因此，理论上我们可以使用该Dockerfile和对应的参数，自行构造一套编译环境。</p>
-<h3 id="22-self-build">2.2 Self build</h3>
+<h3 id="22-custom">2.2 Custom</h3>
 <pre><code>cat &lt;&lt; EOF &gt; build.sh
 #!/bin/bash
 set -x
@@ -313,7 +313,7 @@ bin/containerd-shim-runc-v2: cmd/containerd-shim-runc-v2 FORCE # set !cgo and om
                 <footer class="footer">
     <div class="footer__inner">
         <div class="footer__content">
-            <span>&copy; 2022</span>
+            <span>&copy; 2023</span>
             
             <span></span>
             <span> <a href="/posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a></span>

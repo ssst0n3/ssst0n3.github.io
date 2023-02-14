@@ -58,7 +58,7 @@ apt-get update gnome-terminal 同时修改一下首选应用程序中的terminal
 4. 更改桌面文件夹为英文 cp ~/.config/user-dirs.dirs ~/.config/user-dirs.dirs.bak sed -i &quot;s/桌面/Desktop/g&quot; ~/.config/user-dirs.dirs sed -i &quot;s/下载/Downloads/g&quot; ~/.config/user-dirs.dirs sed -i &quot;s/模板/Templates/g&quot; ~/.config/user-dirs.dirs sed -i &quot;s/公共/Public/g&quot; ~/.config/user-dirs.dirs sed -i &quot;s/文档/Documents/g&quot; ~/.config/user-dirs.dirs sed -i &quot;s/音乐/Music/g&quot; ~/.config/user-dirs.dirs sed -i &quot;s/图片/Pictures/g&quot; ~/.">
 <meta itemprop="datePublished" content="2020-04-10T12:30:00+00:00" />
 <meta itemprop="dateModified" content="2020-04-10T12:30:00+00:00" />
-<meta itemprop="wordCount" content="134">
+<meta itemprop="wordCount" content="314">
 
 
 
@@ -202,7 +202,49 @@ mv 视频 Videos
 <li><a href="https://github.com/iberianpig/fusuma">https://github.com/iberianpig/fusuma</a></li>
 <li><a href="https://blog.csdn.net/amnesiagreen/article/details/106335210">https://blog.csdn.net/amnesiagreen/article/details/106335210</a></li>
 </ul>
+<h2 id="8-谷歌拼音">8. 谷歌拼音</h2>
+<p><a href="https://blog.csdn.net/kan2016/article/details/105735645">https://blog.csdn.net/kan2016/article/details/105735645</a></p>
+<h2 id="9-zsh">9. zsh</h2>
+<h3 id="91-oh-my-zsh">9.1 oh-my-zsh</h3>
+<p><a href="https://ohmyz.sh/#install">https://ohmyz.sh/#install</a></p>
+<pre><code>sh -c &quot;$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)&quot;
+</code></pre><h3 id="92-theme">9.2 theme</h3>
+<p><a href="https://github.com/romkatv/powerlevel10k#oh-my-zsh">https://github.com/romkatv/powerlevel10k#oh-my-zsh</a></p>
+<p>编辑 <code>.zshrc</code></p>
+<pre><code>ZSH_THEME=&quot;random&quot;
 
+# ZSH_THEME_RANDOM_CANDIDATES=( 
+&quot;3den&quot;  &quot;cloud&quot; &quot;fino-time&quot;  &quot;half-life&quot;     &quot;kiwi&quot;   &quot;murilasso&quot;  &quot;rkj&quot;    &quot;terminalparty&quot; 
+&quot;adben&quot; &quot;crcandy&quot;     &quot;fino&quot;    &quot;humza&quot;   &quot;kolo&quot;   &quot;muse&quot; &quot;robbyrussell&quot;    &quot;theunraveler&quot;
+&quot;af-magic&quot; &quot;crunch&quot;      &quot;fishy&quot;   &quot;imajes&quot;  &quot;kphoen&quot; &quot;nanotech&quot;   &quot;sammy&quot;  &quot;tjkirch_mod&quot;
+&quot;afowler&quot;  &quot;cypher&quot;      &quot;flazz&quot;   &quot;intheloop&quot;     &quot;lambda&quot; &quot;nebirhos&quot;   &quot;simonoff&quot;  &quot;tjkirch&quot;
+&quot;agnoster&quot; &quot;dallas&quot;      &quot;fletcherm&quot;  &quot;itchy&quot;   &quot;linuxonly&quot; &quot;nicoulaj&quot;   &quot;simple&quot; &quot;tonotdo&quot;
+&quot;alanpeabody&quot;    &quot;darkblood&quot;   &quot;fox&quot;     &quot;jaischeema&quot;    &quot;lukerandall&quot;     &quot;norm&quot; &quot;skaro&quot;  &quot;trapd00r&quot;
+&quot;amuse&quot; &quot;daveverwer&quot;  &quot;frisk&quot;   &quot;jbergantine&quot;   &quot;macovsky-ruby&quot;   &quot;obraun&quot;     &quot;smt&quot;    &quot;wedisagree&quot;
+&quot;apple&quot; &quot;dieter&quot;      &quot;frontcube&quot;  &quot;jispwoso&quot;      &quot;macovsky&quot;  &quot;peepcode&quot;   &quot;Soliah&quot; &quot;wezm+&quot;
+&quot;arrow&quot; &quot;dogenpunk&quot;   &quot;funky&quot;   &quot;jnrowe&quot;  &quot;maran&quot;  &quot;philips&quot;    &quot;sonicradish&quot;     &quot;wezm&quot;
+&quot;aussiegeek&quot;     &quot;dpoggi&quot;      &quot;fwalch&quot;  &quot;jonathan&quot;      &quot;mgutz&quot;  &quot;pmcgee&quot;     &quot;sorin&quot;  &quot;wuffers&quot;
+&quot;avit&quot;  &quot;dstufft&quot;     &quot;gallifrey&quot;  &quot;josh&quot; &quot;mh&quot;     &quot;pure&quot; &quot;sporty_256&quot;      &quot;xiong-chiamiov-plus&quot;
+&quot;awesomepanda&quot;   &quot;dst&quot;   &quot;gallois&quot; &quot;jreese&quot;  &quot;michelebologna&quot;  &quot;pygmalion&quot;  &quot;steeef&quot; &quot;xiong-chiamiov&quot;
+&quot;bira&quot;  &quot;duellj&quot;      &quot;garyblessington&quot;  &quot;jtriley&quot; &quot;mikeh&quot;  &quot;re5et&quot;      &quot;strug&quot;  &quot;ys&quot;
+&quot;blinks&quot;   &quot;eastwood&quot;    &quot;gentoo&quot;  &quot;juanghurtado&quot;  &quot;miloshadzic&quot;     &quot;refined&quot;    &quot;sunaku&quot; &quot;zhann&quot;
+&quot;bureau&quot;   &quot;edvardm&quot;     &quot;geoffgarside&quot;     &quot;junkfood&quot;      &quot;minimal&quot;   &quot;rgm&quot;  &quot;sunrise&quot;
+&quot;candy-kingdom&quot;  &quot;emotty&quot;      &quot;gianu&quot;   &quot;kafeitu&quot; &quot;mira&quot;   &quot;risto&quot;      &quot;superjarin&quot;
+&quot;candy&quot; &quot;essembeh&quot;    &quot;gnzh&quot;    &quot;kardan&quot;  &quot;mortalscumbag&quot;   &quot;rixius&quot;     &quot;suvash&quot;
+&quot;clean&quot; &quot;evan&quot;  &quot;gozilla&quot; &quot;kennethreitz&quot;  &quot;mrtazz&quot; &quot;rkj-repos&quot;  &quot;takashiyoshida&quot; 
+)
+ZSH_THEME_RANDOM_CANDIDATES=(
+    &quot;strug&quot; &quot;powerlevel10k/powerlevel10k&quot;
+)
+</code></pre><h3 id="93-zsh-autosuggestions">9.3 zsh-autosuggestions</h3>
+<p><a href="https://github.com/zsh-users/zsh-autosuggestions/blob/master/INSTALL.md">https://github.com/zsh-users/zsh-autosuggestions/blob/master/INSTALL.md</a></p>
+<pre><code>git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+</code></pre><p>编辑<code>~/.zshrc</code></p>
+<pre><code>plugins=( 
+    # other plugins...
+    zsh-autosuggestions
+)
+</code></pre>
             </div>
         </article>
 
@@ -220,7 +262,7 @@ mv 视频 Videos
                 <footer class="footer">
     <div class="footer__inner">
         <div class="footer__content">
-            <span>&copy; 2022</span>
+            <span>&copy; 2023</span>
             
             <span></span>
             <span> <a href="/posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a></span>

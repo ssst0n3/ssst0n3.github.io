@@ -42,7 +42,7 @@
 # Note: This dropin only works with kubeadm and kubelet v1.11&#43; [Service] Environment=&quot;KUBELET_KUBECONFIG_ARGS=--bootstrap-kubeconfig=/etc/kubernetes/bootstrap-kubelet.conf --kubeconfig=/etc/kubernetes/kubelet.conf&quot; Environment=&quot;KUBELET_CONFIG_ARGS=--config=/var/lib/kubelet/config.yaml&quot; # This is a file that &quot;kubeadm init&quot; and &quot;kubeadm join&quot; generates at runtime, populating the KUBELET_KUBEADM_ARGS variable dynamically EnvironmentFile=-/var/lib/kubelet/kubeadm-flags.env # This is a file that the user can use for overrides of the kubelet args as a last resort. Preferably, the user should use # the .">
 <meta itemprop="datePublished" content="2022-03-30T07:47:41+00:00" />
 <meta itemprop="dateModified" content="2022-03-30T07:47:41+00:00" />
-<meta itemprop="wordCount" content="583">
+<meta itemprop="wordCount" content="584">
 
 
 
@@ -237,6 +237,7 @@ make binary
 <pre><code>cat &lt;&lt;EOF &gt; docker.debug
 #!/bin/bash
 dlv --listen=:2344 --headless=true --api-version=2 --accept-multiclient exec ./docker-cli.debug -- $*
+EOF
 chmod +x docker.debug
 </code></pre><h3 id="53-dockerd">5.3 dockerd</h3>
 <h4 id="编译-2">编译</h4>
@@ -311,7 +312,7 @@ index 266aef335..be5381a33 100644
                 <footer class="footer">
     <div class="footer__inner">
         <div class="footer__content">
-            <span>&copy; 2022</span>
+            <span>&copy; 2023</span>
             
             <span></span>
             <span> <a href="/posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a></span>
