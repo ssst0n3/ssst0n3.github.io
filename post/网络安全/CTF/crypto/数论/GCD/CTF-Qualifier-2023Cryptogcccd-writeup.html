@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author"
+    content="">
+<meta name="description"
+    content="CodiMD - Collaborative markdown notes   &amp;lt;div class=&amp;quot;site-wrapper&amp;quot;&amp;gt; &amp;lt;div class=&amp;quot;site-wrapper-inner&amp;quot;&amp;gt; &amp;lt;div class=&amp;quot;cover-container&amp;quot;&amp;gt; &amp;lt;div class=&amp;quot;masthead clearfix&amp;quot;&amp;gt; &amp;lt;div class=&amp;quot;inner&amp;quot;&amp;gt; &amp;lt;h3 class=&amp;quot;masthead-brand&amp;quot;&amp;gt;&amp;lt;/h3&amp;gt; &amp;lt;nav&amp;gt; &amp;lt;ul class=&amp;quot;nav masthead-nav&amp;quot;&amp;gt; &amp;lt;li class=&amp;quot;ui-home active&amp;quot;&amp;gt;&amp;lt;a href=&amp;quot;#&amp;quot;&amp;gt;Intro&amp;lt;/a&amp;gt; &amp;lt;/li&amp;gt; &amp;lt;li class=&amp;quot;ui-history&amp;quot;&amp;gt;&amp;lt;a href=&amp;quot;#&amp;quot;&amp;gt;History&amp;lt;/a&amp;gt; &amp;lt;/li&amp;gt; &amp;lt;div class=&amp;quot;ui-signin&amp;quot; style=&amp;quot;float: right; margin-top: 8px;&amp;quot;&amp;gt; &amp;lt;button class=&amp;quot;btn btn-sm btn-success ui-signin&amp;quot; data-toggle=&amp;quot;modal&amp;quot; data-target=&amp;quot;.signin-modal&amp;quot;&amp;gt;Sign In&amp;lt;/button&amp;gt; &amp;lt;/div&amp;gt; &amp;lt;div class=&amp;quot;ui-signout&amp;quot; style=&amp;quot;float: right; margin-top: 8px; display: none;&amp;quot;&amp;gt; &amp;lt;a type=&amp;quot;button&amp;quot; href=&amp;quot;/new&amp;quot; class=&amp;quot;btn btn-sm btn-primary&amp;quot;&amp;gt;&amp;lt;i class=&amp;quot;fa fa-plus&amp;quot;&amp;gt;&amp;lt;/i&amp;gt; New note&amp;lt;/a&amp;gt; &amp;lt;span class=&amp;quot;ui-profile dropdown pull-right&amp;quot;&amp;gt; &amp;lt;button id=&amp;quot;profileLabel&amp;quot; class=&amp;quot;btn btn-sm btn-link ui-profile-label&amp;quot; style=&amp;quot;padding-right: 0;&amp;quot; data-toggle=&amp;quot;dropdown&amp;quot; aria-haspopup=&amp;quot;true&amp;quot; aria-expanded=&amp;quot;false&amp;quot;&amp;gt; &amp;lt;img class=&amp;quot;ui-avatar&amp;quot; width=&amp;quot;20&amp;quot; height=&amp;quot;20&amp;quot;&amp;gt;&amp;lt;span class=&amp;quot;hidden-xs hidden-sm&amp;quot;&amp;gt;&amp;amp;ensp;&amp;lt;span class=&amp;quot;ui-name&amp;quot;&amp;gt;&amp;lt;/span&amp;gt;&amp;lt;/span&amp;gt;&amp;amp;ensp;&amp;lt;i class=&amp;quot;fa fa-caret-down&amp;quot;&amp;gt;&amp;lt;/i&amp;gt; &amp;lt;/button&amp;gt; &amp;lt;ul class=&amp;quot;dropdown-menu&amp;quot; aria-labelledby=&amp;quot;profileLabel&amp;quot;&amp;gt; &amp;lt;li&amp;gt;&amp;lt;a href=&amp;quot;/features&amp;quot;&amp;gt;&amp;lt;i class=&amp;quot;fa fa-dot-circle-o fa-fw&amp;quot;&amp;gt;&amp;lt;/i&amp;gt; Features&amp;lt;/a&amp;gt;&amp;lt;/li&amp;gt; &amp;lt;li&amp;gt;&amp;lt;a href=&amp;quot;/me/export&amp;quot;&amp;gt;&amp;lt;i class=&amp;quot;fa fa-cloud-download fa-fw&amp;quot;&amp;gt;&amp;lt;/i&amp;gt; Export user data&amp;lt;/a&amp;gt;&amp;lt;/li&amp;gt; &amp;lt;li&amp;gt;&amp;lt;a class=&amp;quot;ui-delete-user&amp;quot; data-toggle=&amp;quot;modal&amp;quot; data-target=&amp;quot;." />
+<meta name="keywords" content="" />
+<meta name="robots" content="noodp" />
+<link rel="canonical" href="/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/CTF/crypto/%E6%95%B0%E8%AE%BA/GCD/CTF-Qualifier-2023Cryptogcccd-writeup.html" />
+
+
+<title>
+    
+    *CTF-Qualifier-2023/Crypto/gcccd writeup :: welcome to st0n3&#39;s blog 
+    
+</title>
+
+
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.2.1/css/flag-icon.min.css" rel="stylesheet"
+    type="text/css">
+
+
+
+<link rel="stylesheet" href="/main.min.de959d61dd13c2cd41136acd491ffb0749779e1afe37b1fed6d5cba0b7e1938d.css">
+
+
+
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#252627">
+<link rel="shortcut icon" href="/favicon.ico">
+<meta name="theme-color" content="#252627"><meta itemprop="name" content="*CTF-Qualifier-2023/Crypto/gcccd writeup">
+<meta itemprop="description" content="CodiMD - Collaborative markdown notes   &lt;div class=&quot;site-wrapper&quot;&gt; &lt;div class=&quot;site-wrapper-inner&quot;&gt; &lt;div class=&quot;cover-container&quot;&gt; &lt;div class=&quot;masthead clearfix&quot;&gt; &lt;div class=&quot;inner&quot;&gt; &lt;h3 class=&quot;masthead-brand&quot;&gt;&lt;/h3&gt; &lt;nav&gt; &lt;ul class=&quot;nav masthead-nav&quot;&gt; &lt;li class=&quot;ui-home active&quot;&gt;&lt;a href=&quot;#&quot;&gt;Intro&lt;/a&gt; &lt;/li&gt; &lt;li class=&quot;ui-history&quot;&gt;&lt;a href=&quot;#&quot;&gt;History&lt;/a&gt; &lt;/li&gt; &lt;div class=&quot;ui-signin&quot; style=&quot;float: right; margin-top: 8px;&quot;&gt; &lt;button class=&quot;btn btn-sm btn-success ui-signin&quot; data-toggle=&quot;modal&quot; data-target=&quot;.signin-modal&quot;&gt;Sign In&lt;/button&gt; &lt;/div&gt; &lt;div class=&quot;ui-signout&quot; style=&quot;float: right; margin-top: 8px; display: none;&quot;&gt; &lt;a type=&quot;button&quot; href=&quot;/new&quot; class=&quot;btn btn-sm btn-primary&quot;&gt;&lt;i class=&quot;fa fa-plus&quot;&gt;&lt;/i&gt; New note&lt;/a&gt; &lt;span class=&quot;ui-profile dropdown pull-right&quot;&gt; &lt;button id=&quot;profileLabel&quot; class=&quot;btn btn-sm btn-link ui-profile-label&quot; style=&quot;padding-right: 0;&quot; data-toggle=&quot;dropdown&quot; aria-haspopup=&quot;true&quot; aria-expanded=&quot;false&quot;&gt; &lt;img class=&quot;ui-avatar&quot; width=&quot;20&quot; height=&quot;20&quot;&gt;&lt;span class=&quot;hidden-xs hidden-sm&quot;&gt;&amp;ensp;&lt;span class=&quot;ui-name&quot;&gt;&lt;/span&gt;&lt;/span&gt;&amp;ensp;&lt;i class=&quot;fa fa-caret-down&quot;&gt;&lt;/i&gt; &lt;/button&gt; &lt;ul class=&quot;dropdown-menu&quot; aria-labelledby=&quot;profileLabel&quot;&gt; &lt;li&gt;&lt;a href=&quot;/features&quot;&gt;&lt;i class=&quot;fa fa-dot-circle-o fa-fw&quot;&gt;&lt;/i&gt; Features&lt;/a&gt;&lt;/li&gt; &lt;li&gt;&lt;a href=&quot;/me/export&quot;&gt;&lt;i class=&quot;fa fa-cloud-download fa-fw&quot;&gt;&lt;/i&gt; Export user data&lt;/a&gt;&lt;/li&gt; &lt;li&gt;&lt;a class=&quot;ui-delete-user&quot; data-toggle=&quot;modal&quot; data-target=&quot;.">
+<meta itemprop="datePublished" content="2023-07-30T09:39:48+00:00" />
+<meta itemprop="dateModified" content="2023-07-30T09:39:48+00:00" />
+<meta itemprop="wordCount" content="609">
+
+
+
+<meta itemprop="keywords" content="" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="*CTF-Qualifier-2023/Crypto/gcccd writeup"/>
+<meta name="twitter:description" content="CodiMD - Collaborative markdown notes   &lt;div class=&quot;site-wrapper&quot;&gt; &lt;div class=&quot;site-wrapper-inner&quot;&gt; &lt;div class=&quot;cover-container&quot;&gt; &lt;div class=&quot;masthead clearfix&quot;&gt; &lt;div class=&quot;inner&quot;&gt; &lt;h3 class=&quot;masthead-brand&quot;&gt;&lt;/h3&gt; &lt;nav&gt; &lt;ul class=&quot;nav masthead-nav&quot;&gt; &lt;li class=&quot;ui-home active&quot;&gt;&lt;a href=&quot;#&quot;&gt;Intro&lt;/a&gt; &lt;/li&gt; &lt;li class=&quot;ui-history&quot;&gt;&lt;a href=&quot;#&quot;&gt;History&lt;/a&gt; &lt;/li&gt; &lt;div class=&quot;ui-signin&quot; style=&quot;float: right; margin-top: 8px;&quot;&gt; &lt;button class=&quot;btn btn-sm btn-success ui-signin&quot; data-toggle=&quot;modal&quot; data-target=&quot;.signin-modal&quot;&gt;Sign In&lt;/button&gt; &lt;/div&gt; &lt;div class=&quot;ui-signout&quot; style=&quot;float: right; margin-top: 8px; display: none;&quot;&gt; &lt;a type=&quot;button&quot; href=&quot;/new&quot; class=&quot;btn btn-sm btn-primary&quot;&gt;&lt;i class=&quot;fa fa-plus&quot;&gt;&lt;/i&gt; New note&lt;/a&gt; &lt;span class=&quot;ui-profile dropdown pull-right&quot;&gt; &lt;button id=&quot;profileLabel&quot; class=&quot;btn btn-sm btn-link ui-profile-label&quot; style=&quot;padding-right: 0;&quot; data-toggle=&quot;dropdown&quot; aria-haspopup=&quot;true&quot; aria-expanded=&quot;false&quot;&gt; &lt;img class=&quot;ui-avatar&quot; width=&quot;20&quot; height=&quot;20&quot;&gt;&lt;span class=&quot;hidden-xs hidden-sm&quot;&gt;&amp;ensp;&lt;span class=&quot;ui-name&quot;&gt;&lt;/span&gt;&lt;/span&gt;&amp;ensp;&lt;i class=&quot;fa fa-caret-down&quot;&gt;&lt;/i&gt; &lt;/button&gt; &lt;ul class=&quot;dropdown-menu&quot; aria-labelledby=&quot;profileLabel&quot;&gt; &lt;li&gt;&lt;a href=&quot;/features&quot;&gt;&lt;i class=&quot;fa fa-dot-circle-o fa-fw&quot;&gt;&lt;/i&gt; Features&lt;/a&gt;&lt;/li&gt; &lt;li&gt;&lt;a href=&quot;/me/export&quot;&gt;&lt;i class=&quot;fa fa-cloud-download fa-fw&quot;&gt;&lt;/i&gt; Export user data&lt;/a&gt;&lt;/li&gt; &lt;li&gt;&lt;a class=&quot;ui-delete-user&quot; data-toggle=&quot;modal&quot; data-target=&quot;."/>
+
+
+
+
+<meta property="article:published_time" content="2023-07-30 09:39:48 &#43;0000 UTC" />
+
+
+
+
+
+
+
+    </head>
+
+    <body class="dark-theme">
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text">$ cd /home/st0n3</span>
+            <span class="logo__cursor"></span>
+        
+    </div>
+</a>
+
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="/aboutme.html">About</a></li><li><a href="/post.html">Blog</a></li><li><a href="/hackerbot">Hackerbot</a></li><li><a href="/skill_tree/">SkillTree</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+
+            <span class="theme-toggle"><svg class="theme-toggler" width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M22 41C32.4934 41 41 32.4934 41 22C41 11.5066 32.4934 3 22
+  3C11.5066 3 3 11.5066 3 22C3 32.4934 11.5066 41 22 41ZM7 22C7
+  13.7157 13.7157 7 22 7V37C13.7157 37 7 30.2843 7 22Z"/>
+</svg>
+</span>
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
+                
+    <main class="post">
+
+        <div class="post-info">
+            
+            </p>
+        </div>
+
+        <article>
+            <h2 class="post-title"><a href="/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/CTF/crypto/%E6%95%B0%E8%AE%BA/GCD/CTF-Qualifier-2023Cryptogcccd-writeup.html">*CTF-Qualifier-2023/Crypto/gcccd writeup</a></h2>
+
+            
+
+            <div class="post-content">
+                <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="description" content="The best platform to write and share markdown.">
+<meta name="keywords" content="Collaborative, Markdown, Notes">
+<meta property="og:title" content="CodiMD - Collaborative markdown notes">
+<meta property="og:description" content="The best platform to write and share markdown.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="">
+<meta property="og:image" content="/codimd-icon-1024.png">
+<meta property="og:image:alt" content="CodiMD logo">
+<meta property="og:image:type" content="image/png">
+<base href="/">
+<title>CodiMD - Collaborative markdown notes</title>
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link href="build/font-pack.css" rel="stylesheet"><link href="build/cover-styles-pack.css" rel="stylesheet"><link href="build/cover.css" rel="stylesheet">
+</head>
+<body>
+<pre><code>&lt;div class=&quot;site-wrapper&quot;&gt;
+&lt;div class=&quot;site-wrapper-inner&quot;&gt;
+    &lt;div class=&quot;cover-container&quot;&gt;
+
+        &lt;div class=&quot;masthead clearfix&quot;&gt;
+            &lt;div class=&quot;inner&quot;&gt;
+                &lt;h3 class=&quot;masthead-brand&quot;&gt;&lt;/h3&gt;
+                &lt;nav&gt;
+                    &lt;ul class=&quot;nav masthead-nav&quot;&gt;
+                        &lt;li class=&quot;ui-home active&quot;&gt;&lt;a href=&quot;#&quot;&gt;Intro&lt;/a&gt;
+                        &lt;/li&gt;
+                        &lt;li class=&quot;ui-history&quot;&gt;&lt;a href=&quot;#&quot;&gt;History&lt;/a&gt;
+                        &lt;/li&gt;
+                        &lt;div class=&quot;ui-signin&quot; style=&quot;float: right; margin-top: 8px;&quot;&gt;
+                            
+                            
+                            &lt;button class=&quot;btn btn-sm btn-success ui-signin&quot; data-toggle=&quot;modal&quot; data-target=&quot;.signin-modal&quot;&gt;Sign In&lt;/button&gt;
+                            
+                        &lt;/div&gt;
+                        &lt;div class=&quot;ui-signout&quot; style=&quot;float: right; margin-top: 8px; display: none;&quot;&gt;
+                            &lt;a type=&quot;button&quot; href=&quot;/new&quot; class=&quot;btn btn-sm btn-primary&quot;&gt;&lt;i class=&quot;fa fa-plus&quot;&gt;&lt;/i&gt; New note&lt;/a&gt;
+                            &lt;span class=&quot;ui-profile dropdown pull-right&quot;&gt;
+                                &lt;button id=&quot;profileLabel&quot; class=&quot;btn btn-sm btn-link ui-profile-label&quot; style=&quot;padding-right: 0;&quot; data-toggle=&quot;dropdown&quot; aria-haspopup=&quot;true&quot; aria-expanded=&quot;false&quot;&gt;
+                                    &lt;img class=&quot;ui-avatar&quot; width=&quot;20&quot; height=&quot;20&quot;&gt;&lt;span class=&quot;hidden-xs hidden-sm&quot;&gt;&amp;ensp;&lt;span class=&quot;ui-name&quot;&gt;&lt;/span&gt;&lt;/span&gt;&amp;ensp;&lt;i class=&quot;fa fa-caret-down&quot;&gt;&lt;/i&gt;
+                                &lt;/button&gt;
+                                &lt;ul class=&quot;dropdown-menu&quot; aria-labelledby=&quot;profileLabel&quot;&gt;
+                                    &lt;li&gt;&lt;a href=&quot;/features&quot;&gt;&lt;i class=&quot;fa fa-dot-circle-o fa-fw&quot;&gt;&lt;/i&gt; Features&lt;/a&gt;&lt;/li&gt;
+                                    &lt;li&gt;&lt;a href=&quot;/me/export&quot;&gt;&lt;i class=&quot;fa fa-cloud-download fa-fw&quot;&gt;&lt;/i&gt; Export user data&lt;/a&gt;&lt;/li&gt;
+                                    &lt;li&gt;&lt;a class=&quot;ui-delete-user&quot; data-toggle=&quot;modal&quot; data-target=&quot;.delete-user-modal&quot;&gt;&lt;i class=&quot;fa fa-trash fa-fw&quot;&gt;&lt;/i&gt; Delete user&lt;/a&gt;&lt;/li&gt;
+                                    &lt;li&gt;&lt;a href=&quot;/logout&quot;&gt;&lt;i class=&quot;fa fa-sign-out fa-fw&quot;&gt;&lt;/i&gt; Sign Out&lt;/a&gt;&lt;/li&gt;
+                                &lt;/ul&gt;
+                            &lt;/span&gt;
+                        &lt;/div&gt;
+                    &lt;/ul&gt;
+                &lt;/nav&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;div id=&quot;home&quot; class=&quot;section&quot;&gt;
+            &lt;div class=&quot;inner cover&quot;&gt;
+                &lt;h1 class=&quot;cover-heading&quot;&gt;&lt;i class=&quot;fa fa-file-text&quot;&gt;&lt;/i&gt; CodiMD&lt;/h1&gt;
+                &lt;p class=&quot;lead&quot;&gt;
+                    The best platform to write and share markdown.
+                &lt;/p&gt;
+                
+                
+                
+                &lt;span class=&quot;ui-signin&quot;&gt;
+                    &lt;br&gt;
+                    &lt;a type=&quot;button&quot; class=&quot;btn btn-lg btn-success ui-signin&quot; data-toggle=&quot;modal&quot; data-target=&quot;.signin-modal&quot; style=&quot;min-width: 200px;&quot;&gt;Sign In&lt;/a&gt;
+                &lt;/span&gt;
+                &lt;span class=&quot;ui-or&quot;&gt;or&lt;/span&gt;
+                
+                &lt;span class=&quot;ui-signin&quot;&gt;
+                    &lt;a type=&quot;button&quot; href=&quot;/features&quot; class=&quot;btn btn-lg btn-primary&quot; style=&quot;min-width: 200px;&quot;&gt;Explore all features&lt;/a&gt;
+                    &lt;br&gt;
+                    &lt;br&gt;
+                    &lt;img src=&quot;/screenshot.png&quot; class=&quot;screenshot ui-signin&quot;&gt;
+                &lt;/span&gt;
+                &lt;div class=&quot;lead row&quot; style=&quot;width: 90%; margin: 0 auto;&quot;&gt;
+                    &lt;div class=&quot;col-md-4 inner&quot;&gt;
+                        &lt;a href=&quot;/features#Share-Notes&quot;&gt;
+                            &lt;i class=&quot;fa fa-bolt fa-3x&quot;&gt;&lt;/i&gt;
+                            &lt;h4&gt;Real time collaboration&lt;/h4&gt;
+                        &lt;/a&gt;
+                    &lt;/div&gt;
+                    &lt;div class=&quot;col-md-4 inner&quot;&gt;
+                        &lt;a href=&quot;/features#MathJax&quot;&gt;
+                            &lt;i class=&quot;fa fa-bar-chart fa-3x&quot;&gt;&lt;/i&gt;
+                            &lt;h4&gt;Works with charts and MathJax&lt;/h4&gt;
+                        &lt;/a&gt;
+                    &lt;/div&gt;
+                    &lt;div class=&quot;col-md-4 inner&quot;&gt;
+                        &lt;a href=&quot;/features#Slide-Mode&quot;&gt;
+                            &lt;i class=&quot;fa fa-tv fa-3x&quot;&gt;&lt;/i&gt;
+                            &lt;h4&gt;Supports slide mode&lt;/h4&gt;
+                        &lt;/a&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;div id=&quot;history&quot; class=&quot;section&quot; style=&quot;display:none;&quot;&gt;
+            &lt;div class=&quot;ui-signin&quot;&gt;
+                &lt;p&gt;Below is history from this browser&lt;/p&gt;
+            &lt;/div&gt;
+            &lt;br&gt;
+            &lt;form class=&quot;form-inline&quot;&gt;
+                &lt;div class=&quot;form-group&quot; style=&quot;vertical-align: bottom;&quot;&gt;
+                    &lt;input class=&quot;form-control ui-use-tags&quot; placeholder=&quot;Select tags…&quot; /&gt;
+                &lt;/div&gt;
+                &lt;div class=&quot;form-group&quot;&gt;
+                    &lt;input class=&quot;search form-control&quot; placeholder=&quot;Search keyword…&quot; /&gt;
+                &lt;/div&gt;
+                &lt;a href=&quot;#&quot; class=&quot;sort btn btn-default&quot; data-sort=&quot;text&quot; title=&quot;Sort by title&quot;&gt;
+                Title
+                &lt;/a&gt;
+                &lt;a href=&quot;#&quot; class=&quot;sort btn btn-default&quot; data-sort=&quot;timestamp&quot; title=&quot;Sort by time&quot;&gt;
+                Time
+                &lt;/a&gt;
+                &lt;span class=&quot;hidden-xs hidden-sm&quot;&gt;
+                    &lt;a href=&quot;#&quot; class=&quot;btn btn-default ui-save-history&quot; title=&quot;Export history&quot;&gt;&lt;i class=&quot;fa fa-save&quot;&gt;&lt;/i&gt;&lt;/a&gt;
+                    &lt;span class=&quot;btn btn-default btn-file ui-open-history&quot; title=&quot;Import history&quot;&gt;
+                        &lt;i class=&quot;fa fa-folder-open-o&quot;&gt;&lt;/i&gt;&lt;input type=&quot;file&quot; /&gt;
+                    &lt;/span&gt;
+                &lt;a href=&quot;#&quot; class=&quot;btn btn-default ui-clear-history&quot; title=&quot;Clear history&quot; data-toggle=&quot;modal&quot; data-target=&quot;.delete-history-modal&quot;&gt;&lt;i class=&quot;fa fa-trash-o&quot;&gt;&lt;/i&gt;&lt;/a&gt;
+                &lt;/span&gt;
+                &lt;a href=&quot;#&quot; class=&quot;btn btn-default ui-refresh-history&quot; title=&quot;Refresh history&quot;&gt;&lt;i class=&quot;fa fa-refresh&quot;&gt;&lt;/i&gt;&lt;/a&gt;
+            &lt;/form&gt;
+            &lt;h4 class=&quot;ui-nohistory&quot; style=&quot;display:none;&quot;&gt;
+                No history
+            &lt;/h4&gt;
+            &lt;a href=&quot;#&quot; class=&quot;btn btn-primary ui-import-from-browser&quot; style=&quot;display:none;&quot;&gt;Import from browser&lt;/a&gt;
+            &lt;ul id=&quot;history-list&quot; class=&quot;list&quot;&gt;
+            &lt;/ul&gt;
+            &lt;ul class=&quot;pagination&quot;&gt;&lt;/ul&gt;
+        &lt;/div&gt;
+
+        &lt;div class=&quot;mastfoot&quot;&gt;
+            &lt;div class=&quot;inner&quot;&gt;
+                &lt;select class=&quot;ui-locale&quot;&gt;
+                    &lt;option value=&quot;en&quot;&gt;English&lt;/option&gt;
+                    &lt;option value=&quot;zh-CN&quot;&gt;简体中文&lt;/option&gt;
+                    &lt;option value=&quot;zh-TW&quot;&gt;繁體中文&lt;/option&gt;
+                    &lt;option value=&quot;fr&quot;&gt;Français&lt;/option&gt;
+                    &lt;option value=&quot;de&quot;&gt;Deutsch&lt;/option&gt;
+                    &lt;option value=&quot;ja&quot;&gt;日本語&lt;/option&gt;
+                    &lt;option value=&quot;es&quot;&gt;Español&lt;/option&gt;
+                    &lt;option value=&quot;ca&quot;&gt;Català&lt;/option&gt;
+                    &lt;option value=&quot;el&quot;&gt;Ελληνικά&lt;/option&gt;
+                    &lt;option value=&quot;pt&quot;&gt;Português&lt;/option&gt;
+                    &lt;option value=&quot;it&quot;&gt;Italiano&lt;/option&gt;
+                    &lt;option value=&quot;tr&quot;&gt;Türkçe&lt;/option&gt;
+                    &lt;option value=&quot;ru&quot;&gt;Русский&lt;/option&gt;
+                    &lt;option value=&quot;nl&quot;&gt;Nederlands&lt;/option&gt;
+                    &lt;option value=&quot;hr&quot;&gt;Hrvatski&lt;/option&gt;
+                    &lt;option value=&quot;pl&quot;&gt;Polski&lt;/option&gt;
+                    &lt;option value=&quot;uk&quot;&gt;Українська&lt;/option&gt;
+                    &lt;option value=&quot;hi&quot;&gt;हिन्दी&lt;/option&gt;
+                    &lt;option value=&quot;sv&quot;&gt;Svenska&lt;/option&gt;
+                    &lt;option value=&quot;eo&quot;&gt;Esperanto&lt;/option&gt;
+                    &lt;option value=&quot;da&quot;&gt;Dansk&lt;/option&gt;
+                    &lt;option value=&quot;ko&quot;&gt;한국어&lt;/option&gt;
+                    &lt;option value=&quot;id&quot;&gt;Bahasa Indonesia&lt;/option&gt;
+                    &lt;option value=&quot;sr&quot;&gt;Cрпски&lt;/option&gt;
+                    &lt;option value=&quot;vi&quot;&gt;Tiếng Việt&lt;/option&gt;
+                    &lt;option value=&quot;ar&quot;&gt;العربية&lt;/option&gt;
+                    &lt;option value=&quot;cs&quot;&gt;Česky&lt;/option&gt;
+                    &lt;option value=&quot;sk&quot;&gt;Slovensky&lt;/option&gt;
+                &lt;/select&gt;
+                &lt;p&gt;
+                    Powered by &lt;a href=&quot;https://codimd.org&quot;&gt;CodiMD&lt;/a&gt; | &lt;a href=&quot;/s/release-notes&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;Releases&lt;/a&gt; | &lt;a href=&quot;https://github.com/codimd/server/tree/8ce7b285636c02b4215c838640bb748947c8317f&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;Source Code&lt;/a&gt;
+                &lt;/p&gt;
+                &lt;h6 class=&quot;social-foot&quot;&gt;
+                    Follow us on &lt;a href=&quot;https://github.com/codimd/server&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;&lt;i class=&quot;fa fa-github&quot;&gt;&lt;/i&gt; GitHub&lt;/a&gt;, &lt;a href=&quot;https://community.codimd.org&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;&lt;i class=&quot;fa fa-users&quot; aria-hidden=&quot;true&quot;&gt;&lt;/i&gt; Discourse&lt;/a&gt;, &lt;a href=&quot;https://riot.im/app/#/room/#codimd:matrix.org&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;&lt;i class=&quot;fa fa-comments&quot;&gt;&lt;/i&gt; Riot&lt;/a&gt;, &lt;a href=&quot;https://social.codimd.org/mastodon&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;&lt;i class=&quot;fa fa-mastodon&quot;&gt;&lt;/i&gt; Mastodon&lt;/a&gt;, and &lt;a href=&quot;https://translate.codimd.org&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;&lt;i class=&quot;fa fa-globe&quot;&gt;&lt;/i&gt; POEditor&lt;/a&gt;.
+                &lt;/h6&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+</div>
+<!-- delete history modal -->
+<div class="modal fade delete-history-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel">Are you sure?</h4>
+            </div>
+            <div class="modal-body">
+                <h5 class="ui-delete-history-modal-msg"></h5>
+                <strong class="ui-delete-history-modal-item"></strong>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger ui-delete-history-modal-confirm">Yes, do it!</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- delete user modal -->
+<div class="modal fade delete-user-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel">Are you sure?</h4>
+            </div>
+            <div class="modal-body">
+                <h5 class="ui-delete-user-modal-msg">Do you really want to delete your user account?</h5>
+                <strong class="ui-delete-user-modal-item">This will delete your account, all notes that are owned by you and remove all references to your account from other notes.</strong>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default ui-delete-user-modal-cancel" data-dismiss="modal">Cancel</button>
+                <a type="button" class="btn btn-danger" href="/me/delete/">Yes, do it!</a>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- signin modal -->
+<div class="modal fade signin-modal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="mySmallModalLabel">Choose method</h4>
+            </div>
+            <div class="modal-body" style="text-align: center;">
+<pre><code>            &lt;h4&gt;Sign in via E-Mail&lt;/h4&gt;
+            &lt;form data-toggle=&quot;validator&quot; role=&quot;form&quot; class=&quot;form-horizontal&quot; method=&quot;post&quot; enctype=&quot;application/x-www-form-urlencoded&quot;&gt;
+                &lt;div class=&quot;form-group&quot;&gt;
+                    &lt;div class=&quot;col-sm-12&quot;&gt;
+                        &lt;input type=&quot;email&quot; class=&quot;form-control&quot; name=&quot;email&quot; placeholder=&quot;E-Mail&quot; required&gt;
+                        &lt;span class=&quot;help-block control-label with-errors&quot; style=&quot;display: inline;&quot;&gt;&lt;/span&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+                &lt;div class=&quot;form-group&quot;&gt;
+                    &lt;div class=&quot;col-sm-12&quot;&gt;
+                        &lt;input type=&quot;password&quot; class=&quot;form-control&quot; name=&quot;password&quot; placeholder=&quot;Password&quot; required&gt;
+                        &lt;span class=&quot;help-block control-label with-errors&quot; style=&quot;display: inline;&quot;&gt;&lt;/span&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+                &lt;div class=&quot;form-group&quot;&gt;
+                    &lt;div class=&quot;col-sm-12&quot;&gt;
+                        &lt;button type=&quot;submit&quot; class=&quot;btn btn-primary&quot; formaction=&quot;/login&quot;&gt;Sign In&lt;/button&gt;
+                        
+                    &lt;/div&gt;
+                &lt;/div&gt;
+            &lt;/form&gt;
+            
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+</div>
+<script src="config"></script><script src="build/common.becb2d94d936ce9eb683.js" defer="defer"></script><script src="build/cover-pack.ca020b8522f18c4e1951.js" defer="defer"></script>
+</body>
+</html>
+
+            </div>
+        </article>
+
+        <hr />
+
+        <div class="post-info">
+  			</div>
+
+        
+    </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>&copy; 2023</span>
+            
+            <span></span>
+            <span> <a href="/posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a></span>
+        </div>
+    </div>
+    <div class="footer__inner">
+        <div class="footer__content">
+
+        </div>
+    </div>
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>Powered by <a href="http://gohugo.io">Hugo</a></span>
+            <span>Made with &#10084; by <a href="https://github.com/st0n3">st0n3</a></span>
+            <span>Based on <a href="https://github.com/rhazdon">rhazdon</a></span>
+        </div>
+    </div>
+
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      extensions: ["tex2jax.js"],
+      
+      jax: ["input/TeX", "output/CommonHTML"],
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+        displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+        processEscapes: true
+      },
+      "HTML-CSS": { fonts: ["TeX"] },
+      displayAlign: "left"
+    });
+  </script>
+
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_CHTML"></script>
+
+
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+
+<script type="text/javascript" src="/bundle.min.4c3fb12a087ceed4a52cb5d57068a9795c7069617a01ca70f788052ad66e1791779e6c72686e1dc0ca13dc03b0203204b6566bb0dd1ee80de2b7ff4d8fe53db2.js" integrity="sha512-TD&#43;xKgh87tSlLLXVcGipeVxwaWF6Acpw94gFKtZuF5F3nmxyaG4dwMoT3AOwIDIEtlZrsN0e6A3it/9Nj&#43;U9sg=="></script>
+
+
+
+    </body>
+</html>

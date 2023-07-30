@@ -42,7 +42,7 @@
 # Note: This dropin only works with kubeadm and kubelet v1.11&#43; [Service] Environment=&quot;KUBELET_KUBECONFIG_ARGS=--bootstrap-kubeconfig=/etc/kubernetes/bootstrap-kubelet.conf --kubeconfig=/etc/kubernetes/kubelet.conf&quot; Environment=&quot;KUBELET_CONFIG_ARGS=--config=/var/lib/kubelet/config.yaml&quot; # This is a file that &quot;kubeadm init&quot; and &quot;kubeadm join&quot; generates at runtime, populating the KUBELET_KUBEADM_ARGS variable dynamically EnvironmentFile=-/var/lib/kubelet/kubeadm-flags.env # This is a file that the user can use for overrides of the kubelet args as a last resort. Preferably, the user should use # the .">
 <meta itemprop="datePublished" content="2022-03-30T07:47:41+00:00" />
 <meta itemprop="dateModified" content="2022-03-30T07:47:41+00:00" />
-<meta itemprop="wordCount" content="584">
+<meta itemprop="wordCount" content="653">
 
 
 
@@ -294,6 +294,23 @@ index 266aef335..be5381a33 100644
  # Build a binary from a cmd.
 </code></pre></div><h4 id="调试-3">调试</h4>
 <pre><code>dlv --listen=:2346 --headless=true --api-version=2 --accept-multiclient exec /usr/bin/containerd.debug
+</code></pre><h3 id="55-buildx">5.5 buildx</h3>
+<h4 id="编译-4">编译</h4>
+<pre><code>$ sed -i 's/go build/go build -gcflags=&quot;all=-N -l&quot;/g' hack/build
+$ sed -i 's/${GO_EXTRA_LDFLAGS}//g' hack/build
+$ sed -i 's/-trimpath//g' hack/build
+$ make binaries
+docker buildx bake binaries
+[+] Building 7.3s (21/21) FINISHED
+...
+ =&gt; =&gt; copying files 76.04MB
+$ ls -lah bin/build/buildx 
+-rwxr-xr-x 1 root root 73M Feb 14 12:52 bin/build/buildx
+</code></pre><h4 id="调试-4">调试</h4>
+<pre><code># cat docker-buildx.debug 
+#!/bin/bash
+CLI=&quot;./docker-buildx/buildx-linux-amd64-v0.10.2-debug&quot;
+dlv --log-dest=/dev/null --listen=:2347 --headless=true --api-version=2 --accept-multiclient exec $CLI -- $*
 </code></pre>
             </div>
         </article>

@@ -7,9 +7,9 @@
 <meta name="author"
     content="">
 <meta name="description"
-    content="How to Build buildx 1. Buildx buildx 是 docker 的一个插件，docker buildx 子命令会执行 buildx 二进制文件。本文分析如何自己编译 buildx 。
+    content="tags: container,buildx How to Build buildx 1. Buildx buildx 是 docker 的一个插件，docker buildx 子命令会执行 buildx 二进制文件。本文分析如何自己编译 buildx 。
 2. Standard Build 官方文档提供了标准的编译方法：https://github.com/docker/buildx#building
-# Buildx 0.6&#43; $ docker buildx bake &amp;#34;https://github.com/docker/buildx.git&amp;#34; $ mkdir -p ~/.docker/cli-plugins $ mv ./bin/build/buildx ~/.docker/cli-plugins/docker-buildx # Docker 19.03&#43; $ DOCKER_BUILDKIT=1 docker build --platform=local -o . &amp;#34;https://github.com/docker/buildx.git&amp;#34; $ mkdir -p ~/.docker/cli-plugins $ mv buildx ~/.docker/cli-plugins/docker-buildx # Local $ git clone https://github.com/docker/buildx.git &amp;amp;&amp;amp; cd buildx $ make install 3. 编译流程分析 下面以 make binaries命令为入口，分析编译流程。" />
+# Buildx 0.6&#43; $ docker buildx bake &amp;#34;https://github.com/docker/buildx.git&amp;#34; $ mkdir -p ~/.docker/cli-plugins $ mv ./bin/build/buildx ~/.docker/cli-plugins/docker-buildx # Docker 19.03&#43; $ DOCKER_BUILDKIT=1 docker build --platform=local -o . &amp;#34;https://github.com/docker/buildx.git&amp;#34; $ mkdir -p ~/.docker/cli-plugins $ mv buildx ~/.docker/cli-plugins/docker-buildx # Local $ git clone https://github.com/docker/buildx.git &amp;amp;&amp;amp; cd buildx $ make install 3." />
 <meta name="keywords" content="" />
 <meta name="robots" content="noodp" />
 <link rel="canonical" href="/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E8%BF%9B%E7%A8%8B%E5%AE%B9%E5%99%A8/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%B9%E5%99%A8/docker/docker%E6%BA%90%E7%A0%81%E5%AE%A1%E8%AE%A1/%E5%A6%82%E4%BD%95%E5%BC%80%E5%8F%91%E5%B9%B6%E7%BC%96%E8%AF%91%E4%BB%A3%E7%A0%81/How-to-Build-buildx.html" />
@@ -39,21 +39,21 @@
 <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#252627">
 <link rel="shortcut icon" href="/favicon.ico">
 <meta name="theme-color" content="#252627"><meta itemprop="name" content="How to Build buildx">
-<meta itemprop="description" content="How to Build buildx 1. Buildx buildx 是 docker 的一个插件，docker buildx 子命令会执行 buildx 二进制文件。本文分析如何自己编译 buildx 。
+<meta itemprop="description" content="tags: container,buildx How to Build buildx 1. Buildx buildx 是 docker 的一个插件，docker buildx 子命令会执行 buildx 二进制文件。本文分析如何自己编译 buildx 。
 2. Standard Build 官方文档提供了标准的编译方法：https://github.com/docker/buildx#building
-# Buildx 0.6&#43; $ docker buildx bake &#34;https://github.com/docker/buildx.git&#34; $ mkdir -p ~/.docker/cli-plugins $ mv ./bin/build/buildx ~/.docker/cli-plugins/docker-buildx # Docker 19.03&#43; $ DOCKER_BUILDKIT=1 docker build --platform=local -o . &#34;https://github.com/docker/buildx.git&#34; $ mkdir -p ~/.docker/cli-plugins $ mv buildx ~/.docker/cli-plugins/docker-buildx # Local $ git clone https://github.com/docker/buildx.git &amp;&amp; cd buildx $ make install 3. 编译流程分析 下面以 make binaries命令为入口，分析编译流程。">
+# Buildx 0.6&#43; $ docker buildx bake &#34;https://github.com/docker/buildx.git&#34; $ mkdir -p ~/.docker/cli-plugins $ mv ./bin/build/buildx ~/.docker/cli-plugins/docker-buildx # Docker 19.03&#43; $ DOCKER_BUILDKIT=1 docker build --platform=local -o . &#34;https://github.com/docker/buildx.git&#34; $ mkdir -p ~/.docker/cli-plugins $ mv buildx ~/.docker/cli-plugins/docker-buildx # Local $ git clone https://github.com/docker/buildx.git &amp;&amp; cd buildx $ make install 3.">
 <meta itemprop="datePublished" content="2023-02-14T05:22:28+00:00" />
 <meta itemprop="dateModified" content="2023-02-14T05:22:28+00:00" />
-<meta itemprop="wordCount" content="361">
+<meta itemprop="wordCount" content="369">
 
 
 
 <meta itemprop="keywords" content="" />
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="How to Build buildx"/>
-<meta name="twitter:description" content="How to Build buildx 1. Buildx buildx 是 docker 的一个插件，docker buildx 子命令会执行 buildx 二进制文件。本文分析如何自己编译 buildx 。
+<meta name="twitter:description" content="tags: container,buildx How to Build buildx 1. Buildx buildx 是 docker 的一个插件，docker buildx 子命令会执行 buildx 二进制文件。本文分析如何自己编译 buildx 。
 2. Standard Build 官方文档提供了标准的编译方法：https://github.com/docker/buildx#building
-# Buildx 0.6&#43; $ docker buildx bake &#34;https://github.com/docker/buildx.git&#34; $ mkdir -p ~/.docker/cli-plugins $ mv ./bin/build/buildx ~/.docker/cli-plugins/docker-buildx # Docker 19.03&#43; $ DOCKER_BUILDKIT=1 docker build --platform=local -o . &#34;https://github.com/docker/buildx.git&#34; $ mkdir -p ~/.docker/cli-plugins $ mv buildx ~/.docker/cli-plugins/docker-buildx # Local $ git clone https://github.com/docker/buildx.git &amp;&amp; cd buildx $ make install 3. 编译流程分析 下面以 make binaries命令为入口，分析编译流程。"/>
+# Buildx 0.6&#43; $ docker buildx bake &#34;https://github.com/docker/buildx.git&#34; $ mkdir -p ~/.docker/cli-plugins $ mv ./bin/build/buildx ~/.docker/cli-plugins/docker-buildx # Docker 19.03&#43; $ DOCKER_BUILDKIT=1 docker build --platform=local -o . &#34;https://github.com/docker/buildx.git&#34; $ mkdir -p ~/.docker/cli-plugins $ mv buildx ~/.docker/cli-plugins/docker-buildx # Local $ git clone https://github.com/docker/buildx.git &amp;&amp; cd buildx $ make install 3."/>
 
 
 
@@ -124,7 +124,9 @@
             
 
             <div class="post-content">
-                <h1 id="how-to-build-buildx">How to Build buildx</h1>
+                <hr>
+<h2 id="tags-containerbuildx">tags: container,buildx</h2>
+<h1 id="how-to-build-buildx">How to Build buildx</h1>
 <h2 id="1-buildx">1. Buildx</h2>
 <p>buildx 是  docker 的一个插件，docker buildx 子命令会执行 buildx 二进制文件。本文分析如何自己编译 buildx 。</p>
 <h2 id="2-standard-build">2. Standard Build</h2>
@@ -266,9 +268,11 @@ set -e
 
 set -x
 CGO_ENABLED<span style="color:#f92672">=</span>$CGO_ENABLED go build -mod vendor -trimpath -ldflags <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>GO_LDFLAGS<span style="color:#e6db74">}</span><span style="color:#e6db74"> </span><span style="color:#e6db74">${</span>GO_EXTRA_LDFLAGS<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span> -o <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>DESTDIR<span style="color:#e6db74">}</span><span style="color:#e6db74">/docker-buildx&#34;</span> ./cmd/buildx
-</code></pre></div><h2 id="4-关闭编译优化和内联">4. 关闭编译优化和内联</h2>
+</code></pre></div><h2 id="5-远程调试">5. 远程调试</h2>
+<p>关闭编译优化，内联，trimpath</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ sed -i <span style="color:#e6db74">&#39;s/go build/go build -gcflags=&#34;all=-N -l&#34;/g&#39;</span> hack/build
 $ sed -i <span style="color:#e6db74">&#39;s/${GO_EXTRA_LDFLAGS}//g&#39;</span> hack/build
+$ sed -i <span style="color:#e6db74">&#39;s/-trimpath//g&#39;</span> hack/build
 $ make binaries
 docker buildx bake binaries
 <span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> Building 7.3s <span style="color:#f92672">(</span>21/21<span style="color:#f92672">)</span> FINISHED
