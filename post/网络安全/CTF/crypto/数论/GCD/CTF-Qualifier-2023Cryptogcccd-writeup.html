@@ -7,7 +7,12 @@
 <meta name="author"
     content="">
 <meta name="description"
-    content="CodiMD - Collaborative markdown notes   &amp;lt;div class=&amp;quot;site-wrapper&amp;quot;&amp;gt; &amp;lt;div class=&amp;quot;site-wrapper-inner&amp;quot;&amp;gt; &amp;lt;div class=&amp;quot;cover-container&amp;quot;&amp;gt; &amp;lt;div class=&amp;quot;masthead clearfix&amp;quot;&amp;gt; &amp;lt;div class=&amp;quot;inner&amp;quot;&amp;gt; &amp;lt;h3 class=&amp;quot;masthead-brand&amp;quot;&amp;gt;&amp;lt;/h3&amp;gt; &amp;lt;nav&amp;gt; &amp;lt;ul class=&amp;quot;nav masthead-nav&amp;quot;&amp;gt; &amp;lt;li class=&amp;quot;ui-home active&amp;quot;&amp;gt;&amp;lt;a href=&amp;quot;#&amp;quot;&amp;gt;Intro&amp;lt;/a&amp;gt; &amp;lt;/li&amp;gt; &amp;lt;li class=&amp;quot;ui-history&amp;quot;&amp;gt;&amp;lt;a href=&amp;quot;#&amp;quot;&amp;gt;History&amp;lt;/a&amp;gt; &amp;lt;/li&amp;gt; &amp;lt;div class=&amp;quot;ui-signin&amp;quot; style=&amp;quot;float: right; margin-top: 8px;&amp;quot;&amp;gt; &amp;lt;button class=&amp;quot;btn btn-sm btn-success ui-signin&amp;quot; data-toggle=&amp;quot;modal&amp;quot; data-target=&amp;quot;.signin-modal&amp;quot;&amp;gt;Sign In&amp;lt;/button&amp;gt; &amp;lt;/div&amp;gt; &amp;lt;div class=&amp;quot;ui-signout&amp;quot; style=&amp;quot;float: right; margin-top: 8px; display: none;&amp;quot;&amp;gt; &amp;lt;a type=&amp;quot;button&amp;quot; href=&amp;quot;/new&amp;quot; class=&amp;quot;btn btn-sm btn-primary&amp;quot;&amp;gt;&amp;lt;i class=&amp;quot;fa fa-plus&amp;quot;&amp;gt;&amp;lt;/i&amp;gt; New note&amp;lt;/a&amp;gt; &amp;lt;span class=&amp;quot;ui-profile dropdown pull-right&amp;quot;&amp;gt; &amp;lt;button id=&amp;quot;profileLabel&amp;quot; class=&amp;quot;btn btn-sm btn-link ui-profile-label&amp;quot; style=&amp;quot;padding-right: 0;&amp;quot; data-toggle=&amp;quot;dropdown&amp;quot; aria-haspopup=&amp;quot;true&amp;quot; aria-expanded=&amp;quot;false&amp;quot;&amp;gt; &amp;lt;img class=&amp;quot;ui-avatar&amp;quot; width=&amp;quot;20&amp;quot; height=&amp;quot;20&amp;quot;&amp;gt;&amp;lt;span class=&amp;quot;hidden-xs hidden-sm&amp;quot;&amp;gt;&amp;amp;ensp;&amp;lt;span class=&amp;quot;ui-name&amp;quot;&amp;gt;&amp;lt;/span&amp;gt;&amp;lt;/span&amp;gt;&amp;amp;ensp;&amp;lt;i class=&amp;quot;fa fa-caret-down&amp;quot;&amp;gt;&amp;lt;/i&amp;gt; &amp;lt;/button&amp;gt; &amp;lt;ul class=&amp;quot;dropdown-menu&amp;quot; aria-labelledby=&amp;quot;profileLabel&amp;quot;&amp;gt; &amp;lt;li&amp;gt;&amp;lt;a href=&amp;quot;/features&amp;quot;&amp;gt;&amp;lt;i class=&amp;quot;fa fa-dot-circle-o fa-fw&amp;quot;&amp;gt;&amp;lt;/i&amp;gt; Features&amp;lt;/a&amp;gt;&amp;lt;/li&amp;gt; &amp;lt;li&amp;gt;&amp;lt;a href=&amp;quot;/me/export&amp;quot;&amp;gt;&amp;lt;i class=&amp;quot;fa fa-cloud-download fa-fw&amp;quot;&amp;gt;&amp;lt;/i&amp;gt; Export user data&amp;lt;/a&amp;gt;&amp;lt;/li&amp;gt; &amp;lt;li&amp;gt;&amp;lt;a class=&amp;quot;ui-delete-user&amp;quot; data-toggle=&amp;quot;modal&amp;quot; data-target=&amp;quot;." />
+    content="tags: ctf,crypto
+ *CTF-Qualifier-2023/Crypto/gcccd writeup 本题某种意义上不完全是密码学，还有一些侧信道攻击。
+是独立解的，无奈手太慢，比赛9点结束，12点才跑出来
+1. challenge Can you leak my secert using gcd?
+nc 122.9.153.69 23333
+#!/usr/bin/env python3 from secret import flag import socketserver import hashlib import signal import random import string import os p=20973268502876719886012765513713011996343752519737224550553652605696573094756255499211333096502971357908939298357512380813773140436677393056575164230564778609423872301899323721040416852230597466288892977839300189625522429038289083381035647126860128821615664730513694930502000903655609105029016636999073477487851081722316115785141 enc=lambda x:pow(17,x,p) m=int(flag.encode().hex(),16) def gcd(a,b,f=enc): if b: return gcd(b,a%b,f) else: return f(a) class Task(socketserver.BaseRequestHandler): def __init__(self, *args, **kargs): super().__init__(*args, **kargs) def timeout_handler(self, signum, frame): self.request.close() def proof_of_work(self): random.seed(os.urandom(8)) proof = &amp;#39;&amp;#39;.join([random.choice(string.ascii_letters&#43;string.digits) for _ in range(20)]) _hexdigest = hashlib." />
 <meta name="keywords" content="" />
 <meta name="robots" content="noodp" />
 <link rel="canonical" href="/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/CTF/crypto/%E6%95%B0%E8%AE%BA/GCD/CTF-Qualifier-2023Cryptogcccd-writeup.html" />
@@ -37,17 +42,27 @@
 <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#252627">
 <link rel="shortcut icon" href="/favicon.ico">
 <meta name="theme-color" content="#252627"><meta itemprop="name" content="*CTF-Qualifier-2023/Crypto/gcccd writeup">
-<meta itemprop="description" content="CodiMD - Collaborative markdown notes   &lt;div class=&quot;site-wrapper&quot;&gt; &lt;div class=&quot;site-wrapper-inner&quot;&gt; &lt;div class=&quot;cover-container&quot;&gt; &lt;div class=&quot;masthead clearfix&quot;&gt; &lt;div class=&quot;inner&quot;&gt; &lt;h3 class=&quot;masthead-brand&quot;&gt;&lt;/h3&gt; &lt;nav&gt; &lt;ul class=&quot;nav masthead-nav&quot;&gt; &lt;li class=&quot;ui-home active&quot;&gt;&lt;a href=&quot;#&quot;&gt;Intro&lt;/a&gt; &lt;/li&gt; &lt;li class=&quot;ui-history&quot;&gt;&lt;a href=&quot;#&quot;&gt;History&lt;/a&gt; &lt;/li&gt; &lt;div class=&quot;ui-signin&quot; style=&quot;float: right; margin-top: 8px;&quot;&gt; &lt;button class=&quot;btn btn-sm btn-success ui-signin&quot; data-toggle=&quot;modal&quot; data-target=&quot;.signin-modal&quot;&gt;Sign In&lt;/button&gt; &lt;/div&gt; &lt;div class=&quot;ui-signout&quot; style=&quot;float: right; margin-top: 8px; display: none;&quot;&gt; &lt;a type=&quot;button&quot; href=&quot;/new&quot; class=&quot;btn btn-sm btn-primary&quot;&gt;&lt;i class=&quot;fa fa-plus&quot;&gt;&lt;/i&gt; New note&lt;/a&gt; &lt;span class=&quot;ui-profile dropdown pull-right&quot;&gt; &lt;button id=&quot;profileLabel&quot; class=&quot;btn btn-sm btn-link ui-profile-label&quot; style=&quot;padding-right: 0;&quot; data-toggle=&quot;dropdown&quot; aria-haspopup=&quot;true&quot; aria-expanded=&quot;false&quot;&gt; &lt;img class=&quot;ui-avatar&quot; width=&quot;20&quot; height=&quot;20&quot;&gt;&lt;span class=&quot;hidden-xs hidden-sm&quot;&gt;&amp;ensp;&lt;span class=&quot;ui-name&quot;&gt;&lt;/span&gt;&lt;/span&gt;&amp;ensp;&lt;i class=&quot;fa fa-caret-down&quot;&gt;&lt;/i&gt; &lt;/button&gt; &lt;ul class=&quot;dropdown-menu&quot; aria-labelledby=&quot;profileLabel&quot;&gt; &lt;li&gt;&lt;a href=&quot;/features&quot;&gt;&lt;i class=&quot;fa fa-dot-circle-o fa-fw&quot;&gt;&lt;/i&gt; Features&lt;/a&gt;&lt;/li&gt; &lt;li&gt;&lt;a href=&quot;/me/export&quot;&gt;&lt;i class=&quot;fa fa-cloud-download fa-fw&quot;&gt;&lt;/i&gt; Export user data&lt;/a&gt;&lt;/li&gt; &lt;li&gt;&lt;a class=&quot;ui-delete-user&quot; data-toggle=&quot;modal&quot; data-target=&quot;.">
+<meta itemprop="description" content="tags: ctf,crypto
+ *CTF-Qualifier-2023/Crypto/gcccd writeup 本题某种意义上不完全是密码学，还有一些侧信道攻击。
+是独立解的，无奈手太慢，比赛9点结束，12点才跑出来
+1. challenge Can you leak my secert using gcd?
+nc 122.9.153.69 23333
+#!/usr/bin/env python3 from secret import flag import socketserver import hashlib import signal import random import string import os p=20973268502876719886012765513713011996343752519737224550553652605696573094756255499211333096502971357908939298357512380813773140436677393056575164230564778609423872301899323721040416852230597466288892977839300189625522429038289083381035647126860128821615664730513694930502000903655609105029016636999073477487851081722316115785141 enc=lambda x:pow(17,x,p) m=int(flag.encode().hex(),16) def gcd(a,b,f=enc): if b: return gcd(b,a%b,f) else: return f(a) class Task(socketserver.BaseRequestHandler): def __init__(self, *args, **kargs): super().__init__(*args, **kargs) def timeout_handler(self, signum, frame): self.request.close() def proof_of_work(self): random.seed(os.urandom(8)) proof = &#39;&#39;.join([random.choice(string.ascii_letters&#43;string.digits) for _ in range(20)]) _hexdigest = hashlib.">
 <meta itemprop="datePublished" content="2023-07-30T09:39:48+00:00" />
 <meta itemprop="dateModified" content="2023-07-30T09:39:48+00:00" />
-<meta itemprop="wordCount" content="609">
+<meta itemprop="wordCount" content="2132">
 
 
 
 <meta itemprop="keywords" content="" />
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="*CTF-Qualifier-2023/Crypto/gcccd writeup"/>
-<meta name="twitter:description" content="CodiMD - Collaborative markdown notes   &lt;div class=&quot;site-wrapper&quot;&gt; &lt;div class=&quot;site-wrapper-inner&quot;&gt; &lt;div class=&quot;cover-container&quot;&gt; &lt;div class=&quot;masthead clearfix&quot;&gt; &lt;div class=&quot;inner&quot;&gt; &lt;h3 class=&quot;masthead-brand&quot;&gt;&lt;/h3&gt; &lt;nav&gt; &lt;ul class=&quot;nav masthead-nav&quot;&gt; &lt;li class=&quot;ui-home active&quot;&gt;&lt;a href=&quot;#&quot;&gt;Intro&lt;/a&gt; &lt;/li&gt; &lt;li class=&quot;ui-history&quot;&gt;&lt;a href=&quot;#&quot;&gt;History&lt;/a&gt; &lt;/li&gt; &lt;div class=&quot;ui-signin&quot; style=&quot;float: right; margin-top: 8px;&quot;&gt; &lt;button class=&quot;btn btn-sm btn-success ui-signin&quot; data-toggle=&quot;modal&quot; data-target=&quot;.signin-modal&quot;&gt;Sign In&lt;/button&gt; &lt;/div&gt; &lt;div class=&quot;ui-signout&quot; style=&quot;float: right; margin-top: 8px; display: none;&quot;&gt; &lt;a type=&quot;button&quot; href=&quot;/new&quot; class=&quot;btn btn-sm btn-primary&quot;&gt;&lt;i class=&quot;fa fa-plus&quot;&gt;&lt;/i&gt; New note&lt;/a&gt; &lt;span class=&quot;ui-profile dropdown pull-right&quot;&gt; &lt;button id=&quot;profileLabel&quot; class=&quot;btn btn-sm btn-link ui-profile-label&quot; style=&quot;padding-right: 0;&quot; data-toggle=&quot;dropdown&quot; aria-haspopup=&quot;true&quot; aria-expanded=&quot;false&quot;&gt; &lt;img class=&quot;ui-avatar&quot; width=&quot;20&quot; height=&quot;20&quot;&gt;&lt;span class=&quot;hidden-xs hidden-sm&quot;&gt;&amp;ensp;&lt;span class=&quot;ui-name&quot;&gt;&lt;/span&gt;&lt;/span&gt;&amp;ensp;&lt;i class=&quot;fa fa-caret-down&quot;&gt;&lt;/i&gt; &lt;/button&gt; &lt;ul class=&quot;dropdown-menu&quot; aria-labelledby=&quot;profileLabel&quot;&gt; &lt;li&gt;&lt;a href=&quot;/features&quot;&gt;&lt;i class=&quot;fa fa-dot-circle-o fa-fw&quot;&gt;&lt;/i&gt; Features&lt;/a&gt;&lt;/li&gt; &lt;li&gt;&lt;a href=&quot;/me/export&quot;&gt;&lt;i class=&quot;fa fa-cloud-download fa-fw&quot;&gt;&lt;/i&gt; Export user data&lt;/a&gt;&lt;/li&gt; &lt;li&gt;&lt;a class=&quot;ui-delete-user&quot; data-toggle=&quot;modal&quot; data-target=&quot;."/>
+<meta name="twitter:description" content="tags: ctf,crypto
+ *CTF-Qualifier-2023/Crypto/gcccd writeup 本题某种意义上不完全是密码学，还有一些侧信道攻击。
+是独立解的，无奈手太慢，比赛9点结束，12点才跑出来
+1. challenge Can you leak my secert using gcd?
+nc 122.9.153.69 23333
+#!/usr/bin/env python3 from secret import flag import socketserver import hashlib import signal import random import string import os p=20973268502876719886012765513713011996343752519737224550553652605696573094756255499211333096502971357908939298357512380813773140436677393056575164230564778609423872301899323721040416852230597466288892977839300189625522429038289083381035647126860128821615664730513694930502000903655609105029016636999073477487851081722316115785141 enc=lambda x:pow(17,x,p) m=int(flag.encode().hex(),16) def gcd(a,b,f=enc): if b: return gcd(b,a%b,f) else: return f(a) class Task(socketserver.BaseRequestHandler): def __init__(self, *args, **kargs): super().__init__(*args, **kargs) def timeout_handler(self, signum, frame): self.request.close() def proof_of_work(self): random.seed(os.urandom(8)) proof = &#39;&#39;.join([random.choice(string.ascii_letters&#43;string.digits) for _ in range(20)]) _hexdigest = hashlib."/>
 
 
 
@@ -118,273 +133,655 @@
             
 
             <div class="post-content">
-                <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="description" content="The best platform to write and share markdown.">
-<meta name="keywords" content="Collaborative, Markdown, Notes">
-<meta property="og:title" content="CodiMD - Collaborative markdown notes">
-<meta property="og:description" content="The best platform to write and share markdown.">
-<meta property="og:type" content="website">
-<meta property="og:url" content="">
-<meta property="og:image" content="/codimd-icon-1024.png">
-<meta property="og:image:alt" content="CodiMD logo">
-<meta property="og:image:type" content="image/png">
-<base href="/">
-<title>CodiMD - Collaborative markdown notes</title>
-<link rel="icon" type="image/png" href="/favicon.png">
-<link rel="apple-touch-icon" href="/apple-touch-icon.png">
-<link href="build/font-pack.css" rel="stylesheet"><link href="build/cover-styles-pack.css" rel="stylesheet"><link href="build/cover.css" rel="stylesheet">
-</head>
-<body>
-<pre><code>&lt;div class=&quot;site-wrapper&quot;&gt;
-&lt;div class=&quot;site-wrapper-inner&quot;&gt;
-    &lt;div class=&quot;cover-container&quot;&gt;
+                <hr>
+<p>tags: ctf,crypto</p>
+<hr>
+<h1 id="ctf-qualifier-2023cryptogcccd-writeup">*CTF-Qualifier-2023/Crypto/gcccd writeup</h1>
+<p>本题某种意义上不完全是密码学，还有一些侧信道攻击。</p>
+<p>是独立解的，无奈手太慢，比赛9点结束，12点才跑出来</p>
+<h2 id="1-challenge">1. challenge</h2>
+<p>Can you leak my secert using gcd?</p>
+<p>nc 122.9.153.69 23333</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e">#!/usr/bin/env python3</span>
 
-        &lt;div class=&quot;masthead clearfix&quot;&gt;
-            &lt;div class=&quot;inner&quot;&gt;
-                &lt;h3 class=&quot;masthead-brand&quot;&gt;&lt;/h3&gt;
-                &lt;nav&gt;
-                    &lt;ul class=&quot;nav masthead-nav&quot;&gt;
-                        &lt;li class=&quot;ui-home active&quot;&gt;&lt;a href=&quot;#&quot;&gt;Intro&lt;/a&gt;
-                        &lt;/li&gt;
-                        &lt;li class=&quot;ui-history&quot;&gt;&lt;a href=&quot;#&quot;&gt;History&lt;/a&gt;
-                        &lt;/li&gt;
-                        &lt;div class=&quot;ui-signin&quot; style=&quot;float: right; margin-top: 8px;&quot;&gt;
-                            
-                            
-                            &lt;button class=&quot;btn btn-sm btn-success ui-signin&quot; data-toggle=&quot;modal&quot; data-target=&quot;.signin-modal&quot;&gt;Sign In&lt;/button&gt;
-                            
-                        &lt;/div&gt;
-                        &lt;div class=&quot;ui-signout&quot; style=&quot;float: right; margin-top: 8px; display: none;&quot;&gt;
-                            &lt;a type=&quot;button&quot; href=&quot;/new&quot; class=&quot;btn btn-sm btn-primary&quot;&gt;&lt;i class=&quot;fa fa-plus&quot;&gt;&lt;/i&gt; New note&lt;/a&gt;
-                            &lt;span class=&quot;ui-profile dropdown pull-right&quot;&gt;
-                                &lt;button id=&quot;profileLabel&quot; class=&quot;btn btn-sm btn-link ui-profile-label&quot; style=&quot;padding-right: 0;&quot; data-toggle=&quot;dropdown&quot; aria-haspopup=&quot;true&quot; aria-expanded=&quot;false&quot;&gt;
-                                    &lt;img class=&quot;ui-avatar&quot; width=&quot;20&quot; height=&quot;20&quot;&gt;&lt;span class=&quot;hidden-xs hidden-sm&quot;&gt;&amp;ensp;&lt;span class=&quot;ui-name&quot;&gt;&lt;/span&gt;&lt;/span&gt;&amp;ensp;&lt;i class=&quot;fa fa-caret-down&quot;&gt;&lt;/i&gt;
-                                &lt;/button&gt;
-                                &lt;ul class=&quot;dropdown-menu&quot; aria-labelledby=&quot;profileLabel&quot;&gt;
-                                    &lt;li&gt;&lt;a href=&quot;/features&quot;&gt;&lt;i class=&quot;fa fa-dot-circle-o fa-fw&quot;&gt;&lt;/i&gt; Features&lt;/a&gt;&lt;/li&gt;
-                                    &lt;li&gt;&lt;a href=&quot;/me/export&quot;&gt;&lt;i class=&quot;fa fa-cloud-download fa-fw&quot;&gt;&lt;/i&gt; Export user data&lt;/a&gt;&lt;/li&gt;
-                                    &lt;li&gt;&lt;a class=&quot;ui-delete-user&quot; data-toggle=&quot;modal&quot; data-target=&quot;.delete-user-modal&quot;&gt;&lt;i class=&quot;fa fa-trash fa-fw&quot;&gt;&lt;/i&gt; Delete user&lt;/a&gt;&lt;/li&gt;
-                                    &lt;li&gt;&lt;a href=&quot;/logout&quot;&gt;&lt;i class=&quot;fa fa-sign-out fa-fw&quot;&gt;&lt;/i&gt; Sign Out&lt;/a&gt;&lt;/li&gt;
-                                &lt;/ul&gt;
-                            &lt;/span&gt;
-                        &lt;/div&gt;
-                    &lt;/ul&gt;
-                &lt;/nav&gt;
-            &lt;/div&gt;
-        &lt;/div&gt;
+<span style="color:#f92672">from</span> secret <span style="color:#f92672">import</span> flag
+<span style="color:#f92672">import</span> socketserver
+<span style="color:#f92672">import</span> hashlib
+<span style="color:#f92672">import</span> signal
+<span style="color:#f92672">import</span> random
+<span style="color:#f92672">import</span> string
+<span style="color:#f92672">import</span> os
 
-        &lt;div id=&quot;home&quot; class=&quot;section&quot;&gt;
-            &lt;div class=&quot;inner cover&quot;&gt;
-                &lt;h1 class=&quot;cover-heading&quot;&gt;&lt;i class=&quot;fa fa-file-text&quot;&gt;&lt;/i&gt; CodiMD&lt;/h1&gt;
-                &lt;p class=&quot;lead&quot;&gt;
-                    The best platform to write and share markdown.
-                &lt;/p&gt;
-                
-                
-                
-                &lt;span class=&quot;ui-signin&quot;&gt;
-                    &lt;br&gt;
-                    &lt;a type=&quot;button&quot; class=&quot;btn btn-lg btn-success ui-signin&quot; data-toggle=&quot;modal&quot; data-target=&quot;.signin-modal&quot; style=&quot;min-width: 200px;&quot;&gt;Sign In&lt;/a&gt;
-                &lt;/span&gt;
-                &lt;span class=&quot;ui-or&quot;&gt;or&lt;/span&gt;
-                
-                &lt;span class=&quot;ui-signin&quot;&gt;
-                    &lt;a type=&quot;button&quot; href=&quot;/features&quot; class=&quot;btn btn-lg btn-primary&quot; style=&quot;min-width: 200px;&quot;&gt;Explore all features&lt;/a&gt;
-                    &lt;br&gt;
-                    &lt;br&gt;
-                    &lt;img src=&quot;/screenshot.png&quot; class=&quot;screenshot ui-signin&quot;&gt;
-                &lt;/span&gt;
-                &lt;div class=&quot;lead row&quot; style=&quot;width: 90%; margin: 0 auto;&quot;&gt;
-                    &lt;div class=&quot;col-md-4 inner&quot;&gt;
-                        &lt;a href=&quot;/features#Share-Notes&quot;&gt;
-                            &lt;i class=&quot;fa fa-bolt fa-3x&quot;&gt;&lt;/i&gt;
-                            &lt;h4&gt;Real time collaboration&lt;/h4&gt;
-                        &lt;/a&gt;
-                    &lt;/div&gt;
-                    &lt;div class=&quot;col-md-4 inner&quot;&gt;
-                        &lt;a href=&quot;/features#MathJax&quot;&gt;
-                            &lt;i class=&quot;fa fa-bar-chart fa-3x&quot;&gt;&lt;/i&gt;
-                            &lt;h4&gt;Works with charts and MathJax&lt;/h4&gt;
-                        &lt;/a&gt;
-                    &lt;/div&gt;
-                    &lt;div class=&quot;col-md-4 inner&quot;&gt;
-                        &lt;a href=&quot;/features#Slide-Mode&quot;&gt;
-                            &lt;i class=&quot;fa fa-tv fa-3x&quot;&gt;&lt;/i&gt;
-                            &lt;h4&gt;Supports slide mode&lt;/h4&gt;
-                        &lt;/a&gt;
-                    &lt;/div&gt;
-                &lt;/div&gt;
-            &lt;/div&gt;
-        &lt;/div&gt;
+p<span style="color:#f92672">=</span><span style="color:#ae81ff">20973268502876719886012765513713011996343752519737224550553652605696573094756255499211333096502971357908939298357512380813773140436677393056575164230564778609423872301899323721040416852230597466288892977839300189625522429038289083381035647126860128821615664730513694930502000903655609105029016636999073477487851081722316115785141</span>
+enc<span style="color:#f92672">=</span><span style="color:#66d9ef">lambda</span> x:pow(<span style="color:#ae81ff">17</span>,x,p)
+m<span style="color:#f92672">=</span>int(flag<span style="color:#f92672">.</span>encode()<span style="color:#f92672">.</span>hex(),<span style="color:#ae81ff">16</span>)
 
-        &lt;div id=&quot;history&quot; class=&quot;section&quot; style=&quot;display:none;&quot;&gt;
-            &lt;div class=&quot;ui-signin&quot;&gt;
-                &lt;p&gt;Below is history from this browser&lt;/p&gt;
-            &lt;/div&gt;
-            &lt;br&gt;
-            &lt;form class=&quot;form-inline&quot;&gt;
-                &lt;div class=&quot;form-group&quot; style=&quot;vertical-align: bottom;&quot;&gt;
-                    &lt;input class=&quot;form-control ui-use-tags&quot; placeholder=&quot;Select tags…&quot; /&gt;
-                &lt;/div&gt;
-                &lt;div class=&quot;form-group&quot;&gt;
-                    &lt;input class=&quot;search form-control&quot; placeholder=&quot;Search keyword…&quot; /&gt;
-                &lt;/div&gt;
-                &lt;a href=&quot;#&quot; class=&quot;sort btn btn-default&quot; data-sort=&quot;text&quot; title=&quot;Sort by title&quot;&gt;
-                Title
-                &lt;/a&gt;
-                &lt;a href=&quot;#&quot; class=&quot;sort btn btn-default&quot; data-sort=&quot;timestamp&quot; title=&quot;Sort by time&quot;&gt;
-                Time
-                &lt;/a&gt;
-                &lt;span class=&quot;hidden-xs hidden-sm&quot;&gt;
-                    &lt;a href=&quot;#&quot; class=&quot;btn btn-default ui-save-history&quot; title=&quot;Export history&quot;&gt;&lt;i class=&quot;fa fa-save&quot;&gt;&lt;/i&gt;&lt;/a&gt;
-                    &lt;span class=&quot;btn btn-default btn-file ui-open-history&quot; title=&quot;Import history&quot;&gt;
-                        &lt;i class=&quot;fa fa-folder-open-o&quot;&gt;&lt;/i&gt;&lt;input type=&quot;file&quot; /&gt;
-                    &lt;/span&gt;
-                &lt;a href=&quot;#&quot; class=&quot;btn btn-default ui-clear-history&quot; title=&quot;Clear history&quot; data-toggle=&quot;modal&quot; data-target=&quot;.delete-history-modal&quot;&gt;&lt;i class=&quot;fa fa-trash-o&quot;&gt;&lt;/i&gt;&lt;/a&gt;
-                &lt;/span&gt;
-                &lt;a href=&quot;#&quot; class=&quot;btn btn-default ui-refresh-history&quot; title=&quot;Refresh history&quot;&gt;&lt;i class=&quot;fa fa-refresh&quot;&gt;&lt;/i&gt;&lt;/a&gt;
-            &lt;/form&gt;
-            &lt;h4 class=&quot;ui-nohistory&quot; style=&quot;display:none;&quot;&gt;
-                No history
-            &lt;/h4&gt;
-            &lt;a href=&quot;#&quot; class=&quot;btn btn-primary ui-import-from-browser&quot; style=&quot;display:none;&quot;&gt;Import from browser&lt;/a&gt;
-            &lt;ul id=&quot;history-list&quot; class=&quot;list&quot;&gt;
-            &lt;/ul&gt;
-            &lt;ul class=&quot;pagination&quot;&gt;&lt;/ul&gt;
-        &lt;/div&gt;
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">gcd</span>(a,b,f<span style="color:#f92672">=</span>enc):
+    <span style="color:#66d9ef">if</span> b:
+        <span style="color:#66d9ef">return</span> gcd(b,a<span style="color:#f92672">%</span>b,f)
+    <span style="color:#66d9ef">else</span>:
+        <span style="color:#66d9ef">return</span> f(a)
 
-        &lt;div class=&quot;mastfoot&quot;&gt;
-            &lt;div class=&quot;inner&quot;&gt;
-                &lt;select class=&quot;ui-locale&quot;&gt;
-                    &lt;option value=&quot;en&quot;&gt;English&lt;/option&gt;
-                    &lt;option value=&quot;zh-CN&quot;&gt;简体中文&lt;/option&gt;
-                    &lt;option value=&quot;zh-TW&quot;&gt;繁體中文&lt;/option&gt;
-                    &lt;option value=&quot;fr&quot;&gt;Français&lt;/option&gt;
-                    &lt;option value=&quot;de&quot;&gt;Deutsch&lt;/option&gt;
-                    &lt;option value=&quot;ja&quot;&gt;日本語&lt;/option&gt;
-                    &lt;option value=&quot;es&quot;&gt;Español&lt;/option&gt;
-                    &lt;option value=&quot;ca&quot;&gt;Català&lt;/option&gt;
-                    &lt;option value=&quot;el&quot;&gt;Ελληνικά&lt;/option&gt;
-                    &lt;option value=&quot;pt&quot;&gt;Português&lt;/option&gt;
-                    &lt;option value=&quot;it&quot;&gt;Italiano&lt;/option&gt;
-                    &lt;option value=&quot;tr&quot;&gt;Türkçe&lt;/option&gt;
-                    &lt;option value=&quot;ru&quot;&gt;Русский&lt;/option&gt;
-                    &lt;option value=&quot;nl&quot;&gt;Nederlands&lt;/option&gt;
-                    &lt;option value=&quot;hr&quot;&gt;Hrvatski&lt;/option&gt;
-                    &lt;option value=&quot;pl&quot;&gt;Polski&lt;/option&gt;
-                    &lt;option value=&quot;uk&quot;&gt;Українська&lt;/option&gt;
-                    &lt;option value=&quot;hi&quot;&gt;हिन्दी&lt;/option&gt;
-                    &lt;option value=&quot;sv&quot;&gt;Svenska&lt;/option&gt;
-                    &lt;option value=&quot;eo&quot;&gt;Esperanto&lt;/option&gt;
-                    &lt;option value=&quot;da&quot;&gt;Dansk&lt;/option&gt;
-                    &lt;option value=&quot;ko&quot;&gt;한국어&lt;/option&gt;
-                    &lt;option value=&quot;id&quot;&gt;Bahasa Indonesia&lt;/option&gt;
-                    &lt;option value=&quot;sr&quot;&gt;Cрпски&lt;/option&gt;
-                    &lt;option value=&quot;vi&quot;&gt;Tiếng Việt&lt;/option&gt;
-                    &lt;option value=&quot;ar&quot;&gt;العربية&lt;/option&gt;
-                    &lt;option value=&quot;cs&quot;&gt;Česky&lt;/option&gt;
-                    &lt;option value=&quot;sk&quot;&gt;Slovensky&lt;/option&gt;
-                &lt;/select&gt;
-                &lt;p&gt;
-                    Powered by &lt;a href=&quot;https://codimd.org&quot;&gt;CodiMD&lt;/a&gt; | &lt;a href=&quot;/s/release-notes&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;Releases&lt;/a&gt; | &lt;a href=&quot;https://github.com/codimd/server/tree/8ce7b285636c02b4215c838640bb748947c8317f&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;Source Code&lt;/a&gt;
-                &lt;/p&gt;
-                &lt;h6 class=&quot;social-foot&quot;&gt;
-                    Follow us on &lt;a href=&quot;https://github.com/codimd/server&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;&lt;i class=&quot;fa fa-github&quot;&gt;&lt;/i&gt; GitHub&lt;/a&gt;, &lt;a href=&quot;https://community.codimd.org&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;&lt;i class=&quot;fa fa-users&quot; aria-hidden=&quot;true&quot;&gt;&lt;/i&gt; Discourse&lt;/a&gt;, &lt;a href=&quot;https://riot.im/app/#/room/#codimd:matrix.org&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;&lt;i class=&quot;fa fa-comments&quot;&gt;&lt;/i&gt; Riot&lt;/a&gt;, &lt;a href=&quot;https://social.codimd.org/mastodon&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;&lt;i class=&quot;fa fa-mastodon&quot;&gt;&lt;/i&gt; Mastodon&lt;/a&gt;, and &lt;a href=&quot;https://translate.codimd.org&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;&lt;i class=&quot;fa fa-globe&quot;&gt;&lt;/i&gt; POEditor&lt;/a&gt;.
-                &lt;/h6&gt;
-            &lt;/div&gt;
-        &lt;/div&gt;
-    &lt;/div&gt;
-&lt;/div&gt;
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Task</span>(socketserver<span style="color:#f92672">.</span>BaseRequestHandler):
+    <span style="color:#66d9ef">def</span> __init__(self, <span style="color:#f92672">*</span>args, <span style="color:#f92672">**</span>kargs):
+        super()<span style="color:#f92672">.</span>__init__(<span style="color:#f92672">*</span>args, <span style="color:#f92672">**</span>kargs)
+
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">timeout_handler</span>(self, signum, frame):
+        self<span style="color:#f92672">.</span>request<span style="color:#f92672">.</span>close()
+
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">proof_of_work</span>(self):
+        random<span style="color:#f92672">.</span>seed(os<span style="color:#f92672">.</span>urandom(<span style="color:#ae81ff">8</span>))
+        proof <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;&#39;</span><span style="color:#f92672">.</span>join([random<span style="color:#f92672">.</span>choice(string<span style="color:#f92672">.</span>ascii_letters<span style="color:#f92672">+</span>string<span style="color:#f92672">.</span>digits) <span style="color:#66d9ef">for</span> _ <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">20</span>)])
+        _hexdigest <span style="color:#f92672">=</span> hashlib<span style="color:#f92672">.</span>sha256(proof<span style="color:#f92672">.</span>encode())<span style="color:#f92672">.</span>hexdigest()
+        self<span style="color:#f92672">.</span>request<span style="color:#f92672">.</span>send(f<span style="color:#e6db74">&#34;sha256(XXXX+{proof[4:]}) == {_hexdigest}</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span><span style="color:#f92672">.</span>encode()<span style="color:#f92672">+</span><span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;Give me XXXX: &#39;</span>)
+        x <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>request<span style="color:#f92672">.</span>recv(<span style="color:#ae81ff">1024</span>)<span style="color:#f92672">.</span>strip(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#39;</span>)
+        <span style="color:#66d9ef">if</span> len(x) <span style="color:#f92672">!=</span> <span style="color:#ae81ff">4</span> <span style="color:#f92672">or</span> hashlib<span style="color:#f92672">.</span>sha256(x<span style="color:#f92672">+</span>proof[<span style="color:#ae81ff">4</span>:]<span style="color:#f92672">.</span>encode())<span style="color:#f92672">.</span>hexdigest() <span style="color:#f92672">!=</span> _hexdigest:
+            <span style="color:#66d9ef">return</span> False
+        <span style="color:#66d9ef">return</span> True
+
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">handle</span>(self):
+        signal<span style="color:#f92672">.</span>alarm(<span style="color:#ae81ff">60</span>)
+
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">not</span> self<span style="color:#f92672">.</span>proof_of_work():
+            <span style="color:#66d9ef">return</span>
+
+        <span style="color:#66d9ef">while</span> True:
+            <span style="color:#66d9ef">try</span>:
+                self<span style="color:#f92672">.</span>request<span style="color:#f92672">.</span>send(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;type:&#39;</span>)
+                t<span style="color:#f92672">=</span>int(self<span style="color:#f92672">.</span>request<span style="color:#f92672">.</span>recv(<span style="color:#ae81ff">1024</span>)<span style="color:#f92672">.</span>strip(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#39;</span>))
+                self<span style="color:#f92672">.</span>request<span style="color:#f92672">.</span>send(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;a:&#39;</span>)
+                a<span style="color:#f92672">=</span>int(self<span style="color:#f92672">.</span>request<span style="color:#f92672">.</span>recv(<span style="color:#ae81ff">1024</span>)<span style="color:#f92672">.</span>strip(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#39;</span>))
+                self<span style="color:#f92672">.</span>request<span style="color:#f92672">.</span>send(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;b:&#39;</span>)
+                b<span style="color:#f92672">=</span>int(self<span style="color:#f92672">.</span>request<span style="color:#f92672">.</span>recv(<span style="color:#ae81ff">1024</span>)<span style="color:#f92672">.</span>strip(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#39;</span>))
+                <span style="color:#66d9ef">assert</span> a<span style="color:#f92672">&gt;</span><span style="color:#ae81ff">0</span> <span style="color:#f92672">and</span> b<span style="color:#f92672">&gt;</span><span style="color:#ae81ff">0</span>
+                <span style="color:#66d9ef">if</span> t<span style="color:#f92672">==</span><span style="color:#ae81ff">1</span>:<span style="color:#75715e">#enc test</span>
+                    self<span style="color:#f92672">.</span>request<span style="color:#f92672">.</span>send(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">%d</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#39;</span><span style="color:#f92672">%</span>gcd(a,b))
+                <span style="color:#66d9ef">elif</span> t<span style="color:#f92672">==</span><span style="color:#ae81ff">2</span>:<span style="color:#75715e">#leak try1</span>
+                    self<span style="color:#f92672">.</span>request<span style="color:#f92672">.</span>send(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">%d</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#39;</span><span style="color:#f92672">%</span>gcd(a,m))
+                <span style="color:#66d9ef">elif</span> t<span style="color:#f92672">==</span><span style="color:#ae81ff">3</span>:<span style="color:#75715e">#leak try2</span>
+                    self<span style="color:#f92672">.</span>request<span style="color:#f92672">.</span>send(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">%d</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#39;</span><span style="color:#f92672">%</span>gcd(a,b,f<span style="color:#f92672">=</span><span style="color:#66d9ef">lambda</span> x:gcd(x,m)))
+                <span style="color:#66d9ef">elif</span> t<span style="color:#f92672">==</span><span style="color:#ae81ff">4</span>:<span style="color:#75715e">#leak try3</span>
+                    self<span style="color:#f92672">.</span>request<span style="color:#f92672">.</span>send(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">%d</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#39;</span><span style="color:#f92672">%</span>gcd(a,m,f<span style="color:#f92672">=</span><span style="color:#66d9ef">lambda</span> x:gcd(x,b)))
+                <span style="color:#66d9ef">else</span>:
+                    self<span style="color:#f92672">.</span>request<span style="color:#f92672">.</span>close()
+                    <span style="color:#66d9ef">break</span>
+            <span style="color:#66d9ef">except</span> BrokenPipeError:
+                <span style="color:#66d9ef">break</span>
+            <span style="color:#66d9ef">except</span>:
+                self<span style="color:#f92672">.</span>request<span style="color:#f92672">.</span>send(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;Bad input!</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#39;</span>)
+
+
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">ThreadedServer</span>(socketserver<span style="color:#f92672">.</span>ForkingMixIn, socketserver<span style="color:#f92672">.</span>TCPServer):
+    <span style="color:#66d9ef">pass</span>
+
+<span style="color:#66d9ef">if</span> __name__ <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;__main__&#34;</span>:
+    HOST, PORT <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;0.0.0.0&#39;</span>, <span style="color:#ae81ff">23333</span>
+    server <span style="color:#f92672">=</span> ThreadedServer((HOST, PORT), Task)
+    server<span style="color:#f92672">.</span>allow_reuse_address <span style="color:#f92672">=</span> True
+    server<span style="color:#f92672">.</span>serve_forever()
+</code></pre></div><h2 id="2-分析">2. 分析</h2>
+<p>允许选手控制a, b, 提供4个选项，返回</p>
+<ul>
+<li>pow(17, gcd(a, b), p)</li>
+<li>pow(17, gcd(a, m), p)</li>
+<li>pow(17, gcd(gcd(a, b), m), p)</li>
+<li>pow(17, gcd(gcd(a, m), b), p)</li>
+</ul>
+<h3 id="21-思路一构造包含m的dlp">2.1 <del>思路一：构造包含m的DLP</del></h3>
+<p>初步的思路是，构造包含m的DLP，例如，令a = 0, 则 gcd(a, m) = pow(17, m, p) 。 使问题转化为离散对数问题。</p>
+<p>本题的GF(p)关于g元素的乘法阶是光滑的，易求离散对数问题</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">p<span style="color:#f92672">=</span><span style="color:#ae81ff">20973268502876719886012765513713011996343752519737224550553652605696573094756255499211333096502971357908939298357512380813773140436677393056575164230564778609423872301899323721040416852230597466288892977839300189625522429038289083381035647126860128821615664730513694930502000903655609105029016636999073477487851081722316115785141</span>
+F <span style="color:#f92672">=</span> GF(p)
+g <span style="color:#f92672">=</span> F<span style="color:#f92672">.</span>multiplicative_generator()
+order <span style="color:#f92672">=</span> g<span style="color:#f92672">.</span>multiplicative_order()
+order <span style="color:#f92672">==</span> p<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>, factor(order)
+</code></pre></div><pre><code>(True,
+ 2^2 * 3 * 5 * 7^2 * 11 * 13 * 19 * 23 * 29 * 31 * 37^4 * 41^2 * 43^3 * 61^2 * 67 * 71^3 * 73 * 79^2 * 83 * 89 * 97^3 * 101^4 * 103 * 107 * 109 * 113 * 127^2 * 131^2 * 137 * 139^5 * 151^2 * 157 * 163 * 167 * 173 * 179^2 * 181^3 * 191 * 193 * 197^3 * 199^2 * 211^2 * 223^3 * 227 * 229 * 239^2 * 251^2 * 257^3 * 263 * 269 * 271^5 * 281 * 283^2 * 293^2 * 307^2 * 311 * 317 * 331^3 * 337^3 * 347 * 353^2 * 359^5 * 367 * 389^2 * 397^3 * 409 * 421 * 431^3 * 433^2 * 439^2 * 443^2 * 457^2 * 461 * 467^2 * 479^4 * 487 * 499 * 503 * 509 * 521^3 * 541)
 </code></pre>
-</div>
-<!-- delete history modal -->
-<div class="modal fade delete-history-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-sm">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
-                </button>
-                <h4 class="modal-title" id="myModalLabel">Are you sure?</h4>
-            </div>
-            <div class="modal-body">
-                <h5 class="ui-delete-history-modal-msg"></h5>
-                <strong class="ui-delete-history-modal-item"></strong>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-danger ui-delete-history-modal-confirm">Yes, do it!</button>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- delete user modal -->
-<div class="modal fade delete-user-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-sm">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
-                </button>
-                <h4 class="modal-title" id="myModalLabel">Are you sure?</h4>
-            </div>
-            <div class="modal-body">
-                <h5 class="ui-delete-user-modal-msg">Do you really want to delete your user account?</h5>
-                <strong class="ui-delete-user-modal-item">This will delete your account, all notes that are owned by you and remove all references to your account from other notes.</strong>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default ui-delete-user-modal-cancel" data-dismiss="modal">Cancel</button>
-                <a type="button" class="btn btn-danger" href="/me/delete/">Yes, do it!</a>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- signin modal -->
-<div class="modal fade signin-modal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-sm">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
-                </button>
-                <h4 class="modal-title" id="mySmallModalLabel">Choose method</h4>
-            </div>
-            <div class="modal-body" style="text-align: center;">
-<pre><code>            &lt;h4&gt;Sign in via E-Mail&lt;/h4&gt;
-            &lt;form data-toggle=&quot;validator&quot; role=&quot;form&quot; class=&quot;form-horizontal&quot; method=&quot;post&quot; enctype=&quot;application/x-www-form-urlencoded&quot;&gt;
-                &lt;div class=&quot;form-group&quot;&gt;
-                    &lt;div class=&quot;col-sm-12&quot;&gt;
-                        &lt;input type=&quot;email&quot; class=&quot;form-control&quot; name=&quot;email&quot; placeholder=&quot;E-Mail&quot; required&gt;
-                        &lt;span class=&quot;help-block control-label with-errors&quot; style=&quot;display: inline;&quot;&gt;&lt;/span&gt;
-                    &lt;/div&gt;
-                &lt;/div&gt;
-                &lt;div class=&quot;form-group&quot;&gt;
-                    &lt;div class=&quot;col-sm-12&quot;&gt;
-                        &lt;input type=&quot;password&quot; class=&quot;form-control&quot; name=&quot;password&quot; placeholder=&quot;Password&quot; required&gt;
-                        &lt;span class=&quot;help-block control-label with-errors&quot; style=&quot;display: inline;&quot;&gt;&lt;/span&gt;
-                    &lt;/div&gt;
-                &lt;/div&gt;
-                &lt;div class=&quot;form-group&quot;&gt;
-                    &lt;div class=&quot;col-sm-12&quot;&gt;
-                        &lt;button type=&quot;submit&quot; class=&quot;btn btn-primary&quot; formaction=&quot;/login&quot;&gt;Sign In&lt;/button&gt;
-                        
-                    &lt;/div&gt;
-                &lt;/div&gt;
-            &lt;/form&gt;
+<p>但本题限制了 a, b &gt; 0 , 也未找到其他办法使 m 出现在方程中。</p>
+<h3 id="22-思路二爆破m的素因子">2.2 <del>思路二：爆破m的素因子</del></h3>
+<p>考虑 gcd(a, m) 大部分情况都为 1, 在 a|m 时为 a, 可以根据这一特征对m因式分解。</p>
+<p>但因为比赛时与远程的交互较慢，实际执行很困难。</p>
+<p>实际仅爆破了第一个素因子 6079</p>
+<h3 id="23-提示why-recursion">2.3 提示：Why recursion?</h3>
+<p>赛程过半时，题目仍然0解，主办方公布了提示 “Why recursion?”</p>
+<p>对啊，为什么gcd要使用递归呢？会导致什么问题？我考虑主要有：</p>
+<ol>
+<li>时间复杂度</li>
+<li>递归过多导致程序崩溃</li>
+</ol>
+<h3 id="24-思路三gcd的时间复杂度问题">2.4 <del>思路三：gcd的时间复杂度问题</del></h3>
+<p>经过实验，我发现，两个数较为接近时，gcd的时间复杂度相对较高。</p>
+<p>可以通过比较 gcd(a, b) 的时间复杂度和 gcd(gcd(a, b), m) 的时间复杂度的差，来计算 m 与某个数(gcd(a, b)的最大公约数，可控)的计算量，则可能可以恢复 m 。</p>
+<p>但经过实验，发现主要的时间差异体现在网络波动上，无法体现计算量差异。</p>
+<h3 id="25-思路四python的默认递归次数限制-1000">2.5 思路四：python的默认递归次数限制: 1000</h3>
+<p>使用递归的另一个缺点是，过多可能导致程序崩溃。</p>
+<p>考虑，构造两个数a, b, 其计算 x = gcd(a, b) 的递归次数与 计算 gcd(x, m)的递归次数之和，刚好等于最大递归次数。于是得知，gcd(x, m) 需要递归的次数，这个特点可能恢复m</p>
+<p>自己构造了一段时间，发现 $gcd(a, b)，a,b &lt; 2^1024$ 的递归次数一般在600左右徘徊，自己构造不出来1000左右的情况。</p>
+<p>搜索了一下，发现 gcd 的最坏时间复杂度为 $log_2n$ , 在连续两个斐波那契数产生。</p>
+<p><a href="https://www.baeldung.com/cs/euclid-time-complexity">https://www.baeldung.com/cs/euclid-time-complexity</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">gcd_count</span>(a, b, count<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>):
+    <span style="color:#66d9ef">if</span> b:
+        <span style="color:#66d9ef">return</span> gcd_count(b,a<span style="color:#f92672">%</span>b,count<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>)
+    <span style="color:#66d9ef">else</span>:
+        <span style="color:#66d9ef">return</span> a, count
+    
+gcd_count(fibonacci(<span style="color:#ae81ff">1000</span>), fibonacci(<span style="color:#ae81ff">1001</span>))
+</code></pre></div><pre><code>(1, 1000)
+</code></pre>
+<p>实验还发现，两个连续的斐波那契数，他们的最大公约数为1, 递归次数为较小数在斐波那契数列中的位置。两个数同乘一个数，不影响gcd的递归次数</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">gcd_count(fibonacci(<span style="color:#ae81ff">1000</span>)<span style="color:#f92672">*</span>pow(<span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">100</span>), fibonacci(<span style="color:#ae81ff">1001</span>)<span style="color:#f92672">*</span>pow(<span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">100</span>))
+</code></pre></div><pre><code>(1267650600228229401496703205376, 1000)
+</code></pre>
+<p>而且，斐波那契数的长度很短，适合用于我的攻击思路</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">fibonacci(<span style="color:#ae81ff">1000</span>)<span style="color:#f92672">.</span>nbits()
+</code></pre></div><pre><code>694
+</code></pre>
+<p>于是，可以：</p>
+<ol>
+<li>控制： x = gcd(a, b) 的递归次数</li>
+<li>通过程序崩溃时x = gcd(a, b) 的递归次数, 获得： gcd(x, m) 的递归次数</li>
+</ol>
+<h3 id="26-如何根据-gcdx-m-的递归次数-恢复m">2.6 如何根据 gcd(x, m) 的递归次数 恢复m?</h3>
+<p>实验 gcd(prime, m) 的递归次数，过程中发现：</p>
+<ol>
+<li>gcd(prime, m) = 0 的递归次数，必然为3次</li>
+<li>gcd(prime, m) = 1 的递归次数，必然为4次</li>
+<li>其余情况，可能存在重复，不同递归次数可能对应多种模方程</li>
+</ol>
+<p>于是，可以考虑，遍历 gcd(prime, m) 的递归次数，根据上述特点，计算多组同余式，根据中国剩余定理求解m</p>
+<p>m % 2 = 0: 2次递归</p>
+<ul>
+<li>gcd(2, m)</li>
+<li>1 (m, 2)</li>
+<li>2 (2, 0)</li>
+<li>-&gt; 2</li>
+</ul>
+<p>m % 2 = 1: 3次递归</p>
+<ul>
+<li>gcd(2, m)</li>
+<li>1 (m, 2)</li>
+<li>2 (2, 1)</li>
+<li>3 (1, 0)</li>
+<li>-&gt; 1</li>
+</ul>
+<p>m % 5 = 0: 2次递归</p>
+<ul>
+<li>gcd(5, m)</li>
+<li>1 (m, 5)</li>
+<li>2 (5, 0)</li>
+<li>-&gt; 0</li>
+</ul>
+<p>m % 5 = 1: 3次递归</p>
+<ul>
+<li>gcd(5, m)</li>
+<li>1 (m, 5)</li>
+<li>2 (5, 1)</li>
+<li>3 (1, 0)</li>
+<li>-&gt; 1</li>
+</ul>
+<p>m % 5 = 2: 4次递归</p>
+<ul>
+<li>gcd(5, m)</li>
+<li>1 (m, 5)</li>
+<li>2 (5, 2)</li>
+<li>3 (2, 1)</li>
+<li>4 (1, 0)</li>
+<li>-&gt; 1</li>
+</ul>
+<p>m % 5 = 3: 5次递归</p>
+<ul>
+<li>gcd(5, m)</li>
+<li>1 (m, 5)</li>
+<li>2 (5, 3)</li>
+<li>3 (3, 2)</li>
+<li>4 (2, 1)</li>
+<li>5 (1, 0)</li>
+<li>-&gt; 1</li>
+</ul>
+<p>m % 5 = 4: 4次递归</p>
+<ul>
+<li>gcd(5, m)</li>
+<li>1 (m, 5)</li>
+<li>2 (5, 4)</li>
+<li>3 (4, 1)</li>
+<li>4 (1, 0)</li>
+<li>-&gt; 1</li>
+</ul>
+<h2 id="3-solve">3. solve</h2>
+<p>确认使用思路四：python的默认递归次数限制: 1000</p>
+<h3 id="31-io">3.1 IO</h3>
+<p>服务器环境经常断连，断了之后可重新建立连接。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">import</span> itertools
+<span style="color:#f92672">from</span> pwn <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
+context<span style="color:#f92672">.</span>log_level <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;info&#39;</span>
+r <span style="color:#f92672">=</span> None
+local <span style="color:#f92672">=</span> False
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">init_connect</span>(local):
+    <span style="color:#66d9ef">if</span> local:
+        r <span style="color:#f92672">=</span> remote(<span style="color:#e6db74">&#34;127.0.0.1&#34;</span>, <span style="color:#ae81ff">2333</span>)
+    <span style="color:#66d9ef">else</span>:
+        r <span style="color:#f92672">=</span> remote(<span style="color:#e6db74">&#34;122.9.153.69&#34;</span>, <span style="color:#ae81ff">23333</span>)
+    <span style="color:#66d9ef">return</span> r
+    
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">proof_of_work</span>():
+    <span style="color:#66d9ef">print</span>(<span style="color:#e6db74">&#34;pow doing.&#34;</span>)
+
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">receive_proof_of_work</span>():
+        r<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;XXXX+&#34;</span>)
+        p <span style="color:#f92672">=</span> r<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;)&#34;</span>)<span style="color:#f92672">.</span>rstrip(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;)&#34;</span>)
+        r<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;== &#34;</span>)
+        h <span style="color:#f92672">=</span> r<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#39;</span>)<span style="color:#f92672">.</span>rstrip(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#39;</span>)
+        <span style="color:#66d9ef">return</span> p<span style="color:#f92672">.</span>decode(), h<span style="color:#f92672">.</span>decode()
+
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">solve_proof_of_work</span>(p, h):
+        <span style="color:#66d9ef">for</span> c <span style="color:#f92672">in</span> itertools<span style="color:#f92672">.</span>product(string<span style="color:#f92672">.</span>ascii_letters<span style="color:#f92672">+</span>string<span style="color:#f92672">.</span>digits, repeat<span style="color:#f92672">=</span><span style="color:#ae81ff">4</span>):
+            proof <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;&#34;</span><span style="color:#f92672">.</span>join(c) <span style="color:#f92672">+</span> p
+            <span style="color:#66d9ef">if</span> hashlib<span style="color:#f92672">.</span>sha256(proof<span style="color:#f92672">.</span>encode())<span style="color:#f92672">.</span>hexdigest() <span style="color:#f92672">==</span> h:
+                <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;&#34;</span><span style="color:#f92672">.</span>join(c)
+    p, h <span style="color:#f92672">=</span> receive_proof_of_work()
+    proof <span style="color:#f92672">=</span> solve_proof_of_work(p, h)
+    r<span style="color:#f92672">.</span>sendlineafter(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;Give me XXXX: &#39;</span>, proof<span style="color:#f92672">.</span>encode())
+    <span style="color:#66d9ef">print</span>(<span style="color:#e6db74">&#34;pow done.&#34;</span>)
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">enc_io</span>(t, a, b):
+    <span style="color:#66d9ef">global</span> r
+    <span style="color:#66d9ef">if</span> r <span style="color:#f92672">is</span> None:
+        r <span style="color:#f92672">=</span> init_connect(local)
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">not</span> local:
+            proof_of_work()
+    <span style="color:#66d9ef">try</span>:
+        r<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;type:&#34;</span>)
+        r<span style="color:#f92672">.</span>sendline(str(t)<span style="color:#f92672">.</span>encode())
+        r<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;a:&#34;</span>)
+        r<span style="color:#f92672">.</span>sendline(str(a)<span style="color:#f92672">.</span>encode())
+        r<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;b:&#34;</span>)
+        r<span style="color:#f92672">.</span>sendline(str(b)<span style="color:#f92672">.</span>encode())
+        <span style="color:#66d9ef">return</span> int(r<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#39;</span>)<span style="color:#f92672">.</span>rstrip(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#39;</span>))
+    <span style="color:#66d9ef">except</span> <span style="color:#a6e22e">EOFError</span> <span style="color:#66d9ef">as</span> err:
+        r <span style="color:#f92672">=</span> None
+        <span style="color:#66d9ef">return</span> enc_io(t, a, b)
+    
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">test</span>(a, b):
+    <span style="color:#66d9ef">return</span> enc_io(<span style="color:#ae81ff">1</span>, a, b)
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">try1</span>(a):
+    <span style="color:#e6db74">&#34;&#34;&#34;
+</span><span style="color:#e6db74">    gcd(a,m)
+</span><span style="color:#e6db74">    &#34;&#34;&#34;</span>
+    <span style="color:#66d9ef">return</span> enc_io(<span style="color:#ae81ff">2</span>, a, <span style="color:#ae81ff">1</span>) 
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">try2</span>(a, b):
+    <span style="color:#e6db74">&#34;&#34;&#34;
+</span><span style="color:#e6db74">    gcd(a,b,f=lambda x:gcd(x,m))
+</span><span style="color:#e6db74">    &#34;&#34;&#34;</span>
+    <span style="color:#66d9ef">return</span> enc_io(<span style="color:#ae81ff">3</span>, a, b) 
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">try3</span>(a, b):
+    <span style="color:#e6db74">&#34;&#34;&#34;
+</span><span style="color:#e6db74">    gcd(a,m,f=lambda x:gcd(x,b))
+</span><span style="color:#e6db74">    &#34;&#34;&#34;</span>
+    <span style="color:#66d9ef">return</span> enc_io(<span style="color:#ae81ff">4</span>, a, b) 
+</code></pre></div><h3 id="32-oracle-触发递归崩溃">3.2 oracle: 触发递归崩溃</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">oracle</span>(t, a, b, debug<span style="color:#f92672">=</span>False, msg<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;&#39;</span>):    
+    <span style="color:#66d9ef">try</span>:
+        enc_io(t, a, b)
+    <span style="color:#66d9ef">except</span> <span style="color:#a6e22e">ValueError</span> <span style="color:#66d9ef">as</span> err:
+        <span style="color:#66d9ef">if</span> debug:
+            <span style="color:#66d9ef">print</span>(err, msg)
+        <span style="color:#66d9ef">return</span> True
+    <span style="color:#66d9ef">return</span> False
+
+oracle(<span style="color:#ae81ff">1</span>, fibonacci(<span style="color:#ae81ff">1024</span>), fibonacci(<span style="color:#ae81ff">1024</span><span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>), True)
+</code></pre></div><pre><code>[x] Opening connection to 122.9.153.69 on port 23333
+[x] Opening connection to 122.9.153.69 on port 23333: Trying 122.9.153.69
+[+] Opening connection to 122.9.153.69 on port 23333: Done
+pow doing.
+pow done.
+invalid literal for int() with base 10: b'Bad input!' 
+
+
+
+
+
+True
+</code></pre>
+<h3 id="33-获得递归次数">3.3 获得递归次数</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">fibs <span style="color:#f92672">=</span> {}
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">fib</span>(i):
+    <span style="color:#66d9ef">if</span> i <span style="color:#f92672">not</span> <span style="color:#f92672">in</span> fibs:
+        fibs[i] <span style="color:#f92672">=</span> fibonacci(i) 
+    <span style="color:#66d9ef">return</span> fibs[i]
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">guess</span>(a, base<span style="color:#f92672">=</span><span style="color:#ae81ff">900</span>):
+    <span style="color:#e6db74">&#34;&#34;&#34;
+</span><span style="color:#e6db74">    return remote gcd iter count
+</span><span style="color:#e6db74">    &#34;&#34;&#34;</span>
+    <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(base, <span style="color:#ae81ff">1000</span>):
+        <span style="color:#66d9ef">if</span> oracle(<span style="color:#ae81ff">3</span>, fib(i)<span style="color:#f92672">*</span>a, fib(i<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>)<span style="color:#f92672">*</span>a):
+            <span style="color:#66d9ef">return</span> i
+
+count_cache <span style="color:#f92672">=</span> {}
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">clean_cache</span>():
+    <span style="color:#66d9ef">global</span> count_cache
+    count_cache <span style="color:#f92672">=</span> {}
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">gcd_count_cache</span>(a, b, count<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>):
+    <span style="color:#e6db74">&#34;&#34;&#34;
+</span><span style="color:#e6db74">    return gcd(a, b), itercount
+</span><span style="color:#e6db74">    &#34;&#34;&#34;</span>
+    <span style="color:#66d9ef">if</span> (a, b) <span style="color:#f92672">in</span> count_cache:
+        g, c <span style="color:#f92672">=</span> count_cache[(a, b)]
+        <span style="color:#66d9ef">return</span> g, count <span style="color:#f92672">+</span> c
+    <span style="color:#66d9ef">if</span> b:
+        <span style="color:#66d9ef">return</span> gcd_count(b,a<span style="color:#f92672">%</span>b,count<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>)
+    <span style="color:#66d9ef">else</span>:
+        <span style="color:#66d9ef">return</span> a, count
+    
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">gcd_counts_remainders</span>(b):
+    <span style="color:#e6db74">&#34;&#34;&#34;
+</span><span style="color:#e6db74">    base = gcd(1, b)
+</span><span style="color:#e6db74">    return {itercount - base: remainders}
+</span><span style="color:#e6db74">    &#34;&#34;&#34;</span>
+<span style="color:#75715e">#     _, base = gcd_count_cache(b, 1)</span>
+    counts <span style="color:#f92672">=</span> {}
+    <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(b):
+        g, count <span style="color:#f92672">=</span> gcd_count_cache(b, b<span style="color:#f92672">+</span>i)
+        count_cache[(b<span style="color:#f92672">+</span>i, b)] <span style="color:#f92672">=</span> (g, count)
+<span style="color:#75715e">#         count -= base</span>
+        <span style="color:#66d9ef">if</span> count <span style="color:#f92672">not</span> <span style="color:#f92672">in</span> counts:
+            counts[count] <span style="color:#f92672">=</span> []
+        counts[count]<span style="color:#f92672">.</span>append(i)
+    <span style="color:#66d9ef">return</span> counts        
+</code></pre></div><p>gcd(1, m) + gcd(fib(985),fib(986))  时崩溃, 作为计算递归次数的基准</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">remote_base <span style="color:#f92672">=</span> guess(<span style="color:#ae81ff">1</span>); remote_base
+</code></pre></div><pre><code>985
+</code></pre>
+<p>gcd_counts_remainders返回不同递归次数，对应的可能同余值。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">counts_remainders3 <span style="color:#f92672">=</span> gcd_counts_remainders(<span style="color:#ae81ff">3</span>); counts_remainders3
+</code></pre></div><pre><code>{1: [0], 3: [1], 4: [2]}
+</code></pre>
+<p>gcd(3, m) 在服务器递归了 2(remote_base中相同步骤)+2 次，对应的可能同余值为 2</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">remote_count3 <span style="color:#f92672">=</span> guess(<span style="color:#ae81ff">3</span>, remote_base<span style="color:#f92672">-</span>max(counts_remainders3))
+remote_count3 <span style="color:#f92672">=</span> remote_base <span style="color:#f92672">-</span> remote_count3 <span style="color:#f92672">+</span> <span style="color:#ae81ff">2</span>; remote_count3
+</code></pre></div><pre><code>4
+</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">remote_remainder3 <span style="color:#f92672">=</span> counts_remainders3[remote_count3]; remote_remainder3
+</code></pre></div><pre><code>[2]
+</code></pre>
+<p>gcd(5, m) 在服务器递归了 3 次，对应的可能同余值为 1</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">counts_remainders5 <span style="color:#f92672">=</span> gcd_counts_remainders(<span style="color:#ae81ff">5</span>)
+remote_count5 <span style="color:#f92672">=</span> guess(<span style="color:#ae81ff">5</span>, remote_base<span style="color:#f92672">-</span>max(counts_remainders5))
+remote_count5 <span style="color:#f92672">=</span> remote_base <span style="color:#f92672">-</span> remote_count5 <span style="color:#f92672">+</span> <span style="color:#ae81ff">2</span>
+remote_remainder5 <span style="color:#f92672">=</span> counts_remainders5[remote_count5]
+
+counts_remainders5, remote_count5, remote_remainder5
+</code></pre></div><pre><code>({1: [0], 3: [1], 4: [2, 4], 5: [3]}, 3, [1])
+</code></pre>
+<p>gcd(7, m) 在服务器递归了 4 次，对应的可能同余值为 2, 3, 6</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">counts_remainders7 <span style="color:#f92672">=</span> gcd_counts_remainders(<span style="color:#ae81ff">7</span>)
+remote_count7 <span style="color:#f92672">=</span> guess(<span style="color:#ae81ff">7</span>, remote_base<span style="color:#f92672">-</span>max(counts_remainders7))
+remote_count7 <span style="color:#f92672">=</span> remote_base <span style="color:#f92672">-</span> remote_count7 <span style="color:#f92672">+</span> <span style="color:#ae81ff">2</span>
+remote_remainder7 <span style="color:#f92672">=</span> counts_remainders7[remote_count7]
+
+counts_remainders7, remote_count7, remote_remainder7
+</code></pre></div><pre><code>({1: [0], 3: [1], 4: [2, 3, 6], 5: [4, 5]}, 4, [2, 3, 6])
+</code></pre>
+<h3 id="34-约束可能同余值">3.4 约束可能同余值</h3>
+<p>同余值不唯一，将导致使用中国剩余定理时要排列组合过多可能。</p>
+<p>已知 gcd(2, m) = 1, 能否根据前面已知的同余方程，验证有效解？</p>
+<p>考虑：</p>
+<p>$m \equiv crt \pmod {\Pi p}$</p>
+<p>gcd(pi, m):</p>
+<ul>
+<li>gcd($\Pi p$ , m)</li>
+<li>1 (m, $\Pi p$)</li>
+<li>2 ($\Pi p$, crt)</li>
+</ul>
+<p>有：</p>
+<p>gcd(pi, m) = gcd(pi, crt) + 2</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">check_valid</span>(remainders, primes, debug<span style="color:#f92672">=</span>False):
+    <span style="color:#66d9ef">assert</span> len(remainders) <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">and</span> len(primes) <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">1</span>
+<span style="color:#75715e">#     if len(remainders) &gt; 20:</span>
+<span style="color:#75715e">#         remainders = remainders[-20:]</span>
+<span style="color:#75715e">#         primes = primes[-20:]</span>
+    c <span style="color:#f92672">=</span> crt(remainders, primes)
+    pi <span style="color:#f92672">=</span> product(primes)
+    _, local_count <span style="color:#f92672">=</span> gcd_count_cache(pi, c)
+    remote_count <span style="color:#f92672">=</span> guess(pi, remote_base<span style="color:#f92672">-</span>local_count<span style="color:#f92672">-</span><span style="color:#ae81ff">2</span>)
+    remote_count <span style="color:#f92672">=</span> remote_base <span style="color:#f92672">-</span> remote_count <span style="color:#f92672">+</span> <span style="color:#ae81ff">2</span>
+    <span style="color:#66d9ef">if</span> debug:
+        <span style="color:#66d9ef">print</span>(primes[<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>], remainders[<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>], remote_count, local_count, remote_count <span style="color:#f92672">==</span> local_count <span style="color:#f92672">+</span> <span style="color:#ae81ff">2</span>)
+    <span style="color:#66d9ef">return</span> remote_count <span style="color:#f92672">==</span> local_count <span style="color:#f92672">+</span> <span style="color:#ae81ff">2</span>
+
+<span style="color:#66d9ef">for</span> remainder <span style="color:#f92672">in</span> [<span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">6</span>]:
+    check_valid([<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">1</span>, remainder], [<span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">5</span>, <span style="color:#ae81ff">7</span>], True)
+</code></pre></div><pre><code>7 2 7 3 False
+7 3 8 6 True
+7 6 7 3 False
+</code></pre>
+<p>对素数的排列组合都进行这种验证，可以尽可能地约束同余式。</p>
+<p>但是这里有一个问题：</p>
+<p>参与计算的同余式数量不能太多，否则上面的结论不再成立。具体原因我也没弄明白，可能是 crt， 素数乘积不能太大，可能当这个数较大时，影响了gcd的递归次数？</p>
+<p>另外，减少参与计算的同余式数量，也是减少计算复杂度的需要。在同余式过多时，这个函数的计算量将非常大。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">check_valid_brute</span>(remainders, primes, debug<span style="color:#f92672">=</span>False):
+    <span style="color:#66d9ef">if</span> len(remainders) <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">5</span>:
+        remainders <span style="color:#f92672">=</span> remainders[:<span style="color:#ae81ff">4</span>] <span style="color:#f92672">+</span> remainders[<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>:]
+        primes <span style="color:#f92672">=</span> primes[:<span style="color:#ae81ff">4</span>] <span style="color:#f92672">+</span> primes[<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>:]
+    new_remainders <span style="color:#f92672">=</span> [remainders[<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>]]
+    new_primes <span style="color:#f92672">=</span> [primes[<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>]]
+    <span style="color:#66d9ef">for</span> remainder, prime <span style="color:#f92672">in</span> zip(remainders[:<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>], primes[:<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>]):
+        new_remainders<span style="color:#f92672">.</span>append(remainder)
+        new_primes<span style="color:#f92672">.</span>append(prime)
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">not</span> check_valid(new_remainders, new_primes, debug):
+            <span style="color:#66d9ef">return</span> False
+    <span style="color:#66d9ef">return</span> True
+
+<span style="color:#66d9ef">for</span> remainder <span style="color:#f92672">in</span> [<span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">6</span>]:
+    check_valid_brute([<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">1</span>, remainder], [<span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">5</span>, <span style="color:#ae81ff">7</span>], True)
+</code></pre></div><pre><code>2 1 5 4 False
+2 1 5 3 True
+3 2 5 3 True
+5 1 8 6 True
+2 1 5 2 False
+</code></pre>
+<h3 id="35-遍历-m-的同余式">3.5 遍历 m 的同余式</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">local<span style="color:#f92672">=</span>False
+r<span style="color:#f92672">.</span>close()
+r<span style="color:#f92672">=</span>init_connect(local)
+clean_cache()
+remote_base <span style="color:#f92672">=</span> guess(<span style="color:#ae81ff">1</span>)
+</code></pre></div><pre><code>[*] Closed connection to 122.9.153.69 port 23333
+[x] Opening connection to 122.9.153.69 on port 23333
+[x] Opening connection to 122.9.153.69 on port 23333: Trying 122.9.153.69
+[+] Opening connection to 122.9.153.69 on port 23333: Done
+[x] Opening connection to 122.9.153.69 on port 23333
+[x] Opening connection to 122.9.153.69 on port 23333: Trying 122.9.153.69
+[+] Opening connection to 122.9.153.69 on port 23333: Done
+pow doing.
+pow done.
+</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">generate_candidate_primes</span>():
+    candidate_primes <span style="color:#f92672">=</span> []
+    pi <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>
+    prime <span style="color:#f92672">=</span> <span style="color:#ae81ff">2</span>
+    <span style="color:#66d9ef">while</span> pi<span style="color:#f92672">.</span>nbits() <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">250</span>:
+        candidate_primes<span style="color:#f92672">.</span>append(prime)
+        prime <span style="color:#f92672">=</span> prime<span style="color:#f92672">.</span>next_prime()
+        pi <span style="color:#f92672">*=</span> prime
+    <span style="color:#66d9ef">return</span> candidate_primes
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> tqdm.notebook <span style="color:#f92672">import</span> trange
+
+pi <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>
+prime <span style="color:#f92672">=</span> <span style="color:#ae81ff">2</span>
+remainders <span style="color:#f92672">=</span> []
+primes <span style="color:#f92672">=</span> []
+
+candidate_primes <span style="color:#f92672">=</span> generate_candidate_primes()
+<span style="color:#66d9ef">for</span> _ <span style="color:#f92672">in</span> trange(len(candidate_primes)):
+    <span style="color:#66d9ef">if</span> pi<span style="color:#f92672">.</span>nbits() <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">250</span>:
+        <span style="color:#66d9ef">break</span>
+    <span style="color:#66d9ef">print</span>(<span style="color:#e6db74">&#34;bits:&#34;</span>, pi<span style="color:#f92672">.</span>nbits())
+    counts_remainders <span style="color:#f92672">=</span> gcd_counts_remainders(prime)
+    remote_count <span style="color:#f92672">=</span> guess(prime, remote_base<span style="color:#f92672">-</span>max(counts_remainders))
+    remote_count <span style="color:#f92672">=</span> remote_base <span style="color:#f92672">-</span> remote_count <span style="color:#f92672">+</span> <span style="color:#ae81ff">2</span>
+    remote_remainders <span style="color:#f92672">=</span> counts_remainders[remote_count]
+    valid_remainders <span style="color:#f92672">=</span> []
+    <span style="color:#66d9ef">if</span> len(remote_remainders) <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span>:
+        valid_remainders <span style="color:#f92672">=</span> remote_remainders
+    <span style="color:#66d9ef">else</span>:
+        <span style="color:#66d9ef">for</span> remainder <span style="color:#f92672">in</span> remote_remainders:
+            <span style="color:#66d9ef">if</span> check_valid_brute(remainders <span style="color:#f92672">+</span> [remainder], primes <span style="color:#f92672">+</span> [prime], False):
+                valid_remainders<span style="color:#f92672">.</span>append(remainder)
+    <span style="color:#66d9ef">if</span> len(valid_remainders) <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span>:
+        <span style="color:#66d9ef">print</span>(<span style="color:#e6db74">&#34;m %&#34;</span>, prime, <span style="color:#e6db74">&#34;=&#34;</span>, valid_remainders[<span style="color:#ae81ff">0</span>])
+        remainders<span style="color:#f92672">.</span>append(valid_remainders[<span style="color:#ae81ff">0</span>])
+        primes<span style="color:#f92672">.</span>append(prime)
+        pi <span style="color:#f92672">*=</span> prime
+    <span style="color:#66d9ef">else</span>:
+        <span style="color:#66d9ef">print</span>(prime, valid_remainders)
             
-        &lt;/div&gt;
-    &lt;/div&gt;
-&lt;/div&gt;
+    prime <span style="color:#f92672">=</span> prime<span style="color:#f92672">.</span>next_prime() 
+
+</code></pre></div><pre><code>  0%|          | 0/43 [00:00&lt;?, ?it/s]
+
+
+bits: 1
+m % 2 = 1
+bits: 2
+m % 3 = 2
+bits: 3
+m % 5 = 1
+bits: 5
+m % 7 = 3
+bits: 8
+m % 11 = 1
+bits: 12
+m % 13 = 4
+bits: 15
+m % 17 = 8
+bits: 19
+m % 19 = 6
+bits: 24
+m % 23 = 19
+bits: 28
+m % 29 = 23
+bits: 33
+m % 31 = 14
+bits: 38
+[x] Opening connection to 122.9.153.69 on port 23333
+[x] Opening connection to 122.9.153.69 on port 23333: Trying 122.9.153.69
+[+] Opening connection to 122.9.153.69 on port 23333: Done
+pow doing.
+pow done.
+m % 37 = 4
+bits: 43
+m % 41 = 39
+bits: 49
+m % 43 = 13
+bits: 54
+m % 47 = 33
+bits: 60
+m % 53 = 30
+bits: 65
+m % 59 = 54
+bits: 71
+m % 61 = 7
+bits: 77
+[x] Opening connection to 122.9.153.69 on port 23333
+[x] Opening connection to 122.9.153.69 on port 23333: Trying 122.9.153.69
+[+] Opening connection to 122.9.153.69 on port 23333: Done
+pow doing.
+pow done.
+m % 67 = 63
+bits: 83
+m % 71 = 38
+bits: 89
+m % 73 = 31
+bits: 96
+m % 79 = 6
+bits: 102
+m % 83 = 3
+bits: 108
+[x] Opening connection to 122.9.153.69 on port 23333
+[x] Opening connection to 122.9.153.69 on port 23333: Trying 122.9.153.69
+[+] Opening connection to 122.9.153.69 on port 23333: Done
+pow doing.
+pow done.
+m % 89 = 1
+bits: 115
+m % 97 = 5
+bits: 121
+m % 101 = 6
+bits: 128
+[x] Opening connection to 122.9.153.69 on port 23333
+[x] Opening connection to 122.9.153.69 on port 23333: Trying 122.9.153.69
+[+] Opening connection to 122.9.153.69 on port 23333: Done
+pow doing.
+pow done.
+m % 103 = 7
+bits: 135
+m % 107 = 2
+bits: 141
+m % 109 = 4
+bits: 148
+m % 113 = 32
+bits: 155
+m % 127 = 22
+bits: 162
+m % 131 = 57
+bits: 169
+[x] Opening connection to 122.9.153.69 on port 23333
+[x] Opening connection to 122.9.153.69 on port 23333: Trying 122.9.153.69
+[+] Opening connection to 122.9.153.69 on port 23333: Done
+pow doing.
+pow done.
+m % 137 = 54
+bits: 176
+m % 139 = 64
+bits: 183
+m % 149 = 101
+bits: 190
+[x] Opening connection to 122.9.153.69 on port 23333
+[x] Opening connection to 122.9.153.69 on port 23333: Trying 122.9.153.69
+[+] Opening connection to 122.9.153.69 on port 23333: Done
+pow doing.
+pow done.
+m % 151 = 71
+bits: 198
+m % 157 = 124
+bits: 205
+m % 163 = 119
+bits: 212
+[x] Opening connection to 122.9.153.69 on port 23333
+[x] Opening connection to 122.9.153.69 on port 23333: Trying 122.9.153.69
+[+] Opening connection to 122.9.153.69 on port 23333: Done
+pow doing.
+pow done.
+m % 167 = 7
+bits: 220
+m % 173 = 45
+bits: 227
+[x] Opening connection to 122.9.153.69 on port 23333
+[x] Opening connection to 122.9.153.69 on port 23333: Trying 122.9.153.69
+[+] Opening connection to 122.9.153.69 on port 23333: Done
+pow doing.
+pow done.
+m % 179 = 85
+bits: 235
+m % 181 = 172
+bits: 242
+m % 191 = 20
 </code></pre>
-</div>
-<script src="config"></script><script src="build/common.becb2d94d936ce9eb683.js" defer="defer"></script><script src="build/cover-pack.ca020b8522f18c4e1951.js" defer="defer"></script>
-</body>
-</html>
+<h3 id="36-中国剩余定理还原flag">3.6 中国剩余定理还原flag</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> Crypto.Util.number <span style="color:#f92672">import</span> long_to_bytes
+
+long_to_bytes(crt(remainders,primes))
+</code></pre></div><pre><code>b'*CTF{Y0U_ar3_gO.d_@_gCD_1EAk!!}'
+</code></pre>
+<p>4个选项只用到了第三个，不确定是不是我遗漏了什么</p>
 
             </div>
         </article>
