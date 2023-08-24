@@ -54,7 +54,7 @@ task.py
 from Crypto.Util.number import * from random import randrange from secret import flag def pr(msg): print(msg) pr(br&#34;&#34;&#34; ....&#39;&#39;&#39;&#39;&#39;&#39;.... .`&#34;,:;;II;II;;;;:,&#34;^&#39;. &#39;&#34;IlllI;;;;;;;;;;;;;Il!!l;^. `l&gt;&lt;&gt;!!!!!!!!iiiii!!!!!!!!i&gt;&lt;!&#34;. &#39;:&gt;?]__&#43;&#43;~~~~~&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;~~&#43;__i&#34;. .:i&#43;}{]?-__&#43;&#43;&#43;~~~~~~&lt;&lt;&lt;&lt;&lt;~~~~~~&#43;_-?[\1_!^ .;&lt;_}\{]-_&#43;&#43;~&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;~&#43;-?]\|]&#43;&lt;^ .!-{t|[?-}(|((){_&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;_}1)))1}??]{t|]_&#34; !)nf}]-?/\){]]]_&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;_]]}}{\/?-][)vf?` &#39;!tX/}]--&lt;]{\Un[~~&lt;&lt;&lt;&lt;&lt;~~&lt;~-11Yz)&lt;--?[{vv[&#34;. .&lt;{xJt}]?!ibm0%&amp;Ci&gt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;!0kJW%w&#43;:-?[{uu)}, !1fLf}]_::xmqQj[&#34;I~&lt;&lt;&lt;&lt;&lt;&lt;&gt;&#34;(ZqOu{I^&lt;?[{cc)[` `}|x\}]_&#43;&lt;!&lt;&#43;~&lt;&lt;__~&lt;&lt;&lt;&lt;&lt;&lt;&#43;_&lt;&lt;_&#43;&lt;&gt;&lt;&#43;&#43;-[1j/(&gt; !\j/{]-&#43;&#43;___--_&#43;~~&lt;i;I&gt;~~~__-______?}(jf}` ;~(|}?_&#43;&#43;&#43;&#43;~~&#43;&#43;~&#43;]-&#43;&#43;]?&#43;&#43;&#43;~~~~&#43;&#43;&#43;-[1/]&gt;^ ;\([?__&#43;_-?]?-_-----__-]?-_&#43;&#43;&#43;-]{/]. l||}?__/rjffcCQQQQQLUxffjf}&#43;-]1\?&#39; ,[\)[?}}-__[/nzXXvj)?__]{??}((&gt;. .I[|(1{]_&#43;~~~&lt;~~&lt;&lt;&lt;~&#43;_[}1(1&#43;^ ,~{|\)}]_&#43;&#43;&#43;&#43;&#43;&#43;-?}1)1?!` .&#34;!_]{11))1{}]-&#43;i:&#39; .`^&#34;,&#34;^`&#39;. &#34;&#34;&#34;.decode()) def gen_prime(bit): while 1: P = getPrime(bit) if len(bin(P)) - 2 == bit: return P pq_bit = 512 offset = 16 P,Q = [gen_prime(pq_bit) for i in range(2)] N = P * Q gift = int(bin(P ^ (Q &gt;&gt; offset))[2&#43;offset:],2) pr(N) pr(gift) inpP = int(input()) if inpP !">
 <meta itemprop="datePublished" content="2023-08-24T07:54:16+00:00" />
 <meta itemprop="dateModified" content="2023-08-24T07:54:16+00:00" />
-<meta itemprop="wordCount" content="802">
+<meta itemprop="wordCount" content="807">
 
 
 
@@ -441,6 +441,13 @@ secret: 593139954445965775629933649154833313381992359825742842625025367126484537
 </code></pre></div><pre><code>[*] Process './task.py' stopped with exit code 0 (pid 55051)
 b&quot;b'wmctf{we1c0me_brOo0Oo!hope_y0u_h4v3_fun_iN_the_fTcmWWmcTf/}'\n&quot;
 </code></pre>
+<hr>
+<p>本文同步发布于</p>
+<ul>
+<li>知乎专栏/石头的安全料理屋：https://zhuanlan.zhihu.com/p/652111683</li>
+<li>微信公众号/石头的安全料理屋</li>
+<li>博客: <a href="https://ssst0n3.github.io/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/CTF/crypto/lattice/HNP/WMCTF-Qualifier-2023Cryptosignin-writeup.html">https://ssst0n3.github.io/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/CTF/crypto/lattice/HNP/WMCTF-Qualifier-2023Cryptosignin-writeup.html</a></li>
+</ul>
 
             </div>
         </article>
