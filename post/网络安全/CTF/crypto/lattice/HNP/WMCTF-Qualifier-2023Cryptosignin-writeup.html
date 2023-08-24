@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author"
+    content="">
+<meta name="description"
+    content="WMCTF-Qualifier-2023/Crypto/signin writeup 1. challenge Do you konw yeye5👴? Well well, let&amp;rsquo;s sgin in.
+https://cdn.jsdelivr.net/gh/dawnwhisper/img-bed/images/202308021949352.png
+Attachment:
+Chinese mainland: 链接: https://pan.baidu.com/s/1jXq_vjCSKGo7242JnndcTg?pwd=GAME 提取码: GAME
+Other regions: https://drive.google.com/file/d/1Sh31au3YD_VglAOlA5UObNT2-Fu5FtSc/view?usp=sharing
+Launch an instance
+task.py
+from Crypto.Util.number import * from random import randrange from secret import flag def pr(msg): print(msg) pr(br&amp;#34;&amp;#34;&amp;#34; ....&amp;#39;&amp;#39;&amp;#39;&amp;#39;&amp;#39;&amp;#39;.... .`&amp;#34;,:;;II;II;;;;:,&amp;#34;^&amp;#39;. &amp;#39;&amp;#34;IlllI;;;;;;;;;;;;;Il!!l;^. `l&amp;gt;&amp;lt;&amp;gt;!!!!!!!!iiiii!!!!!!!!i&amp;gt;&amp;lt;!&amp;#34;. &amp;#39;:&amp;gt;?]__&#43;&#43;~~~~~&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;~~&#43;__i&amp;#34;. .:i&#43;}{]?-__&#43;&#43;&#43;~~~~~~&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;~~~~~~&#43;_-?[\1_!^ .;&amp;lt;_}\{]-_&#43;&#43;~&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;~&#43;-?]\|]&#43;&amp;lt;^ .!-{t|[?-}(|((){_&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;_}1)))1}??]{t|]_&amp;#34; !)nf}]-?/\){]]]_&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;_]]}}{\/?-][)vf?` &amp;#39;!tX/}]--&amp;lt;]{\Un[~~&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;~~&amp;lt;~-11Yz)&amp;lt;--?[{vv[&amp;#34;. .&amp;lt;{xJt}]?!ibm0%&amp;amp;Ci&amp;gt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;!0kJW%w&#43;:-?[{uu)}, !1fLf}]_::xmqQj[&amp;#34;I~&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;gt;&amp;#34;(ZqOu{I^&amp;lt;?[{cc)[` `}|x\}]_&#43;&amp;lt;!&amp;lt;&#43;~&amp;lt;&amp;lt;__~&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&#43;_&amp;lt;&amp;lt;_&#43;&amp;lt;&amp;gt;&amp;lt;&#43;&#43;-[1j/(&amp;gt; !\j/{]-&#43;&#43;___--_&#43;~~&amp;lt;i;I&amp;gt;~~~__-______?}(jf}` ;~(|}?_&#43;&#43;&#43;&#43;~~&#43;&#43;~&#43;]-&#43;&#43;]?&#43;&#43;&#43;~~~~&#43;&#43;&#43;-[1/]&amp;gt;^ ;\([?__&#43;_-?]?-_-----__-]?-_&#43;&#43;&#43;-]{/]. l||}?__/rjffcCQQQQQLUxffjf}&#43;-]1\?&amp;#39; ,[\)[?}}-__[/nzXXvj)?__]{??}((&amp;gt;. .I[|(1{]_&#43;~~~&amp;lt;~~&amp;lt;&amp;lt;&amp;lt;~&#43;_[}1(1&#43;^ ,~{|\)}]_&#43;&#43;&#43;&#43;&#43;&#43;-?}1)1?!` .&amp;#34;!_]{11))1{}]-&#43;i:&amp;#39; .`^&amp;#34;,&amp;#34;^`&amp;#39;. &amp;#34;&amp;#34;&amp;#34;.decode()) def gen_prime(bit): while 1: P = getPrime(bit) if len(bin(P)) - 2 == bit: return P pq_bit = 512 offset = 16 P,Q = [gen_prime(pq_bit) for i in range(2)] N = P * Q gift = int(bin(P ^ (Q &amp;gt;&amp;gt; offset))[2&#43;offset:],2) pr(N) pr(gift) inpP = int(input()) if inpP !" />
+<meta name="keywords" content="" />
+<meta name="robots" content="noodp" />
+<link rel="canonical" href="/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/CTF/crypto/lattice/HNP/WMCTF-Qualifier-2023Cryptosignin-writeup.html" />
+
+
+<title>
+    
+    WMCTF-Qualifier-2023/Crypto/signin writeup :: welcome to st0n3&#39;s blog 
+    
+</title>
+
+
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.2.1/css/flag-icon.min.css" rel="stylesheet"
+    type="text/css">
+
+
+
+<link rel="stylesheet" href="/main.min.de959d61dd13c2cd41136acd491ffb0749779e1afe37b1fed6d5cba0b7e1938d.css">
+
+
+
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#252627">
+<link rel="shortcut icon" href="/favicon.ico">
+<meta name="theme-color" content="#252627"><meta itemprop="name" content="WMCTF-Qualifier-2023/Crypto/signin writeup">
+<meta itemprop="description" content="WMCTF-Qualifier-2023/Crypto/signin writeup 1. challenge Do you konw yeye5👴? Well well, let&rsquo;s sgin in.
+https://cdn.jsdelivr.net/gh/dawnwhisper/img-bed/images/202308021949352.png
+Attachment:
+Chinese mainland: 链接: https://pan.baidu.com/s/1jXq_vjCSKGo7242JnndcTg?pwd=GAME 提取码: GAME
+Other regions: https://drive.google.com/file/d/1Sh31au3YD_VglAOlA5UObNT2-Fu5FtSc/view?usp=sharing
+Launch an instance
+task.py
+from Crypto.Util.number import * from random import randrange from secret import flag def pr(msg): print(msg) pr(br&#34;&#34;&#34; ....&#39;&#39;&#39;&#39;&#39;&#39;.... .`&#34;,:;;II;II;;;;:,&#34;^&#39;. &#39;&#34;IlllI;;;;;;;;;;;;;Il!!l;^. `l&gt;&lt;&gt;!!!!!!!!iiiii!!!!!!!!i&gt;&lt;!&#34;. &#39;:&gt;?]__&#43;&#43;~~~~~&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;~~&#43;__i&#34;. .:i&#43;}{]?-__&#43;&#43;&#43;~~~~~~&lt;&lt;&lt;&lt;&lt;~~~~~~&#43;_-?[\1_!^ .;&lt;_}\{]-_&#43;&#43;~&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;~&#43;-?]\|]&#43;&lt;^ .!-{t|[?-}(|((){_&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;_}1)))1}??]{t|]_&#34; !)nf}]-?/\){]]]_&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;_]]}}{\/?-][)vf?` &#39;!tX/}]--&lt;]{\Un[~~&lt;&lt;&lt;&lt;&lt;~~&lt;~-11Yz)&lt;--?[{vv[&#34;. .&lt;{xJt}]?!ibm0%&amp;Ci&gt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;!0kJW%w&#43;:-?[{uu)}, !1fLf}]_::xmqQj[&#34;I~&lt;&lt;&lt;&lt;&lt;&lt;&gt;&#34;(ZqOu{I^&lt;?[{cc)[` `}|x\}]_&#43;&lt;!&lt;&#43;~&lt;&lt;__~&lt;&lt;&lt;&lt;&lt;&lt;&#43;_&lt;&lt;_&#43;&lt;&gt;&lt;&#43;&#43;-[1j/(&gt; !\j/{]-&#43;&#43;___--_&#43;~~&lt;i;I&gt;~~~__-______?}(jf}` ;~(|}?_&#43;&#43;&#43;&#43;~~&#43;&#43;~&#43;]-&#43;&#43;]?&#43;&#43;&#43;~~~~&#43;&#43;&#43;-[1/]&gt;^ ;\([?__&#43;_-?]?-_-----__-]?-_&#43;&#43;&#43;-]{/]. l||}?__/rjffcCQQQQQLUxffjf}&#43;-]1\?&#39; ,[\)[?}}-__[/nzXXvj)?__]{??}((&gt;. .I[|(1{]_&#43;~~~&lt;~~&lt;&lt;&lt;~&#43;_[}1(1&#43;^ ,~{|\)}]_&#43;&#43;&#43;&#43;&#43;&#43;-?}1)1?!` .&#34;!_]{11))1{}]-&#43;i:&#39; .`^&#34;,&#34;^`&#39;. &#34;&#34;&#34;.decode()) def gen_prime(bit): while 1: P = getPrime(bit) if len(bin(P)) - 2 == bit: return P pq_bit = 512 offset = 16 P,Q = [gen_prime(pq_bit) for i in range(2)] N = P * Q gift = int(bin(P ^ (Q &gt;&gt; offset))[2&#43;offset:],2) pr(N) pr(gift) inpP = int(input()) if inpP !">
+<meta itemprop="datePublished" content="2023-08-24T07:54:16+00:00" />
+<meta itemprop="dateModified" content="2023-08-24T07:54:16+00:00" />
+<meta itemprop="wordCount" content="802">
+
+
+
+<meta itemprop="keywords" content="" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="WMCTF-Qualifier-2023/Crypto/signin writeup"/>
+<meta name="twitter:description" content="WMCTF-Qualifier-2023/Crypto/signin writeup 1. challenge Do you konw yeye5👴? Well well, let&rsquo;s sgin in.
+https://cdn.jsdelivr.net/gh/dawnwhisper/img-bed/images/202308021949352.png
+Attachment:
+Chinese mainland: 链接: https://pan.baidu.com/s/1jXq_vjCSKGo7242JnndcTg?pwd=GAME 提取码: GAME
+Other regions: https://drive.google.com/file/d/1Sh31au3YD_VglAOlA5UObNT2-Fu5FtSc/view?usp=sharing
+Launch an instance
+task.py
+from Crypto.Util.number import * from random import randrange from secret import flag def pr(msg): print(msg) pr(br&#34;&#34;&#34; ....&#39;&#39;&#39;&#39;&#39;&#39;.... .`&#34;,:;;II;II;;;;:,&#34;^&#39;. &#39;&#34;IlllI;;;;;;;;;;;;;Il!!l;^. `l&gt;&lt;&gt;!!!!!!!!iiiii!!!!!!!!i&gt;&lt;!&#34;. &#39;:&gt;?]__&#43;&#43;~~~~~&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;~~&#43;__i&#34;. .:i&#43;}{]?-__&#43;&#43;&#43;~~~~~~&lt;&lt;&lt;&lt;&lt;~~~~~~&#43;_-?[\1_!^ .;&lt;_}\{]-_&#43;&#43;~&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;~&#43;-?]\|]&#43;&lt;^ .!-{t|[?-}(|((){_&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;_}1)))1}??]{t|]_&#34; !)nf}]-?/\){]]]_&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;_]]}}{\/?-][)vf?` &#39;!tX/}]--&lt;]{\Un[~~&lt;&lt;&lt;&lt;&lt;~~&lt;~-11Yz)&lt;--?[{vv[&#34;. .&lt;{xJt}]?!ibm0%&amp;Ci&gt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;!0kJW%w&#43;:-?[{uu)}, !1fLf}]_::xmqQj[&#34;I~&lt;&lt;&lt;&lt;&lt;&lt;&gt;&#34;(ZqOu{I^&lt;?[{cc)[` `}|x\}]_&#43;&lt;!&lt;&#43;~&lt;&lt;__~&lt;&lt;&lt;&lt;&lt;&lt;&#43;_&lt;&lt;_&#43;&lt;&gt;&lt;&#43;&#43;-[1j/(&gt; !\j/{]-&#43;&#43;___--_&#43;~~&lt;i;I&gt;~~~__-______?}(jf}` ;~(|}?_&#43;&#43;&#43;&#43;~~&#43;&#43;~&#43;]-&#43;&#43;]?&#43;&#43;&#43;~~~~&#43;&#43;&#43;-[1/]&gt;^ ;\([?__&#43;_-?]?-_-----__-]?-_&#43;&#43;&#43;-]{/]. l||}?__/rjffcCQQQQQLUxffjf}&#43;-]1\?&#39; ,[\)[?}}-__[/nzXXvj)?__]{??}((&gt;. .I[|(1{]_&#43;~~~&lt;~~&lt;&lt;&lt;~&#43;_[}1(1&#43;^ ,~{|\)}]_&#43;&#43;&#43;&#43;&#43;&#43;-?}1)1?!` .&#34;!_]{11))1{}]-&#43;i:&#39; .`^&#34;,&#34;^`&#39;. &#34;&#34;&#34;.decode()) def gen_prime(bit): while 1: P = getPrime(bit) if len(bin(P)) - 2 == bit: return P pq_bit = 512 offset = 16 P,Q = [gen_prime(pq_bit) for i in range(2)] N = P * Q gift = int(bin(P ^ (Q &gt;&gt; offset))[2&#43;offset:],2) pr(N) pr(gift) inpP = int(input()) if inpP !"/>
+
+
+
+
+<meta property="article:published_time" content="2023-08-24 07:54:16 &#43;0000 UTC" />
+
+
+
+
+
+
+
+    </head>
+
+    <body class="dark-theme">
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text">$ cd /home/st0n3</span>
+            <span class="logo__cursor"></span>
+        
+    </div>
+</a>
+
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="/aboutme.html">About</a></li><li><a href="/post.html">Blog</a></li><li><a href="/hackerbot">Hackerbot</a></li><li><a href="/skill_tree/">SkillTree</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+
+            <span class="theme-toggle"><svg class="theme-toggler" width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M22 41C32.4934 41 41 32.4934 41 22C41 11.5066 32.4934 3 22
+  3C11.5066 3 3 11.5066 3 22C3 32.4934 11.5066 41 22 41ZM7 22C7
+  13.7157 13.7157 7 22 7V37C13.7157 37 7 30.2843 7 22Z"/>
+</svg>
+</span>
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
+                
+    <main class="post">
+
+        <div class="post-info">
+            
+            </p>
+        </div>
+
+        <article>
+            <h2 class="post-title"><a href="/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/CTF/crypto/lattice/HNP/WMCTF-Qualifier-2023Cryptosignin-writeup.html">WMCTF-Qualifier-2023/Crypto/signin writeup</a></h2>
+
+            
+
+            <div class="post-content">
+                <h1 id="wmctf-qualifier-2023cryptosignin-writeup">WMCTF-Qualifier-2023/Crypto/signin writeup</h1>
+<h2 id="1-challenge">1. challenge</h2>
+<p>Do you konw yeye5👴? Well well, let&rsquo;s sgin in.</p>
+<p><a href="https://cdn.jsdelivr.net/gh/dawnwhisper/img-bed/images/202308021949352.png">https://cdn.jsdelivr.net/gh/dawnwhisper/img-bed/images/202308021949352.png</a></p>
+<p>Attachment:</p>
+<p>Chinese mainland:
+链接: <a href="https://pan.baidu.com/s/1jXq_vjCSKGo7242JnndcTg?pwd=GAME">https://pan.baidu.com/s/1jXq_vjCSKGo7242JnndcTg?pwd=GAME</a> 提取码: GAME</p>
+<p>Other regions:
+<a href="https://drive.google.com/file/d/1Sh31au3YD_VglAOlA5UObNT2-Fu5FtSc/view?usp=sharing">https://drive.google.com/file/d/1Sh31au3YD_VglAOlA5UObNT2-Fu5FtSc/view?usp=sharing</a></p>
+<p><code>Launch an instance</code></p>
+<p>task.py</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> Crypto.Util.number <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
+<span style="color:#f92672">from</span> random <span style="color:#f92672">import</span> randrange
+<span style="color:#f92672">from</span> secret <span style="color:#f92672">import</span> flag
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">pr</span>(msg):
+    <span style="color:#66d9ef">print</span>(msg)
+
+pr(<span style="color:#e6db74">br</span><span style="color:#e6db74">&#34;&#34;&#34;
+</span><span style="color:#e6db74">                        ....&#39;&#39;&#39;&#39;&#39;&#39;....                        
+</span><span style="color:#e6db74">                     .`&#34;,:;;II;II;;;;:,&#34;^&#39;.                    
+</span><span style="color:#e6db74">                  &#39;&#34;IlllI;;;;;;;;;;;;;Il!!l;^.                 
+</span><span style="color:#e6db74">                `l&gt;&lt;&gt;!!!!!!!!iiiii!!!!!!!!i&gt;&lt;!&#34;.               
+</span><span style="color:#e6db74">             &#39;:&gt;?]__++~~~~~&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;~~+__i&#34;.            
+</span><span style="color:#e6db74">           .:i+}{]?-__+++~~~~~~&lt;&lt;&lt;&lt;&lt;~~~~~~+_-?[\1_!^           
+</span><span style="color:#e6db74">          .;&lt;_}\{]-_++~&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;~+-?]\|]+&lt;^          
+</span><span style="color:#e6db74">          .!-{t|[?-}(|((){_&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;_}1)))1}??]{t|]_&#34;          
+</span><span style="color:#e6db74">           !)nf}]-?/\){]]]_&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;_]]}}{\/?-][)vf?`          
+</span><span style="color:#e6db74">          &#39;!tX/}]--&lt;]{\Un[~~&lt;&lt;&lt;&lt;&lt;~~&lt;~-11Yz)&lt;--?[{vv[&#34;.         
+</span><span style="color:#e6db74">         .&lt;{xJt}]?!ibm0%&amp;Ci&gt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;!0kJW%w+:-?[{uu)},         
+</span><span style="color:#e6db74">          !1fLf}]_::xmqQj[&#34;I~&lt;&lt;&lt;&lt;&lt;&lt;&gt;&#34;(ZqOu{I^&lt;?[{cc)[`         
+</span><span style="color:#e6db74">          `}|x\}]_+&lt;!&lt;+~&lt;&lt;__~&lt;&lt;&lt;&lt;&lt;&lt;+_&lt;&lt;_+&lt;&gt;&lt;++-[1j/(&gt;          
+</span><span style="color:#e6db74">           !\j/{]-++___--_+~~&lt;i;I&gt;~~~__-______?}(jf}`          
+</span><span style="color:#e6db74">            ;~(|}?_++++~~++~+]-++]?+++~~~~+++-[1/]&gt;^           
+</span><span style="color:#e6db74">              ;\([?__+_-?]?-_-----__-]?-_+++-]{/].             
+</span><span style="color:#e6db74">               l||}?__/rjffcCQQQQQLUxffjf}+-]1\?&#39;              
+</span><span style="color:#e6db74">                ,[\)[?}}-__[/nzXXvj)?__]{??}((&gt;.               
+</span><span style="color:#e6db74">                 .I[|(1{]_+~~~&lt;~~&lt;&lt;&lt;~+_[}1(1+^                 
+</span><span style="color:#e6db74">                    ,~{|\)}]_++++++-?}1)1?!`                   
+</span><span style="color:#e6db74">                      .&#34;!_]{11))1{}]-+i:&#39;                      
+</span><span style="color:#e6db74">                          .`^&#34;,&#34;^`&#39;.                           
+</span><span style="color:#e6db74">&#34;&#34;&#34;</span><span style="color:#f92672">.</span>decode())
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">gen_prime</span>(bit):
+    <span style="color:#66d9ef">while</span> <span style="color:#ae81ff">1</span>:
+        P <span style="color:#f92672">=</span> getPrime(bit)
+        <span style="color:#66d9ef">if</span> len(bin(P)) <span style="color:#f92672">-</span> <span style="color:#ae81ff">2</span> <span style="color:#f92672">==</span> bit:
+            <span style="color:#66d9ef">return</span> P
+
+pq_bit <span style="color:#f92672">=</span> <span style="color:#ae81ff">512</span>
+offset <span style="color:#f92672">=</span> <span style="color:#ae81ff">16</span>
+
+P,Q <span style="color:#f92672">=</span> [gen_prime(pq_bit) <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">2</span>)]
+N <span style="color:#f92672">=</span> P <span style="color:#f92672">*</span> Q
+gift <span style="color:#f92672">=</span> int(bin(P <span style="color:#f92672">^</span> (Q <span style="color:#f92672">&gt;&gt;</span> offset))[<span style="color:#ae81ff">2</span><span style="color:#f92672">+</span>offset:],<span style="color:#ae81ff">2</span>)
+pr(N)
+pr(gift)
+
+inpP <span style="color:#f92672">=</span> int(input())
+<span style="color:#66d9ef">if</span> inpP <span style="color:#f92672">!=</span> P:
+    pr(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;you lose!&#34;</span>)
+    exit()
+
+secret <span style="color:#f92672">=</span> randrange(<span style="color:#ae81ff">0</span>,P)
+bs <span style="color:#f92672">=</span> [randrange(<span style="color:#ae81ff">0</span>,P) <span style="color:#66d9ef">for</span> _ <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">38</span>)]
+
+results <span style="color:#f92672">=</span> [(bi <span style="color:#f92672">*</span> secret) <span style="color:#f92672">%</span> P <span style="color:#66d9ef">for</span> bi <span style="color:#f92672">in</span> bs]
+rs <span style="color:#f92672">=</span> [ri <span style="color:#f92672">&amp;</span> (<span style="color:#ae81ff">2</span> <span style="color:#f92672">**</span> offset <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>)  <span style="color:#66d9ef">for</span> ri <span style="color:#f92672">in</span> results]
+
+pr(bs)
+pr(rs)
+inpsecret <span style="color:#f92672">=</span> int(input())
+<span style="color:#66d9ef">if</span> inpsecret <span style="color:#f92672">==</span> secret:
+    pr(flag)
+</code></pre></div><h2 id="2-分析">2. 分析</h2>
+<p>题目有两个关卡</p>
+<ol>
+<li>根据 $N=pq, p\oplus q$ 分解N</li>
+<li>由低16位信息的38组方程求解随机数secret</li>
+</ol>
+<p>io</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> pwn <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
+
+context<span style="color:#f92672">.</span>log_level <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;info&#39;</span>
+
+r <span style="color:#f92672">=</span> None
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">init_connect</span>():
+    <span style="color:#66d9ef">global</span> r
+    <span style="color:#66d9ef">if</span> r <span style="color:#f92672">is</span> <span style="color:#f92672">not</span> None:
+        r<span style="color:#f92672">.</span>close()
+    r <span style="color:#f92672">=</span> process(<span style="color:#e6db74">&#34;./task.py&#34;</span>)
+    <span style="color:#75715e"># r = remote(&#34;1.13.101.243&#34;,28632)</span>
+    
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">stage1_params</span>():
+    <span style="color:#66d9ef">global</span> r
+    init_connect()
+    r<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;&#39;&#39;.`^&#34;,&#34;^`&#39;.&#39;&#39;&#39;</span>)
+    r<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#39;</span>)
+    r<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#39;</span>)
+    N <span style="color:#f92672">=</span> int(r<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#39;</span>)<span style="color:#f92672">.</span>strip())
+    gift <span style="color:#f92672">=</span> int(r<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#39;</span>)<span style="color:#f92672">.</span>strip())
+    <span style="color:#66d9ef">print</span>(<span style="color:#e6db74">&#34;N:&#34;</span>, N)
+    <span style="color:#66d9ef">print</span>(<span style="color:#e6db74">&#34;gift:&#34;</span>, gift)
+    <span style="color:#66d9ef">return</span> N, gift
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">stage1_answer</span>(p):
+    r<span style="color:#f92672">.</span>sendline(str(p)<span style="color:#f92672">.</span>encode())
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">stage2_params</span>():
+    r<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;[&#34;</span>)
+    bs <span style="color:#f92672">=</span> [int(b<span style="color:#f92672">.</span>strip()) <span style="color:#66d9ef">for</span> b <span style="color:#f92672">in</span> r<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;]&#34;</span>)<span style="color:#f92672">.</span>strip(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;]&#34;</span>)<span style="color:#f92672">.</span>split(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;,&#34;</span>)]
+    r<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;[&#34;</span>)
+    rs <span style="color:#f92672">=</span> [int(b<span style="color:#f92672">.</span>strip()) <span style="color:#66d9ef">for</span> b <span style="color:#f92672">in</span> r<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;]&#34;</span>)<span style="color:#f92672">.</span>strip(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;]&#34;</span>)<span style="color:#f92672">.</span>split(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;,&#34;</span>)]
+    r<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#39;</span>)
+    <span style="color:#66d9ef">return</span> bs, rs
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">stage2_answer</span>(secret):
+    r<span style="color:#f92672">.</span>sendline(str(secret)<span style="color:#f92672">.</span>encode())
+    <span style="color:#66d9ef">print</span>(r<span style="color:#f92672">.</span>recvline())
+</code></pre></div><h3 id="21-关卡一二分法">2.1 关卡一：二分法</h3>
+<p>因为异或是按位运算，因此适合使用二分法逐位还原p, q</p>
+<p>对 $n=pq, g=p\oplus q$ , 记 $p_k \equiv p \pmod {2^{k}}$ , 有：</p>
+<p>$$
+\begin{align*}
+&amp; n_k \equiv p_kq_k \pmod {2^k} \<br>
+&amp; p_k = g_k \oplus q_k
+\end{align*}
+$$</p>
+<p>考虑 k+1 :</p>
+<p>$$
+\begin{align*}
+&amp; q_{k+1} = {q_k, 2^k+q_k} \tag a \<br>
+&amp; p_{k+1} = g_{k+1} \oplus q_{k+1} \<br>
+&amp; n_{k+1} \equiv p_{k+1}q_{k+1} \pmod {2^{k+1}} \tag b
+\end{align*}
+$$</p>
+<p>每次遍历k, 可以使用(a)式猜测 $q_{k+1}$ ,使用 (b) 式验证猜测结果， 猜测的两个 $q_{k+1}$ 中至少有一个值是正确的。</p>
+<p>可能有很多组解满足 $p_{512}q_{512}=n_{512}$ ,再使用 n=pq 找到其中的正确解。</p>
+<p>本题与上述问题有所区别，q只有高位参与了异或，低位是未知的。</p>
+<p>$n=pq, qh = q&raquo;offset, g=p\oplus qh $</p>
+<p>可以先爆破q的低位 ql 后，再使用(a)式猜测 $qh_{k+1}$</p>
+<p>$p_{k+1} = g_{k+1} \oplus qh_{k+1}$</p>
+<p>使用 (b) 式验证猜测结果：</p>
+<ul>
+<li>2个猜测值都错误，则说明 ql 错误， 重新爆破 ql</li>
+<li>1个正确结果，则继续迭代</li>
+</ul>
+<p>与上个问题不同的是，这里很难出现2个猜测值都符合的情况, 因为每一轮q参与乘法运算的bit都是确定的。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">import</span> tqdm.notebook <span style="color:#f92672">as</span> tqdm
+<span style="color:#f92672">from</span> tqdm <span style="color:#f92672">import</span> trange
+
+bit <span style="color:#f92672">=</span> <span style="color:#ae81ff">512</span>
+offset <span style="color:#f92672">=</span> <span style="color:#ae81ff">16</span>
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">stage1_binary_search</span>(N, gift):
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">check</span>(q, k):
+        qh <span style="color:#f92672">=</span> q <span style="color:#f92672">&gt;&gt;</span> offset
+        p <span style="color:#f92672">=</span> (gift <span style="color:#f92672">&amp;</span> (<span style="color:#ae81ff">2</span><span style="color:#f92672">^</span>k<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>)) <span style="color:#f92672">^^</span> qh
+        <span style="color:#66d9ef">return</span>  (p <span style="color:#f92672">*</span> q <span style="color:#f92672">-</span> N) <span style="color:#f92672">%</span> <span style="color:#ae81ff">2</span><span style="color:#f92672">^</span>k <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>
+
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">binary_search</span>(ql):
+        q <span style="color:#f92672">=</span> ql
+        <span style="color:#66d9ef">for</span> k <span style="color:#f92672">in</span> range(bit<span style="color:#f92672">-</span>offset):
+            <span style="color:#75715e"># q_{k+1} = q_k</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">not</span> check(q, k<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>):
+                <span style="color:#75715e"># q_{k+1} = q_k + 2^k</span>
+                q <span style="color:#f92672">=</span> q <span style="color:#f92672">+</span> <span style="color:#ae81ff">2</span><span style="color:#f92672">^</span>(k<span style="color:#f92672">+</span>offset)
+                <span style="color:#66d9ef">if</span> <span style="color:#f92672">not</span> check(q, k<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>):
+                    <span style="color:#66d9ef">return</span> False
+        <span style="color:#66d9ef">if</span> N <span style="color:#f92672">%</span> q <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>:
+            <span style="color:#66d9ef">print</span>(<span style="color:#e6db74">&#34;found&#34;</span>)
+            <span style="color:#66d9ef">return</span> q
+    
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">solve</span>():
+        box <span style="color:#f92672">=</span> []
+        ql <span style="color:#f92672">=</span> <span style="color:#ae81ff">2</span>
+        <span style="color:#66d9ef">while</span> ql<span style="color:#f92672">.</span>nbits() <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">16</span>:
+            box<span style="color:#f92672">.</span>append(ql)
+            ql <span style="color:#f92672">=</span> ql<span style="color:#f92672">.</span>next_prime()
+        box <span style="color:#f92672">+=</span> list(set(range(<span style="color:#ae81ff">3</span>,<span style="color:#ae81ff">2</span><span style="color:#f92672">^</span><span style="color:#ae81ff">16</span>,<span style="color:#ae81ff">2</span>)) <span style="color:#f92672">-</span> set(box))
+        <span style="color:#66d9ef">for</span> ql <span style="color:#f92672">in</span> tqdm<span style="color:#f92672">.</span>tqdm(box):
+            q <span style="color:#f92672">=</span> binary_search(ql)
+            <span style="color:#66d9ef">if</span> q:
+                <span style="color:#66d9ef">return</span> q
+
+    q <span style="color:#f92672">=</span> solve()
+    <span style="color:#66d9ef">assert</span> N <span style="color:#f92672">%</span> q <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>
+    p <span style="color:#f92672">=</span> N <span style="color:#f92672">//</span> q
+    <span style="color:#66d9ef">return</span> p
+
+N, gift <span style="color:#f92672">=</span> stage1_params()
+p <span style="color:#f92672">=</span> stage1_binary_search(N, gift)
+<span style="color:#66d9ef">print</span>(<span style="color:#e6db74">&#34;p:&#34;</span>, p)
+stage1_answer(p)
+</code></pre></div><pre><code>[x] Starting local process './task.py'
+[+] Starting local process './task.py': pid 55051
+N: 85466391071560677583277742717968645951511645922872920607564176037214309947198243031165275109633145830930220070328946480625646663925154505046164485944739528307309057874379030015550902797420066810340564664064567908301924007777226490133305272574205098914748291118432703918087250186637794239498083517328838030731
+gift: 114371674224937117546758740929491825252031792599478421554638003622100939710944314827794073546199643845005875603218842206638455651272159928720456782859
+
+
+
+  0%|          | 0/32768 [00:00&lt;?, ?it/s]
+
+
+found
+p: 7570195739207543486406092314807897901568024503999628297779590606687320365025533817418641336805189316623080866597420860796827231795172847315383158330644079
+</code></pre>
+<h3 id="22-关卡二格-hnp">2.2 关卡二：格 HNP</h3>
+<p>有同余式</p>
+<p>$$
+\begin{align*}
+&amp;r_i \equiv b_i * secret \pmod p \<br>
+&amp;r_i \equiv rs_i \pmod {2^{16}} \<br>
+\Rightarrow&amp; \<br>
+&amp;rh_i * 2^{16} + rl_i \equiv b_i * secret \pmod p\<br>
+\Rightarrow&amp; \<br>
+&amp;\underbrace{rh_i}_{? ~~ 496bit} * 2^{16} + rl_i = b_i * \underbrace{secret}_{?~~512bit} + \underbrace{k_i}_{?~~512bit}p
+\end{align*}
+$$</p>
+<p>方程组中 $rh_i$ 是较小值， 但每个方程的 $rh_i, k_i$ 都不相同，变量过多难以同时规约。</p>
+<p>考虑将 $rh_i$ 单独放在等式左边，格基规约时 $rh_i$ 直接位于结果矩阵中 ，这样格中就只有 $k_i$ 在每个方程中不同了。</p>
+<p>$$
+\begin{align*}
+&amp;rh_i * 2^{16} + rl_i \equiv b_i * secret \pmod p\<br>
+\Rightarrow&amp;\<br>
+&amp;rh_i \equiv 2^{-16}*(b_i * secret - rl_i) \pmod p\<br>
+\Rightarrow&amp;\<br>
+&amp;rh_i = k_ip + 2^{-16}*(b_i * secret - rl_i)\<br>
+\end{align*}
+$$</p>
+<p>$$
+\begin{align*}
+&amp;AL \<br>
+=&amp;[k_1, \dots, k_n, secret, 1]
+\begin{bmatrix}
+p&amp; \<br>
+&amp;\ddots\<br>
+&amp;&amp;p\<br>
+b_12^{-16}&amp;\cdots &amp;b_n2^{-16}&amp;1 \<br>
+-rs_12^{-16}&amp;\cdots &amp;-rs_n2^{-16}&amp;&amp;1 \<br>
+\end{bmatrix}\<br>
+=&amp;[rh_1, \cdots, rh_n, secret, 1]
+\end{align*}
+$$</p>
+<p>运气好的话, <code>secret</code> 可以直接求出来。</p>
+<p>一般情况，应以求 $rh_i$ 为目标， 然后再还原secret。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">bs, rs <span style="color:#f92672">=</span> stage2_params()
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">c <span style="color:#f92672">=</span>  Integer(pow(<span style="color:#ae81ff">2</span>, <span style="color:#f92672">-</span><span style="color:#ae81ff">16</span>, p))
+
+M <span style="color:#f92672">=</span> block_matrix([
+    [
+        identity_matrix(<span style="color:#ae81ff">38</span>) <span style="color:#f92672">*</span> p, <span style="color:#ae81ff">0</span>
+    ],
+    [
+        matrix([
+            [c<span style="color:#f92672">*</span>bi <span style="color:#66d9ef">for</span> bi <span style="color:#f92672">in</span> bs],
+            [<span style="color:#f92672">-</span>c<span style="color:#f92672">*</span>ri <span style="color:#66d9ef">for</span> ri <span style="color:#f92672">in</span> rs]
+        ]), <span style="color:#ae81ff">1</span>
+    ]
+])
+bound <span style="color:#f92672">=</span> <span style="color:#ae81ff">2</span><span style="color:#f92672">^</span>(<span style="color:#ae81ff">512</span><span style="color:#f92672">-</span><span style="color:#ae81ff">16</span>)
+bounds <span style="color:#f92672">=</span> [bound]<span style="color:#f92672">*</span><span style="color:#ae81ff">38</span> <span style="color:#f92672">+</span> [<span style="color:#ae81ff">2</span><span style="color:#f92672">^</span><span style="color:#ae81ff">512</span>, <span style="color:#ae81ff">1</span>]
+Q <span style="color:#f92672">=</span> diagonal_matrix(<span style="color:#ae81ff">2</span><span style="color:#f92672">^</span><span style="color:#ae81ff">512</span> <span style="color:#f92672">//</span> b <span style="color:#66d9ef">for</span> b <span style="color:#f92672">in</span> bounds)
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">check_secret</span>(secret):
+    <span style="color:#66d9ef">for</span> bi, si <span style="color:#f92672">in</span> zip(bs, rs):
+        <span style="color:#66d9ef">if</span> bi<span style="color:#f92672">*</span>secret <span style="color:#f92672">%</span> p <span style="color:#f92672">%</span> <span style="color:#ae81ff">2</span><span style="color:#f92672">^</span><span style="color:#ae81ff">16</span> <span style="color:#f92672">!=</span> si:
+            <span style="color:#66d9ef">return</span> False
+    <span style="color:#66d9ef">return</span> True
+
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">calculate_secret_by_rh</span>(rh):    
+    rl <span style="color:#f92672">=</span> rs[<span style="color:#ae81ff">0</span>]
+    b <span style="color:#f92672">=</span> bs[<span style="color:#ae81ff">0</span>]
+    r <span style="color:#f92672">=</span> rh<span style="color:#f92672">*</span><span style="color:#ae81ff">2</span><span style="color:#f92672">^</span><span style="color:#ae81ff">16</span> <span style="color:#f92672">+</span> rl
+    s <span style="color:#f92672">=</span> r<span style="color:#f92672">*</span>inverse_mod(b, p)<span style="color:#f92672">%</span>p
+    <span style="color:#66d9ef">return</span> s    
+
+L <span style="color:#f92672">=</span> M<span style="color:#f92672">*</span>Q
+B <span style="color:#f92672">=</span> L<span style="color:#f92672">.</span>LLL()<span style="color:#f92672">/</span>Q
+<span style="color:#66d9ef">for</span> v <span style="color:#f92672">in</span> B:
+    indicator <span style="color:#f92672">=</span> v[<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>]
+    <span style="color:#66d9ef">if</span> abs(indicator)<span style="color:#f92672">==</span><span style="color:#ae81ff">1</span>:
+        <span style="color:#75715e"># take a chance</span>
+        s <span style="color:#f92672">=</span> abs(v[<span style="color:#f92672">-</span><span style="color:#ae81ff">2</span>])
+        <span style="color:#66d9ef">if</span> check_secret(s):
+            <span style="color:#66d9ef">print</span>(<span style="color:#e6db74">&#34;lucky&#34;</span>)
+            <span style="color:#66d9ef">break</span>
+        s <span style="color:#f92672">=</span> calculate_secret_by_rh(abs(v[<span style="color:#ae81ff">0</span>]))
+        <span style="color:#66d9ef">if</span> check_secret(s):
+            <span style="color:#66d9ef">print</span>(<span style="color:#e6db74">&#34;by rh&#34;</span>)
+            <span style="color:#66d9ef">break</span>
+
+<span style="color:#66d9ef">print</span>(<span style="color:#e6db74">&#34;secret:&#34;</span>, s)
+</code></pre></div><pre><code>by rh
+secret: 5931399544459657756299336491548333133819923598257428426250253671264845370029299810371919660641724170652491277235835827548316400005199590262547987436161115
+</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">stage2_answer(s)
+</code></pre></div><pre><code>[*] Process './task.py' stopped with exit code 0 (pid 55051)
+b&quot;b'wmctf{we1c0me_brOo0Oo!hope_y0u_h4v3_fun_iN_the_fTcmWWmcTf/}'\n&quot;
+</code></pre>
+
+            </div>
+        </article>
+
+        <hr />
+
+        <div class="post-info">
+  			</div>
+
+        
+    </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>&copy; 2023</span>
+            
+            <span></span>
+            <span> <a href="/posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a></span>
+        </div>
+    </div>
+    <div class="footer__inner">
+        <div class="footer__content">
+
+        </div>
+    </div>
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>Powered by <a href="http://gohugo.io">Hugo</a></span>
+            <span>Made with &#10084; by <a href="https://github.com/st0n3">st0n3</a></span>
+            <span>Based on <a href="https://github.com/rhazdon">rhazdon</a></span>
+        </div>
+    </div>
+
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      extensions: ["tex2jax.js"],
+      
+      jax: ["input/TeX", "output/CommonHTML"],
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+        displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+        processEscapes: true
+      },
+      "HTML-CSS": { fonts: ["TeX"] },
+      displayAlign: "left"
+    });
+  </script>
+
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_CHTML"></script>
+
+
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+
+<script type="text/javascript" src="/bundle.min.4c3fb12a087ceed4a52cb5d57068a9795c7069617a01ca70f788052ad66e1791779e6c72686e1dc0ca13dc03b0203204b6566bb0dd1ee80de2b7ff4d8fe53db2.js" integrity="sha512-TD&#43;xKgh87tSlLLXVcGipeVxwaWF6Acpw94gFKtZuF5F3nmxyaG4dwMoT3AOwIDIEtlZrsN0e6A3it/9Nj&#43;U9sg=="></script>
+
+
+
+    </body>
+</html>

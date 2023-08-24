@@ -6,7 +6,23 @@
     <description>Recent content in Post on welcome to st0n3&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 30 Jul 2023 09:39:48 +0000</lastBuildDate><atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 24 Aug 2023 07:54:16 +0000</lastBuildDate><atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>WMCTF-Qualifier-2023/Crypto/signin writeup</title>
+      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/CTF/crypto/lattice/HNP/WMCTF-Qualifier-2023Cryptosignin-writeup.html</link>
+      <pubDate>Thu, 24 Aug 2023 07:54:16 +0000</pubDate>
+      
+      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/CTF/crypto/lattice/HNP/WMCTF-Qualifier-2023Cryptosignin-writeup.html</guid>
+      <description>WMCTF-Qualifier-2023/Crypto/signin writeup 1. challenge Do you konw yeye5👴? Well well, let&amp;rsquo;s sgin in.
+https://cdn.jsdelivr.net/gh/dawnwhisper/img-bed/images/202308021949352.png
+Attachment:
+Chinese mainland: 链接: https://pan.baidu.com/s/1jXq_vjCSKGo7242JnndcTg?pwd=GAME 提取码: GAME
+Other regions: https://drive.google.com/file/d/1Sh31au3YD_VglAOlA5UObNT2-Fu5FtSc/view?usp=sharing
+Launch an instance
+task.py
+from Crypto.Util.number import * from random import randrange from secret import flag def pr(msg): print(msg) pr(br&amp;#34;&amp;#34;&amp;#34; ....&amp;#39;&amp;#39;&amp;#39;&amp;#39;&amp;#39;&amp;#39;.... .`&amp;#34;,:;;II;II;;;;:,&amp;#34;^&amp;#39;. &amp;#39;&amp;#34;IlllI;;;;;;;;;;;;;Il!!l;^. `l&amp;gt;&amp;lt;&amp;gt;!!!!!!!!iiiii!!!!!!!!i&amp;gt;&amp;lt;!&amp;#34;. &amp;#39;:&amp;gt;?]__++~~~~~&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;~~+__i&amp;#34;. .:i+}{]?-__+++~~~~~~&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;~~~~~~+_-?[\1_!^ .;&amp;lt;_}\{]-_++~&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;~+-?]\|]+&amp;lt;^ .!-{t|[?-}(|((){_&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;_}1)))1}??]{t|]_&amp;#34; !)nf}]-?/\){]]]_&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;_]]}}{\/?-][)vf?` &amp;#39;!tX/}]--&amp;lt;]{\Un[~~&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;~~&amp;lt;~-11Yz)&amp;lt;--?[{vv[&amp;#34;. .&amp;lt;{xJt}]?!ibm0%&amp;amp;Ci&amp;gt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;!0kJW%w+:-?[{uu)}, !1fLf}]_::xmqQj[&amp;#34;I~&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;gt;&amp;#34;(ZqOu{I^&amp;lt;?[{cc)[` `}|x\}]_+&amp;lt;!&amp;lt;+~&amp;lt;&amp;lt;__~&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;+_&amp;lt;&amp;lt;_+&amp;lt;&amp;gt;&amp;lt;++-[1j/(&amp;gt; !\j/{]-++___--_+~~&amp;lt;i;I&amp;gt;~~~__-______?}(jf}` ;~(|}?_++++~~++~+]-++]?+++~~~~+++-[1/]&amp;gt;^ ;\([?__+_-?]?-_-----__-]?-_+++-]{/]. l||}?__/rjffcCQQQQQLUxffjf}+-]1\?&amp;#39; ,[\)[?}}-__[/nzXXvj)?__]{??}((&amp;gt;. .I[|(1{]_+~~~&amp;lt;~~&amp;lt;&amp;lt;&amp;lt;~+_[}1(1+^ ,~{|\)}]_++++++-?}1)1?!` .&amp;#34;!_]{11))1{}]-+i:&amp;#39; .`^&amp;#34;,&amp;#34;^`&amp;#39;. &amp;#34;&amp;#34;&amp;#34;.decode()) def gen_prime(bit): while 1: P = getPrime(bit) if len(bin(P)) - 2 == bit: return P pq_bit = 512 offset = 16 P,Q = [gen_prime(pq_bit) for i in range(2)] N = P * Q gift = int(bin(P ^ (Q &amp;gt;&amp;gt; offset))[2+offset:],2) pr(N) pr(gift) inpP = int(input()) if inpP !</description>
+    </item>
+    
     <item>
       <title>*CTF-Qualifier-2023/Crypto/gcccd writeup</title>
       <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/CTF/crypto/%E6%95%B0%E8%AE%BA/GCD/CTF-Qualifier-2023Cryptogcccd-writeup.html</link>
