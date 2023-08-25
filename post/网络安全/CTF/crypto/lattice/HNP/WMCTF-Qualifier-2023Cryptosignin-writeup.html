@@ -54,7 +54,7 @@ task.py
 from Crypto.Util.number import * from random import randrange from secret import flag def pr(msg): print(msg) pr(br&#34;&#34;&#34; ....&#39;&#39;&#39;&#39;&#39;&#39;.... .`&#34;,:;;II;II;;;;:,&#34;^&#39;. &#39;&#34;IlllI;;;;;;;;;;;;;Il!!l;^. `l&gt;&lt;&gt;!!!!!!!!iiiii!!!!!!!!i&gt;&lt;!&#34;. &#39;:&gt;?]__&#43;&#43;~~~~~&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;~~&#43;__i&#34;. .:i&#43;}{]?-__&#43;&#43;&#43;~~~~~~&lt;&lt;&lt;&lt;&lt;~~~~~~&#43;_-?[\1_!^ .;&lt;_}\{]-_&#43;&#43;~&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;~&#43;-?]\|]&#43;&lt;^ .!-{t|[?-}(|((){_&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;_}1)))1}??]{t|]_&#34; !)nf}]-?/\){]]]_&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;_]]}}{\/?-][)vf?` &#39;!tX/}]--&lt;]{\Un[~~&lt;&lt;&lt;&lt;&lt;~~&lt;~-11Yz)&lt;--?[{vv[&#34;. .&lt;{xJt}]?!ibm0%&amp;Ci&gt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;!0kJW%w&#43;:-?[{uu)}, !1fLf}]_::xmqQj[&#34;I~&lt;&lt;&lt;&lt;&lt;&lt;&gt;&#34;(ZqOu{I^&lt;?[{cc)[` `}|x\}]_&#43;&lt;!&lt;&#43;~&lt;&lt;__~&lt;&lt;&lt;&lt;&lt;&lt;&#43;_&lt;&lt;_&#43;&lt;&gt;&lt;&#43;&#43;-[1j/(&gt; !\j/{]-&#43;&#43;___--_&#43;~~&lt;i;I&gt;~~~__-______?}(jf}` ;~(|}?_&#43;&#43;&#43;&#43;~~&#43;&#43;~&#43;]-&#43;&#43;]?&#43;&#43;&#43;~~~~&#43;&#43;&#43;-[1/]&gt;^ ;\([?__&#43;_-?]?-_-----__-]?-_&#43;&#43;&#43;-]{/]. l||}?__/rjffcCQQQQQLUxffjf}&#43;-]1\?&#39; ,[\)[?}}-__[/nzXXvj)?__]{??}((&gt;. .I[|(1{]_&#43;~~~&lt;~~&lt;&lt;&lt;~&#43;_[}1(1&#43;^ ,~{|\)}]_&#43;&#43;&#43;&#43;&#43;&#43;-?}1)1?!` .&#34;!_]{11))1{}]-&#43;i:&#39; .`^&#34;,&#34;^`&#39;. &#34;&#34;&#34;.decode()) def gen_prime(bit): while 1: P = getPrime(bit) if len(bin(P)) - 2 == bit: return P pq_bit = 512 offset = 16 P,Q = [gen_prime(pq_bit) for i in range(2)] N = P * Q gift = int(bin(P ^ (Q &gt;&gt; offset))[2&#43;offset:],2) pr(N) pr(gift) inpP = int(input()) if inpP !">
 <meta itemprop="datePublished" content="2023-08-24T07:54:16+00:00" />
 <meta itemprop="dateModified" content="2023-08-24T07:54:16+00:00" />
-<meta itemprop="wordCount" content="807">
+<meta itemprop="wordCount" content="812">
 
 
 
@@ -264,18 +264,18 @@ r <span style="color:#f92672">=</span> None
 <p>因为异或是按位运算，因此适合使用二分法逐位还原p, q</p>
 <p>对 $n=pq, g=p\oplus q$ , 记 $p_k \equiv p \pmod {2^{k}}$ , 有：</p>
 <p>$$
-\begin{align}
-&amp; n_k \equiv p_kq_k \pmod {2^k} \<br>
+\begin{align*}
+&amp; n_k \equiv p_kq_k \pmod {2^k} \newline
 &amp; p_k = g_k \oplus q_k
-\end{align}
+\end{align*}
 $$</p>
 <p>考虑 k+1 :</p>
 <p>$$
-\begin{align}
-&amp; q_{k+1} = {q_k, 2^k+q_k} \qquad (a) \<br>
-&amp; p_{k+1} = g_{k+1} \oplus q_{k+1} \<br>
+\begin{align*}
+&amp; q_{k+1} = {q_k, 2^k+q_k} \qquad (a) \newline
+&amp; p_{k+1} = g_{k+1} \oplus q_{k+1} \newline
 &amp; n_{k+1} \equiv p_{k+1}q_{k+1} \pmod {2^{k+1}} \qquad (b)
-\end{align}
+\end{align*}
 $$</p>
 <p>每次遍历k, 可以使用(a)式猜测 $q_{k+1}$ ,使用 (b) 式验证猜测结果， 猜测的两个 $q_{k+1}$ 中至少有一个值是正确的。</p>
 <p>可能有很多组解满足 $p_{512}q_{512}=n_{512}$ ,再使用 n=pq 找到其中的正确解。</p>
@@ -363,27 +363,27 @@ $$</p>
 <p>方程组中 $rh_i$ 是较小值， 但每个方程的 $rh_i, k_i$ 都不相同，变量过多难以同时规约。</p>
 <p>考虑将 $rh_i$ 单独放在等式左边，格基规约时 $rh_i$ 直接位于结果矩阵中 ，这样格中就只有 $k_i$ 在每个方程中不同了。</p>
 <p>$$
-\begin{align}
-&amp;rh_i * 2^{16} + rl_i \equiv b_i * secret \pmod p\<br>
-\Rightarrow&amp;\<br>
-&amp;rh_i \equiv 2^{-16}<em>(b_i * secret - rl_i) \pmod p\<br>
-\Rightarrow&amp;\<br>
-&amp;rh_i = k_ip + 2^{-16}</em>(b_i * secret - rl_i)\<br>
-\end{align}
+\begin{align*}
+&amp;rh_i * 2^{16} + rl_i \equiv b_i * secret \pmod p \newline
+\Rightarrow&amp; \newline
+&amp;rh_i \equiv 2^{-16}*(b_i * secret - rl_i) \pmod p \newline
+\Rightarrow&amp; \newline
+&amp;rh_i = k_ip + 2^{-16}*(b_i * secret - rl_i) \newline
+\end{align*}
 $$</p>
 <p>$$
-\begin{align}
-&amp;AL \<br>
+\begin{align*}
+&amp;AL \newline
 =&amp;[k_1, \dots, k_n, secret, 1]
 \begin{bmatrix}
-p&amp; \<br>
-&amp;\ddots\<br>
-&amp;&amp;p\<br>
-b_12^{-16}&amp;\cdots &amp;b_n2^{-16}&amp;1 \<br>
--rs_12^{-16}&amp;\cdots &amp;-rs_n2^{-16}&amp;&amp;1 \<br>
-\end{bmatrix}\<br>
+p&amp; \newline
+&amp;\ddots\newline
+&amp;&amp;p\newline
+b_12^{-16}&amp;\cdots &amp;b_n2^{-16}&amp;1 \newline
+-rs_12^{-16}&amp;\cdots &amp;-rs_n2^{-16}&amp;&amp;1 \newline
+\end{bmatrix}\newline
 =&amp;[rh_1, \cdots, rh_n, secret, 1]
-\end{align}
+\end{align*}
 $$</p>
 <p>运气好的话, <code>secret</code> 可以直接求出来。</p>
 <p>一般情况，应以求 $rh_i$ 为目标， 然后再还原secret。</p>
