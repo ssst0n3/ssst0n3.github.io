@@ -351,14 +351,14 @@ p: 75701957392075434864060923148078979015680245039996282977795906066873203650255
 <h3 id="22-关卡二格-hnp">2.2 关卡二：格 HNP</h3>
 <p>有同余式</p>
 <p>$$
-\begin{aligned}
+\begin{align*}
 &amp;r_i \equiv b_i * secret \pmod p \newline
 &amp;r_i \equiv rs_i \pmod {2^{16}} \newline
 \Rightarrow&amp; \newline
 &amp;rh_i * 2^{16} + rl_i \equiv b_i * secret \pmod p\newline
 \Rightarrow&amp; \newline
-&amp;\underbrace{rh_i}<em>{? ~~ 496bit} * 2^{16} + rl_i = b_i * \underbrace{secret}</em>{?~~512bit} + \underbrace{k_i}_{?~~512bit}p
-\end{aligned}
+&amp;\underbrace{rh_i}_{? ~~ 496bit} * 2^{16} + rl_i = b_i * \underbrace{secret}_{?~~512bit} + \underbrace{k_i}_{?~~512bit}p
+\end{align*}
 $$</p>
 <p>方程组中 $rh_i$ 是较小值， 但每个方程的 $rh_i, k_i$ 都不相同，变量过多难以同时规约。</p>
 <p>考虑将 $rh_i$ 单独放在等式左边，格基规约时 $rh_i$ 直接位于结果矩阵中 ，这样格中就只有 $k_i$ 在每个方程中不同了。</p>
