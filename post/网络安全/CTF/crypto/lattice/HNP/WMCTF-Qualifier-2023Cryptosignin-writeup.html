@@ -352,11 +352,11 @@ p: 75701957392075434864060923148078979015680245039996282977795906066873203650255
 <p>有同余式</p>
 <p>$$
 \begin{aligned}
-&amp;r_i \equiv b_i * secret \pmod p \<br>
-&amp;r_i \equiv rs_i \pmod {2^{16}} \<br>
-\Rightarrow&amp; \<br>
-&amp;rh_i * 2^{16} + rl_i \equiv b_i * secret \pmod p\<br>
-\Rightarrow&amp; \<br>
+&amp;r_i \equiv b_i * secret \pmod p \newline
+&amp;r_i \equiv rs_i \pmod {2^{16}} \newline
+\Rightarrow&amp; \newline
+&amp;rh_i * 2^{16} + rl_i \equiv b_i * secret \pmod p\newline
+\Rightarrow&amp; \newline
 &amp;\underbrace{rh_i}<em>{? ~~ 496bit} * 2^{16} + rl_i = b_i * \underbrace{secret}</em>{?~~512bit} + \underbrace{k_i}_{?~~512bit}p
 \end{aligned}
 $$</p>
