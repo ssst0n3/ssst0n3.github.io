@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author"
+    content="">
+<meta name="description"
+    content="tags: crypto
+ 勘误：Boneh-1996： MSB 定义错误 最近在学习格相关知识的时候，读到 Boneh 和 Venkatesan 1996年的论文 &amp;lsquo;Hardness of computing the most significant bits of secret keys in Diffie-Hellman and related schemes&amp;rsquo;，这篇论文第一次提出了 HNP(Hidden Number Problem) 。
+其中提出的 $MSB_k(x)$ 函数的定义似乎有一些小问题。
+我找到了两个版本的论文, 内容基本一致：
+https://crypto.stanford.edu/~dabo/pubs/abstracts/dhmsb.html
+Let $p$ be a prime number and $n=\lceil \log p\rceil$ be its length in binary. We use $x\mod p$ to denote the unique interger a in the range $[0, p-1]$ satisfying $x \equiv a \pmod p$ ." />
+<meta name="keywords" content="" />
+<meta name="robots" content="noodp" />
+<link rel="canonical" href="/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%90%86%E8%AE%BA/%E5%AF%86%E7%A0%81%E5%AD%A6/LLL/%E5%8B%98%E8%AF%AFBoneh-1996-MSB-%E5%AE%9A%E4%B9%89%E9%94%99%E8%AF%AF.html" />
+
+
+<title>
+    
+    勘误：Boneh-1996： MSB 定义错误 :: welcome to st0n3&#39;s blog 
+    
+</title>
+
+
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.2.1/css/flag-icon.min.css" rel="stylesheet"
+    type="text/css">
+
+
+
+<link rel="stylesheet" href="/main.min.de959d61dd13c2cd41136acd491ffb0749779e1afe37b1fed6d5cba0b7e1938d.css">
+
+
+
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#252627">
+<link rel="shortcut icon" href="/favicon.ico">
+<meta name="theme-color" content="#252627"><meta itemprop="name" content="勘误：Boneh-1996： MSB 定义错误">
+<meta itemprop="description" content="tags: crypto
+ 勘误：Boneh-1996： MSB 定义错误 最近在学习格相关知识的时候，读到 Boneh 和 Venkatesan 1996年的论文 &lsquo;Hardness of computing the most significant bits of secret keys in Diffie-Hellman and related schemes&rsquo;，这篇论文第一次提出了 HNP(Hidden Number Problem) 。
+其中提出的 $MSB_k(x)$ 函数的定义似乎有一些小问题。
+我找到了两个版本的论文, 内容基本一致：
+https://crypto.stanford.edu/~dabo/pubs/abstracts/dhmsb.html
+Let $p$ be a prime number and $n=\lceil \log p\rceil$ be its length in binary. We use $x\mod p$ to denote the unique interger a in the range $[0, p-1]$ satisfying $x \equiv a \pmod p$ .">
+<meta itemprop="datePublished" content="2023-09-01T03:26:07+00:00" />
+<meta itemprop="dateModified" content="2023-09-01T03:26:07+00:00" />
+<meta itemprop="wordCount" content="264">
+
+
+
+<meta itemprop="keywords" content="" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="勘误：Boneh-1996： MSB 定义错误"/>
+<meta name="twitter:description" content="tags: crypto
+ 勘误：Boneh-1996： MSB 定义错误 最近在学习格相关知识的时候，读到 Boneh 和 Venkatesan 1996年的论文 &lsquo;Hardness of computing the most significant bits of secret keys in Diffie-Hellman and related schemes&rsquo;，这篇论文第一次提出了 HNP(Hidden Number Problem) 。
+其中提出的 $MSB_k(x)$ 函数的定义似乎有一些小问题。
+我找到了两个版本的论文, 内容基本一致：
+https://crypto.stanford.edu/~dabo/pubs/abstracts/dhmsb.html
+Let $p$ be a prime number and $n=\lceil \log p\rceil$ be its length in binary. We use $x\mod p$ to denote the unique interger a in the range $[0, p-1]$ satisfying $x \equiv a \pmod p$ ."/>
+
+
+
+
+<meta property="article:published_time" content="2023-09-01 03:26:07 &#43;0000 UTC" />
+
+
+
+
+
+
+
+    </head>
+
+    <body class="dark-theme">
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text">$ cd /home/st0n3</span>
+            <span class="logo__cursor"></span>
+        
+    </div>
+</a>
+
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="/aboutme.html">About</a></li><li><a href="/post.html">Blog</a></li><li><a href="/hackerbot">Hackerbot</a></li><li><a href="/skill_tree/">SkillTree</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+
+            <span class="theme-toggle"><svg class="theme-toggler" width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M22 41C32.4934 41 41 32.4934 41 22C41 11.5066 32.4934 3 22
+  3C11.5066 3 3 11.5066 3 22C3 32.4934 11.5066 41 22 41ZM7 22C7
+  13.7157 13.7157 7 22 7V37C13.7157 37 7 30.2843 7 22Z"/>
+</svg>
+</span>
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
+                
+    <main class="post">
+
+        <div class="post-info">
+            
+            </p>
+        </div>
+
+        <article>
+            <h2 class="post-title"><a href="/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%90%86%E8%AE%BA/%E5%AF%86%E7%A0%81%E5%AD%A6/LLL/%E5%8B%98%E8%AF%AFBoneh-1996-MSB-%E5%AE%9A%E4%B9%89%E9%94%99%E8%AF%AF.html">勘误：Boneh-1996： MSB 定义错误</a></h2>
+
+            
+
+            <div class="post-content">
+                <hr>
+<p>tags: crypto</p>
+<hr>
+<h1 id="勘误boneh-1996-msb-定义错误">勘误：Boneh-1996： MSB 定义错误</h1>
+<p>最近在学习格相关知识的时候，读到 Boneh 和 Venkatesan 1996年的论文
+&lsquo;Hardness of computing the most significant bits of secret keys in Diffie-Hellman and related schemes&rsquo;，这篇论文第一次提出了 HNP(Hidden Number Problem) 。</p>
+<p>其中提出的 $MSB_k(x)$ 函数的定义似乎有一些小问题。</p>
+<p>我找到了两个版本的论文, 内容基本一致：</p>
+<p><a href="https://crypto.stanford.edu/~dabo/pubs/abstracts/dhmsb.html">https://crypto.stanford.edu/~dabo/pubs/abstracts/dhmsb.html</a></p>
+<p>Let $p$ be a prime number and $n=\lceil \log p\rceil$ be its length in binary. We use $x\mod p$ to denote the unique interger a in the range $[0, p-1]$ satisfying $x \equiv a \pmod p$ . Given a prime $p$ , we define $MSB_k(x)$ as the integer $t$ such that $(t-1)\cdot p/2^k \le x \lt t\cdot p/2^k$ . For example, $MSB_1(x)$ is either 0 or 1 depending on whether x is smaller than or greater than $p/2$ .</p>
+<p><a href="https://citeseerx.ist.psu.edu/document?repid=rep1&amp;type=pdf&amp;doi=c8f9439df73b065e124000e23a504d1dbe4ae79d">https://citeseerx.ist.psu.edu/document?repid=rep1&amp;type=pdf&amp;doi=c8f9439df73b065e124000e23a504d1dbe4ae79d</a></p>
+<p>We will often refer to the function $MSB_k(x)$ where $0\le x\lt p$ . Given a prime $p$ the function $MSB_k(x)$ is defined to be the integer $t$ such that $(t-1)\cdot p/2^k \le x \lt t\cdot p/2^k$ . For example, $MSB_1(x)$ is either 0 or 1 depending on whether x is smaller than or greater than $p/2$ .</p>
+<p>其中的错误是很显然的， $MSB_1(x)$ 不可能为0， 否则 $x &lt; 0$ ，与 x 的范围定义矛盾。</p>
+<p>这是一个很小的错误，更可能是笔误，不影响全文任何结论。不过还是对我的学习造成了些许困扰。有可能 Boneh 后来发现了这个笔误，但经我简单搜索，未见公开资料说明这一问题。故在此记录，以供后来有相同困惑的同学参考。</p>
+<p>另外，我发现 Steven Galbraith 教授的 crypto-book &lsquo;Mathematics of Public Key Cryptography&rsquo; 中也支撑了我的观点, 他修正了 MSB 的定义：</p>
+<p><a href="https://www.math.auckland.ac.nz/~sgal018/crypto-book/ch21.pdf">https://www.math.auckland.ac.nz/~sgal018/crypto-book/ch21.pdf</a></p>
+<p><strong>Definition 21.7.1.</strong> Let $p$ be odd. Let $x\in{1,2,\cdots,p-1}$ . Define</p>
+<p>$$
+MSB_1(x) = \left\lbrace\begin{array}{rcl}&amp; 0 &amp; if 1 \le  x \lt p/2 \&amp; 1 &amp; otherwise. \end{array} \right.
+$$</p>
+<p>For $k\in \mathbb N$ let $0\le t \lt 2^k$ be the integer such that</p>
+<p>$$
+tp/2^k \le x \lt (t+1)p/2^k
+$$</p>
+<p>and define $MSB_k(x)=t$ .</p>
+<p>与 Boneh 原论文相比，这个定义要更明确、容易理解。</p>
+<hr>
+<p>本文同步发表于</p>
+<ul>
+<li>blog: ssst0n3.github.io</li>
+<li>公众号: 石头的安全料理屋</li>
+<li>知乎专栏: 石头的安全料理屋</li>
+</ul>
+
+            </div>
+        </article>
+
+        <hr />
+
+        <div class="post-info">
+  			</div>
+
+        
+    </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>&copy; 2023</span>
+            
+            <span></span>
+            <span> <a href="/posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a></span>
+        </div>
+    </div>
+    <div class="footer__inner">
+        <div class="footer__content">
+
+        </div>
+    </div>
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>Powered by <a href="http://gohugo.io">Hugo</a></span>
+            <span>Made with &#10084; by <a href="https://github.com/st0n3">st0n3</a></span>
+            <span>Based on <a href="https://github.com/rhazdon">rhazdon</a></span>
+        </div>
+    </div>
+
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      extensions: ["tex2jax.js"],
+      
+      jax: ["input/TeX", "output/CommonHTML"],
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+        displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+        processEscapes: true
+      },
+      "HTML-CSS": { fonts: ["TeX"] },
+      displayAlign: "left"
+    });
+  </script>
+
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_CHTML"></script>
+
+
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+
+<script type="text/javascript" src="/bundle.min.4c3fb12a087ceed4a52cb5d57068a9795c7069617a01ca70f788052ad66e1791779e6c72686e1dc0ca13dc03b0203204b6566bb0dd1ee80de2b7ff4d8fe53db2.js" integrity="sha512-TD&#43;xKgh87tSlLLXVcGipeVxwaWF6Acpw94gFKtZuF5F3nmxyaG4dwMoT3AOwIDIEtlZrsN0e6A3it/9Nj&#43;U9sg=="></script>
+
+
+
+    </body>
+</html>

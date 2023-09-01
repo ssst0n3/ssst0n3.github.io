@@ -6,7 +6,21 @@
     <description>Recent content on welcome to st0n3&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 24 Aug 2023 07:54:16 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 01 Sep 2023 03:26:07 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>勘误：Boneh-1996： MSB 定义错误</title>
+      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%90%86%E8%AE%BA/%E5%AF%86%E7%A0%81%E5%AD%A6/LLL/%E5%8B%98%E8%AF%AFBoneh-1996-MSB-%E5%AE%9A%E4%B9%89%E9%94%99%E8%AF%AF.html</link>
+      <pubDate>Fri, 01 Sep 2023 03:26:07 +0000</pubDate>
+      
+      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%90%86%E8%AE%BA/%E5%AF%86%E7%A0%81%E5%AD%A6/LLL/%E5%8B%98%E8%AF%AFBoneh-1996-MSB-%E5%AE%9A%E4%B9%89%E9%94%99%E8%AF%AF.html</guid>
+      <description>tags: crypto
+ 勘误：Boneh-1996： MSB 定义错误 最近在学习格相关知识的时候，读到 Boneh 和 Venkatesan 1996年的论文 &amp;lsquo;Hardness of computing the most significant bits of secret keys in Diffie-Hellman and related schemes&amp;rsquo;，这篇论文第一次提出了 HNP(Hidden Number Problem) 。
+其中提出的 $MSB_k(x)$ 函数的定义似乎有一些小问题。
+我找到了两个版本的论文, 内容基本一致：
+https://crypto.stanford.edu/~dabo/pubs/abstracts/dhmsb.html
+Let $p$ be a prime number and $n=\lceil \log p\rceil$ be its length in binary. We use $x\mod p$ to denote the unique interger a in the range $[0, p-1]$ satisfying $x \equiv a \pmod p$ .</description>
+    </item>
+    
     <item>
       <title>WMCTF-Qualifier-2023/Crypto/signin writeup</title>
       <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/CTF/crypto/lattice/HNP/WMCTF-Qualifier-2023Cryptosignin-writeup.html</link>
