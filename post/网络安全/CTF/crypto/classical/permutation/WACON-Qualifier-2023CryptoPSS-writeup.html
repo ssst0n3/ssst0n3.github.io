@@ -50,7 +50,7 @@ prob.py
 from Crypto.Util.number import * import os from hashlib import sha256 from tqdm import tqdm def cascade_hash(msg, cnt, digest_len): assert digest_len &lt;= 32 msg = msg * 10 for _ in range(cnt): msg = sha256(msg).digest() return msg[:digest_len] def seed_to_permutation(seed): permutation = &#39;&#39; msg = seed &#43; b&#34;_shuffle&#34; while len(permutation) &lt; 16: msg = cascade_hash(msg, 777, 32) msg_hex = msg.">
 <meta itemprop="datePublished" content="2023-09-04T09:13:02+00:00" />
 <meta itemprop="dateModified" content="2023-09-04T09:13:02+00:00" />
-<meta itemprop="wordCount" content="737">
+<meta itemprop="wordCount" content="744">
 
 
 
@@ -362,7 +362,14 @@ master_seed: b'{\x7f\x08\xd7H'
 Found, exiting brute.
 master_seed: b'\xa0\x00K\xfa\xef'
 flag: b'WACON2023{2d4b7a9c085316ef}'
-</code></pre>
+</code></pre><hr>
+<p>本文同步发表于</p>
+<ul>
+<li>blog: ssst0n3.github.io</li>
+<li>公众号: 石头的安全料理屋</li>
+<li>知乎专栏: 石头的安全料理屋</li>
+</ul>
+
             </div>
         </article>
 
