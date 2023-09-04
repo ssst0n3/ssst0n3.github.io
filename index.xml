@@ -6,7 +6,21 @@
     <description>Recent content on welcome to st0n3&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 01 Sep 2023 03:26:07 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 04 Sep 2023 09:13:02 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>WACON-Qualifier-2023/Crypto/PSS writeup</title>
+      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/CTF/crypto/classical/permutation/WACON-Qualifier-2023CryptoPSS-writeup.html</link>
+      <pubDate>Mon, 04 Sep 2023 09:13:02 +0000</pubDate>
+      
+      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/CTF/crypto/classical/permutation/WACON-Qualifier-2023CryptoPSS-writeup.html</guid>
+      <description>tags: ctf,crypto,writeup,permutation,brute
+ WACON-Qualifier-2023/Crypto/PSS writeup 1. challenge  PSS = Permutation Secret Sharing
+for_user.zip
+ pss_data 是个3M大小的数据文件
+prob.py
+from Crypto.Util.number import * import os from hashlib import sha256 from tqdm import tqdm def cascade_hash(msg, cnt, digest_len): assert digest_len &amp;lt;= 32 msg = msg * 10 for _ in range(cnt): msg = sha256(msg).digest() return msg[:digest_len] def seed_to_permutation(seed): permutation = &amp;#39;&amp;#39; msg = seed + b&amp;#34;_shuffle&amp;#34; while len(permutation) &amp;lt; 16: msg = cascade_hash(msg, 777, 32) msg_hex = msg.</description>
+    </item>
+    
     <item>
       <title>勘误：Boneh-1996： MSB 定义错误</title>
       <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%90%86%E8%AE%BA/%E5%AF%86%E7%A0%81%E5%AD%A6/LLL/%E5%8B%98%E8%AF%AFBoneh-1996-MSB-%E5%AE%9A%E4%B9%89%E9%94%99%E8%AF%AF.html</link>
