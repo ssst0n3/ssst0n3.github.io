@@ -3,17 +3,22 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>/post.html</loc>
-    <lastmod>2023-09-04T09:13:02+00:00</lastmod>
+    <loc>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%90%86%E8%AE%BA/%E5%AF%86%E7%A0%81%E5%AD%A6/EllipticCurve/%E8%AE%BA%E6%96%87%E5%AD%A6%E4%B9%A0-Peter-Novotney-Weak-Curves-In-Elliptic-Curve-Cryptography.html</loc>
+    <lastmod>2023-09-05T10:00:28+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/CTF/crypto/classical/permutation/WACON-Qualifier-2023CryptoPSS-writeup.html</loc>
-    <lastmod>2023-09-04T09:13:02+00:00</lastmod>
+    <loc>/post.html</loc>
+    <lastmod>2023-09-05T10:00:28+00:00</lastmod>
   </url>
   
   <url>
     <loc>/</loc>
+    <lastmod>2023-09-05T10:00:28+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/CTF/crypto/classical/permutation/WACON-Qualifier-2023CryptoPSS-writeup.html</loc>
     <lastmod>2023-09-04T09:13:02+00:00</lastmod>
   </url>
   

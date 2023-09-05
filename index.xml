@@ -6,7 +6,21 @@
     <description>Recent content on welcome to st0n3&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 04 Sep 2023 09:13:02 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 05 Sep 2023 10:00:28 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>[论文学习] Peter Novotney: Weak Curves In Elliptic Curve Cryptography</title>
+      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%90%86%E8%AE%BA/%E5%AF%86%E7%A0%81%E5%AD%A6/EllipticCurve/%E8%AE%BA%E6%96%87%E5%AD%A6%E4%B9%A0-Peter-Novotney-Weak-Curves-In-Elliptic-Curve-Cryptography.html</link>
+      <pubDate>Tue, 05 Sep 2023 10:00:28 +0000</pubDate>
+      
+      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%90%86%E8%AE%BA/%E5%AF%86%E7%A0%81%E5%AD%A6/EllipticCurve/%E8%AE%BA%E6%96%87%E5%AD%A6%E4%B9%A0-Peter-Novotney-Weak-Curves-In-Elliptic-Curve-Cryptography.html</guid>
+      <description>tags: crypto, elliptic curve, ecc, smart&amp;rsquo;s attack, Pohlig-Hellman Attack original_url: https://wstein.org/edu/2010/414/projects/novotney.pdf version: v0.1.0
+ [论文学习] Peter Novotney: Weak Curves In Elliptic Curve Cryptography 摘要 本文介绍了Pohlig-Hellman attack 和 Smart&amp;rsquo;s attack，并讨论了推荐的 NIST 曲线是如何抵御这种攻击的。
+1. Elliptic Curves 椭圆曲线的通用定义形式为
+$$ E(F) = \lbrace x, y \in F^2 : y^2 + a_1xy + a_3y = x^3 + a_2x^2 + a_4x + a_6 \rbrace \cup \lbrace \mathcal {O} \rbrace $$
+如果域的特征 &amp;gt; 3， 曲线可以简化为
+$$ E(F) = \lbrace x, y \in F^2: y^2 = x^3 + ax + b \rbrace \cup \lbrace \mathcal {O} \rbrace $$</description>
+    </item>
+    
     <item>
       <title>WACON-Qualifier-2023/Crypto/PSS writeup</title>
       <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/CTF/crypto/classical/permutation/WACON-Qualifier-2023CryptoPSS-writeup.html</link>
