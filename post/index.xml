@@ -6,7 +6,21 @@
     <description>Recent content in Post on welcome to st0n3&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 05 Sep 2023 10:00:28 +0000</lastBuildDate><atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 06 Sep 2023 07:41:20 +0000</lastBuildDate><atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>CAP_CHOWN 可利用性研究</title>
+      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E8%BF%9B%E7%A8%8B%E5%AE%B9%E5%99%A8/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%B9%E5%99%A8/docker/%E5%AE%89%E5%85%A8%E9%A3%8E%E9%99%A9/Capability%E5%8F%AF%E5%88%A9%E7%94%A8%E6%80%A7%E7%A0%94%E7%A9%B6/CAP_CHOWN-%E5%8F%AF%E5%88%A9%E7%94%A8%E6%80%A7%E7%A0%94%E7%A9%B6.html</link>
+      <pubDate>Wed, 06 Sep 2023 07:41:20 +0000</pubDate>
+      
+      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E8%BF%9B%E7%A8%8B%E5%AE%B9%E5%99%A8/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%B9%E5%99%A8/docker/%E5%AE%89%E5%85%A8%E9%A3%8E%E9%99%A9/Capability%E5%8F%AF%E5%88%A9%E7%94%A8%E6%80%A7%E7%A0%94%E7%A9%B6/CAP_CHOWN-%E5%8F%AF%E5%88%A9%E7%94%A8%E6%80%A7%E7%A0%94%E7%A9%B6.html</guid>
+      <description>tags: container, capability, cap_chown
+ CAP_CHOWN 可利用性研究 1. 容器支持情况 docker 默认支持 CAP_CHOWN
+https://github.com/moby/moby/blob/791549508a3ed3b95d00556d53940b24a54d901a/oci/caps/defaults.go#L6
+package caps // import &amp;#34;github.com/docker/docker/oci/caps&amp;#34;  // DefaultCapabilities returns a Linux kernel default capabilities func DefaultCapabilities() []string { return []string{ &amp;#34;CAP_CHOWN&amp;#34;, ... } } seccomp 默认允许相关系统调用。
+https://github.com/moby/moby/blob/791549508a3ed3b95d00556d53940b24a54d901a/profiles/seccomp/default.json#L71-L72
+{ ... &amp;#34;syscalls&amp;#34;: [ ... { &amp;#34;names&amp;#34;: [ ... &amp;#34;chown&amp;#34;, &amp;#34;chown32&amp;#34;, ... &amp;#34;fchown&amp;#34;, &amp;#34;fchown32&amp;#34;, &amp;#34;fchownat&amp;#34;, ... &amp;#34;lchown&amp;#34;, &amp;#34;lchown32&amp;#34;, ... ], &amp;#34;action&amp;#34;: &amp;#34;SCMP_ACT_ALLOW&amp;#34; }, ... ] } 2. kernel 源码分析</description>
+    </item>
+    
     <item>
       <title>[论文学习] Peter Novotney: Weak Curves In Elliptic Curve Cryptography</title>
       <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%90%86%E8%AE%BA/%E5%AF%86%E7%A0%81%E5%AD%A6/EllipticCurve/%E8%AE%BA%E6%96%87%E5%AD%A6%E4%B9%A0-Peter-Novotney-Weak-Curves-In-Elliptic-Curve-Cryptography.html</link>
