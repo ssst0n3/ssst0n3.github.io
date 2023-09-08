@@ -6,7 +6,64 @@
     <description>Recent content in Post on welcome to st0n3&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 24 Aug 2023 07:54:16 +0000</lastBuildDate><atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 06 Sep 2023 07:41:20 +0000</lastBuildDate><atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>CAP_CHOWN 可利用性研究</title>
+      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E8%BF%9B%E7%A8%8B%E5%AE%B9%E5%99%A8/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%B9%E5%99%A8/docker/%E5%AE%89%E5%85%A8%E9%A3%8E%E9%99%A9/Capability%E5%8F%AF%E5%88%A9%E7%94%A8%E6%80%A7%E7%A0%94%E7%A9%B6/CAP_CHOWN-%E5%8F%AF%E5%88%A9%E7%94%A8%E6%80%A7%E7%A0%94%E7%A9%B6.html</link>
+      <pubDate>Wed, 06 Sep 2023 07:41:20 +0000</pubDate>
+      
+      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E8%BF%9B%E7%A8%8B%E5%AE%B9%E5%99%A8/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%B9%E5%99%A8/docker/%E5%AE%89%E5%85%A8%E9%A3%8E%E9%99%A9/Capability%E5%8F%AF%E5%88%A9%E7%94%A8%E6%80%A7%E7%A0%94%E7%A9%B6/CAP_CHOWN-%E5%8F%AF%E5%88%A9%E7%94%A8%E6%80%A7%E7%A0%94%E7%A9%B6.html</guid>
+      <description>tags: container, capability, cap_chown
+ CAP_CHOWN 可利用性研究 1. 容器支持情况 docker 默认支持 CAP_CHOWN
+https://github.com/moby/moby/blob/791549508a3ed3b95d00556d53940b24a54d901a/oci/caps/defaults.go#L6
+package caps // import &amp;#34;github.com/docker/docker/oci/caps&amp;#34;  // DefaultCapabilities returns a Linux kernel default capabilities func DefaultCapabilities() []string { return []string{ &amp;#34;CAP_CHOWN&amp;#34;, ... } } seccomp 默认允许相关系统调用。
+https://github.com/moby/moby/blob/791549508a3ed3b95d00556d53940b24a54d901a/profiles/seccomp/default.json#L71-L72
+{ ... &amp;#34;syscalls&amp;#34;: [ ... { &amp;#34;names&amp;#34;: [ ... &amp;#34;chown&amp;#34;, &amp;#34;chown32&amp;#34;, ... &amp;#34;fchown&amp;#34;, &amp;#34;fchown32&amp;#34;, &amp;#34;fchownat&amp;#34;, ... &amp;#34;lchown&amp;#34;, &amp;#34;lchown32&amp;#34;, ... ], &amp;#34;action&amp;#34;: &amp;#34;SCMP_ACT_ALLOW&amp;#34; }, ... ] } 2. kernel 源码分析</description>
+    </item>
+    
+    <item>
+      <title>[论文学习] Peter Novotney: Weak Curves In Elliptic Curve Cryptography</title>
+      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%90%86%E8%AE%BA/%E5%AF%86%E7%A0%81%E5%AD%A6/EllipticCurve/%E8%AE%BA%E6%96%87%E5%AD%A6%E4%B9%A0-Peter-Novotney-Weak-Curves-In-Elliptic-Curve-Cryptography.html</link>
+      <pubDate>Tue, 05 Sep 2023 10:00:28 +0000</pubDate>
+      
+      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%90%86%E8%AE%BA/%E5%AF%86%E7%A0%81%E5%AD%A6/EllipticCurve/%E8%AE%BA%E6%96%87%E5%AD%A6%E4%B9%A0-Peter-Novotney-Weak-Curves-In-Elliptic-Curve-Cryptography.html</guid>
+      <description>tags: crypto, elliptic curve, ecc, smart&amp;rsquo;s attack, Pohlig-Hellman Attack original_url: https://wstein.org/edu/2010/414/projects/novotney.pdf version: v0.1.0
+ [论文学习] Peter Novotney: Weak Curves In Elliptic Curve Cryptography 摘要 本文介绍了Pohlig-Hellman attack 和 Smart&amp;rsquo;s attack，并讨论了推荐的 NIST 曲线是如何抵御这种攻击的。
+1. Elliptic Curves 椭圆曲线的通用定义形式为
+$$ E(F) = \lbrace x, y \in F^2 : y^2 + a_1xy + a_3y = x^3 + a_2x^2 + a_4x + a_6 \rbrace \cup \lbrace \mathcal {O} \rbrace $$
+如果域的特征 &amp;gt; 3， 曲线可以简化为
+$$ E(F) = \lbrace x, y \in F^2: y^2 = x^3 + ax + b \rbrace \cup \lbrace \mathcal {O} \rbrace $$</description>
+    </item>
+    
+    <item>
+      <title>WACON-Qualifier-2023/Crypto/PSS writeup</title>
+      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/CTF/crypto/classical/permutation/WACON-Qualifier-2023CryptoPSS-writeup.html</link>
+      <pubDate>Mon, 04 Sep 2023 09:13:02 +0000</pubDate>
+      
+      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/CTF/crypto/classical/permutation/WACON-Qualifier-2023CryptoPSS-writeup.html</guid>
+      <description>tags: ctf,crypto,writeup,permutation,brute
+ WACON-Qualifier-2023/Crypto/PSS writeup 1. challenge  PSS = Permutation Secret Sharing
+for_user.zip
+ pss_data 是个3M大小的数据文件
+prob.py
+from Crypto.Util.number import * import os from hashlib import sha256 from tqdm import tqdm def cascade_hash(msg, cnt, digest_len): assert digest_len &amp;lt;= 32 msg = msg * 10 for _ in range(cnt): msg = sha256(msg).digest() return msg[:digest_len] def seed_to_permutation(seed): permutation = &amp;#39;&amp;#39; msg = seed + b&amp;#34;_shuffle&amp;#34; while len(permutation) &amp;lt; 16: msg = cascade_hash(msg, 777, 32) msg_hex = msg.</description>
+    </item>
+    
+    <item>
+      <title>勘误：Boneh-1996： MSB 定义错误</title>
+      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%90%86%E8%AE%BA/%E5%AF%86%E7%A0%81%E5%AD%A6/LLL/%E5%8B%98%E8%AF%AFBoneh-1996-MSB-%E5%AE%9A%E4%B9%89%E9%94%99%E8%AF%AF.html</link>
+      <pubDate>Fri, 01 Sep 2023 03:26:07 +0000</pubDate>
+      
+      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%90%86%E8%AE%BA/%E5%AF%86%E7%A0%81%E5%AD%A6/LLL/%E5%8B%98%E8%AF%AFBoneh-1996-MSB-%E5%AE%9A%E4%B9%89%E9%94%99%E8%AF%AF.html</guid>
+      <description>tags: crypto
+ 勘误：Boneh-1996： MSB 定义错误 最近在学习格相关知识的时候，读到 Boneh 和 Venkatesan 1996年的论文 &amp;lsquo;Hardness of computing the most significant bits of secret keys in Diffie-Hellman and related schemes&amp;rsquo;，这篇论文第一次提出了 HNP(Hidden Number Problem) 。
+其中提出的 $MSB_k(x)$ 函数的定义似乎有一些小问题。
+我找到了两个版本的论文, 内容基本一致：
+extended abstract(摘要扩展版、非正式版、预览版、草稿)
+https://crypto.stanford.edu/~dabo/pubs/abstracts/dhmsb.html
+Let $p$ be a prime number and $n=\lceil \log p\rceil$ be its length in binary. We use $x\mod p$ to denote the unique interger a in the range $[0, p-1]$ satisfying $x \equiv a \pmod p$ .</description>
+    </item>
+    
     <item>
       <title>WMCTF-Qualifier-2023/Crypto/signin writeup</title>
       <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/CTF/crypto/lattice/HNP/WMCTF-Qualifier-2023Cryptosignin-writeup.html</link>

@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author"
+    content="">
+<meta name="description"
+    content="tags: crypto, elliptic curve, ecc, smart&amp;rsquo;s attack, Pohlig-Hellman Attack original_url: https://wstein.org/edu/2010/414/projects/novotney.pdf version: v0.1.0
+ [论文学习] Peter Novotney: Weak Curves In Elliptic Curve Cryptography 摘要 本文介绍了Pohlig-Hellman attack 和 Smart&amp;rsquo;s attack，并讨论了推荐的 NIST 曲线是如何抵御这种攻击的。
+1. Elliptic Curves 椭圆曲线的通用定义形式为
+$$ E(F) = \lbrace x, y \in F^2 : y^2 &#43; a_1xy &#43; a_3y = x^3 &#43; a_2x^2 &#43; a_4x &#43; a_6 \rbrace \cup \lbrace \mathcal {O} \rbrace $$
+如果域的特征 &amp;gt; 3， 曲线可以简化为
+$$ E(F) = \lbrace x, y \in F^2: y^2 = x^3 &#43; ax &#43; b \rbrace \cup \lbrace \mathcal {O} \rbrace $$" />
+<meta name="keywords" content="" />
+<meta name="robots" content="noodp" />
+<link rel="canonical" href="/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%90%86%E8%AE%BA/%E5%AF%86%E7%A0%81%E5%AD%A6/EllipticCurve/%E8%AE%BA%E6%96%87%E5%AD%A6%E4%B9%A0-Peter-Novotney-Weak-Curves-In-Elliptic-Curve-Cryptography.html" />
+
+
+<title>
+    
+    [论文学习] Peter Novotney: Weak Curves In Elliptic Curve Cryptography :: welcome to st0n3&#39;s blog 
+    
+</title>
+
+
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.2.1/css/flag-icon.min.css" rel="stylesheet"
+    type="text/css">
+
+
+
+<link rel="stylesheet" href="/main.min.de959d61dd13c2cd41136acd491ffb0749779e1afe37b1fed6d5cba0b7e1938d.css">
+
+
+
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#252627">
+<link rel="shortcut icon" href="/favicon.ico">
+<meta name="theme-color" content="#252627"><meta itemprop="name" content="[论文学习] Peter Novotney: Weak Curves In Elliptic Curve Cryptography">
+<meta itemprop="description" content="tags: crypto, elliptic curve, ecc, smart&rsquo;s attack, Pohlig-Hellman Attack original_url: https://wstein.org/edu/2010/414/projects/novotney.pdf version: v0.1.0
+ [论文学习] Peter Novotney: Weak Curves In Elliptic Curve Cryptography 摘要 本文介绍了Pohlig-Hellman attack 和 Smart&rsquo;s attack，并讨论了推荐的 NIST 曲线是如何抵御这种攻击的。
+1. Elliptic Curves 椭圆曲线的通用定义形式为
+$$ E(F) = \lbrace x, y \in F^2 : y^2 &#43; a_1xy &#43; a_3y = x^3 &#43; a_2x^2 &#43; a_4x &#43; a_6 \rbrace \cup \lbrace \mathcal {O} \rbrace $$
+如果域的特征 &gt; 3， 曲线可以简化为
+$$ E(F) = \lbrace x, y \in F^2: y^2 = x^3 &#43; ax &#43; b \rbrace \cup \lbrace \mathcal {O} \rbrace $$">
+<meta itemprop="datePublished" content="2023-09-05T10:00:28+00:00" />
+<meta itemprop="dateModified" content="2023-09-05T10:00:28+00:00" />
+<meta itemprop="wordCount" content="877">
+
+
+
+<meta itemprop="keywords" content="" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="[论文学习] Peter Novotney: Weak Curves In Elliptic Curve Cryptography"/>
+<meta name="twitter:description" content="tags: crypto, elliptic curve, ecc, smart&rsquo;s attack, Pohlig-Hellman Attack original_url: https://wstein.org/edu/2010/414/projects/novotney.pdf version: v0.1.0
+ [论文学习] Peter Novotney: Weak Curves In Elliptic Curve Cryptography 摘要 本文介绍了Pohlig-Hellman attack 和 Smart&rsquo;s attack，并讨论了推荐的 NIST 曲线是如何抵御这种攻击的。
+1. Elliptic Curves 椭圆曲线的通用定义形式为
+$$ E(F) = \lbrace x, y \in F^2 : y^2 &#43; a_1xy &#43; a_3y = x^3 &#43; a_2x^2 &#43; a_4x &#43; a_6 \rbrace \cup \lbrace \mathcal {O} \rbrace $$
+如果域的特征 &gt; 3， 曲线可以简化为
+$$ E(F) = \lbrace x, y \in F^2: y^2 = x^3 &#43; ax &#43; b \rbrace \cup \lbrace \mathcal {O} \rbrace $$"/>
+
+
+
+
+<meta property="article:published_time" content="2023-09-05 10:00:28 &#43;0000 UTC" />
+
+
+
+
+
+
+
+    </head>
+
+    <body class="dark-theme">
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text">$ cd /home/st0n3</span>
+            <span class="logo__cursor"></span>
+        
+    </div>
+</a>
+
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="/aboutme.html">About</a></li><li><a href="/post.html">Blog</a></li><li><a href="/hackerbot">Hackerbot</a></li><li><a href="/skill_tree/">SkillTree</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+
+            <span class="theme-toggle"><svg class="theme-toggler" width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M22 41C32.4934 41 41 32.4934 41 22C41 11.5066 32.4934 3 22
+  3C11.5066 3 3 11.5066 3 22C3 32.4934 11.5066 41 22 41ZM7 22C7
+  13.7157 13.7157 7 22 7V37C13.7157 37 7 30.2843 7 22Z"/>
+</svg>
+</span>
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
+                
+    <main class="post">
+
+        <div class="post-info">
+            
+            </p>
+        </div>
+
+        <article>
+            <h2 class="post-title"><a href="/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%90%86%E8%AE%BA/%E5%AF%86%E7%A0%81%E5%AD%A6/EllipticCurve/%E8%AE%BA%E6%96%87%E5%AD%A6%E4%B9%A0-Peter-Novotney-Weak-Curves-In-Elliptic-Curve-Cryptography.html">[论文学习] Peter Novotney: Weak Curves In Elliptic Curve Cryptography</a></h2>
+
+            
+
+            <div class="post-content">
+                <hr>
+<p>tags: crypto, elliptic curve, ecc, smart&rsquo;s attack, Pohlig-Hellman Attack
+original_url: <a href="https://wstein.org/edu/2010/414/projects/novotney.pdf">https://wstein.org/edu/2010/414/projects/novotney.pdf</a>
+version: v0.1.0</p>
+<hr>
+<h1 id="论文学习-peter-novotney-weak-curves-in-elliptic-curve-cryptography">[论文学习] Peter Novotney: Weak Curves In Elliptic Curve Cryptography</h1>
+<h2 id="摘要">摘要</h2>
+<p>本文介绍了Pohlig-Hellman attack 和 Smart&rsquo;s attack，并讨论了推荐的 NIST 曲线是如何抵御这种攻击的。</p>
+<h2 id="1-elliptic-curves">1. Elliptic Curves</h2>
+<p>椭圆曲线的通用定义形式为</p>
+<p>$$
+E(F) = \lbrace x, y \in F^2 : y^2 + a_1xy + a_3y = x^3 + a_2x^2 + a_4x + a_6 \rbrace  \cup \lbrace \mathcal {O} \rbrace
+$$</p>
+<p>如果域的特征 &gt; 3， 曲线可以简化为</p>
+<p>$$
+E(F) = \lbrace x, y \in F^2: y^2 = x^3 + ax + b \rbrace \cup \lbrace \mathcal {O} \rbrace
+$$</p>
+<h3 id="11-group-operation">1.1 Group Operation</h3>
+<p><strong>+</strong></p>
+<p>$P_1, P_2 \in E(F_p), R = P_1 + P_2$ :</p>
+<ol>
+<li>如果 $P_1 = \mathcal {O}, R = P_2$</li>
+<li>如果 $x_1 = x_2, y_1 = -y_2, R = \mathcal {O}$</li>
+<li></li>
+</ol>
+<p>$$
+\begin{align}
+&amp;\lambda = \left\lbrace
+\begin{array}{rcl}
+&amp; \frac{3x_1^2 + a}{2y_1}, &amp; P_1=P_2\<br>
+&amp; \frac{y_2-y_1}{x_2-x_1}, &amp; P_1\neq \pm P_2
+\end{array} \right.\<br>
+&amp;R = (\lambda^2 - x_1 -x_2, -\lambda x_3 -v), v = y_1 - \lambda x_1, x_3 = \lambda^2 - x_1 -x_2
+\end{align}
+$$</p>
+<p>椭圆曲线的阶记为 $#E(F_p)$</p>
+<h3 id="12-choice-of-field">1.2 Choice of Field</h3>
+<p>素域：</p>
+<p>$E(F_p) = \lbrace(x, y): y^2 = x^3 + ax +b,x,y,a,b \in F_p\rbrace\cup\lbrace\mathcal{O}\rbrace$</p>
+<p>二进制域:</p>
+<p>$E(F_{2^m}) = \lbrace(x, y): y^2 + xy = x^3 + ax^2 +b,x,y,a,b \in F_{2^m}\rbrace\cup\lbrace\mathcal{O}\rbrace$</p>
+<p>本文仅讨论素域上的攻击</p>
+<h3 id="13-the-elliptic-curve-discrete-logarithm-problem">1.3 The Elliptic Curve Discrete Logarithm Problem</h3>
+<p>椭圆曲线的两点 $Q, P \in E(F_p), Q = kP$ ， 求k, 记作 $k = log_pQ$</p>
+<p>最快的算法是  Pohlig-Hellman attack 和 Pollard Rho Algorithm</p>
+<h2 id="2-attacks-on-weak-curves">2. Attacks on Weak Curves</h2>
+<p>$E(F_p)$</p>
+<ul>
+<li>在没有较大的素子群时，受 Pohlig-Hellman attack 影响</li>
+<li>#E(Fp) = p 时，受Smart&rsquo;s attack 影响</li>
+</ul>
+<h3 id="21-pohlig-hellman-attack">2.1 Pohlig-Hellman Attack</h3>
+<p>Pohlig-Hellman attack 将 $E(F_p)$ 上的 ECDLP 问题简化为 素子群 $\langle P_i\rangle$ 上的ECDLP问题。</p>
+<p>对椭圆曲线的阶 n 素因子分解，得到 $n=p_1^{e_1} * p_2^{e_2} * \cdots * p_r^{e_r}$ ， 对每个素因子，我们希望找到 $k_i \equiv k \pmod {p_i^{e_i}}$</p>
+<p>令 $P_i = \frac{n}{p_i^{e_i}}P, Q_i = \frac{n}{p_i^{e_i}}Q$</p>
+<p>$Q_i = \frac{n}{p_i^{e_i}}Q = \frac{n}{p_i^{e_i}}(k_iP) = k_i(\frac{n}{p_i^{e_i}}P) = k_iP_i$</p>
+<p>由中国剩余定理，即可恢复k。</p>
+<p>其中 $k_i$ 的计算还可以进一步简化为 $p_i$进制上的 $k_i = z_0 + z_1p_i + z_2p_i^2 + \cdots + z_{e_i-1}p_i^{e_i-1}$</p>
+<p>令 $P_0 = \frac{n}{p_i} P, Q_0 = \frac{n}{p_i}Q$ , $P_0$ 的阶为 $p_i$， 因为 $p_iP_0 = nP$</p>
+<p>$Q_0 = \frac{n}{p_i}Q = \frac{n}{p_i}(lP) = l(\frac{n}{p_i}P) = lP_0$</p>
+<p>因为 $\langle P_0 \rangle$ 的阶为 $p_i$ , $z_0$ 是 $p_i$ 进制上的第一位数，所以 $lP_0 = z_0P_0 = Q_0$ 。 $z_0$ 可以由 $\langle P_0 \rangle$ 上的ECDLP求解。</p>
+<p>可以将其扩展至 求解 $\langle P_0 \rangle$ 上的ECDLP $Q_j = z_iP_0$ ， 其中</p>
+<p>$Q_j = \frac{n}{p_i^{j+1}}(Q-z_0P - z_1p_iP - z_2p_i^2P - \cdots - z_{j-1}p_i^{j-1}P)$</p>
+<p>例如</p>
+<p>$$
+\begin{align}
+Q_1 &amp;= \frac{n}{p_i^2}(Q-z_0P) \<br>
+&amp;= \frac{n}{p_i^2}P(k_i-z_0) \<br>
+&amp;= P_0\frac{z_1p_i + \cdots}{p_i}\<br>
+&amp;= z_1P_0
+\end{align}
+$$</p>
+<p>实现</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">PolligHellman</span>(P,Q):
+    zList <span style="color:#f92672">=</span> list()
+    conjList <span style="color:#f92672">=</span> list()
+    rootList <span style="color:#f92672">=</span> list()
+    n <span style="color:#f92672">=</span> P<span style="color:#f92672">.</span>order()
+    factorList <span style="color:#f92672">=</span> n<span style="color:#f92672">.</span>factor()
+    <span style="color:#66d9ef">for</span> facTuple <span style="color:#f92672">in</span> factorList:
+        P0 <span style="color:#f92672">=</span> (ZZ(n<span style="color:#f92672">/</span>facTuple[<span style="color:#ae81ff">0</span>]))<span style="color:#f92672">*</span>P
+        conjList<span style="color:#f92672">.</span>append(<span style="color:#ae81ff">0</span>)
+        rootList<span style="color:#f92672">.</span>append(facTuple[<span style="color:#ae81ff">0</span>]<span style="color:#f92672">^</span>facTuple[<span style="color:#ae81ff">1</span>])
+        <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(facTuple[<span style="color:#ae81ff">1</span>]):
+            Qpart <span style="color:#f92672">=</span> Q
+            <span style="color:#66d9ef">for</span> j <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">1</span>,i<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>):
+                Qpart <span style="color:#f92672">=</span> Qpart <span style="color:#f92672">-</span> (zList[j<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>]<span style="color:#f92672">*</span>(facTuple[<span style="color:#ae81ff">0</span>]<span style="color:#f92672">^</span>(j<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>))<span style="color:#f92672">*</span>P)
+            Qi <span style="color:#f92672">=</span> (ZZ(n<span style="color:#f92672">/</span>(facTuple[<span style="color:#ae81ff">0</span>]<span style="color:#f92672">^</span>(i<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>))))<span style="color:#f92672">*</span>Qpart
+        zList<span style="color:#f92672">.</span>insert(i,discrete_log(Qi,P0,operation<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;+&#39;</span>))
+        conjList[<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>] <span style="color:#f92672">=</span> conjList[<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>] <span style="color:#f92672">+</span> zList[i]<span style="color:#f92672">*</span>(facTuple[<span style="color:#ae81ff">0</span>]<span style="color:#f92672">^</span>i)
+    <span style="color:#66d9ef">return</span> crt(conjList,rootList)
+</code></pre></div><h3 id="22-smarts-attack-where-efp--p">2.2 Smart&rsquo;s Attack where #E(Fp) = p</h3>
+<p>Smart&rsquo;s attack 描述了一种线性时间内计算 <code>#E(Fp) = p</code> 的椭圆曲线上 ECDLP的方法。</p>
+<p>换一句话说，椭圆曲线的 trace of Frobenius 为1时，可以利用。<code>t = p+1+#E(Fp) = 1</code>。</p>
+<h4 id="221-lifts-and-hensels-lemma">2.2.1 Lifts and Hensel&rsquo;s Lemma</h4>
+<p>已知 x 为 $f(X) \equiv 0 \pmod p^s$ 的一个解, 偏导 $f'(x)$ 存在模p上的乘法逆元u, 即存在 u使得 $uf'(x)\equiv 1\pmod p$ ，则 $x' = x - uf'(x)$ 是 $f(X) \equiv 0 \pmod {p^{s+1}}$ 的解。</p>
+<p>$x' \equiv x \pmod {p^s}, f(x') \equiv 0 \pmod {p^{s+1}}$</p>
+<p>这个求解过程称为lift，在 $f'(r) \equiv 0 \pmod p$ 时， 对r的lift是无法预测的，有时候无lift，有时候又多个lift</p>
+<p><strong>proof</strong></p>
+<p><a href="http://web.archive.org/web/20190613022920/http://www.maths.gla.ac.uk/~ajb/dvi-ps/padicnotes.pdf">http://web.archive.org/web/20190613022920/http://www.maths.gla.ac.uk/~ajb/dvi-ps/padicnotes.pdf</a></p>
+<p><strong>Theorem 1.33 (Hensel’s Lemma: first version).</strong></p>
+<p>令 $f(X) = \Sigma_{k=0}^da_kX^k \in \mathbb Z [X]$ , 假设 $x\in \mathbb Z$ 是 $f \mod {p^s} (s \ge 1)$ 的一个根，f'(x) 存在关于模p的乘法逆元。则有 $f \mod {p^{s+1}}$ 的根 $x' \in \mathbb Z/p^{s+1}$ , 满足 $x' \equiv x \pmod {p^s}$ ,  x' 可由公式计算：</p>
+<p>$$
+x' \equiv x-uf(x) \pmod {p^{s+1}}, u\in \mathbb Z, uf'(x)\equiv 1 \pmod p
+$$</p>
+<p>proof:</p>
+<p>$$
+\begin{align}
+&amp; x' = x+tp^s \<br>
+&amp; f(x') \<br>
+=&amp;f(x+tp^s) \<br>
+=&amp;f(x) + f'(x)tp^s + &hellip; \<br>
+\equiv &amp; 0 \pmod {p^{s+1}} \<br>
+&amp;\Leftrightarrow \<br>
+&amp;tf'(x)p^s = -f(x) + kp^{s+1} \<br>
+&amp;\Leftrightarrow \<br>
+t =&amp; \frac{-uf(x)}{p^s} + ukp \<br>
+&amp;\Leftrightarrow \<br>
+t \equiv&amp; \frac{-uf(x)}{p^s} \pmod p
+\end{align}
+$$</p>
+<h4 id="222-p-adic-numbers">2.2.2 P-adic Numbers</h4>
+<p>p-adic 数可以表示为</p>
+<p>$$
+c_{-n}p^{-n} + \cdots + c_0  + c_1p + \cdots + c_mp^m + &hellip;
+$$</p>
+<p>p-adic数构成的域记为 $Q_p$ , 如果这些数没有负次幂(即， $c_i = 0, i&lt;0$) 则表示为 $\mathbb Z_p$</p>
+<p>我们 可以在p-adic 数构成的域上定义 椭圆曲线，使用 上文介绍的 lift 方法 ，lift $Q_p$ 上的椭圆曲线的点。这将允许我们将 ECDLP 约化(reduce)至 群 $p\mathbb Z_p$ 上。</p>
+<h4 id="223-curve-reduction-modulo-p">2.2.3 Curve Reduction Modulo P</h4>
+<p>令 $E(Q_p)$ 是定义在 p-adic 域上的椭圆曲线，通过约化 $E(Q_p): y^2 + x^3 + ax +b \mod p$ 的系数，得到 $E(F_p): y^2 = x^3 + \widetilde{a}x + \widetilde{b}$</p>
+<p>点的映射也类似，对 $P = (x, y) \in E(Q_p), \widetilde{P} = (\widetilde{x}, \widetilde{y}) \in E(F_p), \widetilde{x} = x \pmod p, \widetilde{y} = y \pmod p$</p>
+<p>这个映射是从 $E_(Q_p)$ 到 $E(F_p)$ 的群同态。</p>
+<h4 id="224-p-adic-elliptic-logarithm">2.2.4 P-adic Elliptic Logarithm</h4>
+<p>P-adic Elliptic Logarithm $\psi_p$ 提供了 $E_1(Q_p)$ 到 $p\mathbb Z_p$ 的同构。</p>
+<p>对点 $S\in E_1(Q_p), \psi_p(S) = -\frac{x(S)}{y(S)}$</p>
+<h4 id="225-the--attack">2.2.5 The  Attack</h4>
+<p>lift $E(F_p)$ 上的点 P, Q 到 $E(Q_p)$ ，得到P', Q'。</p>
+<p>因为在 $E(F_p)$ 上 $Q=kP$ ，所以 $Q' - kP'$  在 E(Q_p) 上 模p 为无穷远点。</p>
+<p>$$
+Q' - kP' \in E_1(Q_p)
+$$</p>
+<p>因为 $E(F_p)$ 的阶为p， 所以任意点 $R\in E(Q_p), pR \mod P$ 都将被约化为 $E(F_p)$ 上的 $\mathcal {O}$ ，所以  $E(Q_p)$ 的任意元素乘p，都将映射到 $E_1(Q_p)$</p>
+<p>$$
+pQ' - k(pP') \in E_2(Q_p)
+$$</p>
+<p>因为 $pQ' \in E_1(Q_p), pP' \in E_1(Q_p)$ , 可以应用 P-Adic Elliptic Log:</p>
+<p>$$
+\begin{align}
+&amp; \psi_p(pQ') - k\psi_p(pP') \in p\mathbb Z_p \<br>
+\Rightarrow &amp; \<br>
+&amp; k = \frac{\psi_p(pQ')}{\psi_p(pP')}
+\end{align}
+$$</p>
+<p>再将 $k \mod p$ 以约化回 $F_p$ ，解决 ECDLP。</p>
+<h2 id="3-nist-recommended-curve">3. NIST Recommended Curve</h2>
+<p>nist 推荐的曲线，不满足Smart&rsquo;s Attack 的利用条件，Pohlig-Hellman attack 也不能起到加速效果。</p>
+<h2 id="4-总结">4. 总结</h2>
+<p>介绍了两种对不当选择的椭圆曲线及其底层域的攻击方法。还有很多其他的攻击方法。</p>
+<hr>
+<p>本文同步发表于</p>
+<ul>
+<li>blog: ssst0n3.github.io</li>
+<li>公众号: 石头的安全料理屋</li>
+<li>知乎专栏: 石头的安全料理屋</li>
+</ul>
+
+            </div>
+        </article>
+
+        <hr />
+
+        <div class="post-info">
+  			</div>
+
+        
+    </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>&copy; 2023</span>
+            
+            <span></span>
+            <span> <a href="/posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a></span>
+        </div>
+    </div>
+    <div class="footer__inner">
+        <div class="footer__content">
+
+        </div>
+    </div>
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>Powered by <a href="http://gohugo.io">Hugo</a></span>
+            <span>Made with &#10084; by <a href="https://github.com/st0n3">st0n3</a></span>
+            <span>Based on <a href="https://github.com/rhazdon">rhazdon</a></span>
+        </div>
+    </div>
+
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      extensions: ["tex2jax.js"],
+      
+      jax: ["input/TeX", "output/CommonHTML"],
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+        displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+        processEscapes: true
+      },
+      "HTML-CSS": { fonts: ["TeX"] },
+      displayAlign: "left"
+    });
+  </script>
+
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_CHTML"></script>
+
+
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+
+<script type="text/javascript" src="/bundle.min.4c3fb12a087ceed4a52cb5d57068a9795c7069617a01ca70f788052ad66e1791779e6c72686e1dc0ca13dc03b0203204b6566bb0dd1ee80de2b7ff4d8fe53db2.js" integrity="sha512-TD&#43;xKgh87tSlLLXVcGipeVxwaWF6Acpw94gFKtZuF5F3nmxyaG4dwMoT3AOwIDIEtlZrsN0e6A3it/9Nj&#43;U9sg=="></script>
+
+
+
+    </body>
+</html>
