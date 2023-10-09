@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author"
+    content="">
+<meta name="description"
+    content="tags: 云原生安全资讯,项目介绍 spec version: v0.2.4 version: v0.1.0
+ 项目介绍: rootlesskit  项目地址：https://github.com/rootless-containers/rootlesskit  1. What RootlessKit是使用user_namespaces(7)实现的Linux原生 &amp;ldquo;fake root&amp;rdquo; 工具。
+2. Why RootlessKit 是为了以非特权用户运行 Docker 和 Kubernetes 而设计的，以保护主机上真正的root用户，来应对可能的容器逃逸攻击。
+一些类似的工具不能支撑运行 rootless 容器，或缺少相关功能：
+基于 LD_PRELOAD 的工具 (不足以运行 rootless 容器，不支持静态二进制文件) :
+ fakeroot  基于系统调用 ptrace(2) 的工具 (不足以支撑 rootless 容器)：
+ fakeroot-ng proot  同 RootlessKit 一样，基于 user_namespace(7) 实现的工具(但不支持 &amp;ndash;copy-up, &amp;ndash;net 等功能)：
+ unshare -r podman unshare become-root  3. How 3.1 How to use 依赖" />
+<meta name="keywords" content="" />
+<meta name="robots" content="noodp" />
+<link rel="canonical" href="/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E4%BA%91%E5%8E%9F%E7%94%9F%E5%AE%89%E5%85%A8%E8%B5%84%E8%AE%AF/%E9%A1%B9%E7%9B%AE%E4%BB%8B%E7%BB%8D-rootlesskit.html" />
+
+
+<title>
+    
+    项目介绍: rootlesskit :: welcome to st0n3&#39;s blog 
+    
+</title>
+
+
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.2.1/css/flag-icon.min.css" rel="stylesheet"
+    type="text/css">
+
+
+
+<link rel="stylesheet" href="/main.min.de959d61dd13c2cd41136acd491ffb0749779e1afe37b1fed6d5cba0b7e1938d.css">
+
+
+
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#252627">
+<link rel="shortcut icon" href="/favicon.ico">
+<meta name="theme-color" content="#252627"><meta itemprop="name" content="项目介绍: rootlesskit">
+<meta itemprop="description" content="tags: 云原生安全资讯,项目介绍 spec version: v0.2.4 version: v0.1.0
+ 项目介绍: rootlesskit  项目地址：https://github.com/rootless-containers/rootlesskit  1. What RootlessKit是使用user_namespaces(7)实现的Linux原生 &ldquo;fake root&rdquo; 工具。
+2. Why RootlessKit 是为了以非特权用户运行 Docker 和 Kubernetes 而设计的，以保护主机上真正的root用户，来应对可能的容器逃逸攻击。
+一些类似的工具不能支撑运行 rootless 容器，或缺少相关功能：
+基于 LD_PRELOAD 的工具 (不足以运行 rootless 容器，不支持静态二进制文件) :
+ fakeroot  基于系统调用 ptrace(2) 的工具 (不足以支撑 rootless 容器)：
+ fakeroot-ng proot  同 RootlessKit 一样，基于 user_namespace(7) 实现的工具(但不支持 &ndash;copy-up, &ndash;net 等功能)：
+ unshare -r podman unshare become-root  3. How 3.1 How to use 依赖">
+<meta itemprop="datePublished" content="2023-10-09T07:54:32+00:00" />
+<meta itemprop="dateModified" content="2023-10-09T07:54:32+00:00" />
+<meta itemprop="wordCount" content="586">
+
+
+
+<meta itemprop="keywords" content="" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="项目介绍: rootlesskit"/>
+<meta name="twitter:description" content="tags: 云原生安全资讯,项目介绍 spec version: v0.2.4 version: v0.1.0
+ 项目介绍: rootlesskit  项目地址：https://github.com/rootless-containers/rootlesskit  1. What RootlessKit是使用user_namespaces(7)实现的Linux原生 &ldquo;fake root&rdquo; 工具。
+2. Why RootlessKit 是为了以非特权用户运行 Docker 和 Kubernetes 而设计的，以保护主机上真正的root用户，来应对可能的容器逃逸攻击。
+一些类似的工具不能支撑运行 rootless 容器，或缺少相关功能：
+基于 LD_PRELOAD 的工具 (不足以运行 rootless 容器，不支持静态二进制文件) :
+ fakeroot  基于系统调用 ptrace(2) 的工具 (不足以支撑 rootless 容器)：
+ fakeroot-ng proot  同 RootlessKit 一样，基于 user_namespace(7) 实现的工具(但不支持 &ndash;copy-up, &ndash;net 等功能)：
+ unshare -r podman unshare become-root  3. How 3.1 How to use 依赖"/>
+
+
+
+
+<meta property="article:published_time" content="2023-10-09 07:54:32 &#43;0000 UTC" />
+
+
+
+
+
+
+
+    </head>
+
+    <body class="dark-theme">
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text">$ cd /home/st0n3</span>
+            <span class="logo__cursor"></span>
+        
+    </div>
+</a>
+
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="/aboutme.html">About</a></li><li><a href="/post.html">Blog</a></li><li><a href="/hackerbot">Hackerbot</a></li><li><a href="/skill_tree/">SkillTree</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+
+            <span class="theme-toggle"><svg class="theme-toggler" width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M22 41C32.4934 41 41 32.4934 41 22C41 11.5066 32.4934 3 22
+  3C11.5066 3 3 11.5066 3 22C3 32.4934 11.5066 41 22 41ZM7 22C7
+  13.7157 13.7157 7 22 7V37C13.7157 37 7 30.2843 7 22Z"/>
+</svg>
+</span>
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
+                
+    <main class="post">
+
+        <div class="post-info">
+            
+            </p>
+        </div>
+
+        <article>
+            <h2 class="post-title"><a href="/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E4%BA%91%E5%8E%9F%E7%94%9F%E5%AE%89%E5%85%A8%E8%B5%84%E8%AE%AF/%E9%A1%B9%E7%9B%AE%E4%BB%8B%E7%BB%8D-rootlesskit.html">项目介绍: rootlesskit</a></h2>
+
+            
+
+            <div class="post-content">
+                <hr>
+<p>tags: 云原生安全资讯,项目介绍
+spec version: v0.2.4
+version: v0.1.0</p>
+<hr>
+<h1 id="项目介绍-rootlesskit">项目介绍: rootlesskit</h1>
+<ul>
+<li>项目地址：https://github.com/rootless-containers/rootlesskit</li>
+</ul>
+<h2 id="1-what">1. What</h2>
+<p>RootlessKit是使用user_namespaces(7)实现的Linux原生 &ldquo;fake root&rdquo; 工具。</p>
+<h2 id="2-why">2. Why</h2>
+<p>RootlessKit 是为了以非特权用户运行 Docker 和 Kubernetes 而设计的，以保护主机上真正的root用户，来应对可能的容器逃逸攻击。</p>
+<p>一些类似的工具不能支撑运行 rootless 容器，或缺少相关功能：</p>
+<p>基于 LD_PRELOAD 的工具 (不足以运行 rootless 容器，不支持静态二进制文件) :</p>
+<ul>
+<li><a href="https://wiki.debian.org/FakeRoot">fakeroot</a></li>
+</ul>
+<p>基于系统调用 ptrace(2) 的工具 (不足以支撑 rootless 容器)：</p>
+<ul>
+<li><a href="https://fakeroot-ng.lingnu.com/">fakeroot-ng</a></li>
+<li><a href="https://proot-me.github.io/">proot</a></li>
+</ul>
+<p>同 RootlessKit 一样，基于 user_namespace(7) 实现的工具(但不支持 &ndash;copy-up, &ndash;net 等功能)：</p>
+<ul>
+<li><a href="http://man7.org/linux/man-pages/man1/unshare.1.html">unshare -r</a></li>
+<li><a href="https://github.com/containers/libpod/blob/master/docs/source/markdown/podman-unshare.1.md">podman unshare</a></li>
+<li><a href="https://github.com/giuseppe/become-root">become-root</a></li>
+</ul>
+<h2 id="3-how">3. How</h2>
+<h3 id="31-how-to-use">3.1 How to use</h3>
+<p>依赖</p>
+<pre><code>root@m:~# apt install uidmap
+root@m:~# cat /proc/sys/kernel/unprivileged_userns_clone 
+1
+</code></pre><p>安装 rootlesskit</p>
+<pre><code>test@m:~$ mkdir -p bin
+test@m:~$ curl -sSL https://github.com/rootless-containers/rootlesskit/releases/download/v1.1.1/rootlesskit-$(uname -m).tar.gz | tar Cxzv bin
+rootlessctl
+rootlesskit
+rootlesskit-docker-proxy
+</code></pre><p>试用</p>
+<pre><code>test@m:~$ id
+uid=1000(test) gid=1000(test) groups=1000(test)
+test@m:~$ ./bin/rootlesskit bash
+root@m:~# id
+uid=0(root) gid=0(root) groups=0(root)
+root@m:~# ls -l /etc/shadow
+-rw-r----- 1 nobody nogroup 1160 Oct  7 11:36 /etc/shadow
+root@m:~# cat /etc/shadow
+cat: /etc/shadow: Permission denied
+</code></pre><pre><code>test@m:~$ ./bin/rootlesskit --copy-up=/etc bash
+root@m:~# ls -lah /etc/shadow
+lrwxrwxrwx 1 root root 20 Oct  7 11:43 /etc/shadow -&gt; .ro3709914014/shadow
+</code></pre><h3 id="32-how-it-works">3.2 How it works</h3>
+<h4 id="1-user-namespaces--newuidmapnewgidmap">(1) user namespaces + newuidmap/newgidmap</h4>
+<p>rootless 容器使用 <a href="http://man7.org/linux/man-pages/man7/user_namespaces.7.html">user_namespaces(7)</a> 来模拟特权以创建容器。利用 user ns 中的 CAP_SYS_ADMIN 和 CAP_NET_ADMIN 执行特权操作，例如创建 mount namespaces, network namespaces, TAP 设备等。这一点上和 unshare 功能相同</p>
+<pre><code>test@m:~$ id
+uid=1000(test) gid=1000(test) groups=1000(test)
+test@m:~$ unshare --user --map-root-user
+root@m:~# id
+uid=0(root) gid=0(root) groups=0(root)
+root@m:~# cat /proc/self/status | grep -i capeff
+CapEff: 0000003fffffffff
+root@m:~# cat /proc/self/uid_map 
+         0       1000          1
+</code></pre><p>但仅映射单个 uid/gid 不足以运行需要多个 uid/gid 的容器，rootless 容器使用 SETUID程序 newuidmap/newgidmap 解决这个问题，他们会从 /etc/subuid, /etc/subgid 中读取配置文件。</p>
+<pre><code>test@m:~$ ./bin/rootlesskit bash
+root@m:~# cat /proc/self/uid_map 
+         0       1000          1
+         1     100000      65536
+</code></pre><p>这意味着 user ns 中的 uid 和host uid 的映射关系为 ：</p>
+<table>
+<thead>
+<tr>
+<th>Host UID </th>
+<th>UserNS UID </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1000</td>
+<td>0</td>
+</tr>
+<tr>
+<td>100000</td>
+<td>1</td>
+</tr>
+<tr>
+<td>100001</td>
+<td>2</td>
+</tr>
+<tr>
+<td>…</td>
+<td>…</td>
+</tr>
+<tr>
+<td>165535</td>
+<td>65536</td>
+</tr>
+</tbody>
+</table>
+<h4 id="2-network-namespaces">(2) network namespaces</h4>
+<p>创建 network namespaces 不只是为了分配 IP 地址，还是为了隔离 容器化进程 对主机 UNIX socket 的访问。</p>
+<p>然而 vEth 对 不能在没有特权时 跨 userns 创建。LXC 使用 SETUID 程序 lxc-user-nic 来创建 vEth 对； 也可使用 TAP 设备运行一个名为 <a href="https://rootlesscontaine.rs/glossary#slirp">slirp</a> 的用户模式网络栈，它可以将 Ethernet 数据翻译为 非特权的 socket 系统调用。</p>
+<p>rootlesskit 支持多种驱动</p>
+<ul>
+<li><code>--net=host</code>: 共享主机 network namespace (默认)
+<ul>
+<li>无权限执行 network-namespaced 操作，例如创建 iptables 规则, 运行 tcpdump</li>
+<li>不涉及性能损耗</li>
+</ul>
+</li>
+<li><code>--net=pasta</code>:  <a href="https://passt.top/passt/">pasta</a> (experimental)
+<ul>
+<li>暂不支持 UDP 端口转发</li>
+<li>TCP 端口转发速度快，支持保留源IP</li>
+</ul>
+</li>
+<li><code>--net=slirp4netns</code>:  <a href="https://github.com/rootless-containers/slirp4netns">slirp4netns</a> (推荐)
+<ul>
+<li>基于mount namespace, seccomp 的加固</li>
+<li>性能损耗，但优于 VPNKit</li>
+<li>仅支持 TCP, UDP, ICMP Echo</li>
+</ul>
+</li>
+<li><code>--net=vpnkit</code>: <a href="https://github.com/moby/vpnkit">VPNKit</a>
+<ul>
+<li>性能损耗</li>
+<li>仅支持 TCP, UDP, 不支持 ICMP Echo</li>
+<li>不支持 IPv6</li>
+</ul>
+</li>
+<li><code>--net=lxc-user-nic</code>: <code>lxc-user-nic</code> (experimental)
+<ul>
+<li>最低性能损耗</li>
+<li>低安全</li>
+<li>不支持 IPv6</li>
+<li>不支持 <code>--detach-netns</code></li>
+</ul>
+</li>
+</ul>
+<h2 id="4-源码">4. 源码</h2>
+<p>跳过命令行参数解析，程序运行入口为 <code>parent.Parent()</code> 函数</p>
+<p>主要流程基本在该函数中，包括：</p>
+<ul>
+<li>unshare namespaces</li>
+<li>配置网络</li>
+<li>端口转发</li>
+</ul>
+<p>详细代码待后续 rootlesskit 专项研究分析，本文仅作大致介绍。</p>
+<p><a href="https://github.com/rootless-containers/rootlesskit/blob/v2.0.0-alpha.1/pkg/parent/parent.go#L128">https://github.com/rootless-containers/rootlesskit/blob/v2.0.0-alpha.1/pkg/parent/parent.go#L128</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">Parent</span>(<span style="color:#a6e22e">opt</span> <span style="color:#a6e22e">Opt</span>) <span style="color:#66d9ef">error</span> {
+	<span style="color:#f92672">...</span>
+	<span style="color:#a6e22e">cmd</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">exec</span>.<span style="color:#a6e22e">Command</span>(<span style="color:#e6db74">&#34;/proc/self/exe&#34;</span>, <span style="color:#a6e22e">os</span>.<span style="color:#a6e22e">Args</span>[<span style="color:#ae81ff">1</span>:]<span style="color:#f92672">...</span>)
+	<span style="color:#a6e22e">cmd</span>.<span style="color:#a6e22e">SysProcAttr</span> = <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">syscall</span>.<span style="color:#a6e22e">SysProcAttr</span>{
+		<span style="color:#a6e22e">Pdeathsig</span>:  <span style="color:#a6e22e">syscall</span>.<span style="color:#a6e22e">SIGKILL</span>,
+		<span style="color:#a6e22e">Cloneflags</span>: <span style="color:#a6e22e">syscall</span>.<span style="color:#a6e22e">CLONE_NEWUSER</span> | <span style="color:#a6e22e">syscall</span>.<span style="color:#a6e22e">CLONE_NEWNS</span>,
+	}
+
+	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">opt</span>.<span style="color:#a6e22e">NetworkDriver</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+		<span style="color:#66d9ef">if</span> !<span style="color:#a6e22e">opt</span>.<span style="color:#a6e22e">DetachNetNS</span> {
+			<span style="color:#a6e22e">cmd</span>.<span style="color:#a6e22e">SysProcAttr</span>.<span style="color:#a6e22e">Unshareflags</span> <span style="color:#f92672">|=</span> <span style="color:#a6e22e">syscall</span>.<span style="color:#a6e22e">CLONE_NEWNET</span>
+		}
+	}
+
+	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">opt</span>.<span style="color:#a6e22e">CreatePIDNS</span> {
+		<span style="color:#75715e">// cannot be Unshareflags (panics)
+</span><span style="color:#75715e"></span>		<span style="color:#a6e22e">cmd</span>.<span style="color:#a6e22e">SysProcAttr</span>.<span style="color:#a6e22e">Cloneflags</span> <span style="color:#f92672">|=</span> <span style="color:#a6e22e">syscall</span>.<span style="color:#a6e22e">CLONE_NEWPID</span>
+	}
+	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">opt</span>.<span style="color:#a6e22e">CreateCgroupNS</span> {
+		<span style="color:#a6e22e">cmd</span>.<span style="color:#a6e22e">SysProcAttr</span>.<span style="color:#a6e22e">Unshareflags</span> <span style="color:#f92672">|=</span> <span style="color:#a6e22e">unix</span>.<span style="color:#a6e22e">CLONE_NEWCGROUP</span>
+	}
+	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">opt</span>.<span style="color:#a6e22e">CreateUTSNS</span> {
+		<span style="color:#a6e22e">cmd</span>.<span style="color:#a6e22e">SysProcAttr</span>.<span style="color:#a6e22e">Unshareflags</span> <span style="color:#f92672">|=</span> <span style="color:#a6e22e">unix</span>.<span style="color:#a6e22e">CLONE_NEWUTS</span>
+	}
+	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">opt</span>.<span style="color:#a6e22e">CreateIPCNS</span> {
+		<span style="color:#a6e22e">cmd</span>.<span style="color:#a6e22e">SysProcAttr</span>.<span style="color:#a6e22e">Unshareflags</span> <span style="color:#f92672">|=</span> <span style="color:#a6e22e">unix</span>.<span style="color:#a6e22e">CLONE_NEWIPC</span>
+	}
+        <span style="color:#f92672">...</span>
+	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">setupUIDGIDMap</span>(<span style="color:#a6e22e">cmd</span>.<span style="color:#a6e22e">Process</span>.<span style="color:#a6e22e">Pid</span>, <span style="color:#a6e22e">opt</span>.<span style="color:#a6e22e">SubidSource</span>); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+		<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Errorf</span>(<span style="color:#e6db74">&#34;failed to setup UID/GID map: %w&#34;</span>, <span style="color:#a6e22e">err</span>)
+	}
+        <span style="color:#f92672">...</span>
+	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">opt</span>.<span style="color:#a6e22e">NetworkDriver</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+		<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">netns</span> <span style="color:#66d9ef">string</span>
+		<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">opt</span>.<span style="color:#a6e22e">DetachNetNS</span> {
+			<span style="color:#a6e22e">netns</span> = <span style="color:#a6e22e">filepath</span>.<span style="color:#a6e22e">Join</span>(<span style="color:#e6db74">&#34;/proc&#34;</span>, <span style="color:#a6e22e">strconv</span>.<span style="color:#a6e22e">Itoa</span>(<span style="color:#a6e22e">cmd</span>.<span style="color:#a6e22e">Process</span>.<span style="color:#a6e22e">Pid</span>), <span style="color:#e6db74">&#34;root&#34;</span>, <span style="color:#a6e22e">filepath</span>.<span style="color:#a6e22e">Clean</span>(<span style="color:#a6e22e">opt</span>.<span style="color:#a6e22e">StateDir</span>), <span style="color:#e6db74">&#34;netns&#34;</span>)
+		}
+		<span style="color:#a6e22e">netMsg</span>, <span style="color:#a6e22e">cleanupNetwork</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">opt</span>.<span style="color:#a6e22e">NetworkDriver</span>.<span style="color:#a6e22e">ConfigureNetwork</span>(<span style="color:#a6e22e">cmd</span>.<span style="color:#a6e22e">Process</span>.<span style="color:#a6e22e">Pid</span>, <span style="color:#a6e22e">opt</span>.<span style="color:#a6e22e">StateDir</span>, <span style="color:#a6e22e">netns</span>)
+		<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">cleanupNetwork</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+			<span style="color:#66d9ef">defer</span> <span style="color:#a6e22e">cleanupNetwork</span>()
+		}
+		<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+			<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Errorf</span>(<span style="color:#e6db74">&#34;failed to setup network %+v: %w&#34;</span>, <span style="color:#a6e22e">opt</span>.<span style="color:#a6e22e">NetworkDriver</span>, <span style="color:#a6e22e">err</span>)
+		}
+		<span style="color:#a6e22e">msgParentInitNetworkDriverCompleted</span>.<span style="color:#a6e22e">U</span>.<span style="color:#a6e22e">ParentInitNetworkDriverCompleted</span> = <span style="color:#a6e22e">netMsg</span>
+	}
+        <span style="color:#f92672">...</span>
+	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">opt</span>.<span style="color:#a6e22e">PortDriver</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+		<span style="color:#75715e">// wait for port driver to be ready
+</span><span style="color:#75715e"></span>		<span style="color:#66d9ef">select</span> {
+		<span style="color:#66d9ef">case</span> <span style="color:#f92672">&lt;-</span><span style="color:#a6e22e">portDriverInitComplete</span>:
+		<span style="color:#66d9ef">case</span> <span style="color:#a6e22e">err</span> = <span style="color:#f92672">&lt;-</span><span style="color:#a6e22e">portDriverErr</span>:
+			<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">err</span>
+		}
+		<span style="color:#75715e">// publish ports
+</span><span style="color:#75715e"></span>		<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">p</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">opt</span>.<span style="color:#a6e22e">PublishPorts</span> {
+			<span style="color:#a6e22e">st</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">opt</span>.<span style="color:#a6e22e">PortDriver</span>.<span style="color:#a6e22e">AddPort</span>(<span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">TODO</span>(), <span style="color:#a6e22e">p</span>)
+			<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+				<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Errorf</span>(<span style="color:#e6db74">&#34;failed to expose port %v: %w&#34;</span>, <span style="color:#a6e22e">p</span>, <span style="color:#a6e22e">err</span>)
+			}
+			<span style="color:#a6e22e">logrus</span>.<span style="color:#a6e22e">Debugf</span>(<span style="color:#e6db74">&#34;published port %v&#34;</span>, <span style="color:#a6e22e">st</span>)
+		}
+	}
+        <span style="color:#f92672">...</span>
+	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">cmd</span>.<span style="color:#a6e22e">Wait</span>(); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+		<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Errorf</span>(<span style="color:#e6db74">&#34;child exited: %w&#34;</span>, <span style="color:#a6e22e">err</span>)
+	}
+        <span style="color:#f92672">...</span>
+}
+
+</code></pre></div><h2 id="5-参考">5. 参考</h2>
+<ul>
+<li><a href="https://github.com/rootless-containers/rootlesskit/">https://github.com/rootless-containers/rootlesskit/</a></li>
+<li><a href="https://rootlesscontaine.rs/how-it-works/">https://rootlesscontaine.rs/how-it-works/</a></li>
+</ul>
+<hr>
+<blockquote>
+<p>本文使用<a href="https://github.com/ssst0n3/security-research-specification/blob/main/cloud-native-security-news/project-introduction.md">云原生安全资讯：项目推荐</a>作为文档基线</p>
+</blockquote>
+<hr>
+<p>本文同步发布于</p>
+<ul>
+<li>github: <a href="https://github.com/ssst0n3/cloud-native-security-news/blob/d7396dd963b44e5b07309e0c9d78f7890d497052/2023-10-09_%E9%A1%B9%E7%9B%AE%E4%BB%8B%E7%BB%8D_rootlesskit.md">ssst0n3/cloud-native-security-news</a></li>
+<li>blog: ssst0n3.github.io</li>
+<li>公众号: 石头的安全料理屋</li>
+<li>知乎专栏: <a href="https://www.zhihu.com/column/c_1694733563684151296">云原生安全资讯</a></li>
+</ul>
+
+            </div>
+        </article>
+
+        <hr />
+
+        <div class="post-info">
+  			</div>
+
+        
+    </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>&copy; 2023</span>
+            
+            <span></span>
+            <span> <a href="/posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a></span>
+        </div>
+    </div>
+    <div class="footer__inner">
+        <div class="footer__content">
+
+        </div>
+    </div>
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>Powered by <a href="http://gohugo.io">Hugo</a></span>
+            <span>Made with &#10084; by <a href="https://github.com/st0n3">st0n3</a></span>
+            <span>Based on <a href="https://github.com/rhazdon">rhazdon</a></span>
+        </div>
+    </div>
+
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      extensions: ["tex2jax.js"],
+      
+      jax: ["input/TeX", "output/CommonHTML"],
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+        displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+        processEscapes: true
+      },
+      "HTML-CSS": { fonts: ["TeX"] },
+      displayAlign: "left"
+    });
+  </script>
+
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_CHTML"></script>
+
+
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+
+<script type="text/javascript" src="/bundle.min.4c3fb12a087ceed4a52cb5d57068a9795c7069617a01ca70f788052ad66e1791779e6c72686e1dc0ca13dc03b0203204b6566bb0dd1ee80de2b7ff4d8fe53db2.js" integrity="sha512-TD&#43;xKgh87tSlLLXVcGipeVxwaWF6Acpw94gFKtZuF5F3nmxyaG4dwMoT3AOwIDIEtlZrsN0e6A3it/9Nj&#43;U9sg=="></script>
+
+
+
+    </body>
+</html>

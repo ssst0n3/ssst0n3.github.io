@@ -6,7 +6,23 @@
     <description>Recent content in Post on welcome to st0n3&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 06 Sep 2023 07:41:20 +0000</lastBuildDate><atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 09 Oct 2023 07:54:32 +0000</lastBuildDate><atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>项目介绍: rootlesskit</title>
+      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E4%BA%91%E5%8E%9F%E7%94%9F%E5%AE%89%E5%85%A8%E8%B5%84%E8%AE%AF/%E9%A1%B9%E7%9B%AE%E4%BB%8B%E7%BB%8D-rootlesskit.html</link>
+      <pubDate>Mon, 09 Oct 2023 07:54:32 +0000</pubDate>
+      
+      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E4%BA%91%E5%8E%9F%E7%94%9F%E5%AE%89%E5%85%A8%E8%B5%84%E8%AE%AF/%E9%A1%B9%E7%9B%AE%E4%BB%8B%E7%BB%8D-rootlesskit.html</guid>
+      <description>tags: 云原生安全资讯,项目介绍 spec version: v0.2.4 version: v0.1.0
+ 项目介绍: rootlesskit  项目地址：https://github.com/rootless-containers/rootlesskit  1. What RootlessKit是使用user_namespaces(7)实现的Linux原生 &amp;ldquo;fake root&amp;rdquo; 工具。
+2. Why RootlessKit 是为了以非特权用户运行 Docker 和 Kubernetes 而设计的，以保护主机上真正的root用户，来应对可能的容器逃逸攻击。
+一些类似的工具不能支撑运行 rootless 容器，或缺少相关功能：
+基于 LD_PRELOAD 的工具 (不足以运行 rootless 容器，不支持静态二进制文件) :
+ fakeroot  基于系统调用 ptrace(2) 的工具 (不足以支撑 rootless 容器)：
+ fakeroot-ng proot  同 RootlessKit 一样，基于 user_namespace(7) 实现的工具(但不支持 &amp;ndash;copy-up, &amp;ndash;net 等功能)：
+ unshare -r podman unshare become-root  3. How 3.1 How to use 依赖</description>
+    </item>
+    
     <item>
       <title>CAP_CHOWN 可利用性研究</title>
       <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8/%E8%BF%9B%E7%A8%8B%E5%AE%B9%E5%99%A8/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%B9%E5%99%A8/docker/%E5%AE%89%E5%85%A8%E9%A3%8E%E9%99%A9/Capability%E5%8F%AF%E5%88%A9%E7%94%A8%E6%80%A7%E7%A0%94%E7%A9%B6/CAP_CHOWN-%E5%8F%AF%E5%88%A9%E7%94%A8%E6%80%A7%E7%A0%94%E7%A9%B6.html</link>
