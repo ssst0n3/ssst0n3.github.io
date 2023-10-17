@@ -269,10 +269,10 @@ total<span style="color:#f92672">=</span>sum(A)
 <p>实际上, s=sum(A) 是直接成立的。</p>
 <p>$$
 \begin{align*}
-s &amp;= sum(A) \<br>
-&amp;= 2^0 + (2^1 + 2^{t-2}*(2^t-1)) + &hellip; + (2^i + 2^{t-i-1}*(2^t-1)) + &hellip; + (2^{t-1} + 2^0*(2^t-1)) \<br>
-&amp;= (2^0 + 2^1 + &hellip; + 2^i + &hellip; + 2^{t-1}) + 2^0*(2^t-1) + &hellip; + 2^{t-2}*(2^t-1) \<br>
-&amp;= 2^t - 1 + (2^{t-1}-1)*(2^t-1) \<br>
+s &amp;= sum(A) \newline
+&amp;= 2^0 + (2^1 + 2^{t-2}*(2^t-1)) + &hellip; + (2^i + 2^{t-i-1}*(2^t-1)) + &hellip; + (2^{t-1} + 2^0*(2^t-1)) \newline
+&amp;= (2^0 + 2^1 + &hellip; + 2^i + &hellip; + 2^{t-1}) + 2^0*(2^t-1) + &hellip; + 2^{t-2}*(2^t-1) \newline
+&amp;= 2^t - 1 + (2^{t-1}-1)*(2^t-1) \newline
 &amp;= 2^{t-1}*(2^t-1)
 \end{align*}
 $$</p>
