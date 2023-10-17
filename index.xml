@@ -6,7 +6,21 @@
     <description>Recent content on welcome to st0n3&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 09 Oct 2023 07:54:32 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 17 Oct 2023 07:08:08 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Hack.lu-Qualifier-2023/Crypto/Lucky Numbers Writeup</title>
+      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/CTF/crypto/math/Hack.lu-Qualifier-2023CryptoLucky-Numbers-Writeup.html</link>
+      <pubDate>Tue, 17 Oct 2023 07:08:08 +0000</pubDate>
+      
+      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/CTF/crypto/math/Hack.lu-Qualifier-2023CryptoLucky-Numbers-Writeup.html</guid>
+      <description>tags: ctf,crypto,beginner-friendly
+ Hack.lu-Qualifier-2023/Crypto/Lucky Numbers Writeup 1. challenge  Author: zer0 beginner-friendly!  Help me to find my lucky numbers. Bad luck is around&amp;hellip;
+nc flu.xxx 10010
+Download challenge files
+lucky_number.py
+#!/usr/bin/env python #hacklu23 Baby Crypyo Challenge import math import random from Crypto.Cipher import AES from Crypto.Random import get_random_bytes import base64 import os def add(e): return e+(length-len(e)%length)*chr(length-len(e)%length) def remove(e): return e[0:-ord(e[-1:])] length=16 def main(): flag= os.environ[&amp;#34;FLAG&amp;#34;] print(&amp;#34;Starting Challenge&amp;#34;) key=get_random_bytes(32) message=add(flag) iv=get_random_bytes(length) cipher=AES.</description>
+    </item>
+    
     <item>
       <title>项目介绍: rootlesskit</title>
       <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E4%BA%91%E5%8E%9F%E7%94%9F%E5%AE%89%E5%85%A8%E8%B5%84%E8%AE%AF/%E9%A1%B9%E7%9B%AE%E4%BB%8B%E7%BB%8D-rootlesskit.html</link>
