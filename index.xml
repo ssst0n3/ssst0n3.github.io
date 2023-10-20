@@ -6,7 +6,21 @@
     <description>Recent content on welcome to st0n3&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 17 Oct 2023 07:08:08 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 20 Oct 2023 03:25:22 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Hack.lu-Qualifier-2023/Crypto/Spooky Safebox writeup</title>
+      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/CTF/crypto/ECDSA/Hack.lu-Qualifier-2023CryptoSpooky-Safebox-writeup.html</link>
+      <pubDate>Fri, 20 Oct 2023 03:25:22 +0000</pubDate>
+      
+      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/CTF/crypto/ECDSA/Hack.lu-Qualifier-2023CryptoSpooky-Safebox-writeup.html</guid>
+      <description>tags: ctf,crypto,writeup,lattice,ecdsa
+ Hack.lu-Qualifier-2023/Crypto/Spooky Safebox writeup 1. challenge  Author: newton  Satoshi lost his private key, can you help him recover his secret?
+nc flu.xxx 10030
+Download challenge files
+app.py
+#!/usr/bin/env python3 import secrets import os, sys, hmac import cryptod from proofofwork import challenge_proof_of_work FLAG = os.environ.get(&amp;#34;FLAG&amp;#34;, &amp;#34;flag{FAKE_FLAG}&amp;#34;) if &amp;#34;flag&amp;#34; in os.environ.get(&amp;#34;FLAG&amp;#34;,&amp;#34;&amp;#34;) else &amp;#34;flag{FAKE_FLAG}&amp;#34; def main(): print(&amp;#34;Welcome to the Spooky Safebox!&amp;#34;) if not challenge_proof_of_work(): return kpriv, kpub = cryptod.</description>
+    </item>
+    
     <item>
       <title>Hack.lu-Qualifier-2023/Crypto/Lucky Numbers Writeup</title>
       <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/CTF/crypto/math/Hack.lu-Qualifier-2023CryptoLucky-Numbers-Writeup.html</link>
