@@ -50,7 +50,7 @@ app.py
 #!/usr/bin/env python3 import secrets import os, sys, hmac import cryptod from proofofwork import challenge_proof_of_work FLAG = os.environ.get(&#34;FLAG&#34;, &#34;flag{FAKE_FLAG}&#34;) if &#34;flag&#34; in os.environ.get(&#34;FLAG&#34;,&#34;&#34;) else &#34;flag{FAKE_FLAG}&#34; def main(): print(&#34;Welcome to the Spooky Safebox!&#34;) if not challenge_proof_of_work(): return kpriv, kpub = cryptod.">
 <meta itemprop="datePublished" content="2023-10-20T03:25:22+00:00" />
 <meta itemprop="dateModified" content="2023-10-20T03:25:22+00:00" />
-<meta itemprop="wordCount" content="2947">
+<meta itemprop="wordCount" content="2948">
 
 
 
@@ -243,15 +243,15 @@ FLAG <span style="color:#f92672">=</span> os<span style="color:#f92672">.</span>
 </ul>
 <p><strong>算法</strong></p>
 <p>$$
-\begin{align}
-&amp; 1. e = HASH(m) \<br>
-&amp; 2. z = e &raquo; (2^{n.nbits()}-1) \<br>
-&amp; 3. k = random(1, n-1) \<br>
-&amp; 4. R(x_1, y_1) = k \times G \<br>
-&amp; 5. r = x_1 \mod n, x \neq 0 \<br>
-&amp; 6. s = k^{-1}(z+rd_A) \mod n, s \neq 0\<br>
+\begin{align*}
+&amp; 1. e = HASH(m) \newline
+&amp; 2. z = e &raquo; (2^{n.nbits()}-1) \newline
+&amp; 3. k = random(1, n-1) \newline
+&amp; 4. R(x_1, y_1) = k \times G \newline
+&amp; 5. r = x_1 \mod n, x \neq 0 \newline
+&amp; 6. s = k^{-1}(z+rd_A) \mod n, s \neq 0 \newline
 &amp; 7. return (r, s)
-\end{align}
+\end{align*}
 $$</p>
 <h2 id="3-分析">3. 分析</h2>
 <h3 id="31-flag-加密">3.1 flag 加密</h3>
