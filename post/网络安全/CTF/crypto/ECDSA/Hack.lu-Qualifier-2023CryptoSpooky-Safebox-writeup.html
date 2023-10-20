@@ -50,7 +50,7 @@ app.py
 #!/usr/bin/env python3 import secrets import os, sys, hmac import cryptod from proofofwork import challenge_proof_of_work FLAG = os.environ.get(&#34;FLAG&#34;, &#34;flag{FAKE_FLAG}&#34;) if &#34;flag&#34; in os.environ.get(&#34;FLAG&#34;,&#34;&#34;) else &#34;flag{FAKE_FLAG}&#34; def main(): print(&#34;Welcome to the Spooky Safebox!&#34;) if not challenge_proof_of_work(): return kpriv, kpub = cryptod.">
 <meta itemprop="datePublished" content="2023-10-20T03:25:22+00:00" />
 <meta itemprop="dateModified" content="2023-10-20T03:25:22+00:00" />
-<meta itemprop="wordCount" content="2948">
+<meta itemprop="wordCount" content="2942">
 
 
 
@@ -238,8 +238,8 @@ FLAG <span style="color:#f92672">=</span> os<span style="color:#f92672">.</span>
 <li>CURVE: 椭圆曲线方程</li>
 <li>G: 生成元</li>
 <li>n: G的秩, 素数</li>
-<li>$ d_{A} $ : 私钥, random(1, n-1)</li>
-<li>$ Q_{A} $ : 公钥, $ Q_{A}=d_{A} \times G $</li>
+<li>$d_{A}$ : 私钥, random(1, n-1)</li>
+<li>$Q_{A}$ : 公钥, $Q_{A}=d_{A} \times G$</li>
 </ul>
 <p><strong>算法</strong></p>
 <p>$$
