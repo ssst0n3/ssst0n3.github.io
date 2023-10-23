@@ -14,9 +14,9 @@
       
       <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/CTF/crypto/ECDSA/N1CTF-Qualifier-2023Cryptoe2Wrmup-writeup.html</guid>
       <description>tags: ctf,crypto,ecdsa
- N1CTF-Qualifier-2023/Crypto/e2W@rmup writeup 1. challenge  time cost: 9:30-10:45 score: 80PT solver: 49   Welcome 2 N1CTF2023! （＾ω＾）
+ N1CTF-Qualifier-2023/Crypto/e2W@rmup writeup 1. challenge  time cost: 1 hour 15 min, 9:30-10:45 score: 80PT solver: 49   Welcome 2 N1CTF2023! （＾ω＾）
 https://drive.google.com/file/d/1g-c70UHiXSAhTkBKagpPp_sbSnq9ZPDt/view?usp=sharing
- import hashlib import ecdsa from Crypto.Cipher import AES from Crypto.Util.Padding import pad from Crypto.Util.number import * from secret import flag def gen(): curve = ecdsa.NIST256p.generator order = curve.order() d = randint(1, order-1) while d.bit_length() != 256: d = randint(1, order-1) pubkey = ecdsa.ecdsa.Public_key(curve, curve * d) privkey = ecdsa.</description>
+ import hashlib import ecdsa from Crypto.Cipher import AES from Crypto.Util.Padding import pad from Crypto.Util.number import * from secret import flag def gen(): curve = ecdsa.NIST256p.generator order = curve.order() d = randint(1, order-1) while d.bit_length() != 256: d = randint(1, order-1) pubkey = ecdsa.</description>
     </item>
     
     <item>
