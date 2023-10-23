@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author"
+    content="">
+<meta name="description"
+    content="tags: ctf,crypto,ecdsa
+ N1CTF-Qualifier-2023/Crypto/e2W@rmup writeup 1. challenge  time cost: 9:30-10:45 score: 80PT solver: 49   Welcome 2 N1CTF2023! （＾ω＾）
+https://drive.google.com/file/d/1g-c70UHiXSAhTkBKagpPp_sbSnq9ZPDt/view?usp=sharing
+ import hashlib import ecdsa from Crypto.Cipher import AES from Crypto.Util.Padding import pad from Crypto.Util.number import * from secret import flag def gen(): curve = ecdsa.NIST256p.generator order = curve.order() d = randint(1, order-1) while d.bit_length() != 256: d = randint(1, order-1) pubkey = ecdsa.ecdsa.Public_key(curve, curve * d) privkey = ecdsa." />
+<meta name="keywords" content="" />
+<meta name="robots" content="noodp" />
+<link rel="canonical" href="/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/CTF/crypto/ECDSA/N1CTF-Qualifier-2023Cryptoe2Wrmup-writeup.html" />
+
+
+<title>
+    
+    N1CTF-Qualifier-2023/Crypto/e2W@rmup writeup :: welcome to st0n3&#39;s blog 
+    
+</title>
+
+
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.2.1/css/flag-icon.min.css" rel="stylesheet"
+    type="text/css">
+
+
+
+<link rel="stylesheet" href="/main.min.de959d61dd13c2cd41136acd491ffb0749779e1afe37b1fed6d5cba0b7e1938d.css">
+
+
+
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#252627">
+<link rel="shortcut icon" href="/favicon.ico">
+<meta name="theme-color" content="#252627"><meta itemprop="name" content="N1CTF-Qualifier-2023/Crypto/e2W@rmup writeup">
+<meta itemprop="description" content="tags: ctf,crypto,ecdsa
+ N1CTF-Qualifier-2023/Crypto/e2W@rmup writeup 1. challenge  time cost: 9:30-10:45 score: 80PT solver: 49   Welcome 2 N1CTF2023! （＾ω＾）
+https://drive.google.com/file/d/1g-c70UHiXSAhTkBKagpPp_sbSnq9ZPDt/view?usp=sharing
+ import hashlib import ecdsa from Crypto.Cipher import AES from Crypto.Util.Padding import pad from Crypto.Util.number import * from secret import flag def gen(): curve = ecdsa.NIST256p.generator order = curve.order() d = randint(1, order-1) while d.bit_length() != 256: d = randint(1, order-1) pubkey = ecdsa.ecdsa.Public_key(curve, curve * d) privkey = ecdsa.">
+<meta itemprop="datePublished" content="2023-10-23T11:04:54+00:00" />
+<meta itemprop="dateModified" content="2023-10-23T11:04:54+00:00" />
+<meta itemprop="wordCount" content="1720">
+
+
+
+<meta itemprop="keywords" content="" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="N1CTF-Qualifier-2023/Crypto/e2W@rmup writeup"/>
+<meta name="twitter:description" content="tags: ctf,crypto,ecdsa
+ N1CTF-Qualifier-2023/Crypto/e2W@rmup writeup 1. challenge  time cost: 9:30-10:45 score: 80PT solver: 49   Welcome 2 N1CTF2023! （＾ω＾）
+https://drive.google.com/file/d/1g-c70UHiXSAhTkBKagpPp_sbSnq9ZPDt/view?usp=sharing
+ import hashlib import ecdsa from Crypto.Cipher import AES from Crypto.Util.Padding import pad from Crypto.Util.number import * from secret import flag def gen(): curve = ecdsa.NIST256p.generator order = curve.order() d = randint(1, order-1) while d.bit_length() != 256: d = randint(1, order-1) pubkey = ecdsa.ecdsa.Public_key(curve, curve * d) privkey = ecdsa."/>
+
+
+
+
+<meta property="article:published_time" content="2023-10-23 11:04:54 &#43;0000 UTC" />
+
+
+
+
+
+
+
+    </head>
+
+    <body class="dark-theme">
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text">$ cd /home/st0n3</span>
+            <span class="logo__cursor"></span>
+        
+    </div>
+</a>
+
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="/aboutme.html">About</a></li><li><a href="/post.html">Blog</a></li><li><a href="/hackerbot">Hackerbot</a></li><li><a href="/skill_tree/">SkillTree</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+
+            <span class="theme-toggle"><svg class="theme-toggler" width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M22 41C32.4934 41 41 32.4934 41 22C41 11.5066 32.4934 3 22
+  3C11.5066 3 3 11.5066 3 22C3 32.4934 11.5066 41 22 41ZM7 22C7
+  13.7157 13.7157 7 22 7V37C13.7157 37 7 30.2843 7 22Z"/>
+</svg>
+</span>
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
+                
+    <main class="post">
+
+        <div class="post-info">
+            
+            </p>
+        </div>
+
+        <article>
+            <h2 class="post-title"><a href="/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/CTF/crypto/ECDSA/N1CTF-Qualifier-2023Cryptoe2Wrmup-writeup.html">N1CTF-Qualifier-2023/Crypto/e2W@rmup writeup</a></h2>
+
+            
+
+            <div class="post-content">
+                <hr>
+<p>tags: ctf,crypto,ecdsa</p>
+<hr>
+<h1 id="n1ctf-qualifier-2023cryptoe2wrmup-writeup">N1CTF-Qualifier-2023/Crypto/e2W@rmup writeup</h1>
+<h2 id="1-challenge">1. challenge</h2>
+<ul>
+<li>time cost: 9:30-10:45</li>
+<li>score: 80PT</li>
+<li>solver: 49</li>
+</ul>
+<blockquote>
+<p>Welcome 2 N1CTF2023! （＾ω＾）</p>
+<p><a href="https://drive.google.com/file/d/1g-c70UHiXSAhTkBKagpPp_sbSnq9ZPDt/view?usp=sharing">https://drive.google.com/file/d/1g-c70UHiXSAhTkBKagpPp_sbSnq9ZPDt/view?usp=sharing</a></p>
+</blockquote>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">import</span> hashlib
+<span style="color:#f92672">import</span> ecdsa
+<span style="color:#f92672">from</span> Crypto.Cipher <span style="color:#f92672">import</span> AES
+<span style="color:#f92672">from</span> Crypto.Util.Padding <span style="color:#f92672">import</span> pad
+<span style="color:#f92672">from</span> Crypto.Util.number <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
+<span style="color:#f92672">from</span> secret <span style="color:#f92672">import</span> flag
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">gen</span>():
+    curve <span style="color:#f92672">=</span> ecdsa<span style="color:#f92672">.</span>NIST256p<span style="color:#f92672">.</span>generator
+    order <span style="color:#f92672">=</span> curve<span style="color:#f92672">.</span>order()
+    d <span style="color:#f92672">=</span> randint(<span style="color:#ae81ff">1</span>, order<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>)
+    <span style="color:#66d9ef">while</span> d<span style="color:#f92672">.</span>bit_length() <span style="color:#f92672">!=</span> <span style="color:#ae81ff">256</span>:
+        d <span style="color:#f92672">=</span> randint(<span style="color:#ae81ff">1</span>, order<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>)
+    pubkey <span style="color:#f92672">=</span> ecdsa<span style="color:#f92672">.</span>ecdsa<span style="color:#f92672">.</span>Public_key(curve, curve <span style="color:#f92672">*</span> d)
+    privkey <span style="color:#f92672">=</span> ecdsa<span style="color:#f92672">.</span>ecdsa<span style="color:#f92672">.</span>Private_key(pubkey, d)
+    <span style="color:#66d9ef">return</span> pubkey, privkey, d
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">nonce_gen</span>(msg, d):
+    msg_bin <span style="color:#f92672">=</span> bin(msg)[<span style="color:#ae81ff">2</span>:]<span style="color:#f92672">.</span>zfill(<span style="color:#ae81ff">256</span>)
+    d_bin <span style="color:#f92672">=</span> bin(d)[<span style="color:#ae81ff">2</span>:]<span style="color:#f92672">.</span>zfill(<span style="color:#ae81ff">256</span>)
+    nonce <span style="color:#f92672">=</span> int(msg_bin[:<span style="color:#ae81ff">128</span>] <span style="color:#f92672">+</span> d_bin[:<span style="color:#ae81ff">128</span>], <span style="color:#ae81ff">2</span>)
+    <span style="color:#66d9ef">return</span> nonce
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">sign</span>(msg, privkey, d):
+    msg_hash <span style="color:#f92672">=</span> bytes_to_long(hashlib<span style="color:#f92672">.</span>sha256(msg)<span style="color:#f92672">.</span>digest())
+    nonce <span style="color:#f92672">=</span> nonce_gen(msg_hash, d)
+    sig <span style="color:#f92672">=</span> privkey<span style="color:#f92672">.</span>sign(msg_hash, nonce)
+    s, r <span style="color:#f92672">=</span> sig<span style="color:#f92672">.</span>s, sig<span style="color:#f92672">.</span>r
+    <span style="color:#66d9ef">return</span> s, r
+
+pk, sk, d <span style="color:#f92672">=</span> gen()
+msg <span style="color:#f92672">=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;welcome to n1ctf2023!&#39;</span>
+s, r <span style="color:#f92672">=</span> sign(msg, sk, d)
+<span style="color:#66d9ef">print</span>(f<span style="color:#e6db74">&#39;s = {s}&#39;</span>)
+<span style="color:#66d9ef">print</span>(f<span style="color:#e6db74">&#39;r = {r}&#39;</span>)
+
+m <span style="color:#f92672">=</span> pad(flag, <span style="color:#ae81ff">16</span>)
+aes <span style="color:#f92672">=</span> AES<span style="color:#f92672">.</span>new(long_to_bytes(d), mode<span style="color:#f92672">=</span>AES<span style="color:#f92672">.</span>MODE_ECB)
+cipher <span style="color:#f92672">=</span> aes<span style="color:#f92672">.</span>encrypt(m)
+<span style="color:#66d9ef">print</span>(f<span style="color:#e6db74">&#39;cipher = {cipher}&#39;</span>)
+
+<span style="color:#e6db74">&#34;&#34;&#34;
+</span><span style="color:#e6db74">s = 98064531907276862129345013436610988187051831712632166876574510656675679745081
+</span><span style="color:#e6db74">r = 9821122129422509893435671316433203251343263825232865092134497361752993786340
+</span><span style="color:#e6db74">cipher = b&#39;</span><span style="color:#ae81ff">\xf3</span><span style="color:#e6db74">#</span><span style="color:#ae81ff">\xff\x17\xdf\xbb\xc0\xc6</span><span style="color:#e6db74">v</span><span style="color:#ae81ff">\x1b</span><span style="color:#e6db74">g</span><span style="color:#ae81ff">\xc7\x8a</span><span style="color:#e6db74">6</span><span style="color:#ae81ff">\xf2\xdf</span><span style="color:#e6db74">~</span><span style="color:#ae81ff">\x12\xd8</span><span style="color:#e6db74">]</span><span style="color:#ae81ff">\xc5\x02</span><span style="color:#e6db74">Ot</span><span style="color:#ae81ff">\x99\x9f\xf7\xf3\x98\xbc\x04</span><span style="color:#e6db74">5</span><span style="color:#ae81ff">\x08\xfb\xce</span><span style="color:#e6db74">1@e</span><span style="color:#ae81ff">\xbc</span><span style="color:#e6db74">g[I</span><span style="color:#ae81ff">\xd1\xbf\xf8\xea\n</span><span style="color:#e6db74">-&#39;
+</span><span style="color:#e6db74">&#34;&#34;&#34;</span>
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">s <span style="color:#f92672">=</span> <span style="color:#ae81ff">98064531907276862129345013436610988187051831712632166876574510656675679745081</span>
+r <span style="color:#f92672">=</span> <span style="color:#ae81ff">9821122129422509893435671316433203251343263825232865092134497361752993786340</span>
+c <span style="color:#f92672">=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\xf3</span><span style="color:#e6db74">#</span><span style="color:#ae81ff">\xff\x17\xdf\xbb\xc0\xc6</span><span style="color:#e6db74">v</span><span style="color:#ae81ff">\x1b</span><span style="color:#e6db74">g</span><span style="color:#ae81ff">\xc7\x8a</span><span style="color:#e6db74">6</span><span style="color:#ae81ff">\xf2\xdf</span><span style="color:#e6db74">~</span><span style="color:#ae81ff">\x12\xd8</span><span style="color:#e6db74">]</span><span style="color:#ae81ff">\xc5\x02</span><span style="color:#e6db74">Ot</span><span style="color:#ae81ff">\x99\x9f\xf7\xf3\x98\xbc\x04</span><span style="color:#e6db74">5</span><span style="color:#ae81ff">\x08\xfb\xce</span><span style="color:#e6db74">1@e</span><span style="color:#ae81ff">\xbc</span><span style="color:#e6db74">g[I</span><span style="color:#ae81ff">\xd1\xbf\xf8\xea\n</span><span style="color:#e6db74">-&#39;</span>
+</code></pre></div><h2 id="2-分析">2. 分析</h2>
+<p>$$
+\begin{align*}
+&amp; 2^{255} &lt;= d &lt; 2^{256} \newline
+&amp; k = h_0 \cdot 2^{128} + d_0 \newline
+\Rightarrow &amp; \newline
+&amp; s\cdot(h_0 \cdot 2^{128} + d_0) \equiv h+r\cdot(d_0 \cdot 2^{128} + d_1) \pmod p \newline
+\Rightarrow &amp; \newline
+&amp; d_0 = a\cdot d_1 + b\cdot p + c
+\end{align*}
+$$</p>
+<p>未知数只有 $d_0, d_1$ ，模 p 的系数 u ，其中 $d_0, d_1$ 是128bit 的相对小数。</p>
+<p>于是可以列格来求解</p>
+<p>$$
+\begin{align*}
+&amp; [d_1, 1, b]
+\begin{bmatrix}
+1&amp;&amp;a \newline
+&amp;1&amp;c \newline
+&amp;&amp;p \newline
+\end{bmatrix} \newline
+= &amp; [d_1, 1, d_0]
+\end{align*}
+$$</p>
+<h2 id="3-lll-test">3. LLL Test</h2>
+<p>生成测试数据测试， LLL 只有一定概率解决这个问题。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">import</span> hashlib
+<span style="color:#f92672">import</span> ecdsa
+<span style="color:#f92672">from</span> Crypto.Util.number <span style="color:#f92672">import</span> long_to_bytes, bytes_to_long
+<span style="color:#f92672">from</span> Crypto.Util.Padding <span style="color:#f92672">import</span> pad, unpad
+<span style="color:#f92672">from</span> Crypto.Cipher <span style="color:#f92672">import</span> AES
+<span style="color:#f92672">from</span> tqdm.auto <span style="color:#f92672">import</span> tqdm
+
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Solver</span>:
+    <span style="color:#66d9ef">def</span> __init__(self, s, r, c, log:bool<span style="color:#f92672">=</span>True):
+        self<span style="color:#f92672">.</span>s <span style="color:#f92672">=</span> ZZ(s)
+        self<span style="color:#f92672">.</span>r <span style="color:#f92672">=</span> ZZ(r)
+        self<span style="color:#f92672">.</span>c <span style="color:#f92672">=</span> c
+        self<span style="color:#f92672">.</span>msg <span style="color:#f92672">=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;welcome to n1ctf2023!&#39;</span>
+
+        self<span style="color:#f92672">.</span>log <span style="color:#f92672">=</span> log
+        self<span style="color:#f92672">.</span>tqdm <span style="color:#f92672">=</span> None
+    
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">gen_data</span>(self):
+        self<span style="color:#f92672">.</span>h <span style="color:#f92672">=</span> bytes_to_long(hashlib<span style="color:#f92672">.</span>sha256(self<span style="color:#f92672">.</span>msg)<span style="color:#f92672">.</span>digest())
+        self<span style="color:#f92672">.</span>h0 <span style="color:#f92672">=</span> int(bin(self<span style="color:#f92672">.</span>h)[<span style="color:#ae81ff">2</span>:]<span style="color:#f92672">.</span>zfill(<span style="color:#ae81ff">256</span>)[:<span style="color:#ae81ff">128</span>],<span style="color:#ae81ff">2</span>)
+        self<span style="color:#f92672">.</span>p <span style="color:#f92672">=</span> ZZ(ecdsa<span style="color:#f92672">.</span>NIST256p<span style="color:#f92672">.</span>generator<span style="color:#f92672">.</span>order())
+    
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">gen_eq</span>(self):
+        PR <span style="color:#f92672">=</span> PolynomialRing(GF(self<span style="color:#f92672">.</span>p), [<span style="color:#e6db74">&#34;d0&#34;</span>, <span style="color:#e6db74">&#34;d1&#34;</span>])
+        d0, d1 <span style="color:#f92672">=</span> PR<span style="color:#f92672">.</span>gens()
+        self<span style="color:#f92672">.</span>eq <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>s<span style="color:#f92672">*</span>(self<span style="color:#f92672">.</span>h0<span style="color:#f92672">*</span>(<span style="color:#ae81ff">2</span><span style="color:#f92672">**</span><span style="color:#ae81ff">128</span>)<span style="color:#f92672">+</span>d0) <span style="color:#f92672">-</span> self<span style="color:#f92672">.</span>h <span style="color:#f92672">-</span> self<span style="color:#f92672">.</span>r<span style="color:#f92672">*</span>(d0<span style="color:#f92672">*</span>(<span style="color:#ae81ff">2</span><span style="color:#f92672">**</span><span style="color:#ae81ff">128</span>)<span style="color:#f92672">+</span>d1)
+        
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">resultant</span>(self):
+        g <span style="color:#f92672">=</span> Ideal(self<span style="color:#f92672">.</span>eq)<span style="color:#f92672">.</span>groebner_basis()[<span style="color:#ae81ff">0</span>]
+        self<span style="color:#f92672">.</span>eq <span style="color:#f92672">=</span> g<span style="color:#f92672">.</span>monomials()[<span style="color:#ae81ff">0</span>] <span style="color:#f92672">-</span> g
+
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">balance</span>(self):
+        self<span style="color:#f92672">.</span>bound <span style="color:#f92672">=</span> [<span style="color:#ae81ff">2</span><span style="color:#f92672">**</span><span style="color:#ae81ff">128</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span><span style="color:#f92672">**</span><span style="color:#ae81ff">128</span>]
+        
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">lattice</span>(self):    
+        A <span style="color:#f92672">=</span> Matrix([ZZ(i) <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> self<span style="color:#f92672">.</span>eq<span style="color:#f92672">.</span>coefficients()])<span style="color:#f92672">.</span>T
+        self<span style="color:#f92672">.</span>L <span style="color:#f92672">=</span> block_matrix([
+            [<span style="color:#ae81ff">1</span>, A],
+            [<span style="color:#ae81ff">0</span>, self<span style="color:#f92672">.</span>p]
+        ])
+        self<span style="color:#f92672">.</span>balance()
+        self<span style="color:#f92672">.</span>T <span style="color:#f92672">=</span> diagonal_matrix([max(self<span style="color:#f92672">.</span>bound) <span style="color:#f92672">//</span> i <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> self<span style="color:#f92672">.</span>bound])
+        
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">get_flag</span>(self, d):
+        <span style="color:#f92672">from</span> Crypto.Cipher <span style="color:#f92672">import</span> AES
+        aes <span style="color:#f92672">=</span> AES<span style="color:#f92672">.</span>new(long_to_bytes(d), mode<span style="color:#f92672">=</span>AES<span style="color:#f92672">.</span>MODE_ECB)
+        flag <span style="color:#f92672">=</span> aes<span style="color:#f92672">.</span>decrypt(self<span style="color:#f92672">.</span>c)
+        <span style="color:#66d9ef">try</span>:
+            flag <span style="color:#f92672">=</span> unpad(flag, <span style="color:#ae81ff">16</span>)
+        <span style="color:#66d9ef">except</span> <span style="color:#a6e22e">ValueError</span>:
+            <span style="color:#66d9ef">return</span> None
+        <span style="color:#66d9ef">else</span>:
+            <span style="color:#66d9ef">if</span> self<span style="color:#f92672">.</span>log:
+                <span style="color:#66d9ef">print</span>(<span style="color:#e6db74">&#34;[+] flag:&#34;</span>, flag)
+            <span style="color:#66d9ef">return</span> flag
+    
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">check</span>(self, v):
+        <span style="color:#66d9ef">if</span> abs(v[<span style="color:#ae81ff">1</span>]) <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span>:
+            v<span style="color:#f92672">*=</span>v[<span style="color:#ae81ff">1</span>]
+            d1, d0 <span style="color:#f92672">=</span> v[<span style="color:#ae81ff">0</span>]<span style="color:#f92672">%</span>self<span style="color:#f92672">.</span>p, v[<span style="color:#ae81ff">2</span>]<span style="color:#f92672">%</span>self<span style="color:#f92672">.</span>p
+            <span style="color:#66d9ef">if</span> d0<span style="color:#f92672">.</span>nbits() <span style="color:#f92672">==</span> <span style="color:#ae81ff">128</span> <span style="color:#f92672">and</span> d1<span style="color:#f92672">.</span>nbits() <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">128</span>:
+                d <span style="color:#f92672">=</span> d0 <span style="color:#f92672">*</span> <span style="color:#ae81ff">2</span><span style="color:#f92672">**</span><span style="color:#ae81ff">128</span> <span style="color:#f92672">+</span> d1
+                flag <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>get_flag(d)
+                <span style="color:#66d9ef">return</span> d, flag
+        <span style="color:#66d9ef">return</span> None, None
+
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">LLL_normal</span>(self):
+        B <span style="color:#f92672">=</span> (self<span style="color:#f92672">.</span>L<span style="color:#f92672">*</span>self<span style="color:#f92672">.</span>T)<span style="color:#f92672">.</span>LLL()<span style="color:#f92672">/</span>self<span style="color:#f92672">.</span>T
+        self<span style="color:#f92672">.</span>tqdm<span style="color:#f92672">.</span>reset(total<span style="color:#f92672">=</span>B<span style="color:#f92672">.</span>nrows())
+        <span style="color:#66d9ef">for</span> v <span style="color:#f92672">in</span> B:
+            <span style="color:#66d9ef">yield</span> v
+        
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">LLL_enumeration</span>(self):        
+        <span style="color:#e6db74">&#34;&#34;&#34;
+</span><span style="color:#e6db74">        extend search scope
+</span><span style="color:#e6db74">        &#34;&#34;&#34;</span>
+        <span style="color:#f92672">from</span> fpylll <span style="color:#f92672">import</span> IntegerMatrix, LLL
+        <span style="color:#f92672">from</span> fpylll.fplll.gso <span style="color:#f92672">import</span> MatGSO
+        <span style="color:#f92672">from</span> fpylll.fplll.enumeration <span style="color:#f92672">import</span> Enumeration, EvaluatorStrategy
+        
+        A <span style="color:#f92672">=</span> IntegerMatrix<span style="color:#f92672">.</span>from_matrix(self<span style="color:#f92672">.</span>L<span style="color:#f92672">*</span>self<span style="color:#f92672">.</span>T)
+        LLL<span style="color:#f92672">.</span>reduction(A)
+        M <span style="color:#f92672">=</span> MatGSO(A)
+        M<span style="color:#f92672">.</span>update_gso()
+        size <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>L<span style="color:#f92672">.</span>nrows()
+        sol_cnt <span style="color:#f92672">=</span> <span style="color:#ae81ff">1000000</span>
+        enum <span style="color:#f92672">=</span> Enumeration(M, sol_cnt, strategy<span style="color:#f92672">=</span>EvaluatorStrategy<span style="color:#f92672">.</span>BEST_N_SOLUTIONS)
+        answers <span style="color:#f92672">=</span> enum<span style="color:#f92672">.</span>enumerate(<span style="color:#ae81ff">0</span>, size, (size <span style="color:#f92672">*</span> max(self<span style="color:#f92672">.</span>bound)<span style="color:#f92672">**</span><span style="color:#ae81ff">2</span>), <span style="color:#ae81ff">0</span>, pruning<span style="color:#f92672">=</span>None)
+        self<span style="color:#f92672">.</span>tqdm<span style="color:#f92672">.</span>reset(total<span style="color:#f92672">=</span>len(answers))
+        <span style="color:#66d9ef">for</span> _, a <span style="color:#f92672">in</span> answers:
+            v <span style="color:#f92672">=</span> IntegerMatrix<span style="color:#f92672">.</span>from_iterable(<span style="color:#ae81ff">1</span>, size, map(int, a))
+            B <span style="color:#f92672">=</span> v<span style="color:#f92672">*</span>A
+            B <span style="color:#f92672">=</span> matrix(B)[<span style="color:#ae81ff">0</span>]<span style="color:#f92672">/</span>self<span style="color:#f92672">.</span>T
+            <span style="color:#66d9ef">yield</span> B
+    
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">LLL</span>(self, enum:bool<span style="color:#f92672">=</span>False):        
+        <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">tqdm_storage</span>(t):
+            <span style="color:#66d9ef">if</span> hasattr(t, <span style="color:#e6db74">&#39;container&#39;</span>) <span style="color:#f92672">and</span> t<span style="color:#f92672">.</span>leave:
+                display(t<span style="color:#f92672">.</span>container)
+
+        d <span style="color:#f92672">=</span> None
+        flag <span style="color:#f92672">=</span> None
+        LLL_func <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>LLL_enumeration <span style="color:#66d9ef">if</span> enum <span style="color:#66d9ef">else</span> self<span style="color:#f92672">.</span>LLL_normal
+        vectors <span style="color:#f92672">=</span> LLL_func()
+        self<span style="color:#f92672">.</span>tqdm <span style="color:#f92672">=</span> tqdm(vectors, disable<span style="color:#f92672">=</span><span style="color:#f92672">not</span> self<span style="color:#f92672">.</span>log)
+        <span style="color:#66d9ef">for</span> v <span style="color:#f92672">in</span> self<span style="color:#f92672">.</span>tqdm:
+            d, flag <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>check(v)
+            <span style="color:#66d9ef">if</span> flag <span style="color:#f92672">is</span> <span style="color:#f92672">not</span> None:
+                <span style="color:#66d9ef">break</span>
+        tqdm_storage(self<span style="color:#f92672">.</span>tqdm)
+        <span style="color:#66d9ef">return</span> d, flag
+    
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">solve</span>(self, enum:bool<span style="color:#f92672">=</span>False):
+        self<span style="color:#f92672">.</span>gen_data()
+        self<span style="color:#f92672">.</span>gen_eq()
+        self<span style="color:#f92672">.</span>resultant()
+        self<span style="color:#f92672">.</span>lattice()
+        <span style="color:#66d9ef">return</span> self<span style="color:#f92672">.</span>LLL(enum)
+
+        
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Tester</span>:
+    <span style="color:#66d9ef">def</span> __init__(self):
+        self<span style="color:#f92672">.</span>msg <span style="color:#f92672">=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;welcome to n1ctf2023!&#39;</span>
+        self<span style="color:#f92672">.</span>flag <span style="color:#f92672">=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;flag{test}&#39;</span>
+        self<span style="color:#f92672">.</span>data()
+        self<span style="color:#f92672">.</span>enc()
+        self<span style="color:#f92672">.</span>solver <span style="color:#f92672">=</span> Solver(self<span style="color:#f92672">.</span>s, self<span style="color:#f92672">.</span>r, self<span style="color:#f92672">.</span>c)
+        
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">data</span>(self):
+        curve <span style="color:#f92672">=</span> ecdsa<span style="color:#f92672">.</span>NIST256p<span style="color:#f92672">.</span>generator
+        self<span style="color:#f92672">.</span>p <span style="color:#f92672">=</span> curve<span style="color:#f92672">.</span>order()
+        d <span style="color:#f92672">=</span> randint(<span style="color:#ae81ff">1</span>, self<span style="color:#f92672">.</span>p<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>)
+        <span style="color:#66d9ef">while</span> d<span style="color:#f92672">.</span>bit_length() <span style="color:#f92672">!=</span> <span style="color:#ae81ff">256</span>:
+            d <span style="color:#f92672">=</span> randint(<span style="color:#ae81ff">1</span>, self<span style="color:#f92672">.</span>p<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>)
+        self<span style="color:#f92672">.</span>d <span style="color:#f92672">=</span> d
+        self<span style="color:#f92672">.</span>pubkey <span style="color:#f92672">=</span> ecdsa<span style="color:#f92672">.</span>ecdsa<span style="color:#f92672">.</span>Public_key(curve, curve <span style="color:#f92672">*</span> d)
+        self<span style="color:#f92672">.</span>privkey <span style="color:#f92672">=</span> ecdsa<span style="color:#f92672">.</span>ecdsa<span style="color:#f92672">.</span>Private_key(self<span style="color:#f92672">.</span>pubkey, d)
+        self<span style="color:#f92672">.</span>sign()
+                
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">nonce_gen</span>(self, msg, d):
+        msg_bin <span style="color:#f92672">=</span> bin(msg)[<span style="color:#ae81ff">2</span>:]<span style="color:#f92672">.</span>zfill(<span style="color:#ae81ff">256</span>)
+        d_bin <span style="color:#f92672">=</span> bin(d)[<span style="color:#ae81ff">2</span>:]<span style="color:#f92672">.</span>zfill(<span style="color:#ae81ff">256</span>)
+        nonce <span style="color:#f92672">=</span> int(msg_bin[:<span style="color:#ae81ff">128</span>] <span style="color:#f92672">+</span> d_bin[:<span style="color:#ae81ff">128</span>], <span style="color:#ae81ff">2</span>)
+        self<span style="color:#f92672">.</span>h0 <span style="color:#f92672">=</span> int(msg_bin[:<span style="color:#ae81ff">128</span>], <span style="color:#ae81ff">2</span>)
+        self<span style="color:#f92672">.</span>d0 <span style="color:#f92672">=</span> int(d_bin[:<span style="color:#ae81ff">128</span>],<span style="color:#ae81ff">2</span>)
+        self<span style="color:#f92672">.</span>d1 <span style="color:#f92672">=</span> int(d_bin[<span style="color:#ae81ff">128</span>:],<span style="color:#ae81ff">2</span>)
+        <span style="color:#66d9ef">return</span> nonce
+    
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">sign</span>(self):
+        msg_hash <span style="color:#f92672">=</span> bytes_to_long(hashlib<span style="color:#f92672">.</span>sha256(self<span style="color:#f92672">.</span>msg)<span style="color:#f92672">.</span>digest())
+        self<span style="color:#f92672">.</span>h <span style="color:#f92672">=</span> msg_hash
+        nonce <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>nonce_gen(msg_hash, self<span style="color:#f92672">.</span>d)
+        sig <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>privkey<span style="color:#f92672">.</span>sign(msg_hash, nonce)
+        self<span style="color:#f92672">.</span>s, self<span style="color:#f92672">.</span>r <span style="color:#f92672">=</span> sig<span style="color:#f92672">.</span>s, sig<span style="color:#f92672">.</span>r
+        
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">enc</span>(self):
+        m <span style="color:#f92672">=</span> pad(self<span style="color:#f92672">.</span>flag, <span style="color:#ae81ff">16</span>)
+        aes <span style="color:#f92672">=</span> AES<span style="color:#f92672">.</span>new(long_to_bytes(self<span style="color:#f92672">.</span>d), mode<span style="color:#f92672">=</span>AES<span style="color:#f92672">.</span>MODE_ECB)
+        self<span style="color:#f92672">.</span>c <span style="color:#f92672">=</span> aes<span style="color:#f92672">.</span>encrypt(m)
+        
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">test_gen_data</span>(self):
+        self<span style="color:#f92672">.</span>solver<span style="color:#f92672">.</span>gen_data()
+        <span style="color:#66d9ef">assert</span> self<span style="color:#f92672">.</span>solver<span style="color:#f92672">.</span>h <span style="color:#f92672">==</span> self<span style="color:#f92672">.</span>h
+        <span style="color:#66d9ef">assert</span> self<span style="color:#f92672">.</span>solver<span style="color:#f92672">.</span>h0 <span style="color:#f92672">==</span> self<span style="color:#f92672">.</span>h0
+        
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">test_gen_eq</span>(self):
+        self<span style="color:#f92672">.</span>solver<span style="color:#f92672">.</span>gen_eq()
+        <span style="color:#66d9ef">assert</span> self<span style="color:#f92672">.</span>solver<span style="color:#f92672">.</span>eq(d0<span style="color:#f92672">=</span>self<span style="color:#f92672">.</span>d0, d1<span style="color:#f92672">=</span>self<span style="color:#f92672">.</span>d1) <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>
+    
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">test_resultant</span>(self):
+        self<span style="color:#f92672">.</span>solver<span style="color:#f92672">.</span>resultant()
+        <span style="color:#66d9ef">assert</span> self<span style="color:#f92672">.</span>solver<span style="color:#f92672">.</span>eq(d1<span style="color:#f92672">=</span>self<span style="color:#f92672">.</span>d1) <span style="color:#f92672">==</span> self<span style="color:#f92672">.</span>d0
+    
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">test_lattice</span>(self):
+        self<span style="color:#f92672">.</span>solver<span style="color:#f92672">.</span>lattice()
+    
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">test_LLL</span>(self, enum:bool<span style="color:#f92672">=</span>False):
+        d, flag <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>solver<span style="color:#f92672">.</span>LLL(enum<span style="color:#f92672">=</span>enum)
+        <span style="color:#66d9ef">assert</span> d <span style="color:#f92672">==</span> self<span style="color:#f92672">.</span>d
+        <span style="color:#66d9ef">assert</span> flag <span style="color:#f92672">==</span> self<span style="color:#f92672">.</span>flag
+    
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">test</span>(self, enum:bool<span style="color:#f92672">=</span>False, log:bool<span style="color:#f92672">=</span>True):
+        self<span style="color:#f92672">.</span>solver<span style="color:#f92672">.</span>log <span style="color:#f92672">=</span> log
+        self<span style="color:#f92672">.</span>test_gen_data()
+        self<span style="color:#f92672">.</span>test_gen_eq()
+        self<span style="color:#f92672">.</span>test_resultant()
+        self<span style="color:#f92672">.</span>test_lattice()
+        self<span style="color:#f92672">.</span>test_LLL(enum<span style="color:#f92672">=</span>enum)
+        
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">test_benchmark</span>(self, enum:bool<span style="color:#f92672">=</span>False, log:bool<span style="color:#f92672">=</span>False):
+        count <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+        <span style="color:#66d9ef">for</span> _ <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">100</span>):
+            <span style="color:#66d9ef">try</span>:
+                self<span style="color:#f92672">.</span>__init__()
+                self<span style="color:#f92672">.</span>test(enum<span style="color:#f92672">=</span>enum, log<span style="color:#f92672">=</span>log)
+            <span style="color:#66d9ef">except</span> <span style="color:#a6e22e">AssertionError</span>:
+                <span style="color:#66d9ef">pass</span>
+            <span style="color:#66d9ef">else</span>:
+                count <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
+        <span style="color:#66d9ef">print</span>(f<span style="color:#e6db74">&#34;[+] sucess rate: {count}%&#34;</span>)
+        
+Tester()<span style="color:#f92672">.</span>test()
+</code></pre></div><p><code>[out]:</code></p>
+<pre><code>0it [00:00, ?it/s]
+</code></pre>
+<p><code>[out]:</code></p>
+<pre><code>100%|##########| 3/3 [00:00&lt;00:00, 833.86it/s]
+
+
+
+
+---------------------------------------------------------------------------
+
+AssertionError                            Traceback (most recent call last)
+
+Cell In [2], line 202
+    199                 count += Integer(1)
+    200         print(f&quot;[+] sucess rate: {count}%&quot;)
+--&gt; 202 Tester().test()
+
+
+Cell In [2], line 188, in Tester.test(self, enum, log)
+    186 self.test_resultant()
+    187 self.test_lattice()
+--&gt; 188 self.test_LLL(enum=enum)
+
+
+Cell In [2], line 179, in Tester.test_LLL(self, enum)
+    177 def test_LLL(self, enum:bool=False):
+    178     d, flag = self.solver.LLL(enum=enum)
+--&gt; 179     assert d == self.d
+    180     assert flag == self.flag
+
+
+AssertionError: 
+</code></pre>
+<p>经测试，只有 10% 左右的概率解决这个问题。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">Tester()<span style="color:#f92672">.</span>test_benchmark()
+</code></pre></div><p><code>[out]:</code></p>
+<pre><code>[+] sucess rate: 13%
+</code></pre>
+<p>题目中的问题也解不出答案</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">Solver(s<span style="color:#f92672">=</span>s, r<span style="color:#f92672">=</span>r, c<span style="color:#f92672">=</span>c)<span style="color:#f92672">.</span>solve()
+</code></pre></div><p><code>[out]:</code></p>
+<pre><code>0it [00:00, ?it/s]
+</code></pre>
+<p><code>[out]:</code></p>
+<pre><code>100%|##########| 3/3 [00:00&lt;00:00, 1080.26it/s]
+</code></pre>
+<p><code>[out]:</code></p>
+<pre><code>(None, None)
+</code></pre>
+<h2 id="4-优化">4. 优化</h2>
+<p>测试说明单纯的 LLL 约束不足，有以下几种方法解决</p>
+<h3 id="41-lll-enumeration">4.1 LLL enumeration</h3>
+<p>找到更多组解</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">Tester()<span style="color:#f92672">.</span>test_benchmark(enum<span style="color:#f92672">=</span>True)
+</code></pre></div><p><code>[out]:</code></p>
+<pre><code>[+] sucess rate: 100%
+</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">Solver(s<span style="color:#f92672">=</span>s, r<span style="color:#f92672">=</span>r, c<span style="color:#f92672">=</span>c)<span style="color:#f92672">.</span>solve(enum<span style="color:#f92672">=</span>True)
+</code></pre></div><p><code>[out]:</code></p>
+<pre><code>0it [00:00, ?it/s]
+</code></pre>
+<p><code>[out]:</code></p>
+<pre><code>[+] flag: b'n1ctf{Wow!__You_bre4k_my_s1gn_chal1enge!!___}'
+</code></pre>
+<p><code>[out]:</code></p>
+<pre><code> 30%|###       | 3/10 [00:00&lt;00:00, 306.09it/s]
+</code></pre>
+<p><code>[out]:</code></p>
+<pre><code>(75767369414377063170504861698029562004628781620076152109208613361284011206099,
+ b'n1ctf{Wow!__You_bre4k_my_s1gn_chal1enge!!___}')
+</code></pre>
+<h3 id="42-由-d-256-bit-约束-d-的范围">4.2 由 d 256 bit 约束 d 的范围</h3>
+<p>$$
+\begin{align*}
+&amp; 2^{256} \le d \lt 2^{257} \newline
+\Rightarrow &amp; \newline
+&amp; d = 2^{255} + d^{'}, 2^{254} \le d^{'} &lt; 2^{255} \newline
+&amp; d_0^{'} = 2^{127} + d_0^{'}, 0 \le d_0^{'} \lt 2^{127} \newline
+\Rightarrow &amp; \newline
+&amp; s\cdot(h_0 \cdot 2^{128} + (2^{127}+d_0^{'})) \equiv h+r\cdot((2^{127}+d_0^{'}) \cdot 2^{128} + d_1) \pmod p \newline
+\end{align*}
+$$</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Solver2</span>(Solver):    
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">gen_eq</span>(self):
+        PR <span style="color:#f92672">=</span> PolynomialRing(GF(self<span style="color:#f92672">.</span>p), [<span style="color:#e6db74">&#34;d0&#34;</span>, <span style="color:#e6db74">&#34;d1&#34;</span>])
+        d0, d1 <span style="color:#f92672">=</span> PR<span style="color:#f92672">.</span>gens()
+        d0_ <span style="color:#f92672">=</span> <span style="color:#ae81ff">2</span><span style="color:#f92672">**</span><span style="color:#ae81ff">127</span><span style="color:#f92672">+</span>d0
+        self<span style="color:#f92672">.</span>eq <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>s<span style="color:#f92672">*</span>(self<span style="color:#f92672">.</span>h0<span style="color:#f92672">*</span><span style="color:#ae81ff">2</span><span style="color:#f92672">**</span><span style="color:#ae81ff">128</span> <span style="color:#f92672">+</span> d0_) <span style="color:#f92672">-</span> self<span style="color:#f92672">.</span>h <span style="color:#f92672">-</span> self<span style="color:#f92672">.</span>r<span style="color:#f92672">*</span>(d0_ <span style="color:#f92672">*</span> <span style="color:#ae81ff">2</span><span style="color:#f92672">**</span><span style="color:#ae81ff">128</span><span style="color:#f92672">+</span>d1)
+
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">balance</span>(self):
+        self<span style="color:#f92672">.</span>bound <span style="color:#f92672">=</span> [<span style="color:#ae81ff">2</span><span style="color:#f92672">**</span><span style="color:#ae81ff">128</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span><span style="color:#f92672">**</span><span style="color:#ae81ff">127</span>]
+
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">check</span>(self, v):
+        <span style="color:#66d9ef">if</span> abs(v[<span style="color:#ae81ff">1</span>]) <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span>:
+            v<span style="color:#f92672">*=</span>v[<span style="color:#ae81ff">1</span>]
+            d1, d0 <span style="color:#f92672">=</span> v[<span style="color:#ae81ff">0</span>]<span style="color:#f92672">%</span>self<span style="color:#f92672">.</span>p, v[<span style="color:#ae81ff">2</span>]<span style="color:#f92672">%</span>self<span style="color:#f92672">.</span>p
+            d0 <span style="color:#f92672">+=</span> <span style="color:#ae81ff">2</span><span style="color:#f92672">**</span><span style="color:#ae81ff">127</span>
+            <span style="color:#66d9ef">if</span> d0<span style="color:#f92672">.</span>nbits() <span style="color:#f92672">==</span> <span style="color:#ae81ff">128</span> <span style="color:#f92672">and</span> d1<span style="color:#f92672">.</span>nbits() <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">128</span>:
+                d <span style="color:#f92672">=</span> d0 <span style="color:#f92672">*</span> <span style="color:#ae81ff">2</span><span style="color:#f92672">**</span><span style="color:#ae81ff">128</span> <span style="color:#f92672">+</span> d1
+                flag <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>get_flag(d)
+                <span style="color:#66d9ef">return</span> d, flag
+        <span style="color:#66d9ef">return</span> None, None        
+        
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Tester2</span>(Tester):
+    <span style="color:#66d9ef">def</span> __init__(self):
+        super()<span style="color:#f92672">.</span>__init__()
+        self<span style="color:#f92672">.</span>solver <span style="color:#f92672">=</span> Solver2(self<span style="color:#f92672">.</span>s, self<span style="color:#f92672">.</span>r, self<span style="color:#f92672">.</span>c)
+        <span style="color:#66d9ef">assert</span> self<span style="color:#f92672">.</span>d0<span style="color:#f92672">.</span>bit_length() <span style="color:#f92672">==</span> <span style="color:#ae81ff">128</span>
+        self<span style="color:#f92672">.</span>d0 <span style="color:#f92672">-=</span> <span style="color:#ae81ff">2</span><span style="color:#f92672">**</span><span style="color:#ae81ff">127</span>
+        <span style="color:#66d9ef">assert</span> self<span style="color:#f92672">.</span>d0 <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">and</span> self<span style="color:#f92672">.</span>d0<span style="color:#f92672">.</span>bit_length() <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">127</span>
+                
+Tester2()<span style="color:#f92672">.</span>test()
+</code></pre></div><p><code>[out]:</code></p>
+<pre><code>0it [00:00, ?it/s]
+</code></pre>
+<p><code>[out]:</code></p>
+<pre><code>[+] flag: b'flag{test}'
+</code></pre>
+<p><code>[out]:</code></p>
+<pre><code> 33%|###3      | 1/3 [00:00&lt;00:00, 506.93it/s]
+</code></pre>
+<p>概率率有提升</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">Tester2()<span style="color:#f92672">.</span>test_benchmark(log<span style="color:#f92672">=</span>False)
+</code></pre></div><p><code>[out]:</code></p>
+<pre><code>[+] sucess rate: 44%
+</code></pre>
+<p>不过已经可以解决问题</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">Solver2(s<span style="color:#f92672">=</span>s,r<span style="color:#f92672">=</span>r,c<span style="color:#f92672">=</span>c)<span style="color:#f92672">.</span>solve()
+</code></pre></div><p><code>[out]:</code></p>
+<pre><code>0it [00:00, ?it/s]
+</code></pre>
+<p><code>[out]:</code></p>
+<pre><code>[+] flag: b'n1ctf{Wow!__You_bre4k_my_s1gn_chal1enge!!___}'
+</code></pre>
+<p><code>[out]:</code></p>
+<pre><code>  0%|          | 0/3 [00:00&lt;?, ?it/s]
+</code></pre>
+<p><code>[out]:</code></p>
+<pre><code>(75767369414377063170504861698029562004628781620076152109208613361284011206099,
+ b'n1ctf{Wow!__You_bre4k_my_s1gn_chal1enge!!___}')
+</code></pre>
+<h3 id="43-d--2-进一步约束">4.3 d /= 2 进一步约束</h3>
+<p>格有一半结果是负数，可进一步约束</p>
+<p>$$
+\begin{align*}
+&amp; d_0^{''} = d_0^{'} - 2^{126}, - 2^{126} \le d_0 \lt 2^{126} \newline
+&amp; d_1^{'} = d_1 - 2^{127}, - 2^{127} \le d_0 \lt 2^{127} \newline
+\Rightarrow &amp; \newline
+&amp; s\cdot(h_0 \cdot 2^{128} + (2^{127} + 2^{126} +d_0^{''})) \equiv h+r\cdot((2^{127} + 2^{126} + d_0^{'}) \cdot 2^{128} + (2^{127} + d_1)) \pmod p \newline
+\end{align*}
+$$</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Solver3</span>(Solver):    
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">gen_eq</span>(self):
+        PR <span style="color:#f92672">=</span> PolynomialRing(GF(self<span style="color:#f92672">.</span>p), [<span style="color:#e6db74">&#34;d0&#34;</span>, <span style="color:#e6db74">&#34;d1&#34;</span>])
+        d0, d1 <span style="color:#f92672">=</span> PR<span style="color:#f92672">.</span>gens()
+        d0_ <span style="color:#f92672">=</span> <span style="color:#ae81ff">2</span><span style="color:#f92672">**</span><span style="color:#ae81ff">127</span><span style="color:#f92672">+</span><span style="color:#ae81ff">2</span><span style="color:#f92672">**</span><span style="color:#ae81ff">126</span><span style="color:#f92672">+</span>d0
+        d1_ <span style="color:#f92672">=</span> <span style="color:#ae81ff">2</span><span style="color:#f92672">**</span><span style="color:#ae81ff">127</span> <span style="color:#f92672">+</span> d1
+        self<span style="color:#f92672">.</span>eq <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>s<span style="color:#f92672">*</span>(self<span style="color:#f92672">.</span>h0<span style="color:#f92672">*</span><span style="color:#ae81ff">2</span><span style="color:#f92672">**</span><span style="color:#ae81ff">128</span> <span style="color:#f92672">+</span> d0_) <span style="color:#f92672">-</span> self<span style="color:#f92672">.</span>h <span style="color:#f92672">-</span> self<span style="color:#f92672">.</span>r<span style="color:#f92672">*</span>(d0_ <span style="color:#f92672">*</span> <span style="color:#ae81ff">2</span><span style="color:#f92672">**</span><span style="color:#ae81ff">128</span> <span style="color:#f92672">+</span> d1_)
+
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">balance</span>(self):
+        self<span style="color:#f92672">.</span>bound <span style="color:#f92672">=</span> [<span style="color:#ae81ff">2</span><span style="color:#f92672">**</span><span style="color:#ae81ff">127</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span><span style="color:#f92672">**</span><span style="color:#ae81ff">126</span>]
+
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">check</span>(self, v):
+        <span style="color:#66d9ef">if</span> abs(v[<span style="color:#ae81ff">1</span>]) <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span>:
+            v<span style="color:#f92672">*=</span>v[<span style="color:#ae81ff">1</span>]
+            d1, d0 <span style="color:#f92672">=</span> ZZ(v[<span style="color:#ae81ff">0</span>]), ZZ(v[<span style="color:#ae81ff">2</span>])
+            d0 <span style="color:#f92672">+=</span> <span style="color:#ae81ff">2</span><span style="color:#f92672">**</span><span style="color:#ae81ff">127</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">2</span><span style="color:#f92672">**</span><span style="color:#ae81ff">126</span>
+            d1 <span style="color:#f92672">+=</span> <span style="color:#ae81ff">2</span><span style="color:#f92672">**</span><span style="color:#ae81ff">127</span>
+                        
+            <span style="color:#66d9ef">if</span> d0 <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">and</span> d1 <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">and</span> d0<span style="color:#f92672">.</span>nbits() <span style="color:#f92672">==</span> <span style="color:#ae81ff">128</span> <span style="color:#f92672">and</span> d1<span style="color:#f92672">.</span>nbits() <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">128</span>:
+                d <span style="color:#f92672">=</span> d0 <span style="color:#f92672">*</span> <span style="color:#ae81ff">2</span><span style="color:#f92672">**</span><span style="color:#ae81ff">128</span> <span style="color:#f92672">+</span> d1
+                flag <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>get_flag(d)
+                <span style="color:#66d9ef">return</span> d, flag
+        <span style="color:#66d9ef">return</span> None, None        
+        
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Tester3</span>(Tester):
+    <span style="color:#66d9ef">def</span> __init__(self):
+        super()<span style="color:#f92672">.</span>__init__()
+        self<span style="color:#f92672">.</span>solver <span style="color:#f92672">=</span> Solver3(self<span style="color:#f92672">.</span>s, self<span style="color:#f92672">.</span>r, self<span style="color:#f92672">.</span>c)
+        <span style="color:#66d9ef">assert</span> self<span style="color:#f92672">.</span>d0<span style="color:#f92672">.</span>bit_length() <span style="color:#f92672">==</span> <span style="color:#ae81ff">128</span>
+        self<span style="color:#f92672">.</span>d0 <span style="color:#f92672">-=</span> <span style="color:#ae81ff">2</span><span style="color:#f92672">**</span><span style="color:#ae81ff">127</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">2</span><span style="color:#f92672">**</span><span style="color:#ae81ff">126</span>
+        <span style="color:#66d9ef">assert</span> self<span style="color:#f92672">.</span>d0<span style="color:#f92672">.</span>bit_length() <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">126</span>
+        
+        self<span style="color:#f92672">.</span>d1 <span style="color:#f92672">-=</span> <span style="color:#ae81ff">2</span><span style="color:#f92672">**</span><span style="color:#ae81ff">127</span>
+        <span style="color:#66d9ef">assert</span> self<span style="color:#f92672">.</span>d1<span style="color:#f92672">.</span>bit_length() <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">127</span>
+                        
+Tester3()<span style="color:#f92672">.</span>test()
+</code></pre></div><p><code>[out]:</code></p>
+<pre><code>0it [00:00, ?it/s]
+</code></pre>
+<p><code>[out]:</code></p>
+<pre><code>100%|##########| 3/3 [00:00&lt;00:00, 1413.49it/s]
+
+
+
+
+---------------------------------------------------------------------------
+
+AssertionError                            Traceback (most recent call last)
+
+Cell In [10], line 36
+     33         self.d1 -= Integer(2)**Integer(127)
+     34         assert self.d1.bit_length() &lt;= Integer(127)
+---&gt; 36 Tester3().test()
+
+
+Cell In [2], line 188, in Tester.test(self, enum, log)
+    186 self.test_resultant()
+    187 self.test_lattice()
+--&gt; 188 self.test_LLL(enum=enum)
+
+
+Cell In [2], line 179, in Tester.test_LLL(self, enum)
+    177 def test_LLL(self, enum:bool=False):
+    178     d, flag = self.solver.LLL(enum=enum)
+--&gt; 179     assert d == self.d
+    180     assert flag == self.flag
+
+
+AssertionError: 
+</code></pre>
+<p>现在概率较高了</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">Tester3()<span style="color:#f92672">.</span>test_benchmark(log<span style="color:#f92672">=</span>False)
+</code></pre></div><p><code>[out]:</code></p>
+<pre><code>[+] sucess rate: 89%
+</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">Solver3(s, r, c)<span style="color:#f92672">.</span>solve()
+</code></pre></div><p><code>[out]:</code></p>
+<pre><code>0it [00:00, ?it/s]
+</code></pre>
+<p><code>[out]:</code></p>
+<pre><code>[+] flag: b'n1ctf{Wow!__You_bre4k_my_s1gn_chal1enge!!___}'
+</code></pre>
+<p><code>[out]:</code></p>
+<pre><code>  0%|          | 0/3 [00:00&lt;?, ?it/s]
+</code></pre>
+<p><code>[out]:</code></p>
+<pre><code>(75767369414377063170504861698029562004628781620076152109208613361284011206099,
+ b'n1ctf{Wow!__You_bre4k_my_s1gn_chal1enge!!___}')
+</code></pre>
+<h3 id="44-爆破">4.4 爆破</h3>
+<p>如果只有这么几位的边界值，完全可以爆破来实现。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Solver4</span>(Solver): 
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">gen_eq</span>(self):
+        PR <span style="color:#f92672">=</span> PolynomialRing(GF(self<span style="color:#f92672">.</span>p), [<span style="color:#e6db74">&#34;d0&#34;</span>, <span style="color:#e6db74">&#34;d1&#34;</span>])
+        d0, d1 <span style="color:#f92672">=</span> PR<span style="color:#f92672">.</span>gens()
+        d0_ <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>d0_known <span style="color:#f92672">+</span> d0
+        d1_ <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>d1_known <span style="color:#f92672">+</span> d1
+        self<span style="color:#f92672">.</span>eq <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>s<span style="color:#f92672">*</span>(self<span style="color:#f92672">.</span>h0<span style="color:#f92672">*</span><span style="color:#ae81ff">2</span><span style="color:#f92672">**</span><span style="color:#ae81ff">128</span> <span style="color:#f92672">+</span> d0_) <span style="color:#f92672">-</span> self<span style="color:#f92672">.</span>h <span style="color:#f92672">-</span> self<span style="color:#f92672">.</span>r<span style="color:#f92672">*</span>(d0_ <span style="color:#f92672">*</span> <span style="color:#ae81ff">2</span><span style="color:#f92672">**</span><span style="color:#ae81ff">128</span> <span style="color:#f92672">+</span> d1_)
+
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">balance</span>(self):
+        self<span style="color:#f92672">.</span>bound <span style="color:#f92672">=</span> [<span style="color:#ae81ff">2</span><span style="color:#f92672">**</span>self<span style="color:#f92672">.</span>bits, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span><span style="color:#f92672">**</span>self<span style="color:#f92672">.</span>bits]
+
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">check</span>(self, v):
+        <span style="color:#66d9ef">if</span> abs(v[<span style="color:#ae81ff">1</span>]) <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span>:
+            v<span style="color:#f92672">*=</span>v[<span style="color:#ae81ff">1</span>]
+            d1, d0 <span style="color:#f92672">=</span> ZZ(v[<span style="color:#ae81ff">0</span>]), ZZ(v[<span style="color:#ae81ff">2</span>])
+            d0 <span style="color:#f92672">+=</span> self<span style="color:#f92672">.</span>d0_known
+            d1 <span style="color:#f92672">+=</span> self<span style="color:#f92672">.</span>d1_known         
+            <span style="color:#66d9ef">if</span> d0 <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">and</span> d1 <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">and</span> d0<span style="color:#f92672">.</span>nbits() <span style="color:#f92672">==</span> <span style="color:#ae81ff">128</span> <span style="color:#f92672">and</span> d1<span style="color:#f92672">.</span>nbits() <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">128</span>:
+                d <span style="color:#f92672">=</span> d0 <span style="color:#f92672">*</span> <span style="color:#ae81ff">2</span><span style="color:#f92672">**</span><span style="color:#ae81ff">128</span> <span style="color:#f92672">+</span> d1
+                flag <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>get_flag(d)
+                <span style="color:#66d9ef">return</span> d, flag
+        <span style="color:#66d9ef">return</span> None, None
+    
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">solve_brute</span>(self, bits<span style="color:#f92672">=</span><span style="color:#ae81ff">2</span>):
+        self<span style="color:#f92672">.</span>bits <span style="color:#f92672">=</span> <span style="color:#ae81ff">128</span> <span style="color:#f92672">-</span> bits
+        <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">2</span><span style="color:#f92672">**</span>bits):
+            <span style="color:#66d9ef">for</span> j <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">2</span><span style="color:#f92672">**</span>bits):
+                self<span style="color:#f92672">.</span>d0_known <span style="color:#f92672">=</span> i <span style="color:#f92672">&lt;&lt;</span> (<span style="color:#ae81ff">128</span><span style="color:#f92672">-</span>bits)
+                self<span style="color:#f92672">.</span>d1_known <span style="color:#f92672">=</span> j <span style="color:#f92672">&lt;&lt;</span> (<span style="color:#ae81ff">128</span><span style="color:#f92672">-</span>bits)
+                d, flag <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>solve()
+                <span style="color:#66d9ef">if</span> flag <span style="color:#f92672">is</span> <span style="color:#f92672">not</span> None:
+                    <span style="color:#66d9ef">return</span> d, flag
+                
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Tester4</span>(Tester):
+    <span style="color:#66d9ef">def</span> __init__(self):
+        super()<span style="color:#f92672">.</span>__init__()
+        self<span style="color:#f92672">.</span>solver <span style="color:#f92672">=</span> Solver4(self<span style="color:#f92672">.</span>s, self<span style="color:#f92672">.</span>r, self<span style="color:#f92672">.</span>c)
+        self<span style="color:#f92672">.</span>real_d0, self<span style="color:#f92672">.</span>real_d1 <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>d0, self<span style="color:#f92672">.</span>d1
+
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">test_solve_brute</span>(self, bits<span style="color:#f92672">=</span><span style="color:#ae81ff">2</span>, log:bool<span style="color:#f92672">=</span>True):
+        <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">2</span><span style="color:#f92672">**</span>bits):
+            <span style="color:#66d9ef">for</span> j <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">2</span><span style="color:#f92672">**</span>bits):
+                d0_known <span style="color:#f92672">=</span> i <span style="color:#f92672">&lt;&lt;</span> (<span style="color:#ae81ff">128</span><span style="color:#f92672">-</span>bits)
+                d1_known <span style="color:#f92672">=</span> j <span style="color:#f92672">&lt;&lt;</span> (<span style="color:#ae81ff">128</span><span style="color:#f92672">-</span>bits)
+                self<span style="color:#f92672">.</span>d0 <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>real_d0 <span style="color:#f92672">-</span> d0_known
+                self<span style="color:#f92672">.</span>d1 <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>real_d1 <span style="color:#f92672">-</span> d1_known
+                self<span style="color:#f92672">.</span>solver<span style="color:#f92672">.</span>d0_known, self<span style="color:#f92672">.</span>solver<span style="color:#f92672">.</span>d1_known, self<span style="color:#f92672">.</span>solver<span style="color:#f92672">.</span>bits <span style="color:#f92672">=</span> d0_known, d1_known, <span style="color:#ae81ff">128</span><span style="color:#f92672">-</span>bits
+                <span style="color:#66d9ef">try</span>:
+                    self<span style="color:#f92672">.</span>test(enum<span style="color:#f92672">=</span>False, log<span style="color:#f92672">=</span>False)
+                <span style="color:#66d9ef">except</span> <span style="color:#a6e22e">AssertionError</span>:
+                    <span style="color:#66d9ef">if</span> log:
+                        <span style="color:#66d9ef">print</span>(<span style="color:#e6db74">&#34;AssertionError&#34;</span>)
+                <span style="color:#66d9ef">else</span>:
+                    self<span style="color:#f92672">.</span>test(enum<span style="color:#f92672">=</span>False, log<span style="color:#f92672">=</span>log)
+                    <span style="color:#66d9ef">return</span> True
+        <span style="color:#66d9ef">return</span> False
+    
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">test_benchmark</span>(self, bits):
+        count <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+        <span style="color:#66d9ef">for</span> _ <span style="color:#f92672">in</span> tqdm(range(<span style="color:#ae81ff">1000</span>), leave<span style="color:#f92672">=</span>False):
+            self<span style="color:#f92672">.</span>__init__()
+            <span style="color:#66d9ef">if</span> self<span style="color:#f92672">.</span>test_solve_brute(bits, log<span style="color:#f92672">=</span>False):
+                count <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
+        <span style="color:#66d9ef">print</span>(f<span style="color:#e6db74">&#34;[+] sucess rate: {count//10}%&#34;</span>)
+        
+_ <span style="color:#f92672">=</span> Tester4()<span style="color:#f92672">.</span>test_solve_brute(<span style="color:#ae81ff">1</span>)
+</code></pre></div><p><code>[out]:</code></p>
+<pre><code>AssertionError
+AssertionError
+</code></pre>
+<p><code>[out]:</code></p>
+<pre><code>0it [00:00, ?it/s]
+</code></pre>
+<p><code>[out]:</code></p>
+<pre><code>[+] flag: b'flag{test}'
+</code></pre>
+<p><code>[out]:</code></p>
+<pre><code> 67%|######6   | 2/3 [00:00&lt;00:00, 882.27it/s]
+</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">Solver4(s, r, c, log<span style="color:#f92672">=</span>False)<span style="color:#f92672">.</span>solve_brute()
+</code></pre></div><p><code>[out]:</code></p>
+<pre><code>(75767369414377063170504861698029562004628781620076152109208613361284011206099,
+ b'n1ctf{Wow!__You_bre4k_my_s1gn_chal1enge!!___}')
+</code></pre>
+<p>不爆破</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">Tester4()<span style="color:#f92672">.</span>test_benchmark(<span style="color:#ae81ff">0</span>)
+</code></pre></div><p><code>[out]:</code></p>
+<pre><code>[+] sucess rate: 11%
+</code></pre>
+<p>爆破 1 bit</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">Tester4()<span style="color:#f92672">.</span>test_benchmark(<span style="color:#ae81ff">1</span>)
+</code></pre></div><p><code>[out]:</code></p>
+<pre><code>[+] sucess rate: 87%
+</code></pre>
+<p>爆破 2 bit</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">Tester4()<span style="color:#f92672">.</span>test_benchmark(<span style="color:#ae81ff">2</span>)
+</code></pre></div><p><code>[out]:</code></p>
+<pre><code>[+] sucess rate: 98%
+</code></pre>
+<p>爆破 3 bit</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">Tester4()<span style="color:#f92672">.</span>test_benchmark(<span style="color:#ae81ff">3</span>)
+</code></pre></div><p><code>[out]:</code></p>
+<pre><code>[+] sucess rate: 100%
+</code></pre>
+<hr>
+<p>本文同步发表于</p>
+<ul>
+<li>blog: ssst0n3.github.io</li>
+<li>公众号: 石头的安全料理屋</li>
+<li>知乎专栏: 石头的安全料理屋</li>
+</ul>
+
+            </div>
+        </article>
+
+        <hr />
+
+        <div class="post-info">
+  			</div>
+
+        
+    </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>&copy; 2023</span>
+            
+            <span></span>
+            <span> <a href="/posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a></span>
+        </div>
+    </div>
+    <div class="footer__inner">
+        <div class="footer__content">
+
+        </div>
+    </div>
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>Powered by <a href="http://gohugo.io">Hugo</a></span>
+            <span>Made with &#10084; by <a href="https://github.com/st0n3">st0n3</a></span>
+            <span>Based on <a href="https://github.com/rhazdon">rhazdon</a></span>
+        </div>
+    </div>
+
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      extensions: ["tex2jax.js"],
+      
+      jax: ["input/TeX", "output/CommonHTML"],
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+        displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+        processEscapes: true
+      },
+      "HTML-CSS": { fonts: ["TeX"] },
+      displayAlign: "left"
+    });
+  </script>
+
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_CHTML"></script>
+
+
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+
+<script type="text/javascript" src="/bundle.min.4c3fb12a087ceed4a52cb5d57068a9795c7069617a01ca70f788052ad66e1791779e6c72686e1dc0ca13dc03b0203204b6566bb0dd1ee80de2b7ff4d8fe53db2.js" integrity="sha512-TD&#43;xKgh87tSlLLXVcGipeVxwaWF6Acpw94gFKtZuF5F3nmxyaG4dwMoT3AOwIDIEtlZrsN0e6A3it/9Nj&#43;U9sg=="></script>
+
+
+
+    </body>
+</html>

@@ -6,7 +6,19 @@
     <description>Recent content on welcome to st0n3&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 20 Oct 2023 03:25:22 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 23 Oct 2023 11:04:54 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>N1CTF-Qualifier-2023/Crypto/e2W@rmup writeup</title>
+      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/CTF/crypto/ECDSA/N1CTF-Qualifier-2023Cryptoe2Wrmup-writeup.html</link>
+      <pubDate>Mon, 23 Oct 2023 11:04:54 +0000</pubDate>
+      
+      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/CTF/crypto/ECDSA/N1CTF-Qualifier-2023Cryptoe2Wrmup-writeup.html</guid>
+      <description>tags: ctf,crypto,ecdsa
+ N1CTF-Qualifier-2023/Crypto/e2W@rmup writeup 1. challenge  time cost: 9:30-10:45 score: 80PT solver: 49   Welcome 2 N1CTF2023! （＾ω＾）
+https://drive.google.com/file/d/1g-c70UHiXSAhTkBKagpPp_sbSnq9ZPDt/view?usp=sharing
+ import hashlib import ecdsa from Crypto.Cipher import AES from Crypto.Util.Padding import pad from Crypto.Util.number import * from secret import flag def gen(): curve = ecdsa.NIST256p.generator order = curve.order() d = randint(1, order-1) while d.bit_length() != 256: d = randint(1, order-1) pubkey = ecdsa.ecdsa.Public_key(curve, curve * d) privkey = ecdsa.</description>
+    </item>
+    
     <item>
       <title>Hack.lu-Qualifier-2023/Crypto/Spooky Safebox writeup</title>
       <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/CTF/crypto/ECDSA/Hack.lu-Qualifier-2023CryptoSpooky-Safebox-writeup.html</link>
