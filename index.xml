@@ -6,7 +6,25 @@
     <description>Recent content on welcome to st0n3&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 23 Oct 2023 11:04:54 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 27 Oct 2023 15:05:31 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>云原生安全资讯: Go语言的漏洞管理</title>
+      <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E4%BA%91%E5%8E%9F%E7%94%9F%E5%AE%89%E5%85%A8%E8%B5%84%E8%AE%AF/%E4%BA%91%E5%8E%9F%E7%94%9F%E5%AE%89%E5%85%A8%E8%B5%84%E8%AE%AF-Go%E8%AF%AD%E8%A8%80%E7%9A%84%E6%BC%8F%E6%B4%9E%E7%AE%A1%E7%90%86.html</link>
+      <pubDate>Fri, 27 Oct 2023 15:05:31 +0000</pubDate>
+      
+      <guid>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E4%BA%91%E5%8E%9F%E7%94%9F%E5%AE%89%E5%85%A8%E8%B5%84%E8%AE%AF/%E4%BA%91%E5%8E%9F%E7%94%9F%E5%AE%89%E5%85%A8%E8%B5%84%E8%AE%AF-Go%E8%AF%AD%E8%A8%80%E7%9A%84%E6%BC%8F%E6%B4%9E%E7%AE%A1%E7%90%86.html</guid>
+      <description>云原生安全资讯: Go语言的漏洞管理 下文是文章 https://go.dev/security/vuln/ 的总结
+1. 总结 Go语言的漏洞管理主要有3大块：
+ 数据源：从NVD, GitHub Advisory Database和用户报告而来 漏洞数据库：由go安全团队维护，基于OSV标准实现 集成：pkg.go.dev 和 govulncheck 工具，帮助开发者发现项目中的漏洞  2. 相关资源 2.1 Go 漏洞数据库 https://pkg.go.dev/vuln/
+每一条数据都经过审核，保证漏洞描述、相关的包和版本信息的准确性。
+2.2 漏洞检测工具  cmd工具： govulncheck Go package discovery site VS Code Go插件  $ go install golang.org/x/vuln/cmd/govulncheck@latest $ govulncheck ./... 3. Go CNA Go是CVE分发机构。
+4. 怎么报告未公开漏洞 发送邮件给security@golang.org. 详见 Go’s Security Policy
+5. 怎么报告公开漏洞 https://go.dev/s/vulndb-report-new
+6. 为什么go漏洞数据库不使用严重程度（低、中、高）标签？ 我很欣赏go团队的这个做法，他们这么做的理由主要是
+ 漏洞的影响很少具有普遍性，Go作为一个语言，他们管理的漏洞通常都是library级别的，因此根据不同的使用场景，漏洞的严重程度也都不同。 评判漏洞的严重程度通常是主观的。  作为替代，go安全团队选择去维护一个精准的漏洞表述。
+ 本文同步发布于</description>
+    </item>
+    
     <item>
       <title>N1CTF-Qualifier-2023/Crypto/e2W@rmup writeup</title>
       <link>/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/CTF/crypto/ECDSA/N1CTF-Qualifier-2023Cryptoe2Wrmup-writeup.html</link>

@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author"
+    content="">
+<meta name="description"
+    content="云原生安全资讯: Go语言的漏洞管理 下文是文章 https://go.dev/security/vuln/ 的总结
+1. 总结 Go语言的漏洞管理主要有3大块：
+ 数据源：从NVD, GitHub Advisory Database和用户报告而来 漏洞数据库：由go安全团队维护，基于OSV标准实现 集成：pkg.go.dev 和 govulncheck 工具，帮助开发者发现项目中的漏洞  2. 相关资源 2.1 Go 漏洞数据库 https://pkg.go.dev/vuln/
+每一条数据都经过审核，保证漏洞描述、相关的包和版本信息的准确性。
+2.2 漏洞检测工具  cmd工具： govulncheck Go package discovery site VS Code Go插件  $ go install golang.org/x/vuln/cmd/govulncheck@latest $ govulncheck ./... 3. Go CNA Go是CVE分发机构。
+4. 怎么报告未公开漏洞 发送邮件给security@golang.org. 详见 Go’s Security Policy
+5. 怎么报告公开漏洞 https://go.dev/s/vulndb-report-new
+6. 为什么go漏洞数据库不使用严重程度（低、中、高）标签？ 我很欣赏go团队的这个做法，他们这么做的理由主要是
+ 漏洞的影响很少具有普遍性，Go作为一个语言，他们管理的漏洞通常都是library级别的，因此根据不同的使用场景，漏洞的严重程度也都不同。 评判漏洞的严重程度通常是主观的。  作为替代，go安全团队选择去维护一个精准的漏洞表述。
+ 本文同步发布于" />
+<meta name="keywords" content="" />
+<meta name="robots" content="noodp" />
+<link rel="canonical" href="/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E4%BA%91%E5%8E%9F%E7%94%9F%E5%AE%89%E5%85%A8%E8%B5%84%E8%AE%AF/%E4%BA%91%E5%8E%9F%E7%94%9F%E5%AE%89%E5%85%A8%E8%B5%84%E8%AE%AF-Go%E8%AF%AD%E8%A8%80%E7%9A%84%E6%BC%8F%E6%B4%9E%E7%AE%A1%E7%90%86.html" />
+
+
+<title>
+    
+    云原生安全资讯: Go语言的漏洞管理 :: welcome to st0n3&#39;s blog 
+    
+</title>
+
+
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.2.1/css/flag-icon.min.css" rel="stylesheet"
+    type="text/css">
+
+
+
+<link rel="stylesheet" href="/main.min.de959d61dd13c2cd41136acd491ffb0749779e1afe37b1fed6d5cba0b7e1938d.css">
+
+
+
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#252627">
+<link rel="shortcut icon" href="/favicon.ico">
+<meta name="theme-color" content="#252627"><meta itemprop="name" content="云原生安全资讯: Go语言的漏洞管理">
+<meta itemprop="description" content="云原生安全资讯: Go语言的漏洞管理 下文是文章 https://go.dev/security/vuln/ 的总结
+1. 总结 Go语言的漏洞管理主要有3大块：
+ 数据源：从NVD, GitHub Advisory Database和用户报告而来 漏洞数据库：由go安全团队维护，基于OSV标准实现 集成：pkg.go.dev 和 govulncheck 工具，帮助开发者发现项目中的漏洞  2. 相关资源 2.1 Go 漏洞数据库 https://pkg.go.dev/vuln/
+每一条数据都经过审核，保证漏洞描述、相关的包和版本信息的准确性。
+2.2 漏洞检测工具  cmd工具： govulncheck Go package discovery site VS Code Go插件  $ go install golang.org/x/vuln/cmd/govulncheck@latest $ govulncheck ./... 3. Go CNA Go是CVE分发机构。
+4. 怎么报告未公开漏洞 发送邮件给security@golang.org. 详见 Go’s Security Policy
+5. 怎么报告公开漏洞 https://go.dev/s/vulndb-report-new
+6. 为什么go漏洞数据库不使用严重程度（低、中、高）标签？ 我很欣赏go团队的这个做法，他们这么做的理由主要是
+ 漏洞的影响很少具有普遍性，Go作为一个语言，他们管理的漏洞通常都是library级别的，因此根据不同的使用场景，漏洞的严重程度也都不同。 评判漏洞的严重程度通常是主观的。  作为替代，go安全团队选择去维护一个精准的漏洞表述。
+ 本文同步发布于">
+<meta itemprop="datePublished" content="2023-10-27T15:05:31+00:00" />
+<meta itemprop="dateModified" content="2023-10-27T15:05:31+00:00" />
+<meta itemprop="wordCount" content="71">
+
+
+
+<meta itemprop="keywords" content="" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="云原生安全资讯: Go语言的漏洞管理"/>
+<meta name="twitter:description" content="云原生安全资讯: Go语言的漏洞管理 下文是文章 https://go.dev/security/vuln/ 的总结
+1. 总结 Go语言的漏洞管理主要有3大块：
+ 数据源：从NVD, GitHub Advisory Database和用户报告而来 漏洞数据库：由go安全团队维护，基于OSV标准实现 集成：pkg.go.dev 和 govulncheck 工具，帮助开发者发现项目中的漏洞  2. 相关资源 2.1 Go 漏洞数据库 https://pkg.go.dev/vuln/
+每一条数据都经过审核，保证漏洞描述、相关的包和版本信息的准确性。
+2.2 漏洞检测工具  cmd工具： govulncheck Go package discovery site VS Code Go插件  $ go install golang.org/x/vuln/cmd/govulncheck@latest $ govulncheck ./... 3. Go CNA Go是CVE分发机构。
+4. 怎么报告未公开漏洞 发送邮件给security@golang.org. 详见 Go’s Security Policy
+5. 怎么报告公开漏洞 https://go.dev/s/vulndb-report-new
+6. 为什么go漏洞数据库不使用严重程度（低、中、高）标签？ 我很欣赏go团队的这个做法，他们这么做的理由主要是
+ 漏洞的影响很少具有普遍性，Go作为一个语言，他们管理的漏洞通常都是library级别的，因此根据不同的使用场景，漏洞的严重程度也都不同。 评判漏洞的严重程度通常是主观的。  作为替代，go安全团队选择去维护一个精准的漏洞表述。
+ 本文同步发布于"/>
+
+
+
+
+<meta property="article:published_time" content="2023-10-27 15:05:31 &#43;0000 UTC" />
+
+
+
+
+
+
+
+    </head>
+
+    <body class="dark-theme">
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text">$ cd /home/st0n3</span>
+            <span class="logo__cursor"></span>
+        
+    </div>
+</a>
+
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="/aboutme.html">About</a></li><li><a href="/post.html">Blog</a></li><li><a href="/hackerbot">Hackerbot</a></li><li><a href="/skill_tree/">SkillTree</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+
+            <span class="theme-toggle"><svg class="theme-toggler" width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M22 41C32.4934 41 41 32.4934 41 22C41 11.5066 32.4934 3 22
+  3C11.5066 3 3 11.5066 3 22C3 32.4934 11.5066 41 22 41ZM7 22C7
+  13.7157 13.7157 7 22 7V37C13.7157 37 7 30.2843 7 22Z"/>
+</svg>
+</span>
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
+                
+    <main class="post">
+
+        <div class="post-info">
+            
+            </p>
+        </div>
+
+        <article>
+            <h2 class="post-title"><a href="/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E4%BA%91%E5%8E%9F%E7%94%9F%E5%AE%89%E5%85%A8%E8%B5%84%E8%AE%AF/%E4%BA%91%E5%8E%9F%E7%94%9F%E5%AE%89%E5%85%A8%E8%B5%84%E8%AE%AF-Go%E8%AF%AD%E8%A8%80%E7%9A%84%E6%BC%8F%E6%B4%9E%E7%AE%A1%E7%90%86.html">云原生安全资讯: Go语言的漏洞管理</a></h2>
+
+            
+
+            <div class="post-content">
+                <h1 id="云原生安全资讯-go语言的漏洞管理">云原生安全资讯: Go语言的漏洞管理</h1>
+<p>下文是文章 <a href="https://go.dev/security/vuln/">https://go.dev/security/vuln/</a> 的总结</p>
+<h2 id="1-总结">1. 总结</h2>
+<p>Go语言的漏洞管理主要有3大块：</p>
+<ul>
+<li>数据源：从NVD, GitHub Advisory Database和用户报告而来</li>
+<li>漏洞数据库：由go安全团队维护，基于OSV标准实现</li>
+<li>集成：<a href="https://pkg.go.dev/">pkg.go.dev</a> 和 govulncheck 工具，帮助开发者发现项目中的漏洞</li>
+</ul>
+<p><img src="https://go.dev/security/vuln/architecture.png" alt=""></p>
+<h2 id="2-相关资源">2. 相关资源</h2>
+<h3 id="21-go-漏洞数据库">2.1 Go 漏洞数据库</h3>
+<p><a href="https://pkg.go.dev/vuln/">https://pkg.go.dev/vuln/</a></p>
+<p>每一条数据都经过审核，保证漏洞描述、相关的包和版本信息的准确性。</p>
+<h3 id="22-漏洞检测工具">2.2 漏洞检测工具</h3>
+<ul>
+<li>cmd工具： <a href="https://pkg.go.dev/golang.org/x/vuln/cmd/govulncheck">govulncheck</a></li>
+<li><a href="https://pkg.go.dev/">Go package discovery site</a></li>
+<li><a href="https://github.com/golang/vscode-go/blob/master/docs/commands.md#go-run-vulncheck-experimental">VS Code Go插件</a></li>
+</ul>
+<pre><code>$ go install golang.org/x/vuln/cmd/govulncheck@latest
+$ govulncheck ./...
+</code></pre><h2 id="3-go-cna">3. Go CNA</h2>
+<p>Go是CVE分发机构。</p>
+<h2 id="4-怎么报告未公开漏洞">4. 怎么报告未公开漏洞</h2>
+<p>发送邮件给<a href="mailto:security@golang.org">security@golang.org</a>. 详见 <a href="https://go.dev/security/policy">Go’s Security Policy</a></p>
+<h2 id="5-怎么报告公开漏洞">5. 怎么报告公开漏洞</h2>
+<p><a href="https://go.dev/s/vulndb-report-new">https://go.dev/s/vulndb-report-new</a></p>
+<h2 id="6-为什么go漏洞数据库不使用严重程度低中高标签">6. 为什么go漏洞数据库不使用严重程度（低、中、高）标签？</h2>
+<p>我很欣赏go团队的这个做法，他们这么做的理由主要是</p>
+<ul>
+<li>漏洞的影响很少具有普遍性，Go作为一个语言，他们管理的漏洞通常都是library级别的，因此根据不同的使用场景，漏洞的严重程度也都不同。</li>
+<li>评判漏洞的严重程度通常是主观的。</li>
+</ul>
+<p>作为替代，go安全团队选择去维护一个精准的漏洞表述。</p>
+<hr>
+<p>本文同步发布于</p>
+<ul>
+<li>github: <a href="https://github.com/ssst0n3/cloud-native-security-news/blob/ba19c354534753bbf74d4373e71d0469d7c540f0/2023-10-27_Go%E8%AF%AD%E8%A8%80%E7%9A%84%E6%BC%8F%E6%B4%9E%E7%AE%A1%E7%90%86.md">ssst0n3/cloud-native-security-news</a></li>
+<li>blog: ssst0n3.github.io</li>
+<li>公众号: 石头的安全料理屋</li>
+<li>知乎专栏: <a href="https://zhuanlan.zhihu.com/p/663771656">云原生安全资讯</a></li>
+</ul>
+
+            </div>
+        </article>
+
+        <hr />
+
+        <div class="post-info">
+  			</div>
+
+        
+    </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>&copy; 2023</span>
+            
+            <span></span>
+            <span> <a href="/posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a></span>
+        </div>
+    </div>
+    <div class="footer__inner">
+        <div class="footer__content">
+
+        </div>
+    </div>
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>Powered by <a href="http://gohugo.io">Hugo</a></span>
+            <span>Made with &#10084; by <a href="https://github.com/st0n3">st0n3</a></span>
+            <span>Based on <a href="https://github.com/rhazdon">rhazdon</a></span>
+        </div>
+    </div>
+
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      extensions: ["tex2jax.js"],
+      
+      jax: ["input/TeX", "output/CommonHTML"],
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+        displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+        processEscapes: true
+      },
+      "HTML-CSS": { fonts: ["TeX"] },
+      displayAlign: "left"
+    });
+  </script>
+
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_CHTML"></script>
+
+
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+
+<script type="text/javascript" src="/bundle.min.4c3fb12a087ceed4a52cb5d57068a9795c7069617a01ca70f788052ad66e1791779e6c72686e1dc0ca13dc03b0203204b6566bb0dd1ee80de2b7ff4d8fe53db2.js" integrity="sha512-TD&#43;xKgh87tSlLLXVcGipeVxwaWF6Acpw94gFKtZuF5F3nmxyaG4dwMoT3AOwIDIEtlZrsN0e6A3it/9Nj&#43;U9sg=="></script>
+
+
+
+    </body>
+</html>
