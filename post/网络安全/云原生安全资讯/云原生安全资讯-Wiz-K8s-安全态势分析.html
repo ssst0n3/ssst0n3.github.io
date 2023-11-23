@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author"
+    content="">
+<meta name="description"
+    content="tags: Cloud Native Security News, k8s version: v0.1.0
+ 云原生安全资讯: Wiz: K8s 安全态势分析  原文地址: https://www.wiz.io/blog/key-takeaways-from-the-wiz-2023-kubernetes-security-report  Wiz 威胁研究团队分析了 200,000 个云帐号，得出了 Kubernetes 安全态势。本文作了一些翻译和总结。
+安全研究者可以参考相关数据来指导研究方向。
+1. Kubernetes 攻击链 Wiz 将典型的k8s集群攻击链归纳为以下环节，报告分析的数据也只分析相关环节。
+2. 版本分布 自管理 vs 云厂商托管
+接近 85% 的集群由云厂商托管。
+云厂商
+云厂商托管的集群中，AWS的EKS最受欢迎，占比接近一半，AKS, GKE 大致相当。
+版本
+k8s每年大致发布并维护3个主要版本，云厂商稍晚会跟进。其中 GKE 跟进最快, EKS和AKS分别约有14%,26% 的EOL版本。AKS允许用户运行很旧的版本，最老的版本是 1.7(2018.4 EOL)。
+3. 初始访问 数据显示，控制面的不安全配置导致初始访问的情况相对少，攻击者倾向于使用控制面漏洞，可能是因为容易利用。Wiz预计，随着控制面的的默认安全的设置、意识的提高、控制平面误配置的减少，攻击者将转向攻击面更大的数据面。
+3.1 控制面 公开集群 vs 私有集群
+公开集群的占比为 69%。公开集群中，EKS, GKE 默认开启了匿名认证, AKS未默认开启(默认情况下匿名用户被绑定至 system:viewer 角色，该角色只允许访问关于集群的基本信息，如显示集群版本。)
+少于 1% 的集群开启了匿名认证的同时，system:anonymous 用户还被绑定到了非常规权限。
+3.2 数据面 在所有暴露的 pods 中，52% 包含有已知漏洞的容器镜像，44% 包含有高危漏洞的镜像。暴露容器中的漏洞应该比数据平面其余部分的漏洞更优先处理。" />
+<meta name="keywords" content="" />
+<meta name="robots" content="noodp" />
+<link rel="canonical" href="/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E4%BA%91%E5%8E%9F%E7%94%9F%E5%AE%89%E5%85%A8%E8%B5%84%E8%AE%AF/%E4%BA%91%E5%8E%9F%E7%94%9F%E5%AE%89%E5%85%A8%E8%B5%84%E8%AE%AF-Wiz-K8s-%E5%AE%89%E5%85%A8%E6%80%81%E5%8A%BF%E5%88%86%E6%9E%90.html" />
+
+
+<title>
+    
+    云原生安全资讯: Wiz: K8s 安全态势分析 :: welcome to st0n3&#39;s blog 
+    
+</title>
+
+
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.2.1/css/flag-icon.min.css" rel="stylesheet"
+    type="text/css">
+
+
+
+<link rel="stylesheet" href="/main.min.de959d61dd13c2cd41136acd491ffb0749779e1afe37b1fed6d5cba0b7e1938d.css">
+
+
+
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#252627">
+<link rel="shortcut icon" href="/favicon.ico">
+<meta name="theme-color" content="#252627"><meta itemprop="name" content="云原生安全资讯: Wiz: K8s 安全态势分析">
+<meta itemprop="description" content="tags: Cloud Native Security News, k8s version: v0.1.0
+ 云原生安全资讯: Wiz: K8s 安全态势分析  原文地址: https://www.wiz.io/blog/key-takeaways-from-the-wiz-2023-kubernetes-security-report  Wiz 威胁研究团队分析了 200,000 个云帐号，得出了 Kubernetes 安全态势。本文作了一些翻译和总结。
+安全研究者可以参考相关数据来指导研究方向。
+1. Kubernetes 攻击链 Wiz 将典型的k8s集群攻击链归纳为以下环节，报告分析的数据也只分析相关环节。
+2. 版本分布 自管理 vs 云厂商托管
+接近 85% 的集群由云厂商托管。
+云厂商
+云厂商托管的集群中，AWS的EKS最受欢迎，占比接近一半，AKS, GKE 大致相当。
+版本
+k8s每年大致发布并维护3个主要版本，云厂商稍晚会跟进。其中 GKE 跟进最快, EKS和AKS分别约有14%,26% 的EOL版本。AKS允许用户运行很旧的版本，最老的版本是 1.7(2018.4 EOL)。
+3. 初始访问 数据显示，控制面的不安全配置导致初始访问的情况相对少，攻击者倾向于使用控制面漏洞，可能是因为容易利用。Wiz预计，随着控制面的的默认安全的设置、意识的提高、控制平面误配置的减少，攻击者将转向攻击面更大的数据面。
+3.1 控制面 公开集群 vs 私有集群
+公开集群的占比为 69%。公开集群中，EKS, GKE 默认开启了匿名认证, AKS未默认开启(默认情况下匿名用户被绑定至 system:viewer 角色，该角色只允许访问关于集群的基本信息，如显示集群版本。)
+少于 1% 的集群开启了匿名认证的同时，system:anonymous 用户还被绑定到了非常规权限。
+3.2 数据面 在所有暴露的 pods 中，52% 包含有已知漏洞的容器镜像，44% 包含有高危漏洞的镜像。暴露容器中的漏洞应该比数据平面其余部分的漏洞更优先处理。">
+<meta itemprop="datePublished" content="2023-11-23T06:38:51+00:00" />
+<meta itemprop="dateModified" content="2023-11-23T06:38:51+00:00" />
+<meta itemprop="wordCount" content="220">
+
+
+
+<meta itemprop="keywords" content="" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="云原生安全资讯: Wiz: K8s 安全态势分析"/>
+<meta name="twitter:description" content="tags: Cloud Native Security News, k8s version: v0.1.0
+ 云原生安全资讯: Wiz: K8s 安全态势分析  原文地址: https://www.wiz.io/blog/key-takeaways-from-the-wiz-2023-kubernetes-security-report  Wiz 威胁研究团队分析了 200,000 个云帐号，得出了 Kubernetes 安全态势。本文作了一些翻译和总结。
+安全研究者可以参考相关数据来指导研究方向。
+1. Kubernetes 攻击链 Wiz 将典型的k8s集群攻击链归纳为以下环节，报告分析的数据也只分析相关环节。
+2. 版本分布 自管理 vs 云厂商托管
+接近 85% 的集群由云厂商托管。
+云厂商
+云厂商托管的集群中，AWS的EKS最受欢迎，占比接近一半，AKS, GKE 大致相当。
+版本
+k8s每年大致发布并维护3个主要版本，云厂商稍晚会跟进。其中 GKE 跟进最快, EKS和AKS分别约有14%,26% 的EOL版本。AKS允许用户运行很旧的版本，最老的版本是 1.7(2018.4 EOL)。
+3. 初始访问 数据显示，控制面的不安全配置导致初始访问的情况相对少，攻击者倾向于使用控制面漏洞，可能是因为容易利用。Wiz预计，随着控制面的的默认安全的设置、意识的提高、控制平面误配置的减少，攻击者将转向攻击面更大的数据面。
+3.1 控制面 公开集群 vs 私有集群
+公开集群的占比为 69%。公开集群中，EKS, GKE 默认开启了匿名认证, AKS未默认开启(默认情况下匿名用户被绑定至 system:viewer 角色，该角色只允许访问关于集群的基本信息，如显示集群版本。)
+少于 1% 的集群开启了匿名认证的同时，system:anonymous 用户还被绑定到了非常规权限。
+3.2 数据面 在所有暴露的 pods 中，52% 包含有已知漏洞的容器镜像，44% 包含有高危漏洞的镜像。暴露容器中的漏洞应该比数据平面其余部分的漏洞更优先处理。"/>
+
+
+
+
+<meta property="article:published_time" content="2023-11-23 06:38:51 &#43;0000 UTC" />
+
+
+
+
+
+
+
+    </head>
+
+    <body class="dark-theme">
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text">$ cd /home/st0n3</span>
+            <span class="logo__cursor"></span>
+        
+    </div>
+</a>
+
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="/aboutme.html">About</a></li><li><a href="/post.html">Blog</a></li><li><a href="/hackerbot">Hackerbot</a></li><li><a href="/skill_tree/">SkillTree</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+
+            <span class="theme-toggle"><svg class="theme-toggler" width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M22 41C32.4934 41 41 32.4934 41 22C41 11.5066 32.4934 3 22
+  3C11.5066 3 3 11.5066 3 22C3 32.4934 11.5066 41 22 41ZM7 22C7
+  13.7157 13.7157 7 22 7V37C13.7157 37 7 30.2843 7 22Z"/>
+</svg>
+</span>
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
+                
+    <main class="post">
+
+        <div class="post-info">
+            
+            </p>
+        </div>
+
+        <article>
+            <h2 class="post-title"><a href="/post/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/%E4%BA%91%E5%8E%9F%E7%94%9F%E5%AE%89%E5%85%A8%E8%B5%84%E8%AE%AF/%E4%BA%91%E5%8E%9F%E7%94%9F%E5%AE%89%E5%85%A8%E8%B5%84%E8%AE%AF-Wiz-K8s-%E5%AE%89%E5%85%A8%E6%80%81%E5%8A%BF%E5%88%86%E6%9E%90.html">云原生安全资讯: Wiz: K8s 安全态势分析</a></h2>
+
+            
+
+            <div class="post-content">
+                <hr>
+<p>tags: Cloud Native Security News, k8s
+version: v0.1.0</p>
+<hr>
+<h1 id="云原生安全资讯-wiz-k8s-安全态势分析">云原生安全资讯: Wiz: K8s 安全态势分析</h1>
+<ul>
+<li>原文地址: <a href="https://www.wiz.io/blog/key-takeaways-from-the-wiz-2023-kubernetes-security-report">https://www.wiz.io/blog/key-takeaways-from-the-wiz-2023-kubernetes-security-report</a></li>
+</ul>
+<p>Wiz 威胁研究团队分析了 200,000 个云帐号，得出了 Kubernetes 安全态势。本文作了一些翻译和总结。</p>
+<p>安全研究者可以参考相关数据来指导研究方向。</p>
+<h2 id="1-kubernetes-攻击链">1. Kubernetes 攻击链</h2>
+<p>Wiz 将典型的k8s集群攻击链归纳为以下环节，报告分析的数据也只分析相关环节。</p>
+<p><img src="https://github.com/cloud-native-security-news/cloud-native-security-news/assets/16935049/eca034fc-4820-405f-a622-b162a1de95f4" alt="image"></p>
+<h2 id="2-版本分布">2. 版本分布</h2>
+<p><strong>自管理 vs 云厂商托管</strong></p>
+<p>接近 85% 的集群由云厂商托管。</p>
+<p><strong>云厂商</strong></p>
+<p>云厂商托管的集群中，AWS的EKS最受欢迎，占比接近一半，AKS, GKE 大致相当。</p>
+<p><strong>版本</strong></p>
+<p>k8s每年大致发布并维护3个主要版本，云厂商稍晚会跟进。其中 GKE 跟进最快, EKS和AKS分别约有14%,26% 的EOL版本。AKS允许用户运行很旧的版本，最老的版本是 1.7(2018.4 EOL)。</p>
+<h2 id="3-初始访问">3. 初始访问</h2>
+<p>数据显示，控制面的不安全配置导致初始访问的情况相对少，攻击者倾向于使用控制面漏洞，可能是因为容易利用。Wiz预计，随着控制面的的默认安全的设置、意识的提高、控制平面误配置的减少，攻击者将转向攻击面更大的数据面。</p>
+<h3 id="31-控制面">3.1 控制面</h3>
+<p><strong>公开集群 vs 私有集群</strong></p>
+<p>公开集群的占比为 69%。公开集群中，EKS, GKE 默认开启了匿名认证, AKS未默认开启(默认情况下匿名用户被绑定至 system:viewer 角色，该角色只允许访问关于集群的基本信息，如显示集群版本。)</p>
+<p>少于 1% 的集群开启了匿名认证的同时，system:anonymous 用户还被绑定到了非常规权限。</p>
+<h3 id="32-数据面">3.2 数据面</h3>
+<p>在所有暴露的 pods 中，52% 包含有已知漏洞的容器镜像，44% 包含有高危漏洞的镜像。暴露容器中的漏洞应该比数据平面其余部分的漏洞更优先处理。</p>
+<p>0.27% 的集群包含具有暴露 SSH 访问的容器。直接进入容器的管理接口可以让攻击者轻易绕过传统的 Kubernetes 级别的安全控制。</p>
+<h2 id="4-横向移动和权限提升">4. 横向移动和权限提升</h2>
+<p>数据显示攻击者有很多机会可以在集群内横向移动。</p>
+<h3 id="41-rbac">4.1 RBAC</h3>
+<p>有8%的 pods 拥有超出了操作需求的 RBAC 权限，非 kube-system pods 中，有5.9%的 pods 拥有过高的 RBAC 权限。</p>
+<p>有0.1%的 pods 使用带有明文云凭证的镜像。</p>
+<h3 id="42-容器逃逸">4.2 容器逃逸</h3>
+<p><strong>敏感主机路径挂载</strong></p>
+<p>18% 的 pod 挂载了主机的敏感路径。</p>
+<p><strong>特权容器</strong></p>
+<p>16% 的 pod可能因为capability 导致逃逸： 其中 10% 的 pod 以特权模式运行，6% 的 pod 拥有特定的危险capability。</p>
+<p><strong>root</strong></p>
+<p>约 18% 的 pod 以root权限运行。</p>
+<p>上述提到的错误配置的pod 总计占比为 22% 。</p>
+<h3 id="43-集群内隔离">4.3 集群内隔离</h3>
+<p><strong>网络隔离</strong></p>
+<p>Kubernetes Network Policy 在策略级别定义了集群内的网络限制，而只有 9% 的集群使用带有网络策略的 namespace 。</p>
+<p><strong>namespace</strong></p>
+<p>约 7.5% 的集群，数据面中只有一个 namespace (即 default)</p>
+<h2 id="5-影响">5. 影响</h2>
+<h3 id="51-拒绝服务">5.1 拒绝服务</h3>
+<p>19% 的 pod 没有设置资源配额限制。</p>
+<h3 id="52-由集群跳转到云">5.2 由集群跳转到云</h3>
+<p>有15%的 pod 拥有可以跳出集群的权限，其中 60%  是通过工作节点身份获取的。</p>
+<h2 id="6-安全控制和缓解措施">6. 安全控制和缓解措施</h2>
+<p><strong>PSP,PSS</strong></p>
+<p>只有 6% 的集群没有使用 PSP、外部准入控制器，或者至少有一个命名空间没有强制执行 PSS。然而，运行 1.25 及以上版本的集群（在这些版本中，PodSecurityPolicy（PSP）已经不再可用），只有 39% 的集群在所有数据平面命名空间中使用了第三方准入控制器或内置的 Pod Security 准入控制器。（值得注意的是，即使客户从 v1.24 版本迁移到 v1.25 版本会“失去” PSP，EKS也允许迁移。这可以部分解释这种现象。）</p>
+<p><strong>级别</strong></p>
+<ul>
+<li>用户更倾向于 Baseline 级别的规则，使用 Audit/Warning 和 Enforce 模式的比例相当。</li>
+<li>Restricted级别上, 用户大部分使用Audit/Warning 模式，而不愿意使用 Enforce 模式。仅有 0.13% 的命名空间执行 Enforce 模式，与同级别的审计/警告模式相比。这表明用户通常认为限制模式对于生产工作负载的使用并不实际。</li>
+</ul>
+<p><strong>User Namespace</strong></p>
+<p>在实际使用中，没有任何 pod 实例使用这个特性。</p>
+<h2 id="7-结论">7. 结论</h2>
+<p>根据分析数据，Wiz得出以下结论：</p>
+<ul>
+<li>初始访问：k8s 控制面配置错误或漏洞相对较少，数据面漏洞更多</li>
+<li>横向移动和权限提升：一旦攻击者通过了初始访问，他们就有大量的机会在集群内进行横向移动和权限提升</li>
+<li>影响：在影响环节，特别是关于从k8s影响到云，安全实践不足</li>
+<li>现有安全控制措施在各个攻击阶段的利用不足，社区应优先考虑采用已有安全功能，而不是引入新的安全功能。</li>
+</ul>
+<hr>
+<p>本文同步发布于</p>
+<ul>
+<li>github: <a href="https://github.com/cloud-native-security-news/cloud-native-security-news/blob/main/2023-11-23_Wiz_K8s%E5%AE%89%E5%85%A8%E6%80%81%E5%8A%BF%E5%88%86%E6%9E%90.md">https://github.com/cloud-native-security-news/cloud-native-security-news</a></li>
+<li>blog: <a href="">ssst0n3.github.io</a></li>
+<li>公众号: 石头的安全料理屋</li>
+<li>知乎专栏: <a href="https://zhuanlan.zhihu.com/p/668387109">云原生安全资讯</a></li>
+</ul>
+
+            </div>
+        </article>
+
+        <hr />
+
+        <div class="post-info">
+  			</div>
+
+        
+    </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>&copy; 2023</span>
+            
+            <span></span>
+            <span> <a href="/posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a></span>
+        </div>
+    </div>
+    <div class="footer__inner">
+        <div class="footer__content">
+
+        </div>
+    </div>
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>Powered by <a href="http://gohugo.io">Hugo</a></span>
+            <span>Made with &#10084; by <a href="https://github.com/st0n3">st0n3</a></span>
+            <span>Based on <a href="https://github.com/rhazdon">rhazdon</a></span>
+        </div>
+    </div>
+
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      extensions: ["tex2jax.js"],
+      
+      jax: ["input/TeX", "output/CommonHTML"],
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+        displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+        processEscapes: true
+      },
+      "HTML-CSS": { fonts: ["TeX"] },
+      displayAlign: "left"
+    });
+  </script>
+
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_CHTML"></script>
+
+
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+
+<script type="text/javascript" src="/bundle.min.4c3fb12a087ceed4a52cb5d57068a9795c7069617a01ca70f788052ad66e1791779e6c72686e1dc0ca13dc03b0203204b6566bb0dd1ee80de2b7ff4d8fe53db2.js" integrity="sha512-TD&#43;xKgh87tSlLLXVcGipeVxwaWF6Acpw94gFKtZuF5F3nmxyaG4dwMoT3AOwIDIEtlZrsN0e6A3it/9Nj&#43;U9sg=="></script>
+
+
+
+    </body>
+</html>
